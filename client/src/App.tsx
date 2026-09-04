@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Graph } from "./Graph";
+import { Chat, NodePanel, type Line } from "./Chat";
 import { createSession, loadGraph, streamTurn } from "./api";
 import type {
   EdgeRef,
@@ -8,18 +9,20 @@ import type {
   GraphState,
   McqOption,
   StudentResponse,
+  TurnBudget,
 } from "./types";
 import "./tokens.css";
 
 /**
- * Dependency direction: App -> Graph -> types, App -> api -> types.
- * Nothing imports upward.
+ * Dependency direction: App -> Graph -> types, App -> Chat -> types,
+ * App -> api -> types. Nothing imports upward, and neither child fetches.
+ *
+ * App is the only place that knows there is a session, a network, or an order
+ * to the two stream phases. Graph and Chat are handed values and call back.
  *
  * The only motion in this app is the dim transition. No entrance animations, no
  * hover transitions - that is what makes the narrowing the memorable moment.
  */
-
-type Line = { who: "tutor" | "you"; text: string };
 
 export default function App() {
   const [graph, setGraph] = useState<FrozenGraph | null>(null);
@@ -28,6 +31,8 @@ export default function App() {
   const [expects, setExpects] = useState<Expects>("text");
   const [mcq, setMcq] = useState<McqOption[]>([]);
   const [hint, setHint] = useState(0);
+  const [budget, setBudget] = useState<TurnBudget | null>(null);
+  const [resolvedWithSupport, setResolvedWithSupport] = useState(false);
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState<string | null>(null);
   const [complete, setComplete] = useState(false);
@@ -38,8 +43,11 @@ export default function App() {
   const [pendingNode, setPendingNode] = useState<string | null>(null);
   const [pendingEdge, setPendingEdge] = useState<EdgeRef | null>(null);
 
+  // Reading a node, not answering with it. See Graph.tsx on why these two can
+  // never be live at the same time.
+  const [inspected, setInspected] = useState<string | null>(null);
+
   const session = useRef<string | null>(null);
-  const draft = useRef("");
   // StrictMode runs mount effects twice in dev. Without this guard that opens
   // two sessions and plays two opening turns, and the transcript shows every
   // tutor line duplicated - which reads as a server bug and is not one.
@@ -66,6 +74,7 @@ export default function App() {
     setBusy(true);
     setErr(null);
     setMcq([]);
+    setInspected(null);
     clearPending();
 
     await streamTurn(
@@ -78,6 +87,8 @@ export default function App() {
           setExpects(p.expects);
           setHint(p.hint_level);
           setMcq(p.mcq_options);
+          setBudget(p.turn_budget);
+          setResolvedWithSupport(p.resolved_with_support);
           setComplete(p.session_complete);
         },
         onUtterance: (text) => {
@@ -98,16 +109,23 @@ export default function App() {
     setPendingEdge(null);
   }
 
+  function labelOf(id: string): string {
+    return graph?.nodes.find((n) => n.id === id)?.label ?? id;
+  }
+
   function confirmPending() {
-    if (!graph) return;
     if (pendingNode) {
-      const label = graph.nodes.find((n) => n.id === pendingNode)?.label ?? pendingNode;
-      setLines((l) => [...l, { who: "you", text: label }]);
+      setLines((l) => [...l, { who: "you", text: labelOf(pendingNode) }]);
       void send({ type: "node_click", node_id: pendingNode });
     } else if (pendingEdge) {
-      setLines((l) => [...l, { who: "you", text: "that connection" }]);
+      setLines((l) => [...l, { who: "you", text: pendingEdgeLabel() }]);
       void send({ type: "edge_click", edge: pendingEdge });
     }
+  }
+
+  function pendingEdgeLabel(): string {
+    if (!pendingEdge) return "";
+    return `${labelOf(pendingEdge.from)} → ${labelOf(pendingEdge.to)}`;
   }
 
   function answerMcq(option: McqOption) {
@@ -127,7 +145,19 @@ export default function App() {
   const total = graph.nodes.length;
   const lit = total - (gs?.dimmed_nodes.length ?? 0);
   const narrowed = lit < total;
-  const hasPending = Boolean(pendingNode || pendingEdge);
+
+  // A pending node takes over the panel: same surface, but it is now the thing
+  // you are about to answer with, so it shows its name and not its definition.
+  const panelNodeId = pendingNode ?? inspected;
+  const panelNode = panelNodeId
+    ? (graph.nodes.find((n) => n.id === panelNodeId) ?? null)
+    : null;
+
+  const pendingLabel = pendingNode
+    ? labelOf(pendingNode)
+    : pendingEdge
+      ? pendingEdgeLabel()
+      : null;
 
   return (
     <div
@@ -150,11 +180,13 @@ export default function App() {
           expects={expects}
           pendingNode={pendingNode}
           pendingEdge={pendingEdge}
+          inspectedNode={inspected}
           busy={busy}
           onNodeClick={(id) => {
             setPendingEdge(null);
             setPendingNode(id);
           }}
+          onNodeInspect={(id) => setInspected((cur) => (cur === id ? null : id))}
           onEdgeClick={(e) => {
             setPendingNode(null);
             setPendingEdge(e);
@@ -184,92 +216,34 @@ export default function App() {
           minHeight: 0,
         }}
       >
-        <div style={{ flex: 1, overflowY: "auto", padding: "24px 22px" }}>
-          {lines.length === 0 && !busy && (
-            <p style={{ opacity: 0.6, margin: 0 }}>Getting started.</p>
-          )}
-          {lines.map((l, i) => (
-            <p
-              key={i}
-              style={{
-                margin: "0 0 16px",
-                maxWidth: "62ch",
-                opacity: l.who === "you" ? 0.62 : 1,
-              }}
-            >
-              {l.text}
-            </p>
-          ))}
-          {busy && <p style={{ opacity: 0.45, margin: 0 }}>Thinking</p>}
-          {err && <p style={{ color: "var(--alert)", margin: "8px 0 0" }}>{err}</p>}
-        </div>
+        {panelNode && (
+          <NodePanel
+            node={panelNode}
+            mastery={gs?.mastery?.[panelNode.id] ?? 0}
+            answering={pendingNode !== null}
+            onClose={() => {
+              setInspected(null);
+              if (pendingNode) clearPending();
+            }}
+          />
+        )}
 
-        <div style={{ borderTop: "1px solid var(--rule)", padding: 18 }}>
-          {complete ? (
-            <p style={{ margin: 0, opacity: 0.7 }}>That's the whole chapter.</p>
-          ) : hasPending ? (
-            // Confirm-or-undo. The only gate between a stray click and a
-            // permanent mastery penalty.
-            <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
-              <button onClick={confirmPending} disabled={busy} style={primaryBtn}>
-                Confirm
-              </button>
-              <button onClick={clearPending} disabled={busy} style={btn}>
-                Undo
-              </button>
-            </div>
-          ) : expects === "node_click" ? (
-            <Prompt>Click the node you think it is.</Prompt>
-          ) : expects === "edge_click" ? (
-            <Prompt>Click the connection you mean.</Prompt>
-          ) : expects === "mcq" && mcq.length > 0 ? (
-            <div style={{ display: "grid", gap: 8 }}>
-              {mcq.map((o) => (
-                <button key={o.id} onClick={() => answerMcq(o)} disabled={busy} style={btn}>
-                  {o.label}
-                </button>
-              ))}
-            </div>
-          ) : (
-            <input
-              onChange={(e) => (draft.current = e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === "Enter" && draft.current.trim() && !busy) {
-                  const v = draft.current.trim();
-                  draft.current = "";
-                  (e.target as HTMLInputElement).value = "";
-                  answerText(v);
-                }
-              }}
-              placeholder="Type your answer"
-              style={{ ...btn, width: "100%" }}
-            />
-          )}
-        </div>
+        <Chat
+          lines={lines}
+          busy={busy}
+          error={err}
+          expects={expects}
+          mcq={mcq}
+          budget={budget}
+          resolvedWithSupport={resolvedWithSupport}
+          complete={complete}
+          pendingLabel={pendingLabel}
+          onConfirm={confirmPending}
+          onUndo={clearPending}
+          onMcq={answerMcq}
+          onText={answerText}
+        />
       </aside>
     </div>
   );
-}
-
-const btn: React.CSSProperties = {
-  font: "inherit",
-  padding: "10px 12px",
-  border: "1px solid var(--rule)",
-  borderRadius: 4,
-  background: "var(--ground)",
-  color: "var(--ink)",
-  textAlign: "left",
-  cursor: "pointer",
-};
-
-const primaryBtn: React.CSSProperties = {
-  ...btn,
-  background: "var(--pending)",
-  borderColor: "var(--pending)",
-  color: "var(--paper)",
-  fontWeight: 600,
-};
-
-function Prompt({ children }: { children: React.ReactNode }) {
-  return <p style={{ margin: 0, fontSize: 14, opacity: 0.7 }}>{children}</p>;
 }

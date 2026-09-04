@@ -21,7 +21,7 @@ fixture; nothing else changes.
 pip install -r requirements.txt
 python -m build.make_mock_data   # placeholder 50-node fixture
 python -m build.validate         # strict; must be clean
-python -m pytest                 # 102 tests
+python -m pytest                 # 113 tests
 python -m server.main            # http://127.0.0.1:8000
 ```
 
@@ -70,6 +70,8 @@ NARROW_SCHEDULE=0,25,18,12,8 python -m server.main
 | `eval/adversarial.py` | §9.1 effective leakage — `python -m eval.adversarial` |
 | `docs/writeup/` | draft report sections — identity leakage, limitations |
 | `client/src/types.ts` | reconciled against `/schemas`; supersedes `templates/` |
+| `client/src/Graph.tsx` | the frozen-layout SVG and the two dimming channels |
+| `client/src/Chat.tsx` | the rail — transcript, composer, turn budget, node panel |
 
 Full layout in `CLAUDE.md` §2.
 

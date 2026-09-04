@@ -101,8 +101,7 @@ Response:
     "mastery": { "tcp_segment": 0.61, "tcp_slow_start": 0.43 }
   },
 
-  "item": { "id": "itm_0031", "node_id": "tcp_slow_start",
-            "difficulty": 0.4, "scorable": true },
+  "item": { "id": "itm_0031", "difficulty": 0.4, "scorable": true },
 
   "turn_budget": { "used": 3, "max": 8 },
   "resolved_with_support": false,

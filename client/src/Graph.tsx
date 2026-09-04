@@ -41,8 +41,11 @@ interface Props {
   /** Clicked but not yet confirmed. Never scored until the student says so. */
   pendingNode: string | null;
   pendingEdge: EdgeRef | null;
+  /** Opened in the rail's node panel. Reading, not answering. */
+  inspectedNode: string | null;
   busy: boolean;
   onNodeClick: (id: string) => void;
+  onNodeInspect: (id: string) => void;
   onEdgeClick: (edge: EdgeRef) => void;
 }
 
@@ -52,8 +55,10 @@ export function Graph({
   expects,
   pendingNode,
   pendingEdge,
+  inspectedNode,
   busy,
   onNodeClick,
+  onNodeInspect,
   onEdgeClick,
 }: Props) {
   // dimmed_nodes is authoritative. Empty set == no narrowing.
@@ -81,6 +86,16 @@ export function Graph({
   const nodeClickable = expects === "node_click" && !busy;
   const edgeClickable = expects === "edge_click" && !busy;
   const pendingEdgeKey = pendingEdge ? edgeKey(pendingEdge) : null;
+
+  // One gesture, two meanings, and which one it is depends on what the tutor
+  // just asked for. While it is waiting for a point, a click is an ANSWER and
+  // nothing else; the rest of the time it opens the node panel to read.
+  //
+  // They cannot both be live. If clicking opened a definition during a
+  // node_click item, the student would read their way to the answer inside the
+  // one interaction the whole leakage measurement is about - and eval §9.1
+  // would never see it, because the simulated students only model the lit set.
+  const pointing = expects === "node_click" || expects === "edge_click";
 
   return (
     <svg
@@ -125,7 +140,12 @@ export function Graph({
         const m = state?.mastery?.[n.id] ?? 0;
         const isCurrent = state?.current_node === n.id;
         const isPending = pendingNode === n.id;
-        const clickable = nodeClickable && !isDim;
+        const isInspected = inspectedNode === n.id && !isPending;
+        // Dimmed nodes are ruled out, so they can never be answered. They can
+        // still be read between questions - what was excluded is part of what
+        // the map is for.
+        const answerable = nodeClickable && !isDim;
+        const clickable = pointing ? answerable : !busy;
         return (
           <g
             key={n.id}
@@ -138,7 +158,11 @@ export function Graph({
               transition: "filter var(--dim-ms) ease",
               cursor: clickable ? "pointer" : "default",
             }}
-            onClick={clickable ? () => onNodeClick(n.id) : undefined}
+            onClick={
+              clickable
+                ? () => (pointing ? onNodeClick(n.id) : onNodeInspect(n.id))
+                : undefined
+            }
             tabIndex={clickable ? 0 : -1}
             role={clickable ? "button" : undefined}
             aria-label={clickable ? n.label : undefined}
@@ -147,7 +171,8 @@ export function Graph({
                 ? (ev) => {
                     if (ev.key === "Enter" || ev.key === " ") {
                       ev.preventDefault();
-                      onNodeClick(n.id);
+                      if (pointing) onNodeClick(n.id);
+                      else onNodeInspect(n.id);
                     }
                   }
                 : undefined
@@ -167,7 +192,19 @@ export function Graph({
                   "stroke-width var(--dim-ms) ease, opacity var(--dim-ms) ease",
               }}
             />
-            {isCurrent && !isPending && (
+            {isInspected && (
+              <rect
+                width={NODE_W + 10}
+                height={NODE_H + 10}
+                x={-5}
+                y={-5}
+                rx={R + 2}
+                fill="none"
+                stroke="var(--ink)"
+                strokeWidth={2}
+              />
+            )}
+            {isCurrent && !isPending && !isInspected && (
               <rect
                 width={NODE_W + 10}
                 height={NODE_H + 10}

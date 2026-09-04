@@ -58,10 +58,17 @@ export interface FrozenGraph {
   edges: GraphEdge[];
 }
 
-/** ItemPublic - stripped server-side. No prompt, answer, alias, span or distractor. */
+/** ItemPublic - stripped server-side. No prompt, answer, alias, span or distractor.
+ *
+ *  NO `node_id`, and it must not come back. For a node_click or mcq item the
+ *  answer IS the item's node, so shipping node_id hands over the answer in the
+ *  clear (it held for 204 of the 250 fixture items). This type carried it until
+ *  the server dropped it; the field was never populated after that, so any
+ *  client code reading it was reading `undefined`.
+ *  `graph_state.current_node` is null for the same reason while such an item is
+ *  open - see docs/API.md, "What the client must never infer". */
 export interface ItemPublic {
   id: string;
-  node_id: string;
   difficulty: number;
   scorable: boolean;
 }
