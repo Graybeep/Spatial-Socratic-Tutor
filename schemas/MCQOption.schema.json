@@ -1,0 +1,20 @@
+{
+  "additionalProperties": false,
+  "description": "A rendered MCQ choice.\n\nCarve-out to CLAUDE.md \u00a71.6, and the only one. `label` is text that reaches\nthe client and is not `utterance`. It is server-owned data read from\nitems.json and graph.json - never model output - and MCQ is unrenderable\nwithout it. The rule exists to keep MODEL-generated text off the screen; this\nis the same class of data as the node labels the graph already renders.",
+  "properties": {
+    "id": {
+      "title": "Id",
+      "type": "string"
+    },
+    "label": {
+      "title": "Label",
+      "type": "string"
+    }
+  },
+  "required": [
+    "id",
+    "label"
+  ],
+  "title": "MCQOption",
+  "type": "object"
+}

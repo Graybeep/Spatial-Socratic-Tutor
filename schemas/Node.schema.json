@@ -1,0 +1,49 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "definition": {
+      "description": "one sentence, from source",
+      "title": "Definition",
+      "type": "string"
+    },
+    "difficulty": {
+      "maximum": 1.0,
+      "minimum": 0.0,
+      "title": "Difficulty",
+      "type": "number"
+    },
+    "id": {
+      "title": "Id",
+      "type": "string"
+    },
+    "label": {
+      "title": "Label",
+      "type": "string"
+    },
+    "source_sections": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Source Sections",
+      "type": "array"
+    },
+    "x": {
+      "title": "X",
+      "type": "number"
+    },
+    "y": {
+      "title": "Y",
+      "type": "number"
+    }
+  },
+  "required": [
+    "id",
+    "label",
+    "definition",
+    "difficulty",
+    "x",
+    "y"
+  ],
+  "title": "Node",
+  "type": "object"
+}

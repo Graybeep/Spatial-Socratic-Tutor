@@ -1,0 +1,234 @@
+{
+  "$defs": {
+    "EdgeRef": {
+      "additionalProperties": false,
+      "properties": {
+        "from": {
+          "title": "From",
+          "type": "string"
+        },
+        "to": {
+          "title": "To",
+          "type": "string"
+        }
+      },
+      "required": [
+        "from",
+        "to"
+      ],
+      "title": "EdgeRef",
+      "type": "object"
+    },
+    "GraphState": {
+      "additionalProperties": false,
+      "description": "Returned/streamed before the utterance. CLAUDE.md \u00a75 step 5 and \u00a78: the\ngraph reacts on Call 1 return and never blocks on the text.",
+      "properties": {
+        "current_node": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Current Node"
+        },
+        "dimmed_nodes": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Dimmed Nodes",
+          "type": "array"
+        },
+        "focus_edges": {
+          "items": {
+            "$ref": "#/$defs/EdgeRef"
+          },
+          "title": "Focus Edges",
+          "type": "array"
+        },
+        "focus_nodes": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Focus Nodes",
+          "type": "array"
+        },
+        "mastery": {
+          "additionalProperties": {
+            "type": "number"
+          },
+          "title": "Mastery",
+          "type": "object"
+        }
+      },
+      "title": "GraphState",
+      "type": "object"
+    },
+    "ItemPublic": {
+      "additionalProperties": false,
+      "description": "The only part of an item the client may see.\n\nNo prompt (the tutor's `utterance` IS the question), no answer, no aliases,\nno spans, no distractors. If a field is added here, assume it leaks until\nproven otherwise.",
+      "properties": {
+        "difficulty": {
+          "title": "Difficulty",
+          "type": "number"
+        },
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "node_id": {
+          "title": "Node Id",
+          "type": "string"
+        },
+        "scorable": {
+          "description": "deterministic item; contributes to mastery",
+          "title": "Scorable",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "id",
+        "node_id",
+        "difficulty",
+        "scorable"
+      ],
+      "title": "ItemPublic",
+      "type": "object"
+    },
+    "MCQOption": {
+      "additionalProperties": false,
+      "description": "A rendered MCQ choice.\n\nCarve-out to CLAUDE.md \u00a71.6, and the only one. `label` is text that reaches\nthe client and is not `utterance`. It is server-owned data read from\nitems.json and graph.json - never model output - and MCQ is unrenderable\nwithout it. The rule exists to keep MODEL-generated text off the screen; this\nis the same class of data as the node labels the graph already renders.",
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "label": {
+          "title": "Label",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "label"
+      ],
+      "title": "MCQOption",
+      "type": "object"
+    },
+    "TurnBudget": {
+      "additionalProperties": false,
+      "properties": {
+        "max": {
+          "title": "Max",
+          "type": "integer"
+        },
+        "used": {
+          "title": "Used",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "used",
+        "max"
+      ],
+      "title": "TurnBudget",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "description": "THE WHITELIST (CLAUDE.md \u00a71.6, guard layer 0).\n\n`utterance` is the only model-generated text in this object. `diagnosis`,\n`student_state`, `correct` and the raw Call 1 decision are logged and never\nserialised here. Adding a model-authored text field to this class is a\nseverity-1 bug; tests/test_turn_contract.py asserts the exact field set.",
+  "properties": {
+    "action": {
+      "enum": [
+        "ask",
+        "hint_visual",
+        "hint_verbal",
+        "advance",
+        "backtrack",
+        "explain"
+      ],
+      "title": "Action",
+      "type": "string"
+    },
+    "expects": {
+      "enum": [
+        "text",
+        "node_click",
+        "edge_click",
+        "mcq"
+      ],
+      "title": "Expects",
+      "type": "string"
+    },
+    "graph_state": {
+      "$ref": "#/$defs/GraphState"
+    },
+    "hint_level": {
+      "title": "Hint Level",
+      "type": "integer"
+    },
+    "item": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/ItemPublic"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "mcq_options": {
+      "items": {
+        "$ref": "#/$defs/MCQOption"
+      },
+      "title": "Mcq Options",
+      "type": "array"
+    },
+    "resolved_with_support": {
+      "default": false,
+      "title": "Resolved With Support",
+      "type": "boolean"
+    },
+    "schema_version": {
+      "default": "1.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "session_complete": {
+      "default": false,
+      "title": "Session Complete",
+      "type": "boolean"
+    },
+    "session_id": {
+      "title": "Session Id",
+      "type": "string"
+    },
+    "turn_budget": {
+      "$ref": "#/$defs/TurnBudget"
+    },
+    "turn_id": {
+      "title": "Turn Id",
+      "type": "integer"
+    },
+    "utterance": {
+      "title": "Utterance",
+      "type": "string"
+    }
+  },
+  "required": [
+    "session_id",
+    "turn_id",
+    "utterance",
+    "action",
+    "hint_level",
+    "expects",
+    "graph_state",
+    "turn_budget"
+  ],
+  "title": "TurnResponse",
+  "type": "object"
+}

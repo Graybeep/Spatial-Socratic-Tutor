@@ -1,0 +1,49 @@
+{
+  "_comment": [
+    "Utterance templates for the MOCK tutor only. The real Call 2 replaces this",
+    "entirely (server/llm.py, week 2). Kept out of Python so the mock obeys the",
+    "no-hard-coding rule and so Person B can reword the demo script without",
+    "touching server code.",
+    "Placeholders: {labels} = comma-joined focus node labels, {first} = first",
+    "focus label, {n} = number of nodes still lit.",
+    "Templates are indexed by hint_level, clamped to the list length.",
+    "RULE FOR EDITING: never write a literal count ('two left') - use {n}. A",
+    "template that states a number the graph contradicts is exactly the kind of",
+    "text/visual mismatch this project exists to avoid, and it would show up on",
+    "the demo projector.",
+    "RULE FOR EDITING: hint_visual must never name the answer. It points at the",
+    "screen; that is the whole thesis."
+  ],
+  "ask": [
+    "Have a look at the map. Which node fits?",
+    "Take another look at what's lit up. Which one is it?"
+  ],
+  "hint_visual": [
+    "I've dimmed everything that can't be it - {n} left.",
+    "Narrowing further: {n} candidates. Look at what they have in common.",
+    "Down to {n}. One of these is the answer.",
+    "{n} left. Which of them comes first?",
+    "It's one of the {n} still lit."
+  ],
+  "hint_verbal": [
+    "Think about what has to be true before this step can happen.",
+    "Consider what the sender knows about the network at that moment.",
+    "It's the phase that runs before the next one takes over.",
+    "Think about which of these the others are built on."
+  ],
+  "advance": [
+    "That's it. Next idea.",
+    "Correct. Let's keep going."
+  ],
+  "backtrack": [
+    "Let's back up to {first} first - this one leans on it.",
+    "Before we continue, we should shore up {first}."
+  ],
+  "explain": [
+    "Here's {first} in short - read it, then we'll come back to the question.",
+    "Short version of {first}, then we'll retry."
+  ],
+  "resolved_with_support": [
+    "We've spent enough turns here - it's {first}. Let's move on and come back to it later."
+  ]
+}

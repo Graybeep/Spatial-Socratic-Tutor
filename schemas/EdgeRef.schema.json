@@ -1,0 +1,19 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "from": {
+      "title": "From",
+      "type": "string"
+    },
+    "to": {
+      "title": "To",
+      "type": "string"
+    }
+  },
+  "required": [
+    "from",
+    "to"
+  ],
+  "title": "EdgeRef",
+  "type": "object"
+}

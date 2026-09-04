@@ -1,0 +1,28 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "from": {
+      "title": "From",
+      "type": "string"
+    },
+    "to": {
+      "title": "To",
+      "type": "string"
+    },
+    "type": {
+      "enum": [
+        "prereq",
+        "related"
+      ],
+      "title": "Type",
+      "type": "string"
+    }
+  },
+  "required": [
+    "from",
+    "to",
+    "type"
+  ],
+  "title": "Edge",
+  "type": "object"
+}

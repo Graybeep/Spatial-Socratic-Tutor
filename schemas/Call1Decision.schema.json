@@ -1,0 +1,70 @@
+{
+  "additionalProperties": false,
+  "description": "Call 1 output: diagnosis and decision.\n\nCall 1 sees the answer. Its output is logged in full and never rendered.\n\nThere is deliberately NO `answer_known` field. Call 1 reads the answer from\nitems.json; restating it only puts the answer into the generation stream for\nzero gain. CLAUDE.md \u00a75 says do not add it back - extra=\"forbid\" means a model\nthat emits it anyway fails the parse loudly instead of succeeding quietly.\n\n`correct` is a boolean and nothing else. CLAUDE.md \u00a71.3: the model may not emit\na score, a percentage or a mastery estimate. There is no field here to put one\nin.\n\nEverything the model asks for is prefixed `requested_` (CLAUDE.md \u00a71.7). The\nserver decides; these are requests.",
+  "properties": {
+    "correct": {
+      "title": "Correct",
+      "type": "boolean"
+    },
+    "diagnosis": {
+      "description": "internal reasoning; never rendered, always logged",
+      "title": "Diagnosis",
+      "type": "string"
+    },
+    "expects": {
+      "enum": [
+        "text",
+        "node_click",
+        "edge_click",
+        "mcq"
+      ],
+      "title": "Expects",
+      "type": "string"
+    },
+    "focus_nodes": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Focus Nodes",
+      "type": "array"
+    },
+    "requested_action": {
+      "enum": [
+        "ask",
+        "hint_visual",
+        "hint_verbal",
+        "advance",
+        "backtrack",
+        "explain"
+      ],
+      "title": "Requested Action",
+      "type": "string"
+    },
+    "requested_hint_level": {
+      "minimum": 0,
+      "title": "Requested Hint Level",
+      "type": "integer"
+    },
+    "student_state": {
+      "enum": [
+        "on_track",
+        "confused_prereq",
+        "stuck",
+        "correct",
+        "guessing"
+      ],
+      "title": "Student State",
+      "type": "string"
+    }
+  },
+  "required": [
+    "student_state",
+    "diagnosis",
+    "correct",
+    "requested_action",
+    "requested_hint_level",
+    "expects"
+  ],
+  "title": "Call1Decision",
+  "type": "object"
+}

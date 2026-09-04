@@ -1,0 +1,15 @@
+{
+  "additionalProperties": false,
+  "description": "Call 2 output. One field. That is the whole point of the split.",
+  "properties": {
+    "utterance": {
+      "title": "Utterance",
+      "type": "string"
+    }
+  },
+  "required": [
+    "utterance"
+  ],
+  "title": "Call2Utterance",
+  "type": "object"
+}

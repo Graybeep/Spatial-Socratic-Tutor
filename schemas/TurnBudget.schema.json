@@ -1,0 +1,19 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "max": {
+      "title": "Max",
+      "type": "integer"
+    },
+    "used": {
+      "title": "Used",
+      "type": "integer"
+    }
+  },
+  "required": [
+    "used",
+    "max"
+  ],
+  "title": "TurnBudget",
+  "type": "object"
+}

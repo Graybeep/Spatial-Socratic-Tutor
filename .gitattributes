@@ -1,0 +1,5 @@
+# Normalise line endings so the two of us don't trade CRLF churn in every diff.
+* text=auto eol=lf
+*.png binary
+*.jpg binary
+*.pdf binary

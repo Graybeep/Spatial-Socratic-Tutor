@@ -1,0 +1,9 @@
+# CLAUDE.md 1.1: no agent framework. Plain orchestration, httpx, the model API.
+# CLAUDE.md 1.8: no new dependencies after end of week 2.
+fastapi>=0.115
+uvicorn[standard]>=0.30
+pydantic>=2.7
+httpx>=0.27
+
+# dev
+pytest>=8.0

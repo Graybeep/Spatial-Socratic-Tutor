@@ -1,0 +1,69 @@
+{
+  "$defs": {
+    "EdgeRef": {
+      "additionalProperties": false,
+      "properties": {
+        "from": {
+          "title": "From",
+          "type": "string"
+        },
+        "to": {
+          "title": "To",
+          "type": "string"
+        }
+      },
+      "required": [
+        "from",
+        "to"
+      ],
+      "title": "EdgeRef",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "description": "Returned/streamed before the utterance. CLAUDE.md \u00a75 step 5 and \u00a78: the\ngraph reacts on Call 1 return and never blocks on the text.",
+  "properties": {
+    "current_node": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Current Node"
+    },
+    "dimmed_nodes": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Dimmed Nodes",
+      "type": "array"
+    },
+    "focus_edges": {
+      "items": {
+        "$ref": "#/$defs/EdgeRef"
+      },
+      "title": "Focus Edges",
+      "type": "array"
+    },
+    "focus_nodes": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Focus Nodes",
+      "type": "array"
+    },
+    "mastery": {
+      "additionalProperties": {
+        "type": "number"
+      },
+      "title": "Mastery",
+      "type": "object"
+    }
+  },
+  "title": "GraphState",
+  "type": "object"
+}

@@ -1,0 +1,114 @@
+{
+  "$defs": {
+    "Edge": {
+      "additionalProperties": false,
+      "properties": {
+        "from": {
+          "title": "From",
+          "type": "string"
+        },
+        "to": {
+          "title": "To",
+          "type": "string"
+        },
+        "type": {
+          "enum": [
+            "prereq",
+            "related"
+          ],
+          "title": "Type",
+          "type": "string"
+        }
+      },
+      "required": [
+        "from",
+        "to",
+        "type"
+      ],
+      "title": "Edge",
+      "type": "object"
+    },
+    "Node": {
+      "additionalProperties": false,
+      "properties": {
+        "definition": {
+          "description": "one sentence, from source",
+          "title": "Definition",
+          "type": "string"
+        },
+        "difficulty": {
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Difficulty",
+          "type": "number"
+        },
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "label": {
+          "title": "Label",
+          "type": "string"
+        },
+        "source_sections": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Source Sections",
+          "type": "array"
+        },
+        "x": {
+          "title": "X",
+          "type": "number"
+        },
+        "y": {
+          "title": "Y",
+          "type": "number"
+        }
+      },
+      "required": [
+        "id",
+        "label",
+        "definition",
+        "difficulty",
+        "x",
+        "y"
+      ],
+      "title": "Node",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "domain": {
+      "title": "Domain",
+      "type": "string"
+    },
+    "edges": {
+      "items": {
+        "$ref": "#/$defs/Edge"
+      },
+      "title": "Edges",
+      "type": "array"
+    },
+    "nodes": {
+      "items": {
+        "$ref": "#/$defs/Node"
+      },
+      "title": "Nodes",
+      "type": "array"
+    },
+    "version": {
+      "title": "Version",
+      "type": "string"
+    }
+  },
+  "required": [
+    "version",
+    "domain",
+    "nodes",
+    "edges"
+  ],
+  "title": "Graph",
+  "type": "object"
+}

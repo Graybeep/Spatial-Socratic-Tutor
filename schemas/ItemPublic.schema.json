@@ -1,0 +1,31 @@
+{
+  "additionalProperties": false,
+  "description": "The only part of an item the client may see.\n\nNo prompt (the tutor's `utterance` IS the question), no answer, no aliases,\nno spans, no distractors. If a field is added here, assume it leaks until\nproven otherwise.",
+  "properties": {
+    "difficulty": {
+      "title": "Difficulty",
+      "type": "number"
+    },
+    "id": {
+      "title": "Id",
+      "type": "string"
+    },
+    "node_id": {
+      "title": "Node Id",
+      "type": "string"
+    },
+    "scorable": {
+      "description": "deterministic item; contributes to mastery",
+      "title": "Scorable",
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "id",
+    "node_id",
+    "difficulty",
+    "scorable"
+  ],
+  "title": "ItemPublic",
+  "type": "object"
+}

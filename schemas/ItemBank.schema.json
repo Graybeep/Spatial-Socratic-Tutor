@@ -1,0 +1,112 @@
+{
+  "$defs": {
+    "Item": {
+      "additionalProperties": false,
+      "description": "One item from the bank. NEVER serialised to the client - see ItemPublic.\n\nanswer, answer_aliases, answer_spans and distractors are the leak surface.\nThey exist for Call 1 (CLAUDE.md \u00a75), for masking, and for deterministic\nscoring. They must not cross the wire.",
+      "properties": {
+        "answer": {
+          "title": "Answer",
+          "type": "string"
+        },
+        "answer_aliases": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Answer Aliases",
+          "type": "array"
+        },
+        "answer_spans": {
+          "items": {
+            "maxItems": 2,
+            "minItems": 2,
+            "prefixItems": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "integer"
+              }
+            ],
+            "type": "array"
+          },
+          "title": "Answer Spans",
+          "type": "array"
+        },
+        "difficulty": {
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Difficulty",
+          "type": "number"
+        },
+        "distractors": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Distractors",
+          "type": "array"
+        },
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "node_id": {
+          "title": "Node Id",
+          "type": "string"
+        },
+        "prompt": {
+          "title": "Prompt",
+          "type": "string"
+        },
+        "type": {
+          "enum": [
+            "node_click",
+            "edge_click",
+            "mcq"
+          ],
+          "title": "Type",
+          "type": "string"
+        },
+        "visually_answerable": {
+          "title": "Visually Answerable",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "id",
+        "node_id",
+        "type",
+        "prompt",
+        "answer",
+        "difficulty",
+        "visually_answerable"
+      ],
+      "title": "Item",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "domain": {
+      "title": "Domain",
+      "type": "string"
+    },
+    "items": {
+      "items": {
+        "$ref": "#/$defs/Item"
+      },
+      "title": "Items",
+      "type": "array"
+    },
+    "version": {
+      "title": "Version",
+      "type": "string"
+    }
+  },
+  "required": [
+    "version",
+    "domain",
+    "items"
+  ],
+  "title": "ItemBank",
+  "type": "object"
+}

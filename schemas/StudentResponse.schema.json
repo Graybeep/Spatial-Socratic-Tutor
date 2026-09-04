@@ -1,0 +1,89 @@
+{
+  "$defs": {
+    "EdgeRef": {
+      "additionalProperties": false,
+      "properties": {
+        "from": {
+          "title": "From",
+          "type": "string"
+        },
+        "to": {
+          "title": "To",
+          "type": "string"
+        }
+      },
+      "required": [
+        "from",
+        "to"
+      ],
+      "title": "EdgeRef",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "description": "What the student did. Null on session open.\n\n`type` mirrors the `expects` the server last sent: node_click carries node_id,\nedge_click carries edge, mcq carries choice_id, text carries text. The server\nvalidates the pairing and rejects a mismatch rather than guessing.\n\nCLAUDE.md \u00a78: click answers need confirm-or-undo. The client sends only\nconfirmed clicks, so an unconfirmed misclick never reaches /turn and can never\ncorrupt mastery.",
+  "properties": {
+    "choice_id": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Choice Id"
+    },
+    "edge": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/EdgeRef"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "node_id": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Node Id"
+    },
+    "text": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Text"
+    },
+    "type": {
+      "enum": [
+        "text",
+        "node_click",
+        "edge_click",
+        "mcq"
+      ],
+      "title": "Type",
+      "type": "string"
+    }
+  },
+  "required": [
+    "type"
+  ],
+  "title": "StudentResponse",
+  "type": "object"
+}

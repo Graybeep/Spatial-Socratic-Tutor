@@ -1,0 +1,284 @@
+{
+  "version": "1.0",
+  "domain": "MOCK_computer_networks_ch3",
+  "nodes": [
+    {
+      "id": "tcp_segment",
+      "label": "TCP Segment",
+      "definition": "The unit TCP hands to IP, carrying a sequence number and payload.",
+      "source_sections": [
+        "3.5.1"
+      ],
+      "difficulty": 0.1,
+      "x": 380.0,
+      "y": 80
+    },
+    {
+      "id": "tcp_reliable_delivery",
+      "label": "Reliable Delivery",
+      "definition": "TCP's guarantee that bytes arrive once, in order, despite loss.",
+      "source_sections": [
+        "3.5.2"
+      ],
+      "difficulty": 0.15,
+      "x": 640.0,
+      "y": 80
+    },
+    {
+      "id": "tcp_rtt_estimation",
+      "label": "RTT Estimation",
+      "definition": "The smoothed round-trip-time sample TCP keeps to set its timeout.",
+      "source_sections": [
+        "3.5.3"
+      ],
+      "difficulty": 0.3,
+      "x": 250.0,
+      "y": 230
+    },
+    {
+      "id": "tcp_flow_control",
+      "label": "Flow Control",
+      "definition": "Rate limiting imposed by the receiver's buffer, not the network.",
+      "source_sections": [
+        "3.5.5"
+      ],
+      "difficulty": 0.25,
+      "x": 510.0,
+      "y": 230
+    },
+    {
+      "id": "tcp_congestion_window",
+      "label": "Congestion Window",
+      "definition": "The sender-side limit cwnd on unacknowledged bytes in flight.",
+      "source_sections": [
+        "3.7.1"
+      ],
+      "difficulty": 0.3,
+      "x": 770.0,
+      "y": 230
+    },
+    {
+      "id": "tcp_receive_window",
+      "label": "Receive Window",
+      "definition": "The advertised free buffer space the receiver returns in every ACK.",
+      "source_sections": [
+        "3.5.5"
+      ],
+      "difficulty": 0.25,
+      "x": 250.0,
+      "y": 380
+    },
+    {
+      "id": "tcp_slow_start",
+      "label": "Slow Start",
+      "definition": "The phase where cwnd doubles each RTT as the sender probes for capacity.",
+      "source_sections": [
+        "3.7.1"
+      ],
+      "difficulty": 0.4,
+      "x": 510.0,
+      "y": 380
+    },
+    {
+      "id": "tcp_loss_event",
+      "label": "Loss Event",
+      "definition": "A timeout or triple duplicate ACK, which TCP reads as congestion.",
+      "source_sections": [
+        "3.7.1"
+      ],
+      "difficulty": 0.35,
+      "x": 770.0,
+      "y": 380
+    },
+    {
+      "id": "tcp_congestion_avoidance",
+      "label": "Congestion Avoidance",
+      "definition": "Linear growth of cwnd by one MSS per RTT once past the threshold.",
+      "source_sections": [
+        "3.7.1"
+      ],
+      "difficulty": 0.45,
+      "x": 120.0,
+      "y": 530
+    },
+    {
+      "id": "tcp_ssthresh",
+      "label": "Slow Start Threshold",
+      "definition": "The cwnd value at which the sender switches from doubling to linear growth.",
+      "source_sections": [
+        "3.7.1"
+      ],
+      "difficulty": 0.5,
+      "x": 380.0,
+      "y": 530
+    },
+    {
+      "id": "tcp_triple_dup_ack",
+      "label": "Triple Duplicate ACK",
+      "definition": "Three repeated ACKs for the same byte, signalling an isolated loss.",
+      "source_sections": [
+        "3.7.1"
+      ],
+      "difficulty": 0.45,
+      "x": 640.0,
+      "y": 530
+    },
+    {
+      "id": "tcp_timeout",
+      "label": "Timeout",
+      "definition": "Expiry of the retransmission timer, read as severe congestion.",
+      "source_sections": [
+        "3.5.3"
+      ],
+      "difficulty": 0.4,
+      "x": 900.0,
+      "y": 530
+    },
+    {
+      "id": "tcp_aimd",
+      "label": "AIMD",
+      "definition": "Additive increase, multiplicative decrease - the shape of TCP's sawtooth.",
+      "source_sections": [
+        "3.7.2"
+      ],
+      "difficulty": 0.6,
+      "x": 380.0,
+      "y": 680
+    },
+    {
+      "id": "tcp_fast_retransmit",
+      "label": "Fast Retransmit",
+      "definition": "Resending the missing segment on the third duplicate ACK, before the timer fires.",
+      "source_sections": [
+        "3.7.1"
+      ],
+      "difficulty": 0.55,
+      "x": 640.0,
+      "y": 680
+    },
+    {
+      "id": "tcp_fast_recovery",
+      "label": "Fast Recovery",
+      "definition": "Halving cwnd instead of dropping to one after a triple duplicate ACK.",
+      "source_sections": [
+        "3.7.1"
+      ],
+      "difficulty": 0.7,
+      "x": 380.0,
+      "y": 830
+    },
+    {
+      "id": "tcp_fairness",
+      "label": "TCP Fairness",
+      "definition": "The tendency of competing AIMD flows to converge on an equal share.",
+      "source_sections": [
+        "3.7.3"
+      ],
+      "difficulty": 0.75,
+      "x": 640.0,
+      "y": 830
+    }
+  ],
+  "edges": [
+    {
+      "from": "tcp_segment",
+      "to": "tcp_reliable_delivery",
+      "type": "prereq"
+    },
+    {
+      "from": "tcp_segment",
+      "to": "tcp_congestion_window",
+      "type": "prereq"
+    },
+    {
+      "from": "tcp_reliable_delivery",
+      "to": "tcp_rtt_estimation",
+      "type": "prereq"
+    },
+    {
+      "from": "tcp_reliable_delivery",
+      "to": "tcp_flow_control",
+      "type": "prereq"
+    },
+    {
+      "from": "tcp_flow_control",
+      "to": "tcp_receive_window",
+      "type": "prereq"
+    },
+    {
+      "from": "tcp_congestion_window",
+      "to": "tcp_slow_start",
+      "type": "prereq"
+    },
+    {
+      "from": "tcp_congestion_window",
+      "to": "tcp_loss_event",
+      "type": "prereq"
+    },
+    {
+      "from": "tcp_rtt_estimation",
+      "to": "tcp_timeout",
+      "type": "prereq"
+    },
+    {
+      "from": "tcp_slow_start",
+      "to": "tcp_congestion_avoidance",
+      "type": "prereq"
+    },
+    {
+      "from": "tcp_slow_start",
+      "to": "tcp_ssthresh",
+      "type": "prereq"
+    },
+    {
+      "from": "tcp_loss_event",
+      "to": "tcp_triple_dup_ack",
+      "type": "prereq"
+    },
+    {
+      "from": "tcp_loss_event",
+      "to": "tcp_timeout",
+      "type": "prereq"
+    },
+    {
+      "from": "tcp_congestion_avoidance",
+      "to": "tcp_aimd",
+      "type": "prereq"
+    },
+    {
+      "from": "tcp_ssthresh",
+      "to": "tcp_aimd",
+      "type": "prereq"
+    },
+    {
+      "from": "tcp_triple_dup_ack",
+      "to": "tcp_fast_retransmit",
+      "type": "prereq"
+    },
+    {
+      "from": "tcp_aimd",
+      "to": "tcp_fast_recovery",
+      "type": "prereq"
+    },
+    {
+      "from": "tcp_fast_retransmit",
+      "to": "tcp_fast_recovery",
+      "type": "prereq"
+    },
+    {
+      "from": "tcp_aimd",
+      "to": "tcp_fairness",
+      "type": "prereq"
+    },
+    {
+      "from": "tcp_flow_control",
+      "to": "tcp_congestion_window",
+      "type": "related"
+    },
+    {
+      "from": "tcp_receive_window",
+      "to": "tcp_congestion_window",
+      "type": "related"
+    }
+  ]
+}
