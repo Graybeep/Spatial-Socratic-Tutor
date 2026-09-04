@@ -158,6 +158,10 @@ def hint_action_for_level(level: int) -> str:
     stopped.
     """
     mode = CONFIG.ladder_mode
+    if mode == "none":
+        # No help of any kind: re-ask and let the student try again. The
+        # no-interface baseline for eval 9.1.
+        return "ask"
     if mode == "visual_only":
         return "hint_visual"
     if mode == "verbal_only":
@@ -174,7 +178,7 @@ def would_narrow(store: GraphStore, item: Item, current_level: int) -> bool:
     because entries below the floor are clamped UP to it, so a schedule of
     0,12,6,3,2 becomes 0,12,6,5,5 and the last step changes nothing.
     """
-    if CONFIG.ladder_mode == "verbal_only":
+    if CONFIG.ladder_mode in {"verbal_only", "none"}:
         return False
     before = lit_nodes(store, item, current_level)
     after = lit_nodes(store, item, min(current_level + 1, CONFIG.hint_max))
@@ -232,12 +236,14 @@ def mock_call1(
         diagnosis = "deterministic item answered correctly"
         requested_hint = state.hint_level
     elif graded is False:
-        requested_hint = state.hint_level + 1
+        # In `none` mode the hint level must not climb - there are no hints for
+        # it to count, and a rising level would make the arm look hinted in logs.
+        requested_hint = state.hint_level + (0 if CONFIG.ladder_mode == "none" else 1)
         action = pick_hint_action(store, item, state.visual_narrow_level, requested_hint)
         student_state = "guessing" if state.hint_level >= 2 else "stuck"
         diagnosis = f"wrong answer at hint_level={state.hint_level}"
     else:
-        requested_hint = state.hint_level + 1
+        requested_hint = state.hint_level + (0 if CONFIG.ladder_mode == "none" else 1)
         action = pick_hint_action(store, item, state.visual_narrow_level, requested_hint)
         student_state = "confused_prereq"
         diagnosis = "free-text turn, unscored per CLAUDE.md 1.4"

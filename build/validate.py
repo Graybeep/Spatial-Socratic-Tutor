@@ -9,13 +9,14 @@ human should look at, not things that break the system.
 from __future__ import annotations
 
 import argparse
+import json
 import sys
 from pathlib import Path
 
 from pydantic import ValidationError
 
 from server.config import CONFIG
-from server.schemas import Graph, ItemBank
+from server.schemas import SCORABLE_EXPECTS, Graph, ItemBank, ItemPublic
 
 MIN_NODES = 40
 MAX_NODES = 60
@@ -25,6 +26,10 @@ class Report:
     def __init__(self) -> None:
         self.errors: list = []
         self.warnings: list = []
+        self.notes: list = []
+
+    def note(self, msg: str) -> None:
+        self.notes.append(msg)
 
     def error(self, msg: str) -> None:
         self.errors.append(msg)
@@ -33,6 +38,8 @@ class Report:
         self.warnings.append(msg)
 
     def render(self) -> int:
+        for n in self.notes:
+            print(f"  note  {n}")
         for w in self.warnings:
             print(f"  WARN  {w}")
         for e in self.errors:
@@ -76,6 +83,81 @@ def find_cycle(nodes: list, prereq_edges: list):
             if found:
                 return found
     return None
+
+
+def check_answer_identity(graph: Graph, bank: ItemBank, rep: Report) -> None:
+    """No item may be `visually_answerable: true` while the turn payload
+    identifies its node.
+
+    THIS IS THE CHECK THAT WOULD HAVE CAUGHT THE REAL ONE. `ItemPublic.node_id`
+    shipped the answer for 204 of 250 items - for a node_click or mcq item the
+    answer IS the item's node - and every leak test stayed green because they all
+    compared answer STRINGS and none compared answer IDENTITY. A tutor with a
+    non-verbal channel gets a matching non-verbal leak channel, and no amount of
+    substring matching sees it.
+
+    It lives here, in the pipeline, rather than in a test, because the test that
+    caught it only catches it for whatever mix of `visually_answerable` the
+    current fixture happens to have. When Person A's chapter lands with a
+    different mix - CLAUDE.md §3 expects most of a real bank to be `false` - the
+    ratio shifts and nobody re-checks. This runs on whatever data is in front of
+    it.
+
+    Three ways the identity escapes, all checked:
+      1. a field of ItemPublic naming the node (how it happened)
+      2. an item id that encodes its node ("itm_0031_tcp_slow_start")
+      3. `graph_state.current_node` naming it - enforced in server/turn.py and
+         asserted here as a schema invariant
+    """
+    if "node_id" in ItemPublic.model_fields:
+        rep.error(
+            "ItemPublic has a node_id field. For a node_click or mcq item the "
+            "answer IS item.node_id, so this ships the answer in the clear. "
+            "See server/schemas.py."
+        )
+
+    labels = {n.id: n.label for n in graph.nodes}
+    visually = [i for i in bank.items if i.visually_answerable]
+
+    for item in visually:
+        public = ItemPublic(
+            id=item.id,
+            difficulty=item.difficulty,
+            scorable=item.type in SCORABLE_EXPECTS,
+        )
+        payload = json.dumps(public.model_dump()).lower()
+
+        # The answer's identity, in every form it could take.
+        identities = {item.node_id.lower(), item.answer.lower()}
+        identities.update(part.lower() for part in item.answer.split("->") if part)
+        for node_id in list(identities):
+            if node_id in labels:
+                identities.add(labels[node_id].lower())
+
+        for identity in identities:
+            if len(identity) < 3:
+                continue  # too short to be an identifier; would false-positive
+            if identity in payload:
+                rep.error(
+                    f"item {item.id}: visually_answerable=true but the public "
+                    f"payload contains {identity!r}. The client can name the "
+                    f"answer without answering."
+                )
+
+    total = len(bank.items)
+    if total:
+        share = len(visually) / total
+        rep.note(
+            f"visually_answerable: {len(visually)}/{total} ({share:.0%}). "
+            f"CLAUDE.md §9.2 runs on this subset only."
+        )
+        if share > 0.5:
+            rep.warn(
+                f"{share:.0%} of items are visually_answerable. CLAUDE.md §3 "
+                f"expects more than half to be false - a mechanism question is "
+                f"not a node. Check the flag is being set honestly; getting it "
+                f"wrong invalidates §9.2 and widens the identity-leak surface."
+            )
 
 
 def validate(graph_path: Path, items_path: Path, fixture: bool) -> Report:
@@ -150,15 +232,33 @@ def validate(graph_path: Path, items_path: Path, fixture: bool) -> Report:
                 src, _, dst = item.answer.partition("->")
                 if not any(e.from_ == src and e.to == dst for e in graph.edges):
                     rep.error(f"{where}: answer edge {item.answer} is not in the graph")
-        elif item.answer not in node_set:
-            # node_click and mcq answers are node ids in this build.
-            rep.error(f"{where}: answer {item.answer!r} is not a node id")
+        elif item.visually_answerable and item.answer not in node_set:
+            rep.error(
+                f"{where}: visually_answerable=true but answer {item.answer!r} "
+                f"is not a node id"
+            )
+        elif not item.visually_answerable and item.answer in node_set:
+            # A node-valued answer IS on the graph, so the flag is wrong. This
+            # matters: 9.2 runs on the true subset, and a mislabelled item both
+            # corrupts that split and widens the identity-leak surface.
+            rep.error(
+                f"{where}: visually_answerable=false but answer {item.answer!r} "
+                f"is a node on the graph"
+            )
 
         if item.answer in item.distractors:
             rep.error(f"{where}: answer appears in its own distractors")
         for d in item.distractors:
-            if d not in node_set:
+            # Distractors must be the same KIND as the answer. A node-id
+            # distractor beside a proposition answer makes the odd one out
+            # visible without reading either.
+            if item.visually_answerable and d not in node_set:
                 rep.error(f"{where}: distractor {d} is not a node id")
+            if not item.visually_answerable and d in node_set:
+                rep.error(
+                    f"{where}: distractor {d!r} is a node id but the answer is "
+                    f"a proposition; the odd option out is guessable by shape"
+                )
         if len(set(item.distractors)) != len(item.distractors):
             rep.error(f"{where}: duplicate distractors")
 
@@ -180,11 +280,18 @@ def validate(graph_path: Path, items_path: Path, fixture: bool) -> Report:
         if item.visually_answerable and not answer_on_graph:
             rep.error(f"{where}: visually_answerable=true but answer is not a node or edge")
 
-        if not item.answer_aliases:
-            rep.warn(f"{where}: no answer_aliases; guard layer 1 fuzzy match will not fire")
+        # Aliases only matter for SHORT answers. CLAUDE.md 6 layer 1 splits on
+        # answer length: <=5 tokens uses fuzzy matching against the aliases,
+        # longer answers use cosine against the answer itself. Warning about a
+        # missing alias on a proposition answer is noise, and 150 lines of noise
+        # is how a real warning gets missed.
+        if not item.answer_aliases and len(item.answer.split()) <= CONFIG.short_answer_token_cutoff:
+            rep.warn(f"{where}: short answer with no aliases; guard layer 1 fuzzy match will not fire")
 
     for node_id in sorted(node_set - covered):
         rep.error(f"node has no items: {node_id}")
+
+    check_answer_identity(graph, bank, rep)
 
     if not fixture:
         for node_id in sorted(covered):

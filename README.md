@@ -21,7 +21,7 @@ fixture; nothing else changes.
 pip install -r requirements.txt
 python -m build.make_mock_data   # placeholder 50-node fixture
 python -m build.validate         # strict; must be clean
-python -m pytest                 # 97 tests
+python -m pytest                 # 102 tests
 python -m server.main            # http://127.0.0.1:8000
 ```
 
@@ -68,6 +68,7 @@ NARROW_SCHEDULE=0,25,18,12,8 python -m server.main
 | `build/validate.py` | DAG / orphan / item checks; must pass before commit |
 | `build/make_mock_data.py` | throwaway 50-node fixture; Person A deletes this in week 1 |
 | `eval/adversarial.py` | §9.1 effective leakage — `python -m eval.adversarial` |
+| `docs/writeup/` | draft report sections — identity leakage, limitations |
 | `client/src/types.ts` | reconciled against `/schemas`; supersedes `templates/` |
 
 Full layout in `CLAUDE.md` §2.

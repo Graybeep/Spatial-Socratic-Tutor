@@ -193,8 +193,12 @@ def test_candidate_order_differs_across_items(store):
 
 def test_answer_survives_every_narrowing_level(store):
     """A hint that dims the answer is worse than no hint."""
-    for item in store.bank.items[:15]:
-        if "->" in item.answer:
+    node_ids = set(store.node_ids)
+    for item in store.bank.items[:40]:
+        # Only meaningful where the answer IS a node. Edge answers and
+        # proposition answers (visually_answerable false, the majority of a real
+        # bank per CLAUDE.md 3) have no node to survive the dimming.
+        if not item.visually_answerable or item.answer not in node_ids:
             continue
         for level in range(1, CONFIG.hint_max + 1):
             lit = mock_tutor.lit_nodes(store, item, level)

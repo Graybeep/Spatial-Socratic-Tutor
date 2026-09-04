@@ -24,7 +24,7 @@
     {
       "id": "itm_0002",
       "node_id": "n00",
-      "type": "mcq",
+      "type": "node_click",
       "prompt": "Which concept is described as: Placeholder definition for Theim window. Regenerated fixture, not source text.",
       "answer": "n00",
       "answer_aliases": [
@@ -43,58 +43,49 @@
     {
       "id": "itm_0003",
       "node_id": "n00",
-      "type": "node_click",
-      "prompt": "Which concept is described as: Placeholder definition for Theim window. Regenerated fixture, not source text.",
-      "answer": "n00",
-      "answer_aliases": [
-        "theim window",
-        "theim-window"
-      ],
+      "type": "mcq",
+      "prompt": "Mechanism question about Theim window.",
+      "answer": "Because the theim window is treated as evidence of congestion.",
+      "answer_aliases": [],
       "distractors": [
-        "n42",
-        "n15",
-        "n45"
+        "Because the receiver ran out of buffer space.",
+        "Because the round-trip time estimate expired.",
+        "Because the sender exhausted its send window."
       ],
-      "difficulty": 0.11,
-      "visually_answerable": true,
+      "difficulty": 0.14,
+      "visually_answerable": false,
       "answer_spans": []
     },
     {
       "id": "itm_0004",
       "node_id": "n00",
       "type": "mcq",
-      "prompt": "Which concept is described as: Placeholder definition for Theim window. Regenerated fixture, not source text.",
-      "answer": "n00",
-      "answer_aliases": [
-        "theim window",
-        "theim-window"
-      ],
+      "prompt": "Mechanism question about Theim window.",
+      "answer": "It grows once per round trip rather than once per acknowledgement.",
+      "answer_aliases": [],
       "distractors": [
-        "n27",
-        "n25",
-        "n18"
+        "It grows once per acknowledgement rather than once per round trip.",
+        "It stays fixed until a loss event occurs.",
+        "It halves on every acknowledgement received."
       ],
-      "difficulty": 0.08,
-      "visually_answerable": true,
+      "difficulty": 0.14,
+      "visually_answerable": false,
       "answer_spans": []
     },
     {
       "id": "itm_0005",
       "node_id": "n00",
-      "type": "node_click",
-      "prompt": "Which concept is described as: Placeholder definition for Theim window. Regenerated fixture, not source text.",
-      "answer": "n00",
-      "answer_aliases": [
-        "theim window",
-        "theim-window"
-      ],
+      "type": "mcq",
+      "prompt": "Mechanism question about Theim window.",
+      "answer": "The sender has no estimate of available capacity yet.",
+      "answer_aliases": [],
       "distractors": [
-        "n23",
-        "n40",
-        "n10"
+        "The receiver has not advertised a window yet.",
+        "The retransmission timer has not been initialised.",
+        "The connection is still in the handshake."
       ],
-      "difficulty": 0.06,
-      "visually_answerable": true,
+      "difficulty": 0.14,
+      "visually_answerable": false,
       "answer_spans": []
     },
     {
@@ -108,35 +99,16 @@
         "praerdstoust-window"
       ],
       "distractors": [
-        "n47",
-        "n38",
-        "n11"
-      ],
-      "difficulty": 0.08,
-      "visually_answerable": true,
-      "answer_spans": []
-    },
-    {
-      "id": "itm_0007",
-      "node_id": "n01",
-      "type": "mcq",
-      "prompt": "Which concept is described as: Placeholder definition for Praerdstoust window. Regenerated fixture, not source text.",
-      "answer": "n01",
-      "answer_aliases": [
-        "praerdstoust window",
-        "praerdstoust-window"
-      ],
-      "distractors": [
-        "n45",
-        "n47",
-        "n28"
+        "n48",
+        "n23",
+        "n40"
       ],
       "difficulty": 0.07,
       "visually_answerable": true,
       "answer_spans": []
     },
     {
-      "id": "itm_0008",
+      "id": "itm_0007",
       "node_id": "n01",
       "type": "node_click",
       "prompt": "Which concept is described as: Placeholder definition for Praerdstoust window. Regenerated fixture, not source text.",
@@ -146,50 +118,60 @@
         "praerdstoust-window"
       ],
       "distractors": [
-        "n34",
-        "n46",
-        "n30"
+        "n22",
+        "n47",
+        "n38"
       ],
-      "difficulty": 0.13,
+      "difficulty": 0.08,
       "visually_answerable": true,
+      "answer_spans": []
+    },
+    {
+      "id": "itm_0008",
+      "node_id": "n01",
+      "type": "mcq",
+      "prompt": "Mechanism question about Praerdstoust window.",
+      "answer": "Because the praerdstoust window is treated as evidence of congestion.",
+      "answer_aliases": [],
+      "distractors": [
+        "Because the receiver ran out of buffer space.",
+        "Because the round-trip time estimate expired.",
+        "Because the sender exhausted its send window."
+      ],
+      "difficulty": 0.16,
+      "visually_answerable": false,
       "answer_spans": []
     },
     {
       "id": "itm_0009",
       "node_id": "n01",
       "type": "mcq",
-      "prompt": "Which concept is described as: Placeholder definition for Praerdstoust window. Regenerated fixture, not source text.",
-      "answer": "n01",
-      "answer_aliases": [
-        "praerdstoust window",
-        "praerdstoust-window"
-      ],
+      "prompt": "Mechanism question about Praerdstoust window.",
+      "answer": "It grows once per round trip rather than once per acknowledgement.",
+      "answer_aliases": [],
       "distractors": [
-        "n47",
-        "n34",
-        "n14"
+        "It grows once per acknowledgement rather than once per round trip.",
+        "It stays fixed until a loss event occurs.",
+        "It halves on every acknowledgement received."
       ],
-      "difficulty": 0.12,
-      "visually_answerable": true,
+      "difficulty": 0.16,
+      "visually_answerable": false,
       "answer_spans": []
     },
     {
       "id": "itm_0010",
       "node_id": "n01",
-      "type": "node_click",
-      "prompt": "Which concept is described as: Placeholder definition for Praerdstoust window. Regenerated fixture, not source text.",
-      "answer": "n01",
-      "answer_aliases": [
-        "praerdstoust window",
-        "praerdstoust-window"
-      ],
+      "type": "mcq",
+      "prompt": "Mechanism question about Praerdstoust window.",
+      "answer": "The sender has no estimate of available capacity yet.",
+      "answer_aliases": [],
       "distractors": [
-        "n07",
-        "n17",
-        "n31"
+        "The receiver has not advertised a window yet.",
+        "The retransmission timer has not been initialised.",
+        "The connection is still in the handshake."
       ],
-      "difficulty": 0.09,
-      "visually_answerable": true,
+      "difficulty": 0.16,
+      "visually_answerable": false,
       "answer_spans": []
     },
     {
@@ -203,18 +185,18 @@
         "dremgrouthmosk-bound"
       ],
       "distractors": [
-        "n04",
-        "n30",
-        "n43"
+        "n47",
+        "n33",
+        "n34"
       ],
-      "difficulty": 0.14,
+      "difficulty": 0.13,
       "visually_answerable": true,
       "answer_spans": []
     },
     {
       "id": "itm_0012",
       "node_id": "n02",
-      "type": "mcq",
+      "type": "node_click",
       "prompt": "Which concept is described as: Placeholder definition for Dremgrouthmosk bound. Regenerated fixture, not source text.",
       "answer": "n02",
       "answer_aliases": [
@@ -222,69 +204,60 @@
         "dremgrouthmosk-bound"
       ],
       "distractors": [
-        "n03",
-        "n28",
-        "n13"
+        "n39",
+        "n11",
+        "n07"
       ],
-      "difficulty": 0.06,
+      "difficulty": 0.13,
       "visually_answerable": true,
       "answer_spans": []
     },
     {
       "id": "itm_0013",
       "node_id": "n02",
-      "type": "node_click",
-      "prompt": "Which concept is described as: Placeholder definition for Dremgrouthmosk bound. Regenerated fixture, not source text.",
-      "answer": "n02",
-      "answer_aliases": [
-        "dremgrouthmosk bound",
-        "dremgrouthmosk-bound"
-      ],
+      "type": "mcq",
+      "prompt": "Mechanism question about Dremgrouthmosk bound.",
+      "answer": "Because the dremgrouthmosk bound is treated as evidence of congestion.",
+      "answer_aliases": [],
       "distractors": [
-        "n01",
-        "n35",
-        "n09"
+        "Because the receiver ran out of buffer space.",
+        "Because the round-trip time estimate expired.",
+        "Because the sender exhausted its send window."
       ],
-      "difficulty": 0.06,
-      "visually_answerable": true,
+      "difficulty": 0.15,
+      "visually_answerable": false,
       "answer_spans": []
     },
     {
       "id": "itm_0014",
       "node_id": "n02",
       "type": "mcq",
-      "prompt": "Which concept is described as: Placeholder definition for Dremgrouthmosk bound. Regenerated fixture, not source text.",
-      "answer": "n02",
-      "answer_aliases": [
-        "dremgrouthmosk bound",
-        "dremgrouthmosk-bound"
-      ],
+      "prompt": "Mechanism question about Dremgrouthmosk bound.",
+      "answer": "It grows once per round trip rather than once per acknowledgement.",
+      "answer_aliases": [],
       "distractors": [
-        "n24",
-        "n20",
-        "n06"
+        "It grows once per acknowledgement rather than once per round trip.",
+        "It stays fixed until a loss event occurs.",
+        "It halves on every acknowledgement received."
       ],
-      "difficulty": 0.07,
-      "visually_answerable": true,
+      "difficulty": 0.15,
+      "visually_answerable": false,
       "answer_spans": []
     },
     {
       "id": "itm_0015",
       "node_id": "n02",
-      "type": "node_click",
-      "prompt": "Which concept is described as: Placeholder definition for Dremgrouthmosk bound. Regenerated fixture, not source text.",
-      "answer": "n02",
-      "answer_aliases": [
-        "dremgrouthmosk bound",
-        "dremgrouthmosk-bound"
-      ],
+      "type": "mcq",
+      "prompt": "Mechanism question about Dremgrouthmosk bound.",
+      "answer": "The sender has no estimate of available capacity yet.",
+      "answer_aliases": [],
       "distractors": [
-        "n42",
-        "n33",
-        "n07"
+        "The receiver has not advertised a window yet.",
+        "The retransmission timer has not been initialised.",
+        "The connection is still in the handshake."
       ],
-      "difficulty": 0.07,
-      "visually_answerable": true,
+      "difficulty": 0.15,
+      "visually_answerable": false,
       "answer_spans": []
     },
     {
@@ -298,18 +271,18 @@
         "nothol-phase"
       ],
       "distractors": [
-        "n25",
-        "n23",
-        "n34"
+        "n13",
+        "n04",
+        "n35"
       ],
-      "difficulty": 0.08,
+      "difficulty": 0.05,
       "visually_answerable": true,
       "answer_spans": []
     },
     {
       "id": "itm_0017",
       "node_id": "n03",
-      "type": "mcq",
+      "type": "node_click",
       "prompt": "Which concept is described as: Placeholder definition for Nothol phase. Regenerated fixture, not source text.",
       "answer": "n03",
       "answer_aliases": [
@@ -317,69 +290,60 @@
         "nothol-phase"
       ],
       "distractors": [
-        "n31",
-        "n02",
-        "n15"
+        "n09",
+        "n38",
+        "n24"
       ],
-      "difficulty": 0.14,
+      "difficulty": 0.08,
       "visually_answerable": true,
       "answer_spans": []
     },
     {
       "id": "itm_0018",
       "node_id": "n03",
-      "type": "node_click",
-      "prompt": "Which concept is described as: Placeholder definition for Nothol phase. Regenerated fixture, not source text.",
-      "answer": "n03",
-      "answer_aliases": [
-        "nothol phase",
-        "nothol-phase"
-      ],
+      "type": "mcq",
+      "prompt": "Mechanism question about Nothol phase.",
+      "answer": "Because the nothol phase is treated as evidence of congestion.",
+      "answer_aliases": [],
       "distractors": [
-        "n08",
-        "n27",
-        "n00"
+        "Because the receiver ran out of buffer space.",
+        "Because the round-trip time estimate expired.",
+        "Because the sender exhausted its send window."
       ],
-      "difficulty": 0.14,
-      "visually_answerable": true,
+      "difficulty": 0.15,
+      "visually_answerable": false,
       "answer_spans": []
     },
     {
       "id": "itm_0019",
       "node_id": "n03",
       "type": "mcq",
-      "prompt": "Which concept is described as: Placeholder definition for Nothol phase. Regenerated fixture, not source text.",
-      "answer": "n03",
-      "answer_aliases": [
-        "nothol phase",
-        "nothol-phase"
-      ],
+      "prompt": "Mechanism question about Nothol phase.",
+      "answer": "It grows once per round trip rather than once per acknowledgement.",
+      "answer_aliases": [],
       "distractors": [
-        "n12",
-        "n05",
-        "n19"
+        "It grows once per acknowledgement rather than once per round trip.",
+        "It stays fixed until a loss event occurs.",
+        "It halves on every acknowledgement received."
       ],
-      "difficulty": 0.12,
-      "visually_answerable": true,
+      "difficulty": 0.15,
+      "visually_answerable": false,
       "answer_spans": []
     },
     {
       "id": "itm_0020",
       "node_id": "n03",
-      "type": "node_click",
-      "prompt": "Which concept is described as: Placeholder definition for Nothol phase. Regenerated fixture, not source text.",
-      "answer": "n03",
-      "answer_aliases": [
-        "nothol phase",
-        "nothol-phase"
-      ],
+      "type": "mcq",
+      "prompt": "Mechanism question about Nothol phase.",
+      "answer": "The sender has no estimate of available capacity yet.",
+      "answer_aliases": [],
       "distractors": [
-        "n42",
-        "n32",
-        "n29"
+        "The receiver has not advertised a window yet.",
+        "The retransmission timer has not been initialised.",
+        "The connection is still in the handshake."
       ],
-      "difficulty": 0.14,
-      "visually_answerable": true,
+      "difficulty": 0.15,
+      "visually_answerable": false,
       "answer_spans": []
     },
     {
@@ -393,73 +357,16 @@
         "nisk-limit"
       ],
       "distractors": [
-        "n44",
-        "n30",
-        "n25"
-      ],
-      "difficulty": 0.17,
-      "visually_answerable": true,
-      "answer_spans": []
-    },
-    {
-      "id": "itm_0022",
-      "node_id": "n04",
-      "type": "mcq",
-      "prompt": "Which concept is described as: Placeholder definition for Nisk limit. Regenerated fixture, not source text.",
-      "answer": "n04",
-      "answer_aliases": [
-        "nisk limit",
-        "nisk-limit"
-      ],
-      "distractors": [
-        "n39",
-        "n11",
-        "n01"
-      ],
-      "difficulty": 0.16,
-      "visually_answerable": true,
-      "answer_spans": []
-    },
-    {
-      "id": "itm_0023",
-      "node_id": "n04",
-      "type": "node_click",
-      "prompt": "Which concept is described as: Placeholder definition for Nisk limit. Regenerated fixture, not source text.",
-      "answer": "n04",
-      "answer_aliases": [
-        "nisk limit",
-        "nisk-limit"
-      ],
-      "distractors": [
-        "n16",
         "n34",
-        "n25"
-      ],
-      "difficulty": 0.16,
-      "visually_answerable": true,
-      "answer_spans": []
-    },
-    {
-      "id": "itm_0024",
-      "node_id": "n04",
-      "type": "mcq",
-      "prompt": "Which concept is described as: Placeholder definition for Nisk limit. Regenerated fixture, not source text.",
-      "answer": "n04",
-      "answer_aliases": [
-        "nisk limit",
-        "nisk-limit"
-      ],
-      "distractors": [
-        "n33",
-        "n34",
-        "n35"
+        "n17",
+        "n28"
       ],
       "difficulty": 0.18,
       "visually_answerable": true,
       "answer_spans": []
     },
     {
-      "id": "itm_0025",
+      "id": "itm_0022",
       "node_id": "n04",
       "type": "edge_click",
       "prompt": "Click the edge leading into Nisk limit.",
@@ -469,11 +376,59 @@
       ],
       "distractors": [
         "n02",
-        "n39",
-        "n44"
+        "n15",
+        "n10"
       ],
       "difficulty": 0.28,
       "visually_answerable": true,
+      "answer_spans": []
+    },
+    {
+      "id": "itm_0023",
+      "node_id": "n04",
+      "type": "mcq",
+      "prompt": "Mechanism question about Nisk limit.",
+      "answer": "Because the nisk limit is treated as evidence of congestion.",
+      "answer_aliases": [],
+      "distractors": [
+        "Because the receiver ran out of buffer space.",
+        "Because the round-trip time estimate expired.",
+        "Because the sender exhausted its send window."
+      ],
+      "difficulty": 0.23,
+      "visually_answerable": false,
+      "answer_spans": []
+    },
+    {
+      "id": "itm_0024",
+      "node_id": "n04",
+      "type": "mcq",
+      "prompt": "Mechanism question about Nisk limit.",
+      "answer": "It grows once per round trip rather than once per acknowledgement.",
+      "answer_aliases": [],
+      "distractors": [
+        "It grows once per acknowledgement rather than once per round trip.",
+        "It stays fixed until a loss event occurs.",
+        "It halves on every acknowledgement received."
+      ],
+      "difficulty": 0.23,
+      "visually_answerable": false,
+      "answer_spans": []
+    },
+    {
+      "id": "itm_0025",
+      "node_id": "n04",
+      "type": "mcq",
+      "prompt": "Mechanism question about Nisk limit.",
+      "answer": "The sender has no estimate of available capacity yet.",
+      "answer_aliases": [],
+      "distractors": [
+        "The receiver has not advertised a window yet.",
+        "The retransmission timer has not been initialised.",
+        "The connection is still in the handshake."
+      ],
+      "difficulty": 0.23,
+      "visually_answerable": false,
       "answer_spans": []
     },
     {
@@ -487,73 +442,16 @@
         "kiask-state"
       ],
       "distractors": [
-        "n03",
-        "n06",
-        "n48"
+        "n42",
+        "n32",
+        "n29"
       ],
-      "difficulty": 0.2,
+      "difficulty": 0.25,
       "visually_answerable": true,
       "answer_spans": []
     },
     {
       "id": "itm_0027",
-      "node_id": "n05",
-      "type": "mcq",
-      "prompt": "Which concept is described as: Placeholder definition for Kiask state. Regenerated fixture, not source text.",
-      "answer": "n05",
-      "answer_aliases": [
-        "kiask state",
-        "kiask-state"
-      ],
-      "distractors": [
-        "n41",
-        "n17",
-        "n39"
-      ],
-      "difficulty": 0.24,
-      "visually_answerable": true,
-      "answer_spans": []
-    },
-    {
-      "id": "itm_0028",
-      "node_id": "n05",
-      "type": "node_click",
-      "prompt": "Which concept is described as: Placeholder definition for Kiask state. Regenerated fixture, not source text.",
-      "answer": "n05",
-      "answer_aliases": [
-        "kiask state",
-        "kiask-state"
-      ],
-      "distractors": [
-        "n19",
-        "n28",
-        "n02"
-      ],
-      "difficulty": 0.22,
-      "visually_answerable": true,
-      "answer_spans": []
-    },
-    {
-      "id": "itm_0029",
-      "node_id": "n05",
-      "type": "mcq",
-      "prompt": "Which concept is described as: Placeholder definition for Kiask state. Regenerated fixture, not source text.",
-      "answer": "n05",
-      "answer_aliases": [
-        "kiask state",
-        "kiask-state"
-      ],
-      "distractors": [
-        "n35",
-        "n08",
-        "n19"
-      ],
-      "difficulty": 0.21,
-      "visually_answerable": true,
-      "answer_spans": []
-    },
-    {
-      "id": "itm_0030",
       "node_id": "n05",
       "type": "edge_click",
       "prompt": "Click the edge leading into Kiask state.",
@@ -562,12 +460,60 @@
         "praerdstoust window to kiask state"
       ],
       "distractors": [
-        "n09",
-        "n11",
-        "n01"
+        "n44",
+        "n30",
+        "n25"
       ],
       "difficulty": 0.31,
       "visually_answerable": true,
+      "answer_spans": []
+    },
+    {
+      "id": "itm_0028",
+      "node_id": "n05",
+      "type": "mcq",
+      "prompt": "Mechanism question about Kiask state.",
+      "answer": "Because the kiask state is treated as evidence of congestion.",
+      "answer_aliases": [],
+      "distractors": [
+        "Because the receiver ran out of buffer space.",
+        "Because the round-trip time estimate expired.",
+        "Because the sender exhausted its send window."
+      ],
+      "difficulty": 0.26,
+      "visually_answerable": false,
+      "answer_spans": []
+    },
+    {
+      "id": "itm_0029",
+      "node_id": "n05",
+      "type": "mcq",
+      "prompt": "Mechanism question about Kiask state.",
+      "answer": "It grows once per round trip rather than once per acknowledgement.",
+      "answer_aliases": [],
+      "distractors": [
+        "It grows once per acknowledgement rather than once per round trip.",
+        "It stays fixed until a loss event occurs.",
+        "It halves on every acknowledgement received."
+      ],
+      "difficulty": 0.26,
+      "visually_answerable": false,
+      "answer_spans": []
+    },
+    {
+      "id": "itm_0030",
+      "node_id": "n05",
+      "type": "mcq",
+      "prompt": "Mechanism question about Kiask state.",
+      "answer": "The sender has no estimate of available capacity yet.",
+      "answer_aliases": [],
+      "distractors": [
+        "The receiver has not advertised a window yet.",
+        "The retransmission timer has not been initialised.",
+        "The connection is still in the handshake."
+      ],
+      "difficulty": 0.26,
+      "visually_answerable": false,
       "answer_spans": []
     },
     {
@@ -581,73 +527,16 @@
         "kerdvaest-window"
       ],
       "distractors": [
-        "n19",
         "n25",
-        "n45"
+        "n20",
+        "n00"
       ],
-      "difficulty": 0.24,
+      "difficulty": 0.2,
       "visually_answerable": true,
       "answer_spans": []
     },
     {
       "id": "itm_0032",
-      "node_id": "n06",
-      "type": "mcq",
-      "prompt": "Which concept is described as: Placeholder definition for Kerdvaest window. Regenerated fixture, not source text.",
-      "answer": "n06",
-      "answer_aliases": [
-        "kerdvaest window",
-        "kerdvaest-window"
-      ],
-      "distractors": [
-        "n15",
-        "n23",
-        "n45"
-      ],
-      "difficulty": 0.21,
-      "visually_answerable": true,
-      "answer_spans": []
-    },
-    {
-      "id": "itm_0033",
-      "node_id": "n06",
-      "type": "node_click",
-      "prompt": "Which concept is described as: Placeholder definition for Kerdvaest window. Regenerated fixture, not source text.",
-      "answer": "n06",
-      "answer_aliases": [
-        "kerdvaest window",
-        "kerdvaest-window"
-      ],
-      "distractors": [
-        "n49",
-        "n42",
-        "n39"
-      ],
-      "difficulty": 0.18,
-      "visually_answerable": true,
-      "answer_spans": []
-    },
-    {
-      "id": "itm_0034",
-      "node_id": "n06",
-      "type": "mcq",
-      "prompt": "Which concept is described as: Placeholder definition for Kerdvaest window. Regenerated fixture, not source text.",
-      "answer": "n06",
-      "answer_aliases": [
-        "kerdvaest window",
-        "kerdvaest-window"
-      ],
-      "distractors": [
-        "n41",
-        "n22",
-        "n20"
-      ],
-      "difficulty": 0.25,
-      "visually_answerable": true,
-      "answer_spans": []
-    },
-    {
-      "id": "itm_0035",
       "node_id": "n06",
       "type": "edge_click",
       "prompt": "Click the edge leading into Kerdvaest window.",
@@ -656,12 +545,60 @@
         "dremgrouthmosk bound to kerdvaest window"
       ],
       "distractors": [
-        "n40",
-        "n14",
-        "n33"
+        "n35",
+        "n29",
+        "n38"
       ],
       "difficulty": 0.3,
       "visually_answerable": true,
+      "answer_spans": []
+    },
+    {
+      "id": "itm_0033",
+      "node_id": "n06",
+      "type": "mcq",
+      "prompt": "Mechanism question about Kerdvaest window.",
+      "answer": "Because the kerdvaest window is treated as evidence of congestion.",
+      "answer_aliases": [],
+      "distractors": [
+        "Because the receiver ran out of buffer space.",
+        "Because the round-trip time estimate expired.",
+        "Because the sender exhausted its send window."
+      ],
+      "difficulty": 0.25,
+      "visually_answerable": false,
+      "answer_spans": []
+    },
+    {
+      "id": "itm_0034",
+      "node_id": "n06",
+      "type": "mcq",
+      "prompt": "Mechanism question about Kerdvaest window.",
+      "answer": "It grows once per round trip rather than once per acknowledgement.",
+      "answer_aliases": [],
+      "distractors": [
+        "It grows once per acknowledgement rather than once per round trip.",
+        "It stays fixed until a loss event occurs.",
+        "It halves on every acknowledgement received."
+      ],
+      "difficulty": 0.25,
+      "visually_answerable": false,
+      "answer_spans": []
+    },
+    {
+      "id": "itm_0035",
+      "node_id": "n06",
+      "type": "mcq",
+      "prompt": "Mechanism question about Kerdvaest window.",
+      "answer": "The sender has no estimate of available capacity yet.",
+      "answer_aliases": [],
+      "distractors": [
+        "The receiver has not advertised a window yet.",
+        "The retransmission timer has not been initialised.",
+        "The connection is still in the handshake."
+      ],
+      "difficulty": 0.25,
+      "visually_answerable": false,
       "answer_spans": []
     },
     {
@@ -675,73 +612,16 @@
         "graebroul-window"
       ],
       "distractors": [
-        "n28",
-        "n05",
-        "n09"
+        "n17",
+        "n39",
+        "n18"
       ],
-      "difficulty": 0.16,
+      "difficulty": 0.18,
       "visually_answerable": true,
       "answer_spans": []
     },
     {
       "id": "itm_0037",
-      "node_id": "n07",
-      "type": "mcq",
-      "prompt": "Which concept is described as: Placeholder definition for Graebroul window. Regenerated fixture, not source text.",
-      "answer": "n07",
-      "answer_aliases": [
-        "graebroul window",
-        "graebroul-window"
-      ],
-      "distractors": [
-        "n34",
-        "n01",
-        "n35"
-      ],
-      "difficulty": 0.16,
-      "visually_answerable": true,
-      "answer_spans": []
-    },
-    {
-      "id": "itm_0038",
-      "node_id": "n07",
-      "type": "node_click",
-      "prompt": "Which concept is described as: Placeholder definition for Graebroul window. Regenerated fixture, not source text.",
-      "answer": "n07",
-      "answer_aliases": [
-        "graebroul window",
-        "graebroul-window"
-      ],
-      "distractors": [
-        "n44",
-        "n30",
-        "n25"
-      ],
-      "difficulty": 0.22,
-      "visually_answerable": true,
-      "answer_spans": []
-    },
-    {
-      "id": "itm_0039",
-      "node_id": "n07",
-      "type": "mcq",
-      "prompt": "Which concept is described as: Placeholder definition for Graebroul window. Regenerated fixture, not source text.",
-      "answer": "n07",
-      "answer_aliases": [
-        "graebroul window",
-        "graebroul-window"
-      ],
-      "distractors": [
-        "n09",
-        "n25",
-        "n14"
-      ],
-      "difficulty": 0.23,
-      "visually_answerable": true,
-      "answer_spans": []
-    },
-    {
-      "id": "itm_0040",
       "node_id": "n07",
       "type": "edge_click",
       "prompt": "Click the edge leading into Graebroul window.",
@@ -750,12 +630,60 @@
         "nothol phase to graebroul window"
       ],
       "distractors": [
-        "n30",
-        "n39",
-        "n01"
+        "n02",
+        "n37",
+        "n19"
       ],
       "difficulty": 0.3,
       "visually_answerable": true,
+      "answer_spans": []
+    },
+    {
+      "id": "itm_0038",
+      "node_id": "n07",
+      "type": "mcq",
+      "prompt": "Mechanism question about Graebroul window.",
+      "answer": "Because the graebroul window is treated as evidence of congestion.",
+      "answer_aliases": [],
+      "distractors": [
+        "Because the receiver ran out of buffer space.",
+        "Because the round-trip time estimate expired.",
+        "Because the sender exhausted its send window."
+      ],
+      "difficulty": 0.25,
+      "visually_answerable": false,
+      "answer_spans": []
+    },
+    {
+      "id": "itm_0039",
+      "node_id": "n07",
+      "type": "mcq",
+      "prompt": "Mechanism question about Graebroul window.",
+      "answer": "It grows once per round trip rather than once per acknowledgement.",
+      "answer_aliases": [],
+      "distractors": [
+        "It grows once per acknowledgement rather than once per round trip.",
+        "It stays fixed until a loss event occurs.",
+        "It halves on every acknowledgement received."
+      ],
+      "difficulty": 0.25,
+      "visually_answerable": false,
+      "answer_spans": []
+    },
+    {
+      "id": "itm_0040",
+      "node_id": "n07",
+      "type": "mcq",
+      "prompt": "Mechanism question about Graebroul window.",
+      "answer": "The sender has no estimate of available capacity yet.",
+      "answer_aliases": [],
+      "distractors": [
+        "The receiver has not advertised a window yet.",
+        "The retransmission timer has not been initialised.",
+        "The connection is still in the handshake."
+      ],
+      "difficulty": 0.25,
+      "visually_answerable": false,
       "answer_spans": []
     },
     {
@@ -769,73 +697,16 @@
         "toumtheird-limit"
       ],
       "distractors": [
-        "n06",
-        "n44",
-        "n37"
-      ],
-      "difficulty": 0.21,
-      "visually_answerable": true,
-      "answer_spans": []
-    },
-    {
-      "id": "itm_0042",
-      "node_id": "n08",
-      "type": "mcq",
-      "prompt": "Which concept is described as: Placeholder definition for Toumtheird limit. Regenerated fixture, not source text.",
-      "answer": "n08",
-      "answer_aliases": [
-        "toumtheird limit",
-        "toumtheird-limit"
-      ],
-      "distractors": [
-        "n32",
-        "n33",
-        "n16"
-      ],
-      "difficulty": 0.17,
-      "visually_answerable": true,
-      "answer_spans": []
-    },
-    {
-      "id": "itm_0043",
-      "node_id": "n08",
-      "type": "node_click",
-      "prompt": "Which concept is described as: Placeholder definition for Toumtheird limit. Regenerated fixture, not source text.",
-      "answer": "n08",
-      "answer_aliases": [
-        "toumtheird limit",
-        "toumtheird-limit"
-      ],
-      "distractors": [
-        "n47",
-        "n01",
-        "n23"
+        "n25",
+        "n45",
+        "n19"
       ],
       "difficulty": 0.13,
       "visually_answerable": true,
       "answer_spans": []
     },
     {
-      "id": "itm_0044",
-      "node_id": "n08",
-      "type": "mcq",
-      "prompt": "Which concept is described as: Placeholder definition for Toumtheird limit. Regenerated fixture, not source text.",
-      "answer": "n08",
-      "answer_aliases": [
-        "toumtheird limit",
-        "toumtheird-limit"
-      ],
-      "distractors": [
-        "n48",
-        "n46",
-        "n31"
-      ],
-      "difficulty": 0.16,
-      "visually_answerable": true,
-      "answer_spans": []
-    },
-    {
-      "id": "itm_0045",
+      "id": "itm_0042",
       "node_id": "n08",
       "type": "edge_click",
       "prompt": "Click the edge leading into Toumtheird limit.",
@@ -844,12 +715,60 @@
         "nothol phase to toumtheird limit"
       ],
       "distractors": [
-        "n47",
-        "n05",
-        "n28"
+        "n23",
+        "n45",
+        "n38"
       ],
       "difficulty": 0.26,
       "visually_answerable": true,
+      "answer_spans": []
+    },
+    {
+      "id": "itm_0043",
+      "node_id": "n08",
+      "type": "mcq",
+      "prompt": "Mechanism question about Toumtheird limit.",
+      "answer": "Because the toumtheird limit is treated as evidence of congestion.",
+      "answer_aliases": [],
+      "distractors": [
+        "Because the receiver ran out of buffer space.",
+        "Because the round-trip time estimate expired.",
+        "Because the sender exhausted its send window."
+      ],
+      "difficulty": 0.21,
+      "visually_answerable": false,
+      "answer_spans": []
+    },
+    {
+      "id": "itm_0044",
+      "node_id": "n08",
+      "type": "mcq",
+      "prompt": "Mechanism question about Toumtheird limit.",
+      "answer": "It grows once per round trip rather than once per acknowledgement.",
+      "answer_aliases": [],
+      "distractors": [
+        "It grows once per acknowledgement rather than once per round trip.",
+        "It stays fixed until a loss event occurs.",
+        "It halves on every acknowledgement received."
+      ],
+      "difficulty": 0.21,
+      "visually_answerable": false,
+      "answer_spans": []
+    },
+    {
+      "id": "itm_0045",
+      "node_id": "n08",
+      "type": "mcq",
+      "prompt": "Mechanism question about Toumtheird limit.",
+      "answer": "The sender has no estimate of available capacity yet.",
+      "answer_aliases": [],
+      "distractors": [
+        "The receiver has not advertised a window yet.",
+        "The retransmission timer has not been initialised.",
+        "The connection is still in the handshake."
+      ],
+      "difficulty": 0.21,
+      "visually_answerable": false,
       "answer_spans": []
     },
     {
@@ -863,73 +782,16 @@
         "nothpriardsost"
       ],
       "distractors": [
-        "n35",
-        "n03",
-        "n20"
-      ],
-      "difficulty": 0.12,
-      "visually_answerable": true,
-      "answer_spans": []
-    },
-    {
-      "id": "itm_0047",
-      "node_id": "n09",
-      "type": "mcq",
-      "prompt": "Which concept is described as: Placeholder definition for Nothpriardsost. Regenerated fixture, not source text.",
-      "answer": "n09",
-      "answer_aliases": [
-        "nothpriardsost",
-        "nothpriardsost"
-      ],
-      "distractors": [
-        "n39",
-        "n32",
-        "n46"
-      ],
-      "difficulty": 0.18,
-      "visually_answerable": true,
-      "answer_spans": []
-    },
-    {
-      "id": "itm_0048",
-      "node_id": "n09",
-      "type": "node_click",
-      "prompt": "Which concept is described as: Placeholder definition for Nothpriardsost. Regenerated fixture, not source text.",
-      "answer": "n09",
-      "answer_aliases": [
-        "nothpriardsost",
-        "nothpriardsost"
-      ],
-      "distractors": [
-        "n45",
-        "n22",
-        "n37"
-      ],
-      "difficulty": 0.13,
-      "visually_answerable": true,
-      "answer_spans": []
-    },
-    {
-      "id": "itm_0049",
-      "node_id": "n09",
-      "type": "mcq",
-      "prompt": "Which concept is described as: Placeholder definition for Nothpriardsost. Regenerated fixture, not source text.",
-      "answer": "n09",
-      "answer_aliases": [
-        "nothpriardsost",
-        "nothpriardsost"
-      ],
-      "distractors": [
-        "n02",
-        "n16",
-        "n26"
+        "n40",
+        "n14",
+        "n33"
       ],
       "difficulty": 0.15,
       "visually_answerable": true,
       "answer_spans": []
     },
     {
-      "id": "itm_0050",
+      "id": "itm_0047",
       "node_id": "n09",
       "type": "edge_click",
       "prompt": "Click the edge leading into Nothpriardsost.",
@@ -938,12 +800,60 @@
         "nothol phase to nothpriardsost"
       ],
       "distractors": [
-        "n28",
-        "n30",
-        "n18"
+        "n08",
+        "n10",
+        "n34"
       ],
       "difficulty": 0.26,
       "visually_answerable": true,
+      "answer_spans": []
+    },
+    {
+      "id": "itm_0048",
+      "node_id": "n09",
+      "type": "mcq",
+      "prompt": "Mechanism question about Nothpriardsost.",
+      "answer": "Because the nothpriardsost is treated as evidence of congestion.",
+      "answer_aliases": [],
+      "distractors": [
+        "Because the receiver ran out of buffer space.",
+        "Because the round-trip time estimate expired.",
+        "Because the sender exhausted its send window."
+      ],
+      "difficulty": 0.21,
+      "visually_answerable": false,
+      "answer_spans": []
+    },
+    {
+      "id": "itm_0049",
+      "node_id": "n09",
+      "type": "mcq",
+      "prompt": "Mechanism question about Nothpriardsost.",
+      "answer": "It grows once per round trip rather than once per acknowledgement.",
+      "answer_aliases": [],
+      "distractors": [
+        "It grows once per acknowledgement rather than once per round trip.",
+        "It stays fixed until a loss event occurs.",
+        "It halves on every acknowledgement received."
+      ],
+      "difficulty": 0.21,
+      "visually_answerable": false,
+      "answer_spans": []
+    },
+    {
+      "id": "itm_0050",
+      "node_id": "n09",
+      "type": "mcq",
+      "prompt": "Mechanism question about Nothpriardsost.",
+      "answer": "The sender has no estimate of available capacity yet.",
+      "answer_aliases": [],
+      "distractors": [
+        "The receiver has not advertised a window yet.",
+        "The retransmission timer has not been initialised.",
+        "The connection is still in the handshake."
+      ],
+      "difficulty": 0.21,
+      "visually_answerable": false,
       "answer_spans": []
     },
     {
@@ -957,73 +867,16 @@
         "thaest-limit"
       ],
       "distractors": [
-        "n44",
-        "n12",
-        "n46"
-      ],
-      "difficulty": 0.33,
-      "visually_answerable": true,
-      "answer_spans": []
-    },
-    {
-      "id": "itm_0052",
-      "node_id": "n10",
-      "type": "mcq",
-      "prompt": "Which concept is described as: Placeholder definition for Thaest limit. Regenerated fixture, not source text.",
-      "answer": "n10",
-      "answer_aliases": [
-        "thaest limit",
-        "thaest-limit"
-      ],
-      "distractors": [
-        "n14",
-        "n24",
-        "n26"
-      ],
-      "difficulty": 0.25,
-      "visually_answerable": true,
-      "answer_spans": []
-    },
-    {
-      "id": "itm_0053",
-      "node_id": "n10",
-      "type": "node_click",
-      "prompt": "Which concept is described as: Placeholder definition for Thaest limit. Regenerated fixture, not source text.",
-      "answer": "n10",
-      "answer_aliases": [
-        "thaest limit",
-        "thaest-limit"
-      ],
-      "distractors": [
-        "n15",
-        "n01",
-        "n27"
+        "n08",
+        "n25",
+        "n14"
       ],
       "difficulty": 0.31,
       "visually_answerable": true,
       "answer_spans": []
     },
     {
-      "id": "itm_0054",
-      "node_id": "n10",
-      "type": "mcq",
-      "prompt": "Which concept is described as: Placeholder definition for Thaest limit. Regenerated fixture, not source text.",
-      "answer": "n10",
-      "answer_aliases": [
-        "thaest limit",
-        "thaest-limit"
-      ],
-      "distractors": [
-        "n24",
-        "n01",
-        "n09"
-      ],
-      "difficulty": 0.27,
-      "visually_answerable": true,
-      "answer_spans": []
-    },
-    {
-      "id": "itm_0055",
+      "id": "itm_0052",
       "node_id": "n10",
       "type": "edge_click",
       "prompt": "Click the edge leading into Thaest limit.",
@@ -1032,12 +885,60 @@
         "nisk limit to thaest limit"
       ],
       "distractors": [
-        "n00",
-        "n40",
-        "n18"
+        "n30",
+        "n39",
+        "n01"
       ],
       "difficulty": 0.38,
       "visually_answerable": true,
+      "answer_spans": []
+    },
+    {
+      "id": "itm_0053",
+      "node_id": "n10",
+      "type": "mcq",
+      "prompt": "Mechanism question about Thaest limit.",
+      "answer": "Because the thaest limit is treated as evidence of congestion.",
+      "answer_aliases": [],
+      "distractors": [
+        "Because the receiver ran out of buffer space.",
+        "Because the round-trip time estimate expired.",
+        "Because the sender exhausted its send window."
+      ],
+      "difficulty": 0.33,
+      "visually_answerable": false,
+      "answer_spans": []
+    },
+    {
+      "id": "itm_0054",
+      "node_id": "n10",
+      "type": "mcq",
+      "prompt": "Mechanism question about Thaest limit.",
+      "answer": "It grows once per round trip rather than once per acknowledgement.",
+      "answer_aliases": [],
+      "distractors": [
+        "It grows once per acknowledgement rather than once per round trip.",
+        "It stays fixed until a loss event occurs.",
+        "It halves on every acknowledgement received."
+      ],
+      "difficulty": 0.33,
+      "visually_answerable": false,
+      "answer_spans": []
+    },
+    {
+      "id": "itm_0055",
+      "node_id": "n10",
+      "type": "mcq",
+      "prompt": "Mechanism question about Thaest limit.",
+      "answer": "The sender has no estimate of available capacity yet.",
+      "answer_aliases": [],
+      "distractors": [
+        "The receiver has not advertised a window yet.",
+        "The retransmission timer has not been initialised.",
+        "The connection is still in the handshake."
+      ],
+      "difficulty": 0.33,
+      "visually_answerable": false,
       "answer_spans": []
     },
     {
@@ -1051,73 +952,16 @@
         "nisk-state"
       ],
       "distractors": [
-        "n38",
-        "n37",
-        "n10"
+        "n47",
+        "n01",
+        "n23"
       ],
-      "difficulty": 0.26,
+      "difficulty": 0.27,
       "visually_answerable": true,
       "answer_spans": []
     },
     {
       "id": "itm_0057",
-      "node_id": "n11",
-      "type": "mcq",
-      "prompt": "Which concept is described as: Placeholder definition for Nisk state. Regenerated fixture, not source text.",
-      "answer": "n11",
-      "answer_aliases": [
-        "nisk state",
-        "nisk-state"
-      ],
-      "distractors": [
-        "n17",
-        "n14",
-        "n16"
-      ],
-      "difficulty": 0.3,
-      "visually_answerable": true,
-      "answer_spans": []
-    },
-    {
-      "id": "itm_0058",
-      "node_id": "n11",
-      "type": "node_click",
-      "prompt": "Which concept is described as: Placeholder definition for Nisk state. Regenerated fixture, not source text.",
-      "answer": "n11",
-      "answer_aliases": [
-        "nisk state",
-        "nisk-state"
-      ],
-      "distractors": [
-        "n06",
-        "n04",
-        "n21"
-      ],
-      "difficulty": 0.29,
-      "visually_answerable": true,
-      "answer_spans": []
-    },
-    {
-      "id": "itm_0059",
-      "node_id": "n11",
-      "type": "mcq",
-      "prompt": "Which concept is described as: Placeholder definition for Nisk state. Regenerated fixture, not source text.",
-      "answer": "n11",
-      "answer_aliases": [
-        "nisk state",
-        "nisk-state"
-      ],
-      "distractors": [
-        "n27",
-        "n44",
-        "n15"
-      ],
-      "difficulty": 0.35,
-      "visually_answerable": true,
-      "answer_spans": []
-    },
-    {
-      "id": "itm_0060",
       "node_id": "n11",
       "type": "edge_click",
       "prompt": "Click the edge leading into Nisk state.",
@@ -1126,12 +970,60 @@
         "kiask state to nisk state"
       ],
       "distractors": [
-        "n45",
-        "n03",
-        "n25"
+        "n48",
+        "n46",
+        "n31"
       ],
       "difficulty": 0.4,
       "visually_answerable": true,
+      "answer_spans": []
+    },
+    {
+      "id": "itm_0058",
+      "node_id": "n11",
+      "type": "mcq",
+      "prompt": "Mechanism question about Nisk state.",
+      "answer": "Because the nisk state is treated as evidence of congestion.",
+      "answer_aliases": [],
+      "distractors": [
+        "Because the receiver ran out of buffer space.",
+        "Because the round-trip time estimate expired.",
+        "Because the sender exhausted its send window."
+      ],
+      "difficulty": 0.35,
+      "visually_answerable": false,
+      "answer_spans": []
+    },
+    {
+      "id": "itm_0059",
+      "node_id": "n11",
+      "type": "mcq",
+      "prompt": "Mechanism question about Nisk state.",
+      "answer": "It grows once per round trip rather than once per acknowledgement.",
+      "answer_aliases": [],
+      "distractors": [
+        "It grows once per acknowledgement rather than once per round trip.",
+        "It stays fixed until a loss event occurs.",
+        "It halves on every acknowledgement received."
+      ],
+      "difficulty": 0.35,
+      "visually_answerable": false,
+      "answer_spans": []
+    },
+    {
+      "id": "itm_0060",
+      "node_id": "n11",
+      "type": "mcq",
+      "prompt": "Mechanism question about Nisk state.",
+      "answer": "The sender has no estimate of available capacity yet.",
+      "answer_aliases": [],
+      "distractors": [
+        "The receiver has not advertised a window yet.",
+        "The retransmission timer has not been initialised.",
+        "The connection is still in the handshake."
+      ],
+      "difficulty": 0.35,
+      "visually_answerable": false,
       "answer_spans": []
     },
     {
@@ -1145,73 +1037,16 @@
         "druthneisklaen-phase"
       ],
       "distractors": [
-        "n27",
-        "n16",
-        "n03"
+        "n24",
+        "n39",
+        "n32"
       ],
-      "difficulty": 0.38,
+      "difficulty": 0.35,
       "visually_answerable": true,
       "answer_spans": []
     },
     {
       "id": "itm_0062",
-      "node_id": "n12",
-      "type": "mcq",
-      "prompt": "Which concept is described as: Placeholder definition for Druthneisklaen phase. Regenerated fixture, not source text.",
-      "answer": "n12",
-      "answer_aliases": [
-        "druthneisklaen phase",
-        "druthneisklaen-phase"
-      ],
-      "distractors": [
-        "n47",
-        "n46",
-        "n11"
-      ],
-      "difficulty": 0.34,
-      "visually_answerable": true,
-      "answer_spans": []
-    },
-    {
-      "id": "itm_0063",
-      "node_id": "n12",
-      "type": "node_click",
-      "prompt": "Which concept is described as: Placeholder definition for Druthneisklaen phase. Regenerated fixture, not source text.",
-      "answer": "n12",
-      "answer_aliases": [
-        "druthneisklaen phase",
-        "druthneisklaen-phase"
-      ],
-      "distractors": [
-        "n02",
-        "n16",
-        "n09"
-      ],
-      "difficulty": 0.33,
-      "visually_answerable": true,
-      "answer_spans": []
-    },
-    {
-      "id": "itm_0064",
-      "node_id": "n12",
-      "type": "mcq",
-      "prompt": "Which concept is described as: Placeholder definition for Druthneisklaen phase. Regenerated fixture, not source text.",
-      "answer": "n12",
-      "answer_aliases": [
-        "druthneisklaen phase",
-        "druthneisklaen-phase"
-      ],
-      "distractors": [
-        "n40",
-        "n30",
-        "n03"
-      ],
-      "difficulty": 0.32,
-      "visually_answerable": true,
-      "answer_spans": []
-    },
-    {
-      "id": "itm_0065",
       "node_id": "n12",
       "type": "edge_click",
       "prompt": "Click the edge leading into Druthneisklaen phase.",
@@ -1220,12 +1055,60 @@
         "kerdvaest window to druthneisklaen phase"
       ],
       "distractors": [
-        "n32",
-        "n42",
-        "n27"
+        "n45",
+        "n22",
+        "n37"
       ],
       "difficulty": 0.43,
       "visually_answerable": true,
+      "answer_spans": []
+    },
+    {
+      "id": "itm_0063",
+      "node_id": "n12",
+      "type": "mcq",
+      "prompt": "Mechanism question about Druthneisklaen phase.",
+      "answer": "Because the druthneisklaen phase is treated as evidence of congestion.",
+      "answer_aliases": [],
+      "distractors": [
+        "Because the receiver ran out of buffer space.",
+        "Because the round-trip time estimate expired.",
+        "Because the sender exhausted its send window."
+      ],
+      "difficulty": 0.38,
+      "visually_answerable": false,
+      "answer_spans": []
+    },
+    {
+      "id": "itm_0064",
+      "node_id": "n12",
+      "type": "mcq",
+      "prompt": "Mechanism question about Druthneisklaen phase.",
+      "answer": "It grows once per round trip rather than once per acknowledgement.",
+      "answer_aliases": [],
+      "distractors": [
+        "It grows once per acknowledgement rather than once per round trip.",
+        "It stays fixed until a loss event occurs.",
+        "It halves on every acknowledgement received."
+      ],
+      "difficulty": 0.38,
+      "visually_answerable": false,
+      "answer_spans": []
+    },
+    {
+      "id": "itm_0065",
+      "node_id": "n12",
+      "type": "mcq",
+      "prompt": "Mechanism question about Druthneisklaen phase.",
+      "answer": "The sender has no estimate of available capacity yet.",
+      "answer_aliases": [],
+      "distractors": [
+        "The receiver has not advertised a window yet.",
+        "The retransmission timer has not been initialised.",
+        "The connection is still in the handshake."
+      ],
+      "difficulty": 0.38,
+      "visually_answerable": false,
       "answer_spans": []
     },
     {
@@ -1239,9 +1122,9 @@
         "praennith-phase"
       ],
       "distractors": [
-        "n04",
-        "n42",
-        "n38"
+        "n18",
+        "n44",
+        "n11"
       ],
       "difficulty": 0.35,
       "visually_answerable": true,
@@ -1250,63 +1133,6 @@
     {
       "id": "itm_0067",
       "node_id": "n13",
-      "type": "mcq",
-      "prompt": "Which concept is described as: Placeholder definition for Praennith phase. Regenerated fixture, not source text.",
-      "answer": "n13",
-      "answer_aliases": [
-        "praennith phase",
-        "praennith-phase"
-      ],
-      "distractors": [
-        "n24",
-        "n37",
-        "n04"
-      ],
-      "difficulty": 0.37,
-      "visually_answerable": true,
-      "answer_spans": []
-    },
-    {
-      "id": "itm_0068",
-      "node_id": "n13",
-      "type": "node_click",
-      "prompt": "Which concept is described as: Placeholder definition for Praennith phase. Regenerated fixture, not source text.",
-      "answer": "n13",
-      "answer_aliases": [
-        "praennith phase",
-        "praennith-phase"
-      ],
-      "distractors": [
-        "n33",
-        "n41",
-        "n34"
-      ],
-      "difficulty": 0.29,
-      "visually_answerable": true,
-      "answer_spans": []
-    },
-    {
-      "id": "itm_0069",
-      "node_id": "n13",
-      "type": "mcq",
-      "prompt": "Which concept is described as: Placeholder definition for Praennith phase. Regenerated fixture, not source text.",
-      "answer": "n13",
-      "answer_aliases": [
-        "praennith phase",
-        "praennith-phase"
-      ],
-      "distractors": [
-        "n40",
-        "n39",
-        "n30"
-      ],
-      "difficulty": 0.32,
-      "visually_answerable": true,
-      "answer_spans": []
-    },
-    {
-      "id": "itm_0070",
-      "node_id": "n13",
       "type": "edge_click",
       "prompt": "Click the edge leading into Praennith phase.",
       "answer": "n07->n13",
@@ -1314,12 +1140,60 @@
         "graebroul window to praennith phase"
       ],
       "distractors": [
-        "n23",
-        "n12",
-        "n47"
+        "n03",
+        "n14",
+        "n24"
       ],
       "difficulty": 0.43,
       "visually_answerable": true,
+      "answer_spans": []
+    },
+    {
+      "id": "itm_0068",
+      "node_id": "n13",
+      "type": "mcq",
+      "prompt": "Mechanism question about Praennith phase.",
+      "answer": "Because the praennith phase is treated as evidence of congestion.",
+      "answer_aliases": [],
+      "distractors": [
+        "Because the receiver ran out of buffer space.",
+        "Because the round-trip time estimate expired.",
+        "Because the sender exhausted its send window."
+      ],
+      "difficulty": 0.38,
+      "visually_answerable": false,
+      "answer_spans": []
+    },
+    {
+      "id": "itm_0069",
+      "node_id": "n13",
+      "type": "mcq",
+      "prompt": "Mechanism question about Praennith phase.",
+      "answer": "It grows once per round trip rather than once per acknowledgement.",
+      "answer_aliases": [],
+      "distractors": [
+        "It grows once per acknowledgement rather than once per round trip.",
+        "It stays fixed until a loss event occurs.",
+        "It halves on every acknowledgement received."
+      ],
+      "difficulty": 0.38,
+      "visually_answerable": false,
+      "answer_spans": []
+    },
+    {
+      "id": "itm_0070",
+      "node_id": "n13",
+      "type": "mcq",
+      "prompt": "Mechanism question about Praennith phase.",
+      "answer": "The sender has no estimate of available capacity yet.",
+      "answer_aliases": [],
+      "distractors": [
+        "The receiver has not advertised a window yet.",
+        "The retransmission timer has not been initialised.",
+        "The connection is still in the handshake."
+      ],
+      "difficulty": 0.38,
+      "visually_answerable": false,
       "answer_spans": []
     },
     {
@@ -1333,73 +1207,16 @@
         "flaen-bound"
       ],
       "distractors": [
-        "n36",
-        "n44",
-        "n09"
+        "n23",
+        "n48",
+        "n00"
       ],
-      "difficulty": 0.36,
+      "difficulty": 0.32,
       "visually_answerable": true,
       "answer_spans": []
     },
     {
       "id": "itm_0072",
-      "node_id": "n14",
-      "type": "mcq",
-      "prompt": "Which concept is described as: Placeholder definition for Flaen bound. Regenerated fixture, not source text.",
-      "answer": "n14",
-      "answer_aliases": [
-        "flaen bound",
-        "flaen-bound"
-      ],
-      "distractors": [
-        "n45",
-        "n30",
-        "n21"
-      ],
-      "difficulty": 0.28,
-      "visually_answerable": true,
-      "answer_spans": []
-    },
-    {
-      "id": "itm_0073",
-      "node_id": "n14",
-      "type": "node_click",
-      "prompt": "Which concept is described as: Placeholder definition for Flaen bound. Regenerated fixture, not source text.",
-      "answer": "n14",
-      "answer_aliases": [
-        "flaen bound",
-        "flaen-bound"
-      ],
-      "distractors": [
-        "n00",
-        "n04",
-        "n38"
-      ],
-      "difficulty": 0.29,
-      "visually_answerable": true,
-      "answer_spans": []
-    },
-    {
-      "id": "itm_0074",
-      "node_id": "n14",
-      "type": "mcq",
-      "prompt": "Which concept is described as: Placeholder definition for Flaen bound. Regenerated fixture, not source text.",
-      "answer": "n14",
-      "answer_aliases": [
-        "flaen bound",
-        "flaen-bound"
-      ],
-      "distractors": [
-        "n26",
-        "n38",
-        "n23"
-      ],
-      "difficulty": 0.33,
-      "visually_answerable": true,
-      "answer_spans": []
-    },
-    {
-      "id": "itm_0075",
       "node_id": "n14",
       "type": "edge_click",
       "prompt": "Click the edge leading into Flaen bound.",
@@ -1408,12 +1225,60 @@
         "toumtheird limit to flaen bound"
       ],
       "distractors": [
-        "n29",
-        "n37",
-        "n36"
+        "n18",
+        "n38",
+        "n37"
       ],
       "difficulty": 0.41,
       "visually_answerable": true,
+      "answer_spans": []
+    },
+    {
+      "id": "itm_0073",
+      "node_id": "n14",
+      "type": "mcq",
+      "prompt": "Mechanism question about Flaen bound.",
+      "answer": "Because the flaen bound is treated as evidence of congestion.",
+      "answer_aliases": [],
+      "distractors": [
+        "Because the receiver ran out of buffer space.",
+        "Because the round-trip time estimate expired.",
+        "Because the sender exhausted its send window."
+      ],
+      "difficulty": 0.36,
+      "visually_answerable": false,
+      "answer_spans": []
+    },
+    {
+      "id": "itm_0074",
+      "node_id": "n14",
+      "type": "mcq",
+      "prompt": "Mechanism question about Flaen bound.",
+      "answer": "It grows once per round trip rather than once per acknowledgement.",
+      "answer_aliases": [],
+      "distractors": [
+        "It grows once per acknowledgement rather than once per round trip.",
+        "It stays fixed until a loss event occurs.",
+        "It halves on every acknowledgement received."
+      ],
+      "difficulty": 0.36,
+      "visually_answerable": false,
+      "answer_spans": []
+    },
+    {
+      "id": "itm_0075",
+      "node_id": "n14",
+      "type": "mcq",
+      "prompt": "Mechanism question about Flaen bound.",
+      "answer": "The sender has no estimate of available capacity yet.",
+      "answer_aliases": [],
+      "distractors": [
+        "The receiver has not advertised a window yet.",
+        "The retransmission timer has not been initialised.",
+        "The connection is still in the handshake."
+      ],
+      "difficulty": 0.36,
+      "visually_answerable": false,
       "answer_spans": []
     },
     {
@@ -1427,73 +1292,16 @@
         "to-bound"
       ],
       "distractors": [
-        "n25",
-        "n16",
-        "n23"
+        "n04",
+        "n21",
+        "n28"
       ],
-      "difficulty": 0.37,
+      "difficulty": 0.35,
       "visually_answerable": true,
       "answer_spans": []
     },
     {
       "id": "itm_0077",
-      "node_id": "n15",
-      "type": "mcq",
-      "prompt": "Which concept is described as: Placeholder definition for To bound. Regenerated fixture, not source text.",
-      "answer": "n15",
-      "answer_aliases": [
-        "to bound",
-        "to-bound"
-      ],
-      "distractors": [
-        "n09",
-        "n12",
-        "n49"
-      ],
-      "difficulty": 0.32,
-      "visually_answerable": true,
-      "answer_spans": []
-    },
-    {
-      "id": "itm_0078",
-      "node_id": "n15",
-      "type": "node_click",
-      "prompt": "Which concept is described as: Placeholder definition for To bound. Regenerated fixture, not source text.",
-      "answer": "n15",
-      "answer_aliases": [
-        "to bound",
-        "to-bound"
-      ],
-      "distractors": [
-        "n38",
-        "n35",
-        "n14"
-      ],
-      "difficulty": 0.31,
-      "visually_answerable": true,
-      "answer_spans": []
-    },
-    {
-      "id": "itm_0079",
-      "node_id": "n15",
-      "type": "mcq",
-      "prompt": "Which concept is described as: Placeholder definition for To bound. Regenerated fixture, not source text.",
-      "answer": "n15",
-      "answer_aliases": [
-        "to bound",
-        "to-bound"
-      ],
-      "distractors": [
-        "n08",
-        "n03",
-        "n27"
-      ],
-      "difficulty": 0.34,
-      "visually_answerable": true,
-      "answer_spans": []
-    },
-    {
-      "id": "itm_0080",
       "node_id": "n15",
       "type": "edge_click",
       "prompt": "Click the edge leading into To bound.",
@@ -1502,12 +1310,60 @@
         "nothpriardsost to to bound"
       ],
       "distractors": [
-        "n43",
-        "n45",
-        "n11"
+        "n44",
+        "n14",
+        "n41"
       ],
       "difficulty": 0.44,
       "visually_answerable": true,
+      "answer_spans": []
+    },
+    {
+      "id": "itm_0078",
+      "node_id": "n15",
+      "type": "mcq",
+      "prompt": "Mechanism question about To bound.",
+      "answer": "Because the to bound is treated as evidence of congestion.",
+      "answer_aliases": [],
+      "distractors": [
+        "Because the receiver ran out of buffer space.",
+        "Because the round-trip time estimate expired.",
+        "Because the sender exhausted its send window."
+      ],
+      "difficulty": 0.39,
+      "visually_answerable": false,
+      "answer_spans": []
+    },
+    {
+      "id": "itm_0079",
+      "node_id": "n15",
+      "type": "mcq",
+      "prompt": "Mechanism question about To bound.",
+      "answer": "It grows once per round trip rather than once per acknowledgement.",
+      "answer_aliases": [],
+      "distractors": [
+        "It grows once per acknowledgement rather than once per round trip.",
+        "It stays fixed until a loss event occurs.",
+        "It halves on every acknowledgement received."
+      ],
+      "difficulty": 0.39,
+      "visually_answerable": false,
+      "answer_spans": []
+    },
+    {
+      "id": "itm_0080",
+      "node_id": "n15",
+      "type": "mcq",
+      "prompt": "Mechanism question about To bound.",
+      "answer": "The sender has no estimate of available capacity yet.",
+      "answer_aliases": [],
+      "distractors": [
+        "The receiver has not advertised a window yet.",
+        "The retransmission timer has not been initialised.",
+        "The connection is still in the handshake."
+      ],
+      "difficulty": 0.39,
+      "visually_answerable": false,
       "answer_spans": []
     },
     {
@@ -1521,9 +1377,9 @@
         "groustprem-bound"
       ],
       "distractors": [
-        "n26",
-        "n31",
-        "n12"
+        "n11",
+        "n37",
+        "n26"
       ],
       "difficulty": 0.37,
       "visually_answerable": true,
@@ -1532,63 +1388,6 @@
     {
       "id": "itm_0082",
       "node_id": "n16",
-      "type": "mcq",
-      "prompt": "Which concept is described as: Placeholder definition for Groustprem bound. Regenerated fixture, not source text.",
-      "answer": "n16",
-      "answer_aliases": [
-        "groustprem bound",
-        "groustprem-bound"
-      ],
-      "distractors": [
-        "n46",
-        "n17",
-        "n04"
-      ],
-      "difficulty": 0.32,
-      "visually_answerable": true,
-      "answer_spans": []
-    },
-    {
-      "id": "itm_0083",
-      "node_id": "n16",
-      "type": "node_click",
-      "prompt": "Which concept is described as: Placeholder definition for Groustprem bound. Regenerated fixture, not source text.",
-      "answer": "n16",
-      "answer_aliases": [
-        "groustprem bound",
-        "groustprem-bound"
-      ],
-      "distractors": [
-        "n45",
-        "n08",
-        "n31"
-      ],
-      "difficulty": 0.36,
-      "visually_answerable": true,
-      "answer_spans": []
-    },
-    {
-      "id": "itm_0084",
-      "node_id": "n16",
-      "type": "mcq",
-      "prompt": "Which concept is described as: Placeholder definition for Groustprem bound. Regenerated fixture, not source text.",
-      "answer": "n16",
-      "answer_aliases": [
-        "groustprem bound",
-        "groustprem-bound"
-      ],
-      "distractors": [
-        "n30",
-        "n41",
-        "n27"
-      ],
-      "difficulty": 0.29,
-      "visually_answerable": true,
-      "answer_spans": []
-    },
-    {
-      "id": "itm_0085",
-      "node_id": "n16",
       "type": "edge_click",
       "prompt": "Click the edge leading into Groustprem bound.",
       "answer": "n09->n16",
@@ -1596,12 +1395,60 @@
         "nothpriardsost to groustprem bound"
       ],
       "distractors": [
-        "n39",
-        "n37",
-        "n07"
+        "n15",
+        "n09",
+        "n30"
       ],
       "difficulty": 0.42,
       "visually_answerable": true,
+      "answer_spans": []
+    },
+    {
+      "id": "itm_0083",
+      "node_id": "n16",
+      "type": "mcq",
+      "prompt": "Mechanism question about Groustprem bound.",
+      "answer": "Because the groustprem bound is treated as evidence of congestion.",
+      "answer_aliases": [],
+      "distractors": [
+        "Because the receiver ran out of buffer space.",
+        "Because the round-trip time estimate expired.",
+        "Because the sender exhausted its send window."
+      ],
+      "difficulty": 0.37,
+      "visually_answerable": false,
+      "answer_spans": []
+    },
+    {
+      "id": "itm_0084",
+      "node_id": "n16",
+      "type": "mcq",
+      "prompt": "Mechanism question about Groustprem bound.",
+      "answer": "It grows once per round trip rather than once per acknowledgement.",
+      "answer_aliases": [],
+      "distractors": [
+        "It grows once per acknowledgement rather than once per round trip.",
+        "It stays fixed until a loss event occurs.",
+        "It halves on every acknowledgement received."
+      ],
+      "difficulty": 0.37,
+      "visually_answerable": false,
+      "answer_spans": []
+    },
+    {
+      "id": "itm_0085",
+      "node_id": "n16",
+      "type": "mcq",
+      "prompt": "Mechanism question about Groustprem bound.",
+      "answer": "The sender has no estimate of available capacity yet.",
+      "answer_aliases": [],
+      "distractors": [
+        "The receiver has not advertised a window yet.",
+        "The retransmission timer has not been initialised.",
+        "The connection is still in the handshake."
+      ],
+      "difficulty": 0.37,
+      "visually_answerable": false,
       "answer_spans": []
     },
     {
@@ -1615,73 +1462,16 @@
         "brard-pass"
       ],
       "distractors": [
-        "n09",
-        "n02",
-        "n33"
+        "n04",
+        "n42",
+        "n38"
       ],
-      "difficulty": 0.37,
+      "difficulty": 0.38,
       "visually_answerable": true,
       "answer_spans": []
     },
     {
       "id": "itm_0087",
-      "node_id": "n17",
-      "type": "mcq",
-      "prompt": "Which concept is described as: Placeholder definition for Brard pass. Regenerated fixture, not source text.",
-      "answer": "n17",
-      "answer_aliases": [
-        "brard pass",
-        "brard-pass"
-      ],
-      "distractors": [
-        "n22",
-        "n36",
-        "n03"
-      ],
-      "difficulty": 0.32,
-      "visually_answerable": true,
-      "answer_spans": []
-    },
-    {
-      "id": "itm_0088",
-      "node_id": "n17",
-      "type": "node_click",
-      "prompt": "Which concept is described as: Placeholder definition for Brard pass. Regenerated fixture, not source text.",
-      "answer": "n17",
-      "answer_aliases": [
-        "brard pass",
-        "brard-pass"
-      ],
-      "distractors": [
-        "n28",
-        "n13",
-        "n01"
-      ],
-      "difficulty": 0.31,
-      "visually_answerable": true,
-      "answer_spans": []
-    },
-    {
-      "id": "itm_0089",
-      "node_id": "n17",
-      "type": "mcq",
-      "prompt": "Which concept is described as: Placeholder definition for Brard pass. Regenerated fixture, not source text.",
-      "answer": "n17",
-      "answer_aliases": [
-        "brard pass",
-        "brard-pass"
-      ],
-      "distractors": [
-        "n31",
-        "n03",
-        "n21"
-      ],
-      "difficulty": 0.4,
-      "visually_answerable": true,
-      "answer_spans": []
-    },
-    {
-      "id": "itm_0090",
       "node_id": "n17",
       "type": "edge_click",
       "prompt": "Click the edge leading into Brard pass.",
@@ -1690,12 +1480,60 @@
         "thaest limit to brard pass"
       ],
       "distractors": [
-        "n39",
-        "n23",
-        "n22"
+        "n24",
+        "n37",
+        "n04"
       ],
       "difficulty": 0.46,
       "visually_answerable": true,
+      "answer_spans": []
+    },
+    {
+      "id": "itm_0088",
+      "node_id": "n17",
+      "type": "mcq",
+      "prompt": "Mechanism question about Brard pass.",
+      "answer": "Because the brard pass is treated as evidence of congestion.",
+      "answer_aliases": [],
+      "distractors": [
+        "Because the receiver ran out of buffer space.",
+        "Because the round-trip time estimate expired.",
+        "Because the sender exhausted its send window."
+      ],
+      "difficulty": 0.41,
+      "visually_answerable": false,
+      "answer_spans": []
+    },
+    {
+      "id": "itm_0089",
+      "node_id": "n17",
+      "type": "mcq",
+      "prompt": "Mechanism question about Brard pass.",
+      "answer": "It grows once per round trip rather than once per acknowledgement.",
+      "answer_aliases": [],
+      "distractors": [
+        "It grows once per acknowledgement rather than once per round trip.",
+        "It stays fixed until a loss event occurs.",
+        "It halves on every acknowledgement received."
+      ],
+      "difficulty": 0.41,
+      "visually_answerable": false,
+      "answer_spans": []
+    },
+    {
+      "id": "itm_0090",
+      "node_id": "n17",
+      "type": "mcq",
+      "prompt": "Mechanism question about Brard pass.",
+      "answer": "The sender has no estimate of available capacity yet.",
+      "answer_aliases": [],
+      "distractors": [
+        "The receiver has not advertised a window yet.",
+        "The retransmission timer has not been initialised.",
+        "The connection is still in the handshake."
+      ],
+      "difficulty": 0.41,
+      "visually_answerable": false,
       "answer_spans": []
     },
     {
@@ -1709,73 +1547,16 @@
         "steskgrengsterd"
       ],
       "distractors": [
-        "n34",
-        "n41",
-        "n22"
+        "n12",
+        "n47",
+        "n36"
       ],
-      "difficulty": 0.47,
+      "difficulty": 0.46,
       "visually_answerable": true,
       "answer_spans": []
     },
     {
       "id": "itm_0092",
-      "node_id": "n18",
-      "type": "mcq",
-      "prompt": "Which concept is described as: Placeholder definition for Steskgrengsterd. Regenerated fixture, not source text.",
-      "answer": "n18",
-      "answer_aliases": [
-        "steskgrengsterd",
-        "steskgrengsterd"
-      ],
-      "distractors": [
-        "n10",
-        "n35",
-        "n33"
-      ],
-      "difficulty": 0.38,
-      "visually_answerable": true,
-      "answer_spans": []
-    },
-    {
-      "id": "itm_0093",
-      "node_id": "n18",
-      "type": "node_click",
-      "prompt": "Which concept is described as: Placeholder definition for Steskgrengsterd. Regenerated fixture, not source text.",
-      "answer": "n18",
-      "answer_aliases": [
-        "steskgrengsterd",
-        "steskgrengsterd"
-      ],
-      "distractors": [
-        "n31",
-        "n43",
-        "n02"
-      ],
-      "difficulty": 0.4,
-      "visually_answerable": true,
-      "answer_spans": []
-    },
-    {
-      "id": "itm_0094",
-      "node_id": "n18",
-      "type": "mcq",
-      "prompt": "Which concept is described as: Placeholder definition for Steskgrengsterd. Regenerated fixture, not source text.",
-      "answer": "n18",
-      "answer_aliases": [
-        "steskgrengsterd",
-        "steskgrengsterd"
-      ],
-      "distractors": [
-        "n02",
-        "n39",
-        "n21"
-      ],
-      "difficulty": 0.38,
-      "visually_answerable": true,
-      "answer_spans": []
-    },
-    {
-      "id": "itm_0095",
       "node_id": "n18",
       "type": "edge_click",
       "prompt": "Click the edge leading into Steskgrengsterd.",
@@ -1784,12 +1565,60 @@
         "nisk state to steskgrengsterd"
       ],
       "distractors": [
-        "n37",
-        "n14",
-        "n22"
+        "n09",
+        "n39",
+        "n45"
       ],
       "difficulty": 0.52,
       "visually_answerable": true,
+      "answer_spans": []
+    },
+    {
+      "id": "itm_0093",
+      "node_id": "n18",
+      "type": "mcq",
+      "prompt": "Mechanism question about Steskgrengsterd.",
+      "answer": "Because the steskgrengsterd is treated as evidence of congestion.",
+      "answer_aliases": [],
+      "distractors": [
+        "Because the receiver ran out of buffer space.",
+        "Because the round-trip time estimate expired.",
+        "Because the sender exhausted its send window."
+      ],
+      "difficulty": 0.47,
+      "visually_answerable": false,
+      "answer_spans": []
+    },
+    {
+      "id": "itm_0094",
+      "node_id": "n18",
+      "type": "mcq",
+      "prompt": "Mechanism question about Steskgrengsterd.",
+      "answer": "It grows once per round trip rather than once per acknowledgement.",
+      "answer_aliases": [],
+      "distractors": [
+        "It grows once per acknowledgement rather than once per round trip.",
+        "It stays fixed until a loss event occurs.",
+        "It halves on every acknowledgement received."
+      ],
+      "difficulty": 0.47,
+      "visually_answerable": false,
+      "answer_spans": []
+    },
+    {
+      "id": "itm_0095",
+      "node_id": "n18",
+      "type": "mcq",
+      "prompt": "Mechanism question about Steskgrengsterd.",
+      "answer": "The sender has no estimate of available capacity yet.",
+      "answer_aliases": [],
+      "distractors": [
+        "The receiver has not advertised a window yet.",
+        "The retransmission timer has not been initialised.",
+        "The connection is still in the handshake."
+      ],
+      "difficulty": 0.47,
+      "visually_answerable": false,
       "answer_spans": []
     },
     {
@@ -1803,9 +1632,9 @@
         "droun-state"
       ],
       "distractors": [
-        "n39",
-        "n47",
-        "n11"
+        "n26",
+        "n38",
+        "n23"
       ],
       "difficulty": 0.43,
       "visually_answerable": true,
@@ -1814,63 +1643,6 @@
     {
       "id": "itm_0097",
       "node_id": "n19",
-      "type": "mcq",
-      "prompt": "Which concept is described as: Placeholder definition for Droun state. Regenerated fixture, not source text.",
-      "answer": "n19",
-      "answer_aliases": [
-        "droun state",
-        "droun-state"
-      ],
-      "distractors": [
-        "n08",
-        "n09",
-        "n49"
-      ],
-      "difficulty": 0.45,
-      "visually_answerable": true,
-      "answer_spans": []
-    },
-    {
-      "id": "itm_0098",
-      "node_id": "n19",
-      "type": "node_click",
-      "prompt": "Which concept is described as: Placeholder definition for Droun state. Regenerated fixture, not source text.",
-      "answer": "n19",
-      "answer_aliases": [
-        "droun state",
-        "droun-state"
-      ],
-      "distractors": [
-        "n23",
-        "n45",
-        "n47"
-      ],
-      "difficulty": 0.46,
-      "visually_answerable": true,
-      "answer_spans": []
-    },
-    {
-      "id": "itm_0099",
-      "node_id": "n19",
-      "type": "mcq",
-      "prompt": "Which concept is described as: Placeholder definition for Droun state. Regenerated fixture, not source text.",
-      "answer": "n19",
-      "answer_aliases": [
-        "droun state",
-        "droun-state"
-      ],
-      "distractors": [
-        "n20",
-        "n17",
-        "n31"
-      ],
-      "difficulty": 0.45,
-      "visually_answerable": true,
-      "answer_spans": []
-    },
-    {
-      "id": "itm_0100",
-      "node_id": "n19",
       "type": "edge_click",
       "prompt": "Click the edge leading into Droun state.",
       "answer": "n12->n19",
@@ -1878,12 +1650,60 @@
         "druthneisklaen phase to droun state"
       ],
       "distractors": [
-        "n32",
-        "n17",
-        "n49"
+        "n29",
+        "n37",
+        "n36"
       ],
       "difficulty": 0.51,
       "visually_answerable": true,
+      "answer_spans": []
+    },
+    {
+      "id": "itm_0098",
+      "node_id": "n19",
+      "type": "mcq",
+      "prompt": "Mechanism question about Droun state.",
+      "answer": "Because the droun state is treated as evidence of congestion.",
+      "answer_aliases": [],
+      "distractors": [
+        "Because the receiver ran out of buffer space.",
+        "Because the round-trip time estimate expired.",
+        "Because the sender exhausted its send window."
+      ],
+      "difficulty": 0.46,
+      "visually_answerable": false,
+      "answer_spans": []
+    },
+    {
+      "id": "itm_0099",
+      "node_id": "n19",
+      "type": "mcq",
+      "prompt": "Mechanism question about Droun state.",
+      "answer": "It grows once per round trip rather than once per acknowledgement.",
+      "answer_aliases": [],
+      "distractors": [
+        "It grows once per acknowledgement rather than once per round trip.",
+        "It stays fixed until a loss event occurs.",
+        "It halves on every acknowledgement received."
+      ],
+      "difficulty": 0.46,
+      "visually_answerable": false,
+      "answer_spans": []
+    },
+    {
+      "id": "itm_0100",
+      "node_id": "n19",
+      "type": "mcq",
+      "prompt": "Mechanism question about Droun state.",
+      "answer": "The sender has no estimate of available capacity yet.",
+      "answer_aliases": [],
+      "distractors": [
+        "The receiver has not advertised a window yet.",
+        "The retransmission timer has not been initialised.",
+        "The connection is still in the handshake."
+      ],
+      "difficulty": 0.46,
+      "visually_answerable": false,
       "answer_spans": []
     },
     {
@@ -1897,73 +1717,16 @@
         "terdnesk-phase"
       ],
       "distractors": [
-        "n21",
-        "n49",
-        "n45"
-      ],
-      "difficulty": 0.47,
-      "visually_answerable": true,
-      "answer_spans": []
-    },
-    {
-      "id": "itm_0102",
-      "node_id": "n20",
-      "type": "mcq",
-      "prompt": "Which concept is described as: Placeholder definition for Terdnesk phase. Regenerated fixture, not source text.",
-      "answer": "n20",
-      "answer_aliases": [
-        "terdnesk phase",
-        "terdnesk-phase"
-      ],
-      "distractors": [
-        "n26",
-        "n03",
-        "n02"
-      ],
-      "difficulty": 0.48,
-      "visually_answerable": true,
-      "answer_spans": []
-    },
-    {
-      "id": "itm_0103",
-      "node_id": "n20",
-      "type": "node_click",
-      "prompt": "Which concept is described as: Placeholder definition for Terdnesk phase. Regenerated fixture, not source text.",
-      "answer": "n20",
-      "answer_aliases": [
-        "terdnesk phase",
-        "terdnesk-phase"
-      ],
-      "distractors": [
-        "n18",
-        "n37",
-        "n28"
-      ],
-      "difficulty": 0.43,
-      "visually_answerable": true,
-      "answer_spans": []
-    },
-    {
-      "id": "itm_0104",
-      "node_id": "n20",
-      "type": "mcq",
-      "prompt": "Which concept is described as: Placeholder definition for Terdnesk phase. Regenerated fixture, not source text.",
-      "answer": "n20",
-      "answer_aliases": [
-        "terdnesk phase",
-        "terdnesk-phase"
-      ],
-      "distractors": [
-        "n42",
-        "n28",
-        "n01"
+        "n38",
+        "n35",
+        "n14"
       ],
       "difficulty": 0.4,
       "visually_answerable": true,
       "answer_spans": []
     },
     {
-      "id": "itm_0105",
+      "id": "itm_0102",
       "node_id": "n20",
       "type": "edge_click",
       "prompt": "Click the edge leading into Terdnesk phase.",
@@ -1972,12 +1735,60 @@
         "praennith phase to terdnesk phase"
       ],
       "distractors": [
-        "n10",
-        "n13",
-        "n38"
+        "n08",
+        "n03",
+        "n27"
       ],
       "difficulty": 0.53,
       "visually_answerable": true,
+      "answer_spans": []
+    },
+    {
+      "id": "itm_0103",
+      "node_id": "n20",
+      "type": "mcq",
+      "prompt": "Mechanism question about Terdnesk phase.",
+      "answer": "Because the terdnesk phase is treated as evidence of congestion.",
+      "answer_aliases": [],
+      "distractors": [
+        "Because the receiver ran out of buffer space.",
+        "Because the round-trip time estimate expired.",
+        "Because the sender exhausted its send window."
+      ],
+      "difficulty": 0.48,
+      "visually_answerable": false,
+      "answer_spans": []
+    },
+    {
+      "id": "itm_0104",
+      "node_id": "n20",
+      "type": "mcq",
+      "prompt": "Mechanism question about Terdnesk phase.",
+      "answer": "It grows once per round trip rather than once per acknowledgement.",
+      "answer_aliases": [],
+      "distractors": [
+        "It grows once per acknowledgement rather than once per round trip.",
+        "It stays fixed until a loss event occurs.",
+        "It halves on every acknowledgement received."
+      ],
+      "difficulty": 0.48,
+      "visually_answerable": false,
+      "answer_spans": []
+    },
+    {
+      "id": "itm_0105",
+      "node_id": "n20",
+      "type": "mcq",
+      "prompt": "Mechanism question about Terdnesk phase.",
+      "answer": "The sender has no estimate of available capacity yet.",
+      "answer_aliases": [],
+      "distractors": [
+        "The receiver has not advertised a window yet.",
+        "The retransmission timer has not been initialised.",
+        "The connection is still in the handshake."
+      ],
+      "difficulty": 0.48,
+      "visually_answerable": false,
       "answer_spans": []
     },
     {
@@ -1991,73 +1802,16 @@
         "stelouth-limit"
       ],
       "distractors": [
-        "n08",
-        "n35",
-        "n31"
+        "n46",
+        "n16",
+        "n04"
       ],
-      "difficulty": 0.39,
+      "difficulty": 0.4,
       "visually_answerable": true,
       "answer_spans": []
     },
     {
       "id": "itm_0107",
-      "node_id": "n21",
-      "type": "mcq",
-      "prompt": "Which concept is described as: Placeholder definition for Stelouth limit. Regenerated fixture, not source text.",
-      "answer": "n21",
-      "answer_aliases": [
-        "stelouth limit",
-        "stelouth-limit"
-      ],
-      "distractors": [
-        "n25",
-        "n48",
-        "n34"
-      ],
-      "difficulty": 0.36,
-      "visually_answerable": true,
-      "answer_spans": []
-    },
-    {
-      "id": "itm_0108",
-      "node_id": "n21",
-      "type": "node_click",
-      "prompt": "Which concept is described as: Placeholder definition for Stelouth limit. Regenerated fixture, not source text.",
-      "answer": "n21",
-      "answer_aliases": [
-        "stelouth limit",
-        "stelouth-limit"
-      ],
-      "distractors": [
-        "n20",
-        "n41",
-        "n17"
-      ],
-      "difficulty": 0.37,
-      "visually_answerable": true,
-      "answer_spans": []
-    },
-    {
-      "id": "itm_0109",
-      "node_id": "n21",
-      "type": "mcq",
-      "prompt": "Which concept is described as: Placeholder definition for Stelouth limit. Regenerated fixture, not source text.",
-      "answer": "n21",
-      "answer_aliases": [
-        "stelouth limit",
-        "stelouth-limit"
-      ],
-      "distractors": [
-        "n25",
-        "n42",
-        "n27"
-      ],
-      "difficulty": 0.36,
-      "visually_answerable": true,
-      "answer_spans": []
-    },
-    {
-      "id": "itm_0110",
       "node_id": "n21",
       "type": "edge_click",
       "prompt": "Click the edge leading into Stelouth limit.",
@@ -2066,12 +1820,60 @@
         "flaen bound to stelouth limit"
       ],
       "distractors": [
-        "n28",
-        "n36",
-        "n32"
+        "n45",
+        "n08",
+        "n31"
       ],
       "difficulty": 0.5,
       "visually_answerable": true,
+      "answer_spans": []
+    },
+    {
+      "id": "itm_0108",
+      "node_id": "n21",
+      "type": "mcq",
+      "prompt": "Mechanism question about Stelouth limit.",
+      "answer": "Because the stelouth limit is treated as evidence of congestion.",
+      "answer_aliases": [],
+      "distractors": [
+        "Because the receiver ran out of buffer space.",
+        "Because the round-trip time estimate expired.",
+        "Because the sender exhausted its send window."
+      ],
+      "difficulty": 0.45,
+      "visually_answerable": false,
+      "answer_spans": []
+    },
+    {
+      "id": "itm_0109",
+      "node_id": "n21",
+      "type": "mcq",
+      "prompt": "Mechanism question about Stelouth limit.",
+      "answer": "It grows once per round trip rather than once per acknowledgement.",
+      "answer_aliases": [],
+      "distractors": [
+        "It grows once per acknowledgement rather than once per round trip.",
+        "It stays fixed until a loss event occurs.",
+        "It halves on every acknowledgement received."
+      ],
+      "difficulty": 0.45,
+      "visually_answerable": false,
+      "answer_spans": []
+    },
+    {
+      "id": "itm_0110",
+      "node_id": "n21",
+      "type": "mcq",
+      "prompt": "Mechanism question about Stelouth limit.",
+      "answer": "The sender has no estimate of available capacity yet.",
+      "answer_aliases": [],
+      "distractors": [
+        "The receiver has not advertised a window yet.",
+        "The retransmission timer has not been initialised.",
+        "The connection is still in the handshake."
+      ],
+      "difficulty": 0.45,
+      "visually_answerable": false,
       "answer_spans": []
     },
     {
@@ -2085,73 +1887,16 @@
         "prenthiask"
       ],
       "distractors": [
-        "n14",
-        "n46",
-        "n16"
+        "n09",
+        "n02",
+        "n33"
       ],
-      "difficulty": 0.41,
+      "difficulty": 0.44,
       "visually_answerable": true,
       "answer_spans": []
     },
     {
       "id": "itm_0112",
-      "node_id": "n22",
-      "type": "mcq",
-      "prompt": "Which concept is described as: Placeholder definition for Prenthiask. Regenerated fixture, not source text.",
-      "answer": "n22",
-      "answer_aliases": [
-        "prenthiask",
-        "prenthiask"
-      ],
-      "distractors": [
-        "n44",
-        "n24",
-        "n21"
-      ],
-      "difficulty": 0.39,
-      "visually_answerable": true,
-      "answer_spans": []
-    },
-    {
-      "id": "itm_0113",
-      "node_id": "n22",
-      "type": "node_click",
-      "prompt": "Which concept is described as: Placeholder definition for Prenthiask. Regenerated fixture, not source text.",
-      "answer": "n22",
-      "answer_aliases": [
-        "prenthiask",
-        "prenthiask"
-      ],
-      "distractors": [
-        "n36",
-        "n39",
-        "n23"
-      ],
-      "difficulty": 0.46,
-      "visually_answerable": true,
-      "answer_spans": []
-    },
-    {
-      "id": "itm_0114",
-      "node_id": "n22",
-      "type": "mcq",
-      "prompt": "Which concept is described as: Placeholder definition for Prenthiask. Regenerated fixture, not source text.",
-      "answer": "n22",
-      "answer_aliases": [
-        "prenthiask",
-        "prenthiask"
-      ],
-      "distractors": [
-        "n43",
-        "n19",
-        "n36"
-      ],
-      "difficulty": 0.42,
-      "visually_answerable": true,
-      "answer_spans": []
-    },
-    {
-      "id": "itm_0115",
       "node_id": "n22",
       "type": "edge_click",
       "prompt": "Click the edge leading into Prenthiask.",
@@ -2160,12 +1905,60 @@
         "to bound to prenthiask"
       ],
       "distractors": [
-        "n40",
-        "n09",
-        "n27"
+        "n21",
+        "n36",
+        "n03"
       ],
       "difficulty": 0.53,
       "visually_answerable": true,
+      "answer_spans": []
+    },
+    {
+      "id": "itm_0113",
+      "node_id": "n22",
+      "type": "mcq",
+      "prompt": "Mechanism question about Prenthiask.",
+      "answer": "Because the prenthiask is treated as evidence of congestion.",
+      "answer_aliases": [],
+      "distractors": [
+        "Because the receiver ran out of buffer space.",
+        "Because the round-trip time estimate expired.",
+        "Because the sender exhausted its send window."
+      ],
+      "difficulty": 0.48,
+      "visually_answerable": false,
+      "answer_spans": []
+    },
+    {
+      "id": "itm_0114",
+      "node_id": "n22",
+      "type": "mcq",
+      "prompt": "Mechanism question about Prenthiask.",
+      "answer": "It grows once per round trip rather than once per acknowledgement.",
+      "answer_aliases": [],
+      "distractors": [
+        "It grows once per acknowledgement rather than once per round trip.",
+        "It stays fixed until a loss event occurs.",
+        "It halves on every acknowledgement received."
+      ],
+      "difficulty": 0.48,
+      "visually_answerable": false,
+      "answer_spans": []
+    },
+    {
+      "id": "itm_0115",
+      "node_id": "n22",
+      "type": "mcq",
+      "prompt": "Mechanism question about Prenthiask.",
+      "answer": "The sender has no estimate of available capacity yet.",
+      "answer_aliases": [],
+      "distractors": [
+        "The receiver has not advertised a window yet.",
+        "The retransmission timer has not been initialised.",
+        "The connection is still in the handshake."
+      ],
+      "difficulty": 0.48,
+      "visually_answerable": false,
       "answer_spans": []
     },
     {
@@ -2179,73 +1972,16 @@
         "stostdrial"
       ],
       "distractors": [
-        "n05",
-        "n27",
-        "n02"
+        "n49",
+        "n39",
+        "n22"
       ],
-      "difficulty": 0.39,
+      "difficulty": 0.35,
       "visually_answerable": true,
       "answer_spans": []
     },
     {
       "id": "itm_0117",
-      "node_id": "n23",
-      "type": "mcq",
-      "prompt": "Which concept is described as: Placeholder definition for Stostdrial. Regenerated fixture, not source text.",
-      "answer": "n23",
-      "answer_aliases": [
-        "stostdrial",
-        "stostdrial"
-      ],
-      "distractors": [
-        "n14",
-        "n40",
-        "n10"
-      ],
-      "difficulty": 0.4,
-      "visually_answerable": true,
-      "answer_spans": []
-    },
-    {
-      "id": "itm_0118",
-      "node_id": "n23",
-      "type": "node_click",
-      "prompt": "Which concept is described as: Placeholder definition for Stostdrial. Regenerated fixture, not source text.",
-      "answer": "n23",
-      "answer_aliases": [
-        "stostdrial",
-        "stostdrial"
-      ],
-      "distractors": [
-        "n26",
-        "n41",
-        "n40"
-      ],
-      "difficulty": 0.36,
-      "visually_answerable": true,
-      "answer_spans": []
-    },
-    {
-      "id": "itm_0119",
-      "node_id": "n23",
-      "type": "mcq",
-      "prompt": "Which concept is described as: Placeholder definition for Stostdrial. Regenerated fixture, not source text.",
-      "answer": "n23",
-      "answer_aliases": [
-        "stostdrial",
-        "stostdrial"
-      ],
-      "distractors": [
-        "n40",
-        "n06",
-        "n21"
-      ],
-      "difficulty": 0.41,
-      "visually_answerable": true,
-      "answer_spans": []
-    },
-    {
-      "id": "itm_0120",
       "node_id": "n23",
       "type": "edge_click",
       "prompt": "Click the edge leading into Stostdrial.",
@@ -2254,12 +1990,60 @@
         "groustprem bound to stostdrial"
       ],
       "distractors": [
+        "n41",
         "n21",
-        "n11",
-        "n22"
+        "n08"
       ],
       "difficulty": 0.47,
       "visually_answerable": true,
+      "answer_spans": []
+    },
+    {
+      "id": "itm_0118",
+      "node_id": "n23",
+      "type": "mcq",
+      "prompt": "Mechanism question about Stostdrial.",
+      "answer": "Because the stostdrial is treated as evidence of congestion.",
+      "answer_aliases": [],
+      "distractors": [
+        "Because the receiver ran out of buffer space.",
+        "Because the round-trip time estimate expired.",
+        "Because the sender exhausted its send window."
+      ],
+      "difficulty": 0.42,
+      "visually_answerable": false,
+      "answer_spans": []
+    },
+    {
+      "id": "itm_0119",
+      "node_id": "n23",
+      "type": "mcq",
+      "prompt": "Mechanism question about Stostdrial.",
+      "answer": "It grows once per round trip rather than once per acknowledgement.",
+      "answer_aliases": [],
+      "distractors": [
+        "It grows once per acknowledgement rather than once per round trip.",
+        "It stays fixed until a loss event occurs.",
+        "It halves on every acknowledgement received."
+      ],
+      "difficulty": 0.42,
+      "visually_answerable": false,
+      "answer_spans": []
+    },
+    {
+      "id": "itm_0120",
+      "node_id": "n23",
+      "type": "mcq",
+      "prompt": "Mechanism question about Stostdrial.",
+      "answer": "The sender has no estimate of available capacity yet.",
+      "answer_aliases": [],
+      "distractors": [
+        "The receiver has not advertised a window yet.",
+        "The retransmission timer has not been initialised.",
+        "The connection is still in the handshake."
+      ],
+      "difficulty": 0.42,
+      "visually_answerable": false,
       "answer_spans": []
     },
     {
@@ -2273,73 +2057,16 @@
         "lest-limit"
       ],
       "distractors": [
-        "n00",
-        "n32",
-        "n28"
-      ],
-      "difficulty": 0.44,
-      "visually_answerable": true,
-      "answer_spans": []
-    },
-    {
-      "id": "itm_0122",
-      "node_id": "n24",
-      "type": "mcq",
-      "prompt": "Which concept is described as: Placeholder definition for Lest limit. Regenerated fixture, not source text.",
-      "answer": "n24",
-      "answer_aliases": [
-        "lest limit",
-        "lest-limit"
-      ],
-      "distractors": [
-        "n00",
-        "n16",
-        "n04"
+        "n20",
+        "n02",
+        "n39"
       ],
       "difficulty": 0.46,
       "visually_answerable": true,
       "answer_spans": []
     },
     {
-      "id": "itm_0123",
-      "node_id": "n24",
-      "type": "node_click",
-      "prompt": "Which concept is described as: Placeholder definition for Lest limit. Regenerated fixture, not source text.",
-      "answer": "n24",
-      "answer_aliases": [
-        "lest limit",
-        "lest-limit"
-      ],
-      "distractors": [
-        "n19",
-        "n32",
-        "n06"
-      ],
-      "difficulty": 0.39,
-      "visually_answerable": true,
-      "answer_spans": []
-    },
-    {
-      "id": "itm_0124",
-      "node_id": "n24",
-      "type": "mcq",
-      "prompt": "Which concept is described as: Placeholder definition for Lest limit. Regenerated fixture, not source text.",
-      "answer": "n24",
-      "answer_aliases": [
-        "lest limit",
-        "lest-limit"
-      ],
-      "distractors": [
-        "n41",
-        "n09",
-        "n47"
-      ],
-      "difficulty": 0.45,
-      "visually_answerable": true,
-      "answer_spans": []
-    },
-    {
-      "id": "itm_0125",
+      "id": "itm_0122",
       "node_id": "n24",
       "type": "edge_click",
       "prompt": "Click the edge leading into Lest limit.",
@@ -2348,12 +2075,60 @@
         "groustprem bound to lest limit"
       ],
       "distractors": [
-        "n28",
-        "n38",
+        "n07",
+        "n37",
         "n14"
       ],
       "difficulty": 0.52,
       "visually_answerable": true,
+      "answer_spans": []
+    },
+    {
+      "id": "itm_0123",
+      "node_id": "n24",
+      "type": "mcq",
+      "prompt": "Mechanism question about Lest limit.",
+      "answer": "Because the lest limit is treated as evidence of congestion.",
+      "answer_aliases": [],
+      "distractors": [
+        "Because the receiver ran out of buffer space.",
+        "Because the round-trip time estimate expired.",
+        "Because the sender exhausted its send window."
+      ],
+      "difficulty": 0.47,
+      "visually_answerable": false,
+      "answer_spans": []
+    },
+    {
+      "id": "itm_0124",
+      "node_id": "n24",
+      "type": "mcq",
+      "prompt": "Mechanism question about Lest limit.",
+      "answer": "It grows once per round trip rather than once per acknowledgement.",
+      "answer_aliases": [],
+      "distractors": [
+        "It grows once per acknowledgement rather than once per round trip.",
+        "It stays fixed until a loss event occurs.",
+        "It halves on every acknowledgement received."
+      ],
+      "difficulty": 0.47,
+      "visually_answerable": false,
+      "answer_spans": []
+    },
+    {
+      "id": "itm_0125",
+      "node_id": "n24",
+      "type": "mcq",
+      "prompt": "Mechanism question about Lest limit.",
+      "answer": "The sender has no estimate of available capacity yet.",
+      "answer_aliases": [],
+      "distractors": [
+        "The receiver has not advertised a window yet.",
+        "The retransmission timer has not been initialised.",
+        "The connection is still in the handshake."
+      ],
+      "difficulty": 0.47,
+      "visually_answerable": false,
       "answer_spans": []
     },
     {
@@ -2367,73 +2142,16 @@
         "mon-phase"
       ],
       "distractors": [
-        "n29",
-        "n40",
-        "n44"
+        "n22",
+        "n45",
+        "n47"
       ],
-      "difficulty": 0.56,
+      "difficulty": 0.57,
       "visually_answerable": true,
       "answer_spans": []
     },
     {
       "id": "itm_0127",
-      "node_id": "n25",
-      "type": "mcq",
-      "prompt": "Which concept is described as: Placeholder definition for Mon phase. Regenerated fixture, not source text.",
-      "answer": "n25",
-      "answer_aliases": [
-        "mon phase",
-        "mon-phase"
-      ],
-      "distractors": [
-        "n09",
-        "n39",
-        "n34"
-      ],
-      "difficulty": 0.51,
-      "visually_answerable": true,
-      "answer_spans": []
-    },
-    {
-      "id": "itm_0128",
-      "node_id": "n25",
-      "type": "node_click",
-      "prompt": "Which concept is described as: Placeholder definition for Mon phase. Regenerated fixture, not source text.",
-      "answer": "n25",
-      "answer_aliases": [
-        "mon phase",
-        "mon-phase"
-      ],
-      "distractors": [
-        "n10",
-        "n11",
-        "n19"
-      ],
-      "difficulty": 0.53,
-      "visually_answerable": true,
-      "answer_spans": []
-    },
-    {
-      "id": "itm_0129",
-      "node_id": "n25",
-      "type": "mcq",
-      "prompt": "Which concept is described as: Placeholder definition for Mon phase. Regenerated fixture, not source text.",
-      "answer": "n25",
-      "answer_aliases": [
-        "mon phase",
-        "mon-phase"
-      ],
-      "distractors": [
-        "n07",
-        "n45",
-        "n46"
-      ],
-      "difficulty": 0.55,
-      "visually_answerable": true,
-      "answer_spans": []
-    },
-    {
-      "id": "itm_0130",
       "node_id": "n25",
       "type": "edge_click",
       "prompt": "Click the edge leading into Mon phase.",
@@ -2442,12 +2160,60 @@
         "brard pass to mon phase"
       ],
       "distractors": [
-        "n44",
-        "n04",
-        "n05"
+        "n19",
+        "n17",
+        "n31"
       ],
       "difficulty": 0.62,
       "visually_answerable": true,
+      "answer_spans": []
+    },
+    {
+      "id": "itm_0128",
+      "node_id": "n25",
+      "type": "mcq",
+      "prompt": "Mechanism question about Mon phase.",
+      "answer": "Because the mon phase is treated as evidence of congestion.",
+      "answer_aliases": [],
+      "distractors": [
+        "Because the receiver ran out of buffer space.",
+        "Because the round-trip time estimate expired.",
+        "Because the sender exhausted its send window."
+      ],
+      "difficulty": 0.57,
+      "visually_answerable": false,
+      "answer_spans": []
+    },
+    {
+      "id": "itm_0129",
+      "node_id": "n25",
+      "type": "mcq",
+      "prompt": "Mechanism question about Mon phase.",
+      "answer": "It grows once per round trip rather than once per acknowledgement.",
+      "answer_aliases": [],
+      "distractors": [
+        "It grows once per acknowledgement rather than once per round trip.",
+        "It stays fixed until a loss event occurs.",
+        "It halves on every acknowledgement received."
+      ],
+      "difficulty": 0.57,
+      "visually_answerable": false,
+      "answer_spans": []
+    },
+    {
+      "id": "itm_0130",
+      "node_id": "n25",
+      "type": "mcq",
+      "prompt": "Mechanism question about Mon phase.",
+      "answer": "The sender has no estimate of available capacity yet.",
+      "answer_aliases": [],
+      "distractors": [
+        "The receiver has not advertised a window yet.",
+        "The retransmission timer has not been initialised.",
+        "The connection is still in the handshake."
+      ],
+      "difficulty": 0.57,
+      "visually_answerable": false,
       "answer_spans": []
     },
     {
@@ -2461,73 +2227,16 @@
         "noststaeth-bound"
       ],
       "distractors": [
-        "n10",
-        "n21",
-        "n17"
+        "n18",
+        "n37",
+        "n28"
       ],
-      "difficulty": 0.51,
+      "difficulty": 0.53,
       "visually_answerable": true,
       "answer_spans": []
     },
     {
       "id": "itm_0132",
-      "node_id": "n26",
-      "type": "mcq",
-      "prompt": "Which concept is described as: Placeholder definition for Noststaeth bound. Regenerated fixture, not source text.",
-      "answer": "n26",
-      "answer_aliases": [
-        "noststaeth bound",
-        "noststaeth-bound"
-      ],
-      "distractors": [
-        "n10",
-        "n28",
-        "n12"
-      ],
-      "difficulty": 0.57,
-      "visually_answerable": true,
-      "answer_spans": []
-    },
-    {
-      "id": "itm_0133",
-      "node_id": "n26",
-      "type": "node_click",
-      "prompt": "Which concept is described as: Placeholder definition for Noststaeth bound. Regenerated fixture, not source text.",
-      "answer": "n26",
-      "answer_aliases": [
-        "noststaeth bound",
-        "noststaeth-bound"
-      ],
-      "distractors": [
-        "n16",
-        "n04",
-        "n45"
-      ],
-      "difficulty": 0.49,
-      "visually_answerable": true,
-      "answer_spans": []
-    },
-    {
-      "id": "itm_0134",
-      "node_id": "n26",
-      "type": "mcq",
-      "prompt": "Which concept is described as: Placeholder definition for Noststaeth bound. Regenerated fixture, not source text.",
-      "answer": "n26",
-      "answer_aliases": [
-        "noststaeth bound",
-        "noststaeth-bound"
-      ],
-      "distractors": [
-        "n13",
-        "n42",
-        "n05"
-      ],
-      "difficulty": 0.49,
-      "visually_answerable": true,
-      "answer_spans": []
-    },
-    {
-      "id": "itm_0135",
       "node_id": "n26",
       "type": "edge_click",
       "prompt": "Click the edge leading into Noststaeth bound.",
@@ -2536,12 +2245,60 @@
         "steskgrengsterd to noststaeth bound"
       ],
       "distractors": [
-        "n23",
-        "n16",
-        "n41"
+        "n42",
+        "n28",
+        "n01"
       ],
       "difficulty": 0.63,
       "visually_answerable": true,
+      "answer_spans": []
+    },
+    {
+      "id": "itm_0133",
+      "node_id": "n26",
+      "type": "mcq",
+      "prompt": "Mechanism question about Noststaeth bound.",
+      "answer": "Because the noststaeth bound is treated as evidence of congestion.",
+      "answer_aliases": [],
+      "distractors": [
+        "Because the receiver ran out of buffer space.",
+        "Because the round-trip time estimate expired.",
+        "Because the sender exhausted its send window."
+      ],
+      "difficulty": 0.58,
+      "visually_answerable": false,
+      "answer_spans": []
+    },
+    {
+      "id": "itm_0134",
+      "node_id": "n26",
+      "type": "mcq",
+      "prompt": "Mechanism question about Noststaeth bound.",
+      "answer": "It grows once per round trip rather than once per acknowledgement.",
+      "answer_aliases": [],
+      "distractors": [
+        "It grows once per acknowledgement rather than once per round trip.",
+        "It stays fixed until a loss event occurs.",
+        "It halves on every acknowledgement received."
+      ],
+      "difficulty": 0.58,
+      "visually_answerable": false,
+      "answer_spans": []
+    },
+    {
+      "id": "itm_0135",
+      "node_id": "n26",
+      "type": "mcq",
+      "prompt": "Mechanism question about Noststaeth bound.",
+      "answer": "The sender has no estimate of available capacity yet.",
+      "answer_aliases": [],
+      "distractors": [
+        "The receiver has not advertised a window yet.",
+        "The retransmission timer has not been initialised.",
+        "The connection is still in the handshake."
+      ],
+      "difficulty": 0.58,
+      "visually_answerable": false,
       "answer_spans": []
     },
     {
@@ -2555,73 +2312,16 @@
         "drimdriang-phase"
       ],
       "distractors": [
-        "n36",
-        "n02",
-        "n13"
+        "n14",
+        "n24",
+        "n48"
       ],
-      "difficulty": 0.54,
+      "difficulty": 0.5,
       "visually_answerable": true,
       "answer_spans": []
     },
     {
       "id": "itm_0137",
-      "node_id": "n27",
-      "type": "mcq",
-      "prompt": "Which concept is described as: Placeholder definition for Drimdriang phase. Regenerated fixture, not source text.",
-      "answer": "n27",
-      "answer_aliases": [
-        "drimdriang phase",
-        "drimdriang-phase"
-      ],
-      "distractors": [
-        "n16",
-        "n40",
-        "n22"
-      ],
-      "difficulty": 0.51,
-      "visually_answerable": true,
-      "answer_spans": []
-    },
-    {
-      "id": "itm_0138",
-      "node_id": "n27",
-      "type": "node_click",
-      "prompt": "Which concept is described as: Placeholder definition for Drimdriang phase. Regenerated fixture, not source text.",
-      "answer": "n27",
-      "answer_aliases": [
-        "drimdriang phase",
-        "drimdriang-phase"
-      ],
-      "distractors": [
-        "n32",
-        "n31",
-        "n09"
-      ],
-      "difficulty": 0.52,
-      "visually_answerable": true,
-      "answer_spans": []
-    },
-    {
-      "id": "itm_0139",
-      "node_id": "n27",
-      "type": "mcq",
-      "prompt": "Which concept is described as: Placeholder definition for Drimdriang phase. Regenerated fixture, not source text.",
-      "answer": "n27",
-      "answer_aliases": [
-        "drimdriang phase",
-        "drimdriang-phase"
-      ],
-      "distractors": [
-        "n09",
-        "n47",
-        "n17"
-      ],
-      "difficulty": 0.46,
-      "visually_answerable": true,
-      "answer_spans": []
-    },
-    {
-      "id": "itm_0140",
       "node_id": "n27",
       "type": "edge_click",
       "prompt": "Click the edge leading into Drimdriang phase.",
@@ -2630,12 +2330,60 @@
         "droun state to drimdriang phase"
       ],
       "distractors": [
-        "n48",
-        "n28",
-        "n22"
+        "n42",
+        "n20",
+        "n41"
       ],
       "difficulty": 0.6,
       "visually_answerable": true,
+      "answer_spans": []
+    },
+    {
+      "id": "itm_0138",
+      "node_id": "n27",
+      "type": "mcq",
+      "prompt": "Mechanism question about Drimdriang phase.",
+      "answer": "Because the drimdriang phase is treated as evidence of congestion.",
+      "answer_aliases": [],
+      "distractors": [
+        "Because the receiver ran out of buffer space.",
+        "Because the round-trip time estimate expired.",
+        "Because the sender exhausted its send window."
+      ],
+      "difficulty": 0.55,
+      "visually_answerable": false,
+      "answer_spans": []
+    },
+    {
+      "id": "itm_0139",
+      "node_id": "n27",
+      "type": "mcq",
+      "prompt": "Mechanism question about Drimdriang phase.",
+      "answer": "It grows once per round trip rather than once per acknowledgement.",
+      "answer_aliases": [],
+      "distractors": [
+        "It grows once per acknowledgement rather than once per round trip.",
+        "It stays fixed until a loss event occurs.",
+        "It halves on every acknowledgement received."
+      ],
+      "difficulty": 0.55,
+      "visually_answerable": false,
+      "answer_spans": []
+    },
+    {
+      "id": "itm_0140",
+      "node_id": "n27",
+      "type": "mcq",
+      "prompt": "Mechanism question about Drimdriang phase.",
+      "answer": "The sender has no estimate of available capacity yet.",
+      "answer_aliases": [],
+      "distractors": [
+        "The receiver has not advertised a window yet.",
+        "The retransmission timer has not been initialised.",
+        "The connection is still in the handshake."
+      ],
+      "difficulty": 0.55,
+      "visually_answerable": false,
       "answer_spans": []
     },
     {
@@ -2649,73 +2397,16 @@
         "drilseimsturd-pass"
       ],
       "distractors": [
-        "n21",
-        "n12",
-        "n07"
+        "n32",
+        "n14",
+        "n46"
       ],
-      "difficulty": 0.45,
+      "difficulty": 0.48,
       "visually_answerable": true,
       "answer_spans": []
     },
     {
       "id": "itm_0142",
-      "node_id": "n28",
-      "type": "mcq",
-      "prompt": "Which concept is described as: Placeholder definition for Drilseimsturd pass. Regenerated fixture, not source text.",
-      "answer": "n28",
-      "answer_aliases": [
-        "drilseimsturd pass",
-        "drilseimsturd-pass"
-      ],
-      "distractors": [
-        "n21",
-        "n08",
-        "n39"
-      ],
-      "difficulty": 0.46,
-      "visually_answerable": true,
-      "answer_spans": []
-    },
-    {
-      "id": "itm_0143",
-      "node_id": "n28",
-      "type": "node_click",
-      "prompt": "Which concept is described as: Placeholder definition for Drilseimsturd pass. Regenerated fixture, not source text.",
-      "answer": "n28",
-      "answer_aliases": [
-        "drilseimsturd pass",
-        "drilseimsturd-pass"
-      ],
-      "distractors": [
-        "n07",
-        "n45",
-        "n10"
-      ],
-      "difficulty": 0.45,
-      "visually_answerable": true,
-      "answer_spans": []
-    },
-    {
-      "id": "itm_0144",
-      "node_id": "n28",
-      "type": "mcq",
-      "prompt": "Which concept is described as: Placeholder definition for Drilseimsturd pass. Regenerated fixture, not source text.",
-      "answer": "n28",
-      "answer_aliases": [
-        "drilseimsturd pass",
-        "drilseimsturd-pass"
-      ],
-      "distractors": [
-        "n47",
-        "n08",
-        "n30"
-      ],
-      "difficulty": 0.53,
-      "visually_answerable": true,
-      "answer_spans": []
-    },
-    {
-      "id": "itm_0145",
       "node_id": "n28",
       "type": "edge_click",
       "prompt": "Click the edge leading into Drilseimsturd pass.",
@@ -2724,12 +2415,60 @@
         "terdnesk phase to drilseimsturd pass"
       ],
       "distractors": [
-        "n37",
         "n25",
-        "n04"
+        "n44",
+        "n23"
       ],
       "difficulty": 0.6,
       "visually_answerable": true,
+      "answer_spans": []
+    },
+    {
+      "id": "itm_0143",
+      "node_id": "n28",
+      "type": "mcq",
+      "prompt": "Mechanism question about Drilseimsturd pass.",
+      "answer": "Because the drilseimsturd pass is treated as evidence of congestion.",
+      "answer_aliases": [],
+      "distractors": [
+        "Because the receiver ran out of buffer space.",
+        "Because the round-trip time estimate expired.",
+        "Because the sender exhausted its send window."
+      ],
+      "difficulty": 0.55,
+      "visually_answerable": false,
+      "answer_spans": []
+    },
+    {
+      "id": "itm_0144",
+      "node_id": "n28",
+      "type": "mcq",
+      "prompt": "Mechanism question about Drilseimsturd pass.",
+      "answer": "It grows once per round trip rather than once per acknowledgement.",
+      "answer_aliases": [],
+      "distractors": [
+        "It grows once per acknowledgement rather than once per round trip.",
+        "It stays fixed until a loss event occurs.",
+        "It halves on every acknowledgement received."
+      ],
+      "difficulty": 0.55,
+      "visually_answerable": false,
+      "answer_spans": []
+    },
+    {
+      "id": "itm_0145",
+      "node_id": "n28",
+      "type": "mcq",
+      "prompt": "Mechanism question about Drilseimsturd pass.",
+      "answer": "The sender has no estimate of available capacity yet.",
+      "answer_aliases": [],
+      "distractors": [
+        "The receiver has not advertised a window yet.",
+        "The retransmission timer has not been initialised.",
+        "The connection is still in the handshake."
+      ],
+      "difficulty": 0.55,
+      "visually_answerable": false,
       "answer_spans": []
     },
     {
@@ -2743,73 +2482,16 @@
         "seistmeth-phase"
       ],
       "distractors": [
-        "n49",
-        "n00",
-        "n21"
+        "n27",
+        "n28",
+        "n40"
       ],
-      "difficulty": 0.48,
+      "difficulty": 0.45,
       "visually_answerable": true,
       "answer_spans": []
     },
     {
       "id": "itm_0147",
-      "node_id": "n29",
-      "type": "mcq",
-      "prompt": "Which concept is described as: Placeholder definition for Seistmeth phase. Regenerated fixture, not source text.",
-      "answer": "n29",
-      "answer_aliases": [
-        "seistmeth phase",
-        "seistmeth-phase"
-      ],
-      "distractors": [
-        "n45",
-        "n46",
-        "n11"
-      ],
-      "difficulty": 0.47,
-      "visually_answerable": true,
-      "answer_spans": []
-    },
-    {
-      "id": "itm_0148",
-      "node_id": "n29",
-      "type": "node_click",
-      "prompt": "Which concept is described as: Placeholder definition for Seistmeth phase. Regenerated fixture, not source text.",
-      "answer": "n29",
-      "answer_aliases": [
-        "seistmeth phase",
-        "seistmeth-phase"
-      ],
-      "distractors": [
-        "n18",
-        "n00",
-        "n32"
-      ],
-      "difficulty": 0.46,
-      "visually_answerable": true,
-      "answer_spans": []
-    },
-    {
-      "id": "itm_0149",
-      "node_id": "n29",
-      "type": "mcq",
-      "prompt": "Which concept is described as: Placeholder definition for Seistmeth phase. Regenerated fixture, not source text.",
-      "answer": "n29",
-      "answer_aliases": [
-        "seistmeth phase",
-        "seistmeth-phase"
-      ],
-      "distractors": [
-        "n13",
-        "n17",
-        "n31"
-      ],
-      "difficulty": 0.49,
-      "visually_answerable": true,
-      "answer_spans": []
-    },
-    {
-      "id": "itm_0150",
       "node_id": "n29",
       "type": "edge_click",
       "prompt": "Click the edge leading into Seistmeth phase.",
@@ -2818,12 +2500,60 @@
         "stelouth limit to seistmeth phase"
       ],
       "distractors": [
-        "n44",
-        "n24",
-        "n25"
+        "n05",
+        "n26",
+        "n02"
       ],
       "difficulty": 0.58,
       "visually_answerable": true,
+      "answer_spans": []
+    },
+    {
+      "id": "itm_0148",
+      "node_id": "n29",
+      "type": "mcq",
+      "prompt": "Mechanism question about Seistmeth phase.",
+      "answer": "Because the seistmeth phase is treated as evidence of congestion.",
+      "answer_aliases": [],
+      "distractors": [
+        "Because the receiver ran out of buffer space.",
+        "Because the round-trip time estimate expired.",
+        "Because the sender exhausted its send window."
+      ],
+      "difficulty": 0.53,
+      "visually_answerable": false,
+      "answer_spans": []
+    },
+    {
+      "id": "itm_0149",
+      "node_id": "n29",
+      "type": "mcq",
+      "prompt": "Mechanism question about Seistmeth phase.",
+      "answer": "It grows once per round trip rather than once per acknowledgement.",
+      "answer_aliases": [],
+      "distractors": [
+        "It grows once per acknowledgement rather than once per round trip.",
+        "It stays fixed until a loss event occurs.",
+        "It halves on every acknowledgement received."
+      ],
+      "difficulty": 0.53,
+      "visually_answerable": false,
+      "answer_spans": []
+    },
+    {
+      "id": "itm_0150",
+      "node_id": "n29",
+      "type": "mcq",
+      "prompt": "Mechanism question about Seistmeth phase.",
+      "answer": "The sender has no estimate of available capacity yet.",
+      "answer_aliases": [],
+      "distractors": [
+        "The receiver has not advertised a window yet.",
+        "The retransmission timer has not been initialised.",
+        "The connection is still in the handshake."
+      ],
+      "difficulty": 0.53,
+      "visually_answerable": false,
       "answer_spans": []
     },
     {
@@ -2837,73 +2567,16 @@
         "muprethliask-limit"
       ],
       "distractors": [
-        "n24",
-        "n49",
-        "n37"
+        "n40",
+        "n23",
+        "n06"
       ],
-      "difficulty": 0.45,
+      "difficulty": 0.44,
       "visually_answerable": true,
       "answer_spans": []
     },
     {
       "id": "itm_0152",
-      "node_id": "n30",
-      "type": "mcq",
-      "prompt": "Which concept is described as: Placeholder definition for Muprethliask limit. Regenerated fixture, not source text.",
-      "answer": "n30",
-      "answer_aliases": [
-        "muprethliask limit",
-        "muprethliask-limit"
-      ],
-      "distractors": [
-        "n12",
-        "n40",
-        "n45"
-      ],
-      "difficulty": 0.49,
-      "visually_answerable": true,
-      "answer_spans": []
-    },
-    {
-      "id": "itm_0153",
-      "node_id": "n30",
-      "type": "node_click",
-      "prompt": "Which concept is described as: Placeholder definition for Muprethliask limit. Regenerated fixture, not source text.",
-      "answer": "n30",
-      "answer_aliases": [
-        "muprethliask limit",
-        "muprethliask-limit"
-      ],
-      "distractors": [
-        "n31",
-        "n32",
-        "n42"
-      ],
-      "difficulty": 0.42,
-      "visually_answerable": true,
-      "answer_spans": []
-    },
-    {
-      "id": "itm_0154",
-      "node_id": "n30",
-      "type": "mcq",
-      "prompt": "Which concept is described as: Placeholder definition for Muprethliask limit. Regenerated fixture, not source text.",
-      "answer": "n30",
-      "answer_aliases": [
-        "muprethliask limit",
-        "muprethliask-limit"
-      ],
-      "distractors": [
-        "n45",
-        "n22",
-        "n46"
-      ],
-      "difficulty": 0.45,
-      "visually_answerable": true,
-      "answer_spans": []
-    },
-    {
-      "id": "itm_0155",
       "node_id": "n30",
       "type": "edge_click",
       "prompt": "Click the edge leading into Muprethliask limit.",
@@ -2912,12 +2585,60 @@
         "prenthiask to muprethliask limit"
       ],
       "distractors": [
-        "n46",
-        "n19",
-        "n05"
+        "n00",
+        "n21",
+        "n11"
       ],
       "difficulty": 0.56,
       "visually_answerable": true,
+      "answer_spans": []
+    },
+    {
+      "id": "itm_0153",
+      "node_id": "n30",
+      "type": "mcq",
+      "prompt": "Mechanism question about Muprethliask limit.",
+      "answer": "Because the muprethliask limit is treated as evidence of congestion.",
+      "answer_aliases": [],
+      "distractors": [
+        "Because the receiver ran out of buffer space.",
+        "Because the round-trip time estimate expired.",
+        "Because the sender exhausted its send window."
+      ],
+      "difficulty": 0.51,
+      "visually_answerable": false,
+      "answer_spans": []
+    },
+    {
+      "id": "itm_0154",
+      "node_id": "n30",
+      "type": "mcq",
+      "prompt": "Mechanism question about Muprethliask limit.",
+      "answer": "It grows once per round trip rather than once per acknowledgement.",
+      "answer_aliases": [],
+      "distractors": [
+        "It grows once per acknowledgement rather than once per round trip.",
+        "It stays fixed until a loss event occurs.",
+        "It halves on every acknowledgement received."
+      ],
+      "difficulty": 0.51,
+      "visually_answerable": false,
+      "answer_spans": []
+    },
+    {
+      "id": "itm_0155",
+      "node_id": "n30",
+      "type": "mcq",
+      "prompt": "Mechanism question about Muprethliask limit.",
+      "answer": "The sender has no estimate of available capacity yet.",
+      "answer_aliases": [],
+      "distractors": [
+        "The receiver has not advertised a window yet.",
+        "The retransmission timer has not been initialised.",
+        "The connection is still in the handshake."
+      ],
+      "difficulty": 0.51,
+      "visually_answerable": false,
       "answer_spans": []
     },
     {
@@ -2931,73 +2652,16 @@
         "driang"
       ],
       "distractors": [
-        "n22",
-        "n03",
-        "n46"
+        "n32",
+        "n06",
+        "n12"
       ],
-      "difficulty": 0.51,
+      "difficulty": 0.48,
       "visually_answerable": true,
       "answer_spans": []
     },
     {
       "id": "itm_0157",
-      "node_id": "n31",
-      "type": "mcq",
-      "prompt": "Which concept is described as: Placeholder definition for Driang. Regenerated fixture, not source text.",
-      "answer": "n31",
-      "answer_aliases": [
-        "driang",
-        "driang"
-      ],
-      "distractors": [
-        "n39",
-        "n16",
-        "n45"
-      ],
-      "difficulty": 0.43,
-      "visually_answerable": true,
-      "answer_spans": []
-    },
-    {
-      "id": "itm_0158",
-      "node_id": "n31",
-      "type": "node_click",
-      "prompt": "Which concept is described as: Placeholder definition for Driang. Regenerated fixture, not source text.",
-      "answer": "n31",
-      "answer_aliases": [
-        "driang",
-        "driang"
-      ],
-      "distractors": [
-        "n39",
-        "n19",
-        "n49"
-      ],
-      "difficulty": 0.47,
-      "visually_answerable": true,
-      "answer_spans": []
-    },
-    {
-      "id": "itm_0159",
-      "node_id": "n31",
-      "type": "mcq",
-      "prompt": "Which concept is described as: Placeholder definition for Driang. Regenerated fixture, not source text.",
-      "answer": "n31",
-      "answer_aliases": [
-        "driang",
-        "driang"
-      ],
-      "distractors": [
-        "n49",
-        "n23",
-        "n37"
-      ],
-      "difficulty": 0.44,
-      "visually_answerable": true,
-      "answer_spans": []
-    },
-    {
-      "id": "itm_0160",
       "node_id": "n31",
       "type": "edge_click",
       "prompt": "Click the edge leading into Driang.",
@@ -3006,12 +2670,60 @@
         "stostdrial to driang"
       ],
       "distractors": [
-        "n41",
-        "n36",
-        "n00"
+        "n09",
+        "n47",
+        "n32"
       ],
       "difficulty": 0.58,
       "visually_answerable": true,
+      "answer_spans": []
+    },
+    {
+      "id": "itm_0158",
+      "node_id": "n31",
+      "type": "mcq",
+      "prompt": "Mechanism question about Driang.",
+      "answer": "Because the driang is treated as evidence of congestion.",
+      "answer_aliases": [],
+      "distractors": [
+        "Because the receiver ran out of buffer space.",
+        "Because the round-trip time estimate expired.",
+        "Because the sender exhausted its send window."
+      ],
+      "difficulty": 0.53,
+      "visually_answerable": false,
+      "answer_spans": []
+    },
+    {
+      "id": "itm_0159",
+      "node_id": "n31",
+      "type": "mcq",
+      "prompt": "Mechanism question about Driang.",
+      "answer": "It grows once per round trip rather than once per acknowledgement.",
+      "answer_aliases": [],
+      "distractors": [
+        "It grows once per acknowledgement rather than once per round trip.",
+        "It stays fixed until a loss event occurs.",
+        "It halves on every acknowledgement received."
+      ],
+      "difficulty": 0.53,
+      "visually_answerable": false,
+      "answer_spans": []
+    },
+    {
+      "id": "itm_0160",
+      "node_id": "n31",
+      "type": "mcq",
+      "prompt": "Mechanism question about Driang.",
+      "answer": "The sender has no estimate of available capacity yet.",
+      "answer_aliases": [],
+      "distractors": [
+        "The receiver has not advertised a window yet.",
+        "The retransmission timer has not been initialised.",
+        "The connection is still in the handshake."
+      ],
+      "difficulty": 0.53,
+      "visually_answerable": false,
       "answer_spans": []
     },
     {
@@ -3025,9 +2737,9 @@
         "vorviam-window"
       ],
       "distractors": [
-        "n04",
-        "n43",
-        "n33"
+        "n34",
+        "n22",
+        "n10"
       ],
       "difficulty": 0.48,
       "visually_answerable": true,
@@ -3036,63 +2748,6 @@
     {
       "id": "itm_0162",
       "node_id": "n32",
-      "type": "mcq",
-      "prompt": "Which concept is described as: Placeholder definition for Vorviam window. Regenerated fixture, not source text.",
-      "answer": "n32",
-      "answer_aliases": [
-        "vorviam window",
-        "vorviam-window"
-      ],
-      "distractors": [
-        "n36",
-        "n07",
-        "n02"
-      ],
-      "difficulty": 0.53,
-      "visually_answerable": true,
-      "answer_spans": []
-    },
-    {
-      "id": "itm_0163",
-      "node_id": "n32",
-      "type": "node_click",
-      "prompt": "Which concept is described as: Placeholder definition for Vorviam window. Regenerated fixture, not source text.",
-      "answer": "n32",
-      "answer_aliases": [
-        "vorviam window",
-        "vorviam-window"
-      ],
-      "distractors": [
-        "n22",
-        "n00",
-        "n29"
-      ],
-      "difficulty": 0.47,
-      "visually_answerable": true,
-      "answer_spans": []
-    },
-    {
-      "id": "itm_0164",
-      "node_id": "n32",
-      "type": "mcq",
-      "prompt": "Which concept is described as: Placeholder definition for Vorviam window. Regenerated fixture, not source text.",
-      "answer": "n32",
-      "answer_aliases": [
-        "vorviam window",
-        "vorviam-window"
-      ],
-      "distractors": [
-        "n03",
-        "n48",
-        "n29"
-      ],
-      "difficulty": 0.48,
-      "visually_answerable": true,
-      "answer_spans": []
-    },
-    {
-      "id": "itm_0165",
-      "node_id": "n32",
       "type": "edge_click",
       "prompt": "Click the edge leading into Vorviam window.",
       "answer": "n24->n32",
@@ -3100,12 +2755,60 @@
         "lest limit to vorviam window"
       ],
       "distractors": [
-        "n05",
-        "n11",
-        "n12"
+        "n41",
+        "n07",
+        "n45"
       ],
       "difficulty": 0.61,
       "visually_answerable": true,
+      "answer_spans": []
+    },
+    {
+      "id": "itm_0163",
+      "node_id": "n32",
+      "type": "mcq",
+      "prompt": "Mechanism question about Vorviam window.",
+      "answer": "Because the vorviam window is treated as evidence of congestion.",
+      "answer_aliases": [],
+      "distractors": [
+        "Because the receiver ran out of buffer space.",
+        "Because the round-trip time estimate expired.",
+        "Because the sender exhausted its send window."
+      ],
+      "difficulty": 0.56,
+      "visually_answerable": false,
+      "answer_spans": []
+    },
+    {
+      "id": "itm_0164",
+      "node_id": "n32",
+      "type": "mcq",
+      "prompt": "Mechanism question about Vorviam window.",
+      "answer": "It grows once per round trip rather than once per acknowledgement.",
+      "answer_aliases": [],
+      "distractors": [
+        "It grows once per acknowledgement rather than once per round trip.",
+        "It stays fixed until a loss event occurs.",
+        "It halves on every acknowledgement received."
+      ],
+      "difficulty": 0.56,
+      "visually_answerable": false,
+      "answer_spans": []
+    },
+    {
+      "id": "itm_0165",
+      "node_id": "n32",
+      "type": "mcq",
+      "prompt": "Mechanism question about Vorviam window.",
+      "answer": "The sender has no estimate of available capacity yet.",
+      "answer_aliases": [],
+      "distractors": [
+        "The receiver has not advertised a window yet.",
+        "The retransmission timer has not been initialised.",
+        "The connection is still in the handshake."
+      ],
+      "difficulty": 0.56,
+      "visually_answerable": false,
       "answer_spans": []
     },
     {
@@ -3119,73 +2822,16 @@
         "seing-phase"
       ],
       "distractors": [
-        "n35",
-        "n46",
-        "n39"
+        "n10",
+        "n27",
+        "n12"
       ],
-      "difficulty": 0.65,
+      "difficulty": 0.68,
       "visually_answerable": true,
       "answer_spans": []
     },
     {
       "id": "itm_0167",
-      "node_id": "n33",
-      "type": "mcq",
-      "prompt": "Which concept is described as: Placeholder definition for Seing phase. Regenerated fixture, not source text.",
-      "answer": "n33",
-      "answer_aliases": [
-        "seing phase",
-        "seing-phase"
-      ],
-      "distractors": [
-        "n35",
-        "n05",
-        "n36"
-      ],
-      "difficulty": 0.68,
-      "visually_answerable": true,
-      "answer_spans": []
-    },
-    {
-      "id": "itm_0168",
-      "node_id": "n33",
-      "type": "node_click",
-      "prompt": "Which concept is described as: Placeholder definition for Seing phase. Regenerated fixture, not source text.",
-      "answer": "n33",
-      "answer_aliases": [
-        "seing phase",
-        "seing-phase"
-      ],
-      "distractors": [
-        "n46",
-        "n22",
-        "n13"
-      ],
-      "difficulty": 0.64,
-      "visually_answerable": true,
-      "answer_spans": []
-    },
-    {
-      "id": "itm_0169",
-      "node_id": "n33",
-      "type": "mcq",
-      "prompt": "Which concept is described as: Placeholder definition for Seing phase. Regenerated fixture, not source text.",
-      "answer": "n33",
-      "answer_aliases": [
-        "seing phase",
-        "seing-phase"
-      ],
-      "distractors": [
-        "n10",
-        "n24",
-        "n03"
-      ],
-      "difficulty": 0.68,
-      "visually_answerable": true,
-      "answer_spans": []
-    },
-    {
-      "id": "itm_0170",
       "node_id": "n33",
       "type": "edge_click",
       "prompt": "Click the edge leading into Seing phase.",
@@ -3194,12 +2840,60 @@
         "mon phase to seing phase"
       ],
       "distractors": [
-        "n09",
-        "n38",
-        "n15"
+        "n16",
+        "n04",
+        "n45"
       ],
       "difficulty": 0.74,
       "visually_answerable": true,
+      "answer_spans": []
+    },
+    {
+      "id": "itm_0168",
+      "node_id": "n33",
+      "type": "mcq",
+      "prompt": "Mechanism question about Seing phase.",
+      "answer": "Because the seing phase is treated as evidence of congestion.",
+      "answer_aliases": [],
+      "distractors": [
+        "Because the receiver ran out of buffer space.",
+        "Because the round-trip time estimate expired.",
+        "Because the sender exhausted its send window."
+      ],
+      "difficulty": 0.69,
+      "visually_answerable": false,
+      "answer_spans": []
+    },
+    {
+      "id": "itm_0169",
+      "node_id": "n33",
+      "type": "mcq",
+      "prompt": "Mechanism question about Seing phase.",
+      "answer": "It grows once per round trip rather than once per acknowledgement.",
+      "answer_aliases": [],
+      "distractors": [
+        "It grows once per acknowledgement rather than once per round trip.",
+        "It stays fixed until a loss event occurs.",
+        "It halves on every acknowledgement received."
+      ],
+      "difficulty": 0.69,
+      "visually_answerable": false,
+      "answer_spans": []
+    },
+    {
+      "id": "itm_0170",
+      "node_id": "n33",
+      "type": "mcq",
+      "prompt": "Mechanism question about Seing phase.",
+      "answer": "The sender has no estimate of available capacity yet.",
+      "answer_aliases": [],
+      "distractors": [
+        "The receiver has not advertised a window yet.",
+        "The retransmission timer has not been initialised.",
+        "The connection is still in the handshake."
+      ],
+      "difficulty": 0.69,
+      "visually_answerable": false,
       "answer_spans": []
     },
     {
@@ -3213,73 +2907,16 @@
         "teirdkurgraerd"
       ],
       "distractors": [
-        "n30",
-        "n45",
-        "n36"
+        "n36",
+        "n02",
+        "n13"
       ],
-      "difficulty": 0.6,
+      "difficulty": 0.62,
       "visually_answerable": true,
       "answer_spans": []
     },
     {
       "id": "itm_0172",
-      "node_id": "n34",
-      "type": "mcq",
-      "prompt": "Which concept is described as: Placeholder definition for Teirdkurgraerd. Regenerated fixture, not source text.",
-      "answer": "n34",
-      "answer_aliases": [
-        "teirdkurgraerd",
-        "teirdkurgraerd"
-      ],
-      "distractors": [
-        "n30",
-        "n03",
-        "n17"
-      ],
-      "difficulty": 0.53,
-      "visually_answerable": true,
-      "answer_spans": []
-    },
-    {
-      "id": "itm_0173",
-      "node_id": "n34",
-      "type": "node_click",
-      "prompt": "Which concept is described as: Placeholder definition for Teirdkurgraerd. Regenerated fixture, not source text.",
-      "answer": "n34",
-      "answer_aliases": [
-        "teirdkurgraerd",
-        "teirdkurgraerd"
-      ],
-      "distractors": [
-        "n19",
-        "n16",
-        "n21"
-      ],
-      "difficulty": 0.55,
-      "visually_answerable": true,
-      "answer_spans": []
-    },
-    {
-      "id": "itm_0174",
-      "node_id": "n34",
-      "type": "mcq",
-      "prompt": "Which concept is described as: Placeholder definition for Teirdkurgraerd. Regenerated fixture, not source text.",
-      "answer": "n34",
-      "answer_aliases": [
-        "teirdkurgraerd",
-        "teirdkurgraerd"
-      ],
-      "distractors": [
-        "n41",
-        "n24",
-        "n31"
-      ],
-      "difficulty": 0.61,
-      "visually_answerable": true,
-      "answer_spans": []
-    },
-    {
-      "id": "itm_0175",
       "node_id": "n34",
       "type": "edge_click",
       "prompt": "Click the edge leading into Teirdkurgraerd.",
@@ -3288,12 +2925,60 @@
         "noststaeth bound to teirdkurgraerd"
       ],
       "distractors": [
-        "n00",
-        "n36",
-        "n23"
+        "n16",
+        "n40",
+        "n22"
       ],
       "difficulty": 0.68,
       "visually_answerable": true,
+      "answer_spans": []
+    },
+    {
+      "id": "itm_0173",
+      "node_id": "n34",
+      "type": "mcq",
+      "prompt": "Mechanism question about Teirdkurgraerd.",
+      "answer": "Because the teirdkurgraerd is treated as evidence of congestion.",
+      "answer_aliases": [],
+      "distractors": [
+        "Because the receiver ran out of buffer space.",
+        "Because the round-trip time estimate expired.",
+        "Because the sender exhausted its send window."
+      ],
+      "difficulty": 0.63,
+      "visually_answerable": false,
+      "answer_spans": []
+    },
+    {
+      "id": "itm_0174",
+      "node_id": "n34",
+      "type": "mcq",
+      "prompt": "Mechanism question about Teirdkurgraerd.",
+      "answer": "It grows once per round trip rather than once per acknowledgement.",
+      "answer_aliases": [],
+      "distractors": [
+        "It grows once per acknowledgement rather than once per round trip.",
+        "It stays fixed until a loss event occurs.",
+        "It halves on every acknowledgement received."
+      ],
+      "difficulty": 0.63,
+      "visually_answerable": false,
+      "answer_spans": []
+    },
+    {
+      "id": "itm_0175",
+      "node_id": "n34",
+      "type": "mcq",
+      "prompt": "Mechanism question about Teirdkurgraerd.",
+      "answer": "The sender has no estimate of available capacity yet.",
+      "answer_aliases": [],
+      "distractors": [
+        "The receiver has not advertised a window yet.",
+        "The retransmission timer has not been initialised.",
+        "The connection is still in the handshake."
+      ],
+      "difficulty": 0.63,
+      "visually_answerable": false,
       "answer_spans": []
     },
     {
@@ -3307,73 +2992,16 @@
         "flan"
       ],
       "distractors": [
-        "n09",
-        "n15",
-        "n16"
+        "n05",
+        "n48",
+        "n27"
       ],
-      "difficulty": 0.62,
+      "difficulty": 0.61,
       "visually_answerable": true,
       "answer_spans": []
     },
     {
       "id": "itm_0177",
-      "node_id": "n35",
-      "type": "mcq",
-      "prompt": "Which concept is described as: Placeholder definition for Flan. Regenerated fixture, not source text.",
-      "answer": "n35",
-      "answer_aliases": [
-        "flan",
-        "flan"
-      ],
-      "distractors": [
-        "n40",
-        "n09",
-        "n22"
-      ],
-      "difficulty": 0.6,
-      "visually_answerable": true,
-      "answer_spans": []
-    },
-    {
-      "id": "itm_0178",
-      "node_id": "n35",
-      "type": "node_click",
-      "prompt": "Which concept is described as: Placeholder definition for Flan. Regenerated fixture, not source text.",
-      "answer": "n35",
-      "answer_aliases": [
-        "flan",
-        "flan"
-      ],
-      "distractors": [
-        "n25",
-        "n44",
-        "n15"
-      ],
-      "difficulty": 0.67,
-      "visually_answerable": true,
-      "answer_spans": []
-    },
-    {
-      "id": "itm_0179",
-      "node_id": "n35",
-      "type": "mcq",
-      "prompt": "Which concept is described as: Placeholder definition for Flan. Regenerated fixture, not source text.",
-      "answer": "n35",
-      "answer_aliases": [
-        "flan",
-        "flan"
-      ],
-      "distractors": [
-        "n04",
-        "n43",
-        "n30"
-      ],
-      "difficulty": 0.67,
-      "visually_answerable": true,
-      "answer_spans": []
-    },
-    {
-      "id": "itm_0180",
       "node_id": "n35",
       "type": "edge_click",
       "prompt": "Click the edge leading into Flan.",
@@ -3382,12 +3010,60 @@
         "drimdriang phase to flan"
       ],
       "distractors": [
-        "n23",
-        "n19",
-        "n30"
+        "n12",
+        "n07",
+        "n03"
       ],
       "difficulty": 0.73,
       "visually_answerable": true,
+      "answer_spans": []
+    },
+    {
+      "id": "itm_0178",
+      "node_id": "n35",
+      "type": "mcq",
+      "prompt": "Mechanism question about Flan.",
+      "answer": "Because the flan is treated as evidence of congestion.",
+      "answer_aliases": [],
+      "distractors": [
+        "Because the receiver ran out of buffer space.",
+        "Because the round-trip time estimate expired.",
+        "Because the sender exhausted its send window."
+      ],
+      "difficulty": 0.68,
+      "visually_answerable": false,
+      "answer_spans": []
+    },
+    {
+      "id": "itm_0179",
+      "node_id": "n35",
+      "type": "mcq",
+      "prompt": "Mechanism question about Flan.",
+      "answer": "It grows once per round trip rather than once per acknowledgement.",
+      "answer_aliases": [],
+      "distractors": [
+        "It grows once per acknowledgement rather than once per round trip.",
+        "It stays fixed until a loss event occurs.",
+        "It halves on every acknowledgement received."
+      ],
+      "difficulty": 0.68,
+      "visually_answerable": false,
+      "answer_spans": []
+    },
+    {
+      "id": "itm_0180",
+      "node_id": "n35",
+      "type": "mcq",
+      "prompt": "Mechanism question about Flan.",
+      "answer": "The sender has no estimate of available capacity yet.",
+      "answer_aliases": [],
+      "distractors": [
+        "The receiver has not advertised a window yet.",
+        "The retransmission timer has not been initialised.",
+        "The connection is still in the handshake."
+      ],
+      "difficulty": 0.68,
+      "visually_answerable": false,
       "answer_spans": []
     },
     {
@@ -3401,73 +3077,16 @@
         "greskliask"
       ],
       "distractors": [
-        "n25",
-        "n16",
-        "n28"
-      ],
-      "difficulty": 0.57,
-      "visually_answerable": true,
-      "answer_spans": []
-    },
-    {
-      "id": "itm_0182",
-      "node_id": "n36",
-      "type": "mcq",
-      "prompt": "Which concept is described as: Placeholder definition for Greskliask. Regenerated fixture, not source text.",
-      "answer": "n36",
-      "answer_aliases": [
-        "greskliask",
-        "greskliask"
-      ],
-      "distractors": [
-        "n40",
-        "n24",
-        "n49"
-      ],
-      "difficulty": 0.57,
-      "visually_answerable": true,
-      "answer_spans": []
-    },
-    {
-      "id": "itm_0183",
-      "node_id": "n36",
-      "type": "node_click",
-      "prompt": "Which concept is described as: Placeholder definition for Greskliask. Regenerated fixture, not source text.",
-      "answer": "n36",
-      "answer_aliases": [
-        "greskliask",
-        "greskliask"
-      ],
-      "distractors": [
-        "n32",
-        "n40",
-        "n24"
-      ],
-      "difficulty": 0.64,
-      "visually_answerable": true,
-      "answer_spans": []
-    },
-    {
-      "id": "itm_0184",
-      "node_id": "n36",
-      "type": "mcq",
-      "prompt": "Which concept is described as: Placeholder definition for Greskliask. Regenerated fixture, not source text.",
-      "answer": "n36",
-      "answer_aliases": [
-        "greskliask",
-        "greskliask"
-      ],
-      "distractors": [
-        "n40",
-        "n43",
-        "n07"
+        "n20",
+        "n47",
+        "n08"
       ],
       "difficulty": 0.62,
       "visually_answerable": true,
       "answer_spans": []
     },
     {
-      "id": "itm_0185",
+      "id": "itm_0182",
       "node_id": "n36",
       "type": "edge_click",
       "prompt": "Click the edge leading into Greskliask.",
@@ -3476,12 +3095,60 @@
         "drilseimsturd pass to greskliask"
       ],
       "distractors": [
-        "n01",
-        "n15",
-        "n12"
+        "n47",
+        "n37",
+        "n25"
       ],
       "difficulty": 0.72,
       "visually_answerable": true,
+      "answer_spans": []
+    },
+    {
+      "id": "itm_0183",
+      "node_id": "n36",
+      "type": "mcq",
+      "prompt": "Mechanism question about Greskliask.",
+      "answer": "Because the greskliask is treated as evidence of congestion.",
+      "answer_aliases": [],
+      "distractors": [
+        "Because the receiver ran out of buffer space.",
+        "Because the round-trip time estimate expired.",
+        "Because the sender exhausted its send window."
+      ],
+      "difficulty": 0.67,
+      "visually_answerable": false,
+      "answer_spans": []
+    },
+    {
+      "id": "itm_0184",
+      "node_id": "n36",
+      "type": "mcq",
+      "prompt": "Mechanism question about Greskliask.",
+      "answer": "It grows once per round trip rather than once per acknowledgement.",
+      "answer_aliases": [],
+      "distractors": [
+        "It grows once per acknowledgement rather than once per round trip.",
+        "It stays fixed until a loss event occurs.",
+        "It halves on every acknowledgement received."
+      ],
+      "difficulty": 0.67,
+      "visually_answerable": false,
+      "answer_spans": []
+    },
+    {
+      "id": "itm_0185",
+      "node_id": "n36",
+      "type": "mcq",
+      "prompt": "Mechanism question about Greskliask.",
+      "answer": "The sender has no estimate of available capacity yet.",
+      "answer_aliases": [],
+      "distractors": [
+        "The receiver has not advertised a window yet.",
+        "The retransmission timer has not been initialised.",
+        "The connection is still in the handshake."
+      ],
+      "difficulty": 0.67,
+      "visually_answerable": false,
       "answer_spans": []
     },
     {
@@ -3495,73 +3162,16 @@
         "tomflou-limit"
       ],
       "distractors": [
-        "n40",
-        "n41",
-        "n24"
-      ],
-      "difficulty": 0.58,
-      "visually_answerable": true,
-      "answer_spans": []
-    },
-    {
-      "id": "itm_0187",
-      "node_id": "n37",
-      "type": "mcq",
-      "prompt": "Which concept is described as: Placeholder definition for Tomflou limit. Regenerated fixture, not source text.",
-      "answer": "n37",
-      "answer_aliases": [
-        "tomflou limit",
-        "tomflou-limit"
-      ],
-      "distractors": [
-        "n14",
-        "n44",
-        "n08"
-      ],
-      "difficulty": 0.58,
-      "visually_answerable": true,
-      "answer_spans": []
-    },
-    {
-      "id": "itm_0188",
-      "node_id": "n37",
-      "type": "node_click",
-      "prompt": "Which concept is described as: Placeholder definition for Tomflou limit. Regenerated fixture, not source text.",
-      "answer": "n37",
-      "answer_aliases": [
-        "tomflou limit",
-        "tomflou-limit"
-      ],
-      "distractors": [
-        "n06",
-        "n20",
-        "n31"
-      ],
-      "difficulty": 0.57,
-      "visually_answerable": true,
-      "answer_spans": []
-    },
-    {
-      "id": "itm_0189",
-      "node_id": "n37",
-      "type": "mcq",
-      "prompt": "Which concept is described as: Placeholder definition for Tomflou limit. Regenerated fixture, not source text.",
-      "answer": "n37",
-      "answer_aliases": [
-        "tomflou limit",
-        "tomflou-limit"
-      ],
-      "distractors": [
-        "n16",
-        "n30",
-        "n34"
+        "n11",
+        "n23",
+        "n45"
       ],
       "difficulty": 0.55,
       "visually_answerable": true,
       "answer_spans": []
     },
     {
-      "id": "itm_0190",
+      "id": "itm_0187",
       "node_id": "n37",
       "type": "edge_click",
       "prompt": "Click the edge leading into Tomflou limit.",
@@ -3570,12 +3180,60 @@
         "seistmeth phase to tomflou limit"
       ],
       "distractors": [
-        "n28",
-        "n13",
-        "n04"
+        "n31",
+        "n16",
+        "n33"
       ],
       "difficulty": 0.67,
       "visually_answerable": true,
+      "answer_spans": []
+    },
+    {
+      "id": "itm_0188",
+      "node_id": "n37",
+      "type": "mcq",
+      "prompt": "Mechanism question about Tomflou limit.",
+      "answer": "Because the tomflou limit is treated as evidence of congestion.",
+      "answer_aliases": [],
+      "distractors": [
+        "Because the receiver ran out of buffer space.",
+        "Because the round-trip time estimate expired.",
+        "Because the sender exhausted its send window."
+      ],
+      "difficulty": 0.62,
+      "visually_answerable": false,
+      "answer_spans": []
+    },
+    {
+      "id": "itm_0189",
+      "node_id": "n37",
+      "type": "mcq",
+      "prompt": "Mechanism question about Tomflou limit.",
+      "answer": "It grows once per round trip rather than once per acknowledgement.",
+      "answer_aliases": [],
+      "distractors": [
+        "It grows once per acknowledgement rather than once per round trip.",
+        "It stays fixed until a loss event occurs.",
+        "It halves on every acknowledgement received."
+      ],
+      "difficulty": 0.62,
+      "visually_answerable": false,
+      "answer_spans": []
+    },
+    {
+      "id": "itm_0190",
+      "node_id": "n37",
+      "type": "mcq",
+      "prompt": "Mechanism question about Tomflou limit.",
+      "answer": "The sender has no estimate of available capacity yet.",
+      "answer_aliases": [],
+      "distractors": [
+        "The receiver has not advertised a window yet.",
+        "The retransmission timer has not been initialised.",
+        "The connection is still in the handshake."
+      ],
+      "difficulty": 0.62,
+      "visually_answerable": false,
       "answer_spans": []
     },
     {
@@ -3589,73 +3247,16 @@
         "mirlour-state"
       ],
       "distractors": [
-        "n43",
-        "n17",
-        "n13"
+        "n36",
+        "n27",
+        "n12"
       ],
-      "difficulty": 0.6,
+      "difficulty": 0.64,
       "visually_answerable": true,
       "answer_spans": []
     },
     {
       "id": "itm_0192",
-      "node_id": "n38",
-      "type": "mcq",
-      "prompt": "Which concept is described as: Placeholder definition for Mirlour state. Regenerated fixture, not source text.",
-      "answer": "n38",
-      "answer_aliases": [
-        "mirlour state",
-        "mirlour-state"
-      ],
-      "distractors": [
-        "n00",
-        "n33",
-        "n49"
-      ],
-      "difficulty": 0.6,
-      "visually_answerable": true,
-      "answer_spans": []
-    },
-    {
-      "id": "itm_0193",
-      "node_id": "n38",
-      "type": "node_click",
-      "prompt": "Which concept is described as: Placeholder definition for Mirlour state. Regenerated fixture, not source text.",
-      "answer": "n38",
-      "answer_aliases": [
-        "mirlour state",
-        "mirlour-state"
-      ],
-      "distractors": [
-        "n34",
-        "n29",
-        "n00"
-      ],
-      "difficulty": 0.56,
-      "visually_answerable": true,
-      "answer_spans": []
-    },
-    {
-      "id": "itm_0194",
-      "node_id": "n38",
-      "type": "mcq",
-      "prompt": "Which concept is described as: Placeholder definition for Mirlour state. Regenerated fixture, not source text.",
-      "answer": "n38",
-      "answer_aliases": [
-        "mirlour state",
-        "mirlour-state"
-      ],
-      "distractors": [
-        "n43",
-        "n32",
-        "n47"
-      ],
-      "difficulty": 0.63,
-      "visually_answerable": true,
-      "answer_spans": []
-    },
-    {
-      "id": "itm_0195",
       "node_id": "n38",
       "type": "edge_click",
       "prompt": "Click the edge leading into Mirlour state.",
@@ -3664,12 +3265,60 @@
         "muprethliask limit to mirlour state"
       ],
       "distractors": [
-        "n18",
-        "n07",
-        "n32"
+        "n40",
+        "n45",
+        "n46"
       ],
       "difficulty": 0.69,
       "visually_answerable": true,
+      "answer_spans": []
+    },
+    {
+      "id": "itm_0193",
+      "node_id": "n38",
+      "type": "mcq",
+      "prompt": "Mechanism question about Mirlour state.",
+      "answer": "Because the mirlour state is treated as evidence of congestion.",
+      "answer_aliases": [],
+      "distractors": [
+        "Because the receiver ran out of buffer space.",
+        "Because the round-trip time estimate expired.",
+        "Because the sender exhausted its send window."
+      ],
+      "difficulty": 0.64,
+      "visually_answerable": false,
+      "answer_spans": []
+    },
+    {
+      "id": "itm_0194",
+      "node_id": "n38",
+      "type": "mcq",
+      "prompt": "Mechanism question about Mirlour state.",
+      "answer": "It grows once per round trip rather than once per acknowledgement.",
+      "answer_aliases": [],
+      "distractors": [
+        "It grows once per acknowledgement rather than once per round trip.",
+        "It stays fixed until a loss event occurs.",
+        "It halves on every acknowledgement received."
+      ],
+      "difficulty": 0.64,
+      "visually_answerable": false,
+      "answer_spans": []
+    },
+    {
+      "id": "itm_0195",
+      "node_id": "n38",
+      "type": "mcq",
+      "prompt": "Mechanism question about Mirlour state.",
+      "answer": "The sender has no estimate of available capacity yet.",
+      "answer_aliases": [],
+      "distractors": [
+        "The receiver has not advertised a window yet.",
+        "The retransmission timer has not been initialised.",
+        "The connection is still in the handshake."
+      ],
+      "difficulty": 0.64,
+      "visually_answerable": false,
       "answer_spans": []
     },
     {
@@ -3683,73 +3332,16 @@
         "moun-phase"
       ],
       "distractors": [
-        "n07",
-        "n13",
-        "n31"
+        "n46",
+        "n19",
+        "n05"
       ],
-      "difficulty": 0.58,
+      "difficulty": 0.57,
       "visually_answerable": true,
       "answer_spans": []
     },
     {
       "id": "itm_0197",
-      "node_id": "n39",
-      "type": "mcq",
-      "prompt": "Which concept is described as: Placeholder definition for Moun phase. Regenerated fixture, not source text.",
-      "answer": "n39",
-      "answer_aliases": [
-        "moun phase",
-        "moun-phase"
-      ],
-      "distractors": [
-        "n19",
-        "n07",
-        "n38"
-      ],
-      "difficulty": 0.53,
-      "visually_answerable": true,
-      "answer_spans": []
-    },
-    {
-      "id": "itm_0198",
-      "node_id": "n39",
-      "type": "node_click",
-      "prompt": "Which concept is described as: Placeholder definition for Moun phase. Regenerated fixture, not source text.",
-      "answer": "n39",
-      "answer_aliases": [
-        "moun phase",
-        "moun-phase"
-      ],
-      "distractors": [
-        "n21",
-        "n03",
-        "n07"
-      ],
-      "difficulty": 0.61,
-      "visually_answerable": true,
-      "answer_spans": []
-    },
-    {
-      "id": "itm_0199",
-      "node_id": "n39",
-      "type": "mcq",
-      "prompt": "Which concept is described as: Placeholder definition for Moun phase. Regenerated fixture, not source text.",
-      "answer": "n39",
-      "answer_aliases": [
-        "moun phase",
-        "moun-phase"
-      ],
-      "distractors": [
-        "n15",
-        "n10",
-        "n02"
-      ],
-      "difficulty": 0.6,
-      "visually_answerable": true,
-      "answer_spans": []
-    },
-    {
-      "id": "itm_0200",
       "node_id": "n39",
       "type": "edge_click",
       "prompt": "Click the edge leading into Moun phase.",
@@ -3758,12 +3350,60 @@
         "driang to moun phase"
       ],
       "distractors": [
-        "n24",
-        "n25",
-        "n00"
+        "n46",
+        "n49",
+        "n27"
       ],
       "difficulty": 0.68,
       "visually_answerable": true,
+      "answer_spans": []
+    },
+    {
+      "id": "itm_0198",
+      "node_id": "n39",
+      "type": "mcq",
+      "prompt": "Mechanism question about Moun phase.",
+      "answer": "Because the moun phase is treated as evidence of congestion.",
+      "answer_aliases": [],
+      "distractors": [
+        "Because the receiver ran out of buffer space.",
+        "Because the round-trip time estimate expired.",
+        "Because the sender exhausted its send window."
+      ],
+      "difficulty": 0.63,
+      "visually_answerable": false,
+      "answer_spans": []
+    },
+    {
+      "id": "itm_0199",
+      "node_id": "n39",
+      "type": "mcq",
+      "prompt": "Mechanism question about Moun phase.",
+      "answer": "It grows once per round trip rather than once per acknowledgement.",
+      "answer_aliases": [],
+      "distractors": [
+        "It grows once per acknowledgement rather than once per round trip.",
+        "It stays fixed until a loss event occurs.",
+        "It halves on every acknowledgement received."
+      ],
+      "difficulty": 0.63,
+      "visually_answerable": false,
+      "answer_spans": []
+    },
+    {
+      "id": "itm_0200",
+      "node_id": "n39",
+      "type": "mcq",
+      "prompt": "Mechanism question about Moun phase.",
+      "answer": "The sender has no estimate of available capacity yet.",
+      "answer_aliases": [],
+      "distractors": [
+        "The receiver has not advertised a window yet.",
+        "The retransmission timer has not been initialised.",
+        "The connection is still in the handshake."
+      ],
+      "difficulty": 0.63,
+      "visually_answerable": false,
       "answer_spans": []
     },
     {
@@ -3777,73 +3417,16 @@
         "sostgroust-pass"
       ],
       "distractors": [
-        "n01",
-        "n38",
-        "n41"
+        "n34",
+        "n49",
+        "n23"
       ],
-      "difficulty": 0.75,
+      "difficulty": 0.76,
       "visually_answerable": true,
       "answer_spans": []
     },
     {
       "id": "itm_0202",
-      "node_id": "n40",
-      "type": "mcq",
-      "prompt": "Which concept is described as: Placeholder definition for Sostgroust pass. Regenerated fixture, not source text.",
-      "answer": "n40",
-      "answer_aliases": [
-        "sostgroust pass",
-        "sostgroust-pass"
-      ],
-      "distractors": [
-        "n37",
-        "n08",
-        "n02"
-      ],
-      "difficulty": 0.72,
-      "visually_answerable": true,
-      "answer_spans": []
-    },
-    {
-      "id": "itm_0203",
-      "node_id": "n40",
-      "type": "node_click",
-      "prompt": "Which concept is described as: Placeholder definition for Sostgroust pass. Regenerated fixture, not source text.",
-      "answer": "n40",
-      "answer_aliases": [
-        "sostgroust pass",
-        "sostgroust-pass"
-      ],
-      "distractors": [
-        "n20",
-        "n38",
-        "n41"
-      ],
-      "difficulty": 0.67,
-      "visually_answerable": true,
-      "answer_spans": []
-    },
-    {
-      "id": "itm_0204",
-      "node_id": "n40",
-      "type": "mcq",
-      "prompt": "Which concept is described as: Placeholder definition for Sostgroust pass. Regenerated fixture, not source text.",
-      "answer": "n40",
-      "answer_aliases": [
-        "sostgroust pass",
-        "sostgroust-pass"
-      ],
-      "distractors": [
-        "n45",
-        "n06",
-        "n19"
-      ],
-      "difficulty": 0.67,
-      "visually_answerable": true,
-      "answer_spans": []
-    },
-    {
-      "id": "itm_0205",
       "node_id": "n40",
       "type": "edge_click",
       "prompt": "Click the edge leading into Sostgroust pass.",
@@ -3852,12 +3435,60 @@
         "seing phase to sostgroust pass"
       ],
       "distractors": [
-        "n25",
-        "n27",
-        "n21"
+        "n03",
+        "n49",
+        "n41"
       ],
       "difficulty": 0.81,
       "visually_answerable": true,
+      "answer_spans": []
+    },
+    {
+      "id": "itm_0203",
+      "node_id": "n40",
+      "type": "mcq",
+      "prompt": "Mechanism question about Sostgroust pass.",
+      "answer": "Because the sostgroust pass is treated as evidence of congestion.",
+      "answer_aliases": [],
+      "distractors": [
+        "Because the receiver ran out of buffer space.",
+        "Because the round-trip time estimate expired.",
+        "Because the sender exhausted its send window."
+      ],
+      "difficulty": 0.76,
+      "visually_answerable": false,
+      "answer_spans": []
+    },
+    {
+      "id": "itm_0204",
+      "node_id": "n40",
+      "type": "mcq",
+      "prompt": "Mechanism question about Sostgroust pass.",
+      "answer": "It grows once per round trip rather than once per acknowledgement.",
+      "answer_aliases": [],
+      "distractors": [
+        "It grows once per acknowledgement rather than once per round trip.",
+        "It stays fixed until a loss event occurs.",
+        "It halves on every acknowledgement received."
+      ],
+      "difficulty": 0.76,
+      "visually_answerable": false,
+      "answer_spans": []
+    },
+    {
+      "id": "itm_0205",
+      "node_id": "n40",
+      "type": "mcq",
+      "prompt": "Mechanism question about Sostgroust pass.",
+      "answer": "The sender has no estimate of available capacity yet.",
+      "answer_aliases": [],
+      "distractors": [
+        "The receiver has not advertised a window yet.",
+        "The retransmission timer has not been initialised.",
+        "The connection is still in the handshake."
+      ],
+      "difficulty": 0.76,
+      "visually_answerable": false,
       "answer_spans": []
     },
     {
@@ -3871,73 +3502,16 @@
         "niastnest-phase"
       ],
       "distractors": [
-        "n19",
-        "n31",
-        "n27"
+        "n02",
+        "n44",
+        "n39"
       ],
-      "difficulty": 0.63,
+      "difficulty": 0.72,
       "visually_answerable": true,
       "answer_spans": []
     },
     {
       "id": "itm_0207",
-      "node_id": "n41",
-      "type": "mcq",
-      "prompt": "Which concept is described as: Placeholder definition for Niastnest phase. Regenerated fixture, not source text.",
-      "answer": "n41",
-      "answer_aliases": [
-        "niastnest phase",
-        "niastnest-phase"
-      ],
-      "distractors": [
-        "n02",
-        "n32",
-        "n47"
-      ],
-      "difficulty": 0.67,
-      "visually_answerable": true,
-      "answer_spans": []
-    },
-    {
-      "id": "itm_0208",
-      "node_id": "n41",
-      "type": "node_click",
-      "prompt": "Which concept is described as: Placeholder definition for Niastnest phase. Regenerated fixture, not source text.",
-      "answer": "n41",
-      "answer_aliases": [
-        "niastnest phase",
-        "niastnest-phase"
-      ],
-      "distractors": [
-        "n49",
-        "n33",
-        "n38"
-      ],
-      "difficulty": 0.73,
-      "visually_answerable": true,
-      "answer_spans": []
-    },
-    {
-      "id": "itm_0209",
-      "node_id": "n41",
-      "type": "mcq",
-      "prompt": "Which concept is described as: Placeholder definition for Niastnest phase. Regenerated fixture, not source text.",
-      "answer": "n41",
-      "answer_aliases": [
-        "niastnest phase",
-        "niastnest-phase"
-      ],
-      "distractors": [
-        "n16",
-        "n03",
-        "n10"
-      ],
-      "difficulty": 0.7,
-      "visually_answerable": true,
-      "answer_spans": []
-    },
-    {
-      "id": "itm_0210",
       "node_id": "n41",
       "type": "edge_click",
       "prompt": "Click the edge leading into Niastnest phase.",
@@ -3946,12 +3520,60 @@
         "teirdkurgraerd to niastnest phase"
       ],
       "distractors": [
-        "n35",
-        "n49",
-        "n45"
+        "n00",
+        "n29",
+        "n08"
       ],
       "difficulty": 0.78,
       "visually_answerable": true,
+      "answer_spans": []
+    },
+    {
+      "id": "itm_0208",
+      "node_id": "n41",
+      "type": "mcq",
+      "prompt": "Mechanism question about Niastnest phase.",
+      "answer": "Because the niastnest phase is treated as evidence of congestion.",
+      "answer_aliases": [],
+      "distractors": [
+        "Because the receiver ran out of buffer space.",
+        "Because the round-trip time estimate expired.",
+        "Because the sender exhausted its send window."
+      ],
+      "difficulty": 0.73,
+      "visually_answerable": false,
+      "answer_spans": []
+    },
+    {
+      "id": "itm_0209",
+      "node_id": "n41",
+      "type": "mcq",
+      "prompt": "Mechanism question about Niastnest phase.",
+      "answer": "It grows once per round trip rather than once per acknowledgement.",
+      "answer_aliases": [],
+      "distractors": [
+        "It grows once per acknowledgement rather than once per round trip.",
+        "It stays fixed until a loss event occurs.",
+        "It halves on every acknowledgement received."
+      ],
+      "difficulty": 0.73,
+      "visually_answerable": false,
+      "answer_spans": []
+    },
+    {
+      "id": "itm_0210",
+      "node_id": "n41",
+      "type": "mcq",
+      "prompt": "Mechanism question about Niastnest phase.",
+      "answer": "The sender has no estimate of available capacity yet.",
+      "answer_aliases": [],
+      "distractors": [
+        "The receiver has not advertised a window yet.",
+        "The retransmission timer has not been initialised.",
+        "The connection is still in the handshake."
+      ],
+      "difficulty": 0.73,
+      "visually_answerable": false,
       "answer_spans": []
     },
     {
@@ -3965,73 +3587,16 @@
         "stistkard-bound"
       ],
       "distractors": [
-        "n29",
-        "n22",
-        "n46"
+        "n34",
+        "n46",
+        "n38"
       ],
-      "difficulty": 0.75,
+      "difficulty": 0.73,
       "visually_answerable": true,
       "answer_spans": []
     },
     {
       "id": "itm_0212",
-      "node_id": "n42",
-      "type": "mcq",
-      "prompt": "Which concept is described as: Placeholder definition for Stistkard bound. Regenerated fixture, not source text.",
-      "answer": "n42",
-      "answer_aliases": [
-        "stistkard bound",
-        "stistkard-bound"
-      ],
-      "distractors": [
-        "n11",
-        "n09",
-        "n41"
-      ],
-      "difficulty": 0.68,
-      "visually_answerable": true,
-      "answer_spans": []
-    },
-    {
-      "id": "itm_0213",
-      "node_id": "n42",
-      "type": "node_click",
-      "prompt": "Which concept is described as: Placeholder definition for Stistkard bound. Regenerated fixture, not source text.",
-      "answer": "n42",
-      "answer_aliases": [
-        "stistkard bound",
-        "stistkard-bound"
-      ],
-      "distractors": [
-        "n28",
-        "n31",
-        "n02"
-      ],
-      "difficulty": 0.74,
-      "visually_answerable": true,
-      "answer_spans": []
-    },
-    {
-      "id": "itm_0214",
-      "node_id": "n42",
-      "type": "mcq",
-      "prompt": "Which concept is described as: Placeholder definition for Stistkard bound. Regenerated fixture, not source text.",
-      "answer": "n42",
-      "answer_aliases": [
-        "stistkard bound",
-        "stistkard-bound"
-      ],
-      "distractors": [
-        "n43",
-        "n18",
-        "n27"
-      ],
-      "difficulty": 0.69,
-      "visually_answerable": true,
-      "answer_spans": []
-    },
-    {
-      "id": "itm_0215",
       "node_id": "n42",
       "type": "edge_click",
       "prompt": "Click the edge leading into Stistkard bound.",
@@ -4040,12 +3605,60 @@
         "flan to stistkard bound"
       ],
       "distractors": [
-        "n39",
-        "n28",
-        "n04"
+        "n34",
+        "n05",
+        "n35"
       ],
       "difficulty": 0.82,
       "visually_answerable": true,
+      "answer_spans": []
+    },
+    {
+      "id": "itm_0213",
+      "node_id": "n42",
+      "type": "mcq",
+      "prompt": "Mechanism question about Stistkard bound.",
+      "answer": "Because the stistkard bound is treated as evidence of congestion.",
+      "answer_aliases": [],
+      "distractors": [
+        "Because the receiver ran out of buffer space.",
+        "Because the round-trip time estimate expired.",
+        "Because the sender exhausted its send window."
+      ],
+      "difficulty": 0.77,
+      "visually_answerable": false,
+      "answer_spans": []
+    },
+    {
+      "id": "itm_0214",
+      "node_id": "n42",
+      "type": "mcq",
+      "prompt": "Mechanism question about Stistkard bound.",
+      "answer": "It grows once per round trip rather than once per acknowledgement.",
+      "answer_aliases": [],
+      "distractors": [
+        "It grows once per acknowledgement rather than once per round trip.",
+        "It stays fixed until a loss event occurs.",
+        "It halves on every acknowledgement received."
+      ],
+      "difficulty": 0.77,
+      "visually_answerable": false,
+      "answer_spans": []
+    },
+    {
+      "id": "itm_0215",
+      "node_id": "n42",
+      "type": "mcq",
+      "prompt": "Mechanism question about Stistkard bound.",
+      "answer": "The sender has no estimate of available capacity yet.",
+      "answer_aliases": [],
+      "distractors": [
+        "The receiver has not advertised a window yet.",
+        "The retransmission timer has not been initialised.",
+        "The connection is still in the handshake."
+      ],
+      "difficulty": 0.77,
+      "visually_answerable": false,
       "answer_spans": []
     },
     {
@@ -4059,73 +3672,16 @@
         "miask-bound"
       ],
       "distractors": [
-        "n08",
-        "n30",
-        "n11"
-      ],
-      "difficulty": 0.68,
-      "visually_answerable": true,
-      "answer_spans": []
-    },
-    {
-      "id": "itm_0217",
-      "node_id": "n43",
-      "type": "mcq",
-      "prompt": "Which concept is described as: Placeholder definition for Miask bound. Regenerated fixture, not source text.",
-      "answer": "n43",
-      "answer_aliases": [
-        "miask bound",
-        "miask-bound"
-      ],
-      "distractors": [
         "n02",
-        "n38",
-        "n39"
+        "n09",
+        "n37"
       ],
       "difficulty": 0.7,
       "visually_answerable": true,
       "answer_spans": []
     },
     {
-      "id": "itm_0218",
-      "node_id": "n43",
-      "type": "node_click",
-      "prompt": "Which concept is described as: Placeholder definition for Miask bound. Regenerated fixture, not source text.",
-      "answer": "n43",
-      "answer_aliases": [
-        "miask bound",
-        "miask-bound"
-      ],
-      "distractors": [
-        "n18",
-        "n19",
-        "n24"
-      ],
-      "difficulty": 0.78,
-      "visually_answerable": true,
-      "answer_spans": []
-    },
-    {
-      "id": "itm_0219",
-      "node_id": "n43",
-      "type": "mcq",
-      "prompt": "Which concept is described as: Placeholder definition for Miask bound. Regenerated fixture, not source text.",
-      "answer": "n43",
-      "answer_aliases": [
-        "miask bound",
-        "miask-bound"
-      ],
-      "distractors": [
-        "n31",
-        "n28",
-        "n04"
-      ],
-      "difficulty": 0.71,
-      "visually_answerable": true,
-      "answer_spans": []
-    },
-    {
-      "id": "itm_0220",
+      "id": "itm_0217",
       "node_id": "n43",
       "type": "edge_click",
       "prompt": "Click the edge leading into Miask bound.",
@@ -4134,12 +3690,60 @@
         "greskliask to miask bound"
       ],
       "distractors": [
-        "n14",
+        "n45",
         "n35",
-        "n20"
+        "n42"
       ],
       "difficulty": 0.83,
       "visually_answerable": true,
+      "answer_spans": []
+    },
+    {
+      "id": "itm_0218",
+      "node_id": "n43",
+      "type": "mcq",
+      "prompt": "Mechanism question about Miask bound.",
+      "answer": "Because the miask bound is treated as evidence of congestion.",
+      "answer_aliases": [],
+      "distractors": [
+        "Because the receiver ran out of buffer space.",
+        "Because the round-trip time estimate expired.",
+        "Because the sender exhausted its send window."
+      ],
+      "difficulty": 0.78,
+      "visually_answerable": false,
+      "answer_spans": []
+    },
+    {
+      "id": "itm_0219",
+      "node_id": "n43",
+      "type": "mcq",
+      "prompt": "Mechanism question about Miask bound.",
+      "answer": "It grows once per round trip rather than once per acknowledgement.",
+      "answer_aliases": [],
+      "distractors": [
+        "It grows once per acknowledgement rather than once per round trip.",
+        "It stays fixed until a loss event occurs.",
+        "It halves on every acknowledgement received."
+      ],
+      "difficulty": 0.78,
+      "visually_answerable": false,
+      "answer_spans": []
+    },
+    {
+      "id": "itm_0220",
+      "node_id": "n43",
+      "type": "mcq",
+      "prompt": "Mechanism question about Miask bound.",
+      "answer": "The sender has no estimate of available capacity yet.",
+      "answer_aliases": [],
+      "distractors": [
+        "The receiver has not advertised a window yet.",
+        "The retransmission timer has not been initialised.",
+        "The connection is still in the handshake."
+      ],
+      "difficulty": 0.78,
+      "visually_answerable": false,
       "answer_spans": []
     },
     {
@@ -4153,73 +3757,16 @@
         "sum"
       ],
       "distractors": [
-        "n37",
-        "n15",
-        "n36"
-      ],
-      "difficulty": 0.7,
-      "visually_answerable": true,
-      "answer_spans": []
-    },
-    {
-      "id": "itm_0222",
-      "node_id": "n44",
-      "type": "mcq",
-      "prompt": "Which concept is described as: Placeholder definition for Sum. Regenerated fixture, not source text.",
-      "answer": "n44",
-      "answer_aliases": [
-        "sum",
-        "sum"
-      ],
-      "distractors": [
-        "n08",
+        "n46",
         "n40",
-        "n34"
+        "n24"
       ],
       "difficulty": 0.76,
       "visually_answerable": true,
       "answer_spans": []
     },
     {
-      "id": "itm_0223",
-      "node_id": "n44",
-      "type": "node_click",
-      "prompt": "Which concept is described as: Placeholder definition for Sum. Regenerated fixture, not source text.",
-      "answer": "n44",
-      "answer_aliases": [
-        "sum",
-        "sum"
-      ],
-      "distractors": [
-        "n28",
-        "n32",
-        "n23"
-      ],
-      "difficulty": 0.69,
-      "visually_answerable": true,
-      "answer_spans": []
-    },
-    {
-      "id": "itm_0224",
-      "node_id": "n44",
-      "type": "mcq",
-      "prompt": "Which concept is described as: Placeholder definition for Sum. Regenerated fixture, not source text.",
-      "answer": "n44",
-      "answer_aliases": [
-        "sum",
-        "sum"
-      ],
-      "distractors": [
-        "n17",
-        "n26",
-        "n33"
-      ],
-      "difficulty": 0.71,
-      "visually_answerable": true,
-      "answer_spans": []
-    },
-    {
-      "id": "itm_0225",
+      "id": "itm_0222",
       "node_id": "n44",
       "type": "edge_click",
       "prompt": "Click the edge leading into Sum.",
@@ -4228,12 +3775,60 @@
         "tomflou limit to sum"
       ],
       "distractors": [
-        "n20",
-        "n36",
-        "n21"
+        "n06",
+        "n00",
+        "n35"
       ],
       "difficulty": 0.82,
       "visually_answerable": true,
+      "answer_spans": []
+    },
+    {
+      "id": "itm_0223",
+      "node_id": "n44",
+      "type": "mcq",
+      "prompt": "Mechanism question about Sum.",
+      "answer": "Because the sum is treated as evidence of congestion.",
+      "answer_aliases": [],
+      "distractors": [
+        "Because the receiver ran out of buffer space.",
+        "Because the round-trip time estimate expired.",
+        "Because the sender exhausted its send window."
+      ],
+      "difficulty": 0.77,
+      "visually_answerable": false,
+      "answer_spans": []
+    },
+    {
+      "id": "itm_0224",
+      "node_id": "n44",
+      "type": "mcq",
+      "prompt": "Mechanism question about Sum.",
+      "answer": "It grows once per round trip rather than once per acknowledgement.",
+      "answer_aliases": [],
+      "distractors": [
+        "It grows once per acknowledgement rather than once per round trip.",
+        "It stays fixed until a loss event occurs.",
+        "It halves on every acknowledgement received."
+      ],
+      "difficulty": 0.77,
+      "visually_answerable": false,
+      "answer_spans": []
+    },
+    {
+      "id": "itm_0225",
+      "node_id": "n44",
+      "type": "mcq",
+      "prompt": "Mechanism question about Sum.",
+      "answer": "The sender has no estimate of available capacity yet.",
+      "answer_aliases": [],
+      "distractors": [
+        "The receiver has not advertised a window yet.",
+        "The retransmission timer has not been initialised.",
+        "The connection is still in the handshake."
+      ],
+      "difficulty": 0.77,
+      "visually_answerable": false,
       "answer_spans": []
     },
     {
@@ -4247,73 +3842,16 @@
         "kaen-window"
       ],
       "distractors": [
-        "n15",
-        "n12",
-        "n00"
+        "n14",
+        "n25",
+        "n43"
       ],
-      "difficulty": 0.66,
+      "difficulty": 0.64,
       "visually_answerable": true,
       "answer_spans": []
     },
     {
       "id": "itm_0227",
-      "node_id": "n45",
-      "type": "mcq",
-      "prompt": "Which concept is described as: Placeholder definition for Kaen window. Regenerated fixture, not source text.",
-      "answer": "n45",
-      "answer_aliases": [
-        "kaen window",
-        "kaen-window"
-      ],
-      "distractors": [
-        "n37",
-        "n26",
-        "n06"
-      ],
-      "difficulty": 0.68,
-      "visually_answerable": true,
-      "answer_spans": []
-    },
-    {
-      "id": "itm_0228",
-      "node_id": "n45",
-      "type": "node_click",
-      "prompt": "Which concept is described as: Placeholder definition for Kaen window. Regenerated fixture, not source text.",
-      "answer": "n45",
-      "answer_aliases": [
-        "kaen window",
-        "kaen-window"
-      ],
-      "distractors": [
-        "n13",
-        "n42",
-        "n21"
-      ],
-      "difficulty": 0.63,
-      "visually_answerable": true,
-      "answer_spans": []
-    },
-    {
-      "id": "itm_0229",
-      "node_id": "n45",
-      "type": "mcq",
-      "prompt": "Which concept is described as: Placeholder definition for Kaen window. Regenerated fixture, not source text.",
-      "answer": "n45",
-      "answer_aliases": [
-        "kaen window",
-        "kaen-window"
-      ],
-      "distractors": [
-        "n29",
-        "n04",
-        "n48"
-      ],
-      "difficulty": 0.7,
-      "visually_answerable": true,
-      "answer_spans": []
-    },
-    {
-      "id": "itm_0230",
       "node_id": "n45",
       "type": "edge_click",
       "prompt": "Click the edge leading into Kaen window.",
@@ -4322,12 +3860,60 @@
         "mirlour state to kaen window"
       ],
       "distractors": [
-        "n49",
-        "n01",
-        "n11"
+        "n09",
+        "n04",
+        "n42"
       ],
       "difficulty": 0.77,
       "visually_answerable": true,
+      "answer_spans": []
+    },
+    {
+      "id": "itm_0228",
+      "node_id": "n45",
+      "type": "mcq",
+      "prompt": "Mechanism question about Kaen window.",
+      "answer": "Because the kaen window is treated as evidence of congestion.",
+      "answer_aliases": [],
+      "distractors": [
+        "Because the receiver ran out of buffer space.",
+        "Because the round-trip time estimate expired.",
+        "Because the sender exhausted its send window."
+      ],
+      "difficulty": 0.72,
+      "visually_answerable": false,
+      "answer_spans": []
+    },
+    {
+      "id": "itm_0229",
+      "node_id": "n45",
+      "type": "mcq",
+      "prompt": "Mechanism question about Kaen window.",
+      "answer": "It grows once per round trip rather than once per acknowledgement.",
+      "answer_aliases": [],
+      "distractors": [
+        "It grows once per acknowledgement rather than once per round trip.",
+        "It stays fixed until a loss event occurs.",
+        "It halves on every acknowledgement received."
+      ],
+      "difficulty": 0.72,
+      "visually_answerable": false,
+      "answer_spans": []
+    },
+    {
+      "id": "itm_0230",
+      "node_id": "n45",
+      "type": "mcq",
+      "prompt": "Mechanism question about Kaen window.",
+      "answer": "The sender has no estimate of available capacity yet.",
+      "answer_aliases": [],
+      "distractors": [
+        "The receiver has not advertised a window yet.",
+        "The retransmission timer has not been initialised.",
+        "The connection is still in the handshake."
+      ],
+      "difficulty": 0.72,
+      "visually_answerable": false,
       "answer_spans": []
     },
     {
@@ -4341,73 +3927,16 @@
         "grialthith"
       ],
       "distractors": [
-        "n25",
-        "n07",
-        "n05"
+        "n39",
+        "n24",
+        "n49"
       ],
-      "difficulty": 0.83,
+      "difficulty": 0.73,
       "visually_answerable": true,
       "answer_spans": []
     },
     {
       "id": "itm_0232",
-      "node_id": "n46",
-      "type": "mcq",
-      "prompt": "Which concept is described as: Placeholder definition for Grialthith. Regenerated fixture, not source text.",
-      "answer": "n46",
-      "answer_aliases": [
-        "grialthith",
-        "grialthith"
-      ],
-      "distractors": [
-        "n38",
-        "n24",
-        "n39"
-      ],
-      "difficulty": 0.74,
-      "visually_answerable": true,
-      "answer_spans": []
-    },
-    {
-      "id": "itm_0233",
-      "node_id": "n46",
-      "type": "node_click",
-      "prompt": "Which concept is described as: Placeholder definition for Grialthith. Regenerated fixture, not source text.",
-      "answer": "n46",
-      "answer_aliases": [
-        "grialthith",
-        "grialthith"
-      ],
-      "distractors": [
-        "n42",
-        "n11",
-        "n17"
-      ],
-      "difficulty": 0.76,
-      "visually_answerable": true,
-      "answer_spans": []
-    },
-    {
-      "id": "itm_0234",
-      "node_id": "n46",
-      "type": "mcq",
-      "prompt": "Which concept is described as: Placeholder definition for Grialthith. Regenerated fixture, not source text.",
-      "answer": "n46",
-      "answer_aliases": [
-        "grialthith",
-        "grialthith"
-      ],
-      "distractors": [
-        "n02",
-        "n20",
-        "n31"
-      ],
-      "difficulty": 0.78,
-      "visually_answerable": true,
-      "answer_spans": []
-    },
-    {
-      "id": "itm_0235",
       "node_id": "n46",
       "type": "edge_click",
       "prompt": "Click the edge leading into Grialthith.",
@@ -4416,12 +3945,60 @@
         "sostgroust pass to grialthith"
       ],
       "distractors": [
-        "n07",
-        "n02",
-        "n03"
+        "n32",
+        "n39",
+        "n24"
       ],
       "difficulty": 0.88,
       "visually_answerable": true,
+      "answer_spans": []
+    },
+    {
+      "id": "itm_0233",
+      "node_id": "n46",
+      "type": "mcq",
+      "prompt": "Mechanism question about Grialthith.",
+      "answer": "Because the grialthith is treated as evidence of congestion.",
+      "answer_aliases": [],
+      "distractors": [
+        "Because the receiver ran out of buffer space.",
+        "Because the round-trip time estimate expired.",
+        "Because the sender exhausted its send window."
+      ],
+      "difficulty": 0.83,
+      "visually_answerable": false,
+      "answer_spans": []
+    },
+    {
+      "id": "itm_0234",
+      "node_id": "n46",
+      "type": "mcq",
+      "prompt": "Mechanism question about Grialthith.",
+      "answer": "It grows once per round trip rather than once per acknowledgement.",
+      "answer_aliases": [],
+      "distractors": [
+        "It grows once per acknowledgement rather than once per round trip.",
+        "It stays fixed until a loss event occurs.",
+        "It halves on every acknowledgement received."
+      ],
+      "difficulty": 0.83,
+      "visually_answerable": false,
+      "answer_spans": []
+    },
+    {
+      "id": "itm_0235",
+      "node_id": "n46",
+      "type": "mcq",
+      "prompt": "Mechanism question about Grialthith.",
+      "answer": "The sender has no estimate of available capacity yet.",
+      "answer_aliases": [],
+      "distractors": [
+        "The receiver has not advertised a window yet.",
+        "The retransmission timer has not been initialised.",
+        "The connection is still in the handshake."
+      ],
+      "difficulty": 0.83,
+      "visually_answerable": false,
       "answer_spans": []
     },
     {
@@ -4435,9 +4012,9 @@
         "kuskstosk"
       ],
       "distractors": [
-        "n16",
-        "n07",
-        "n33"
+        "n15",
+        "n12",
+        "n39"
       ],
       "difficulty": 0.78,
       "visually_answerable": true,
@@ -4446,63 +4023,6 @@
     {
       "id": "itm_0237",
       "node_id": "n47",
-      "type": "mcq",
-      "prompt": "Which concept is described as: Placeholder definition for Kuskstosk. Regenerated fixture, not source text.",
-      "answer": "n47",
-      "answer_aliases": [
-        "kuskstosk",
-        "kuskstosk"
-      ],
-      "distractors": [
-        "n19",
-        "n04",
-        "n10"
-      ],
-      "difficulty": 0.8,
-      "visually_answerable": true,
-      "answer_spans": []
-    },
-    {
-      "id": "itm_0238",
-      "node_id": "n47",
-      "type": "node_click",
-      "prompt": "Which concept is described as: Placeholder definition for Kuskstosk. Regenerated fixture, not source text.",
-      "answer": "n47",
-      "answer_aliases": [
-        "kuskstosk",
-        "kuskstosk"
-      ],
-      "distractors": [
-        "n42",
-        "n34",
-        "n30"
-      ],
-      "difficulty": 0.76,
-      "visually_answerable": true,
-      "answer_spans": []
-    },
-    {
-      "id": "itm_0239",
-      "node_id": "n47",
-      "type": "mcq",
-      "prompt": "Which concept is described as: Placeholder definition for Kuskstosk. Regenerated fixture, not source text.",
-      "answer": "n47",
-      "answer_aliases": [
-        "kuskstosk",
-        "kuskstosk"
-      ],
-      "distractors": [
-        "n17",
-        "n48",
-        "n18"
-      ],
-      "difficulty": 0.82,
-      "visually_answerable": true,
-      "answer_spans": []
-    },
-    {
-      "id": "itm_0240",
-      "node_id": "n47",
       "type": "edge_click",
       "prompt": "Click the edge leading into Kuskstosk.",
       "answer": "n41->n47",
@@ -4510,12 +4030,60 @@
         "niastnest phase to kuskstosk"
       ],
       "distractors": [
-        "n26",
         "n39",
-        "n29"
+        "n14",
+        "n43"
       ],
       "difficulty": 0.87,
       "visually_answerable": true,
+      "answer_spans": []
+    },
+    {
+      "id": "itm_0238",
+      "node_id": "n47",
+      "type": "mcq",
+      "prompt": "Mechanism question about Kuskstosk.",
+      "answer": "Because the kuskstosk is treated as evidence of congestion.",
+      "answer_aliases": [],
+      "distractors": [
+        "Because the receiver ran out of buffer space.",
+        "Because the round-trip time estimate expired.",
+        "Because the sender exhausted its send window."
+      ],
+      "difficulty": 0.82,
+      "visually_answerable": false,
+      "answer_spans": []
+    },
+    {
+      "id": "itm_0239",
+      "node_id": "n47",
+      "type": "mcq",
+      "prompt": "Mechanism question about Kuskstosk.",
+      "answer": "It grows once per round trip rather than once per acknowledgement.",
+      "answer_aliases": [],
+      "distractors": [
+        "It grows once per acknowledgement rather than once per round trip.",
+        "It stays fixed until a loss event occurs.",
+        "It halves on every acknowledgement received."
+      ],
+      "difficulty": 0.82,
+      "visually_answerable": false,
+      "answer_spans": []
+    },
+    {
+      "id": "itm_0240",
+      "node_id": "n47",
+      "type": "mcq",
+      "prompt": "Mechanism question about Kuskstosk.",
+      "answer": "The sender has no estimate of available capacity yet.",
+      "answer_aliases": [],
+      "distractors": [
+        "The receiver has not advertised a window yet.",
+        "The retransmission timer has not been initialised.",
+        "The connection is still in the handshake."
+      ],
+      "difficulty": 0.82,
+      "visually_answerable": false,
       "answer_spans": []
     },
     {
@@ -4529,73 +4097,16 @@
         "steng"
       ],
       "distractors": [
-        "n23",
-        "n45",
+        "n30",
+        "n34",
         "n17"
       ],
-      "difficulty": 0.81,
+      "difficulty": 0.76,
       "visually_answerable": true,
       "answer_spans": []
     },
     {
       "id": "itm_0242",
-      "node_id": "n48",
-      "type": "mcq",
-      "prompt": "Which concept is described as: Placeholder definition for Steng. Regenerated fixture, not source text.",
-      "answer": "n48",
-      "answer_aliases": [
-        "steng",
-        "steng"
-      ],
-      "distractors": [
-        "n28",
-        "n11",
-        "n47"
-      ],
-      "difficulty": 0.77,
-      "visually_answerable": true,
-      "answer_spans": []
-    },
-    {
-      "id": "itm_0243",
-      "node_id": "n48",
-      "type": "node_click",
-      "prompt": "Which concept is described as: Placeholder definition for Steng. Regenerated fixture, not source text.",
-      "answer": "n48",
-      "answer_aliases": [
-        "steng",
-        "steng"
-      ],
-      "distractors": [
-        "n10",
-        "n06",
-        "n18"
-      ],
-      "difficulty": 0.81,
-      "visually_answerable": true,
-      "answer_spans": []
-    },
-    {
-      "id": "itm_0244",
-      "node_id": "n48",
-      "type": "mcq",
-      "prompt": "Which concept is described as: Placeholder definition for Steng. Regenerated fixture, not source text.",
-      "answer": "n48",
-      "answer_aliases": [
-        "steng",
-        "steng"
-      ],
-      "distractors": [
-        "n00",
-        "n24",
-        "n40"
-      ],
-      "difficulty": 0.79,
-      "visually_answerable": true,
-      "answer_spans": []
-    },
-    {
-      "id": "itm_0245",
       "node_id": "n48",
       "type": "edge_click",
       "prompt": "Click the edge leading into Steng.",
@@ -4604,12 +4115,60 @@
         "stistkard bound to steng"
       ],
       "distractors": [
-        "n47",
-        "n46",
-        "n23"
+        "n13",
+        "n04",
+        "n42"
       ],
       "difficulty": 0.9,
       "visually_answerable": true,
+      "answer_spans": []
+    },
+    {
+      "id": "itm_0243",
+      "node_id": "n48",
+      "type": "mcq",
+      "prompt": "Mechanism question about Steng.",
+      "answer": "Because the steng is treated as evidence of congestion.",
+      "answer_aliases": [],
+      "distractors": [
+        "Because the receiver ran out of buffer space.",
+        "Because the round-trip time estimate expired.",
+        "Because the sender exhausted its send window."
+      ],
+      "difficulty": 0.85,
+      "visually_answerable": false,
+      "answer_spans": []
+    },
+    {
+      "id": "itm_0244",
+      "node_id": "n48",
+      "type": "mcq",
+      "prompt": "Mechanism question about Steng.",
+      "answer": "It grows once per round trip rather than once per acknowledgement.",
+      "answer_aliases": [],
+      "distractors": [
+        "It grows once per acknowledgement rather than once per round trip.",
+        "It stays fixed until a loss event occurs.",
+        "It halves on every acknowledgement received."
+      ],
+      "difficulty": 0.85,
+      "visually_answerable": false,
+      "answer_spans": []
+    },
+    {
+      "id": "itm_0245",
+      "node_id": "n48",
+      "type": "mcq",
+      "prompt": "Mechanism question about Steng.",
+      "answer": "The sender has no estimate of available capacity yet.",
+      "answer_aliases": [],
+      "distractors": [
+        "The receiver has not advertised a window yet.",
+        "The retransmission timer has not been initialised.",
+        "The connection is still in the handshake."
+      ],
+      "difficulty": 0.85,
+      "visually_answerable": false,
       "answer_spans": []
     },
     {
@@ -4623,73 +4182,16 @@
         "stiastmaskming"
       ],
       "distractors": [
-        "n18",
-        "n27",
-        "n09"
+        "n34",
+        "n29",
+        "n00"
       ],
-      "difficulty": 0.84,
+      "difficulty": 0.78,
       "visually_answerable": true,
       "answer_spans": []
     },
     {
       "id": "itm_0247",
-      "node_id": "n49",
-      "type": "mcq",
-      "prompt": "Which concept is described as: Placeholder definition for Stiastmaskming. Regenerated fixture, not source text.",
-      "answer": "n49",
-      "answer_aliases": [
-        "stiastmaskming",
-        "stiastmaskming"
-      ],
-      "distractors": [
-        "n04",
-        "n29",
-        "n48"
-      ],
-      "difficulty": 0.76,
-      "visually_answerable": true,
-      "answer_spans": []
-    },
-    {
-      "id": "itm_0248",
-      "node_id": "n49",
-      "type": "node_click",
-      "prompt": "Which concept is described as: Placeholder definition for Stiastmaskming. Regenerated fixture, not source text.",
-      "answer": "n49",
-      "answer_aliases": [
-        "stiastmaskming",
-        "stiastmaskming"
-      ],
-      "distractors": [
-        "n15",
-        "n06",
-        "n42"
-      ],
-      "difficulty": 0.8,
-      "visually_answerable": true,
-      "answer_spans": []
-    },
-    {
-      "id": "itm_0249",
-      "node_id": "n49",
-      "type": "mcq",
-      "prompt": "Which concept is described as: Placeholder definition for Stiastmaskming. Regenerated fixture, not source text.",
-      "answer": "n49",
-      "answer_aliases": [
-        "stiastmaskming",
-        "stiastmaskming"
-      ],
-      "distractors": [
-        "n30",
-        "n23",
-        "n31"
-      ],
-      "difficulty": 0.84,
-      "visually_answerable": true,
-      "answer_spans": []
-    },
-    {
-      "id": "itm_0250",
       "node_id": "n49",
       "type": "edge_click",
       "prompt": "Click the edge leading into Stiastmaskming.",
@@ -4698,12 +4200,60 @@
         "miask bound to stiastmaskming"
       ],
       "distractors": [
-        "n36",
-        "n38",
-        "n18"
+        "n42",
+        "n32",
+        "n46"
       ],
       "difficulty": 0.91,
       "visually_answerable": true,
+      "answer_spans": []
+    },
+    {
+      "id": "itm_0248",
+      "node_id": "n49",
+      "type": "mcq",
+      "prompt": "Mechanism question about Stiastmaskming.",
+      "answer": "Because the stiastmaskming is treated as evidence of congestion.",
+      "answer_aliases": [],
+      "distractors": [
+        "Because the receiver ran out of buffer space.",
+        "Because the round-trip time estimate expired.",
+        "Because the sender exhausted its send window."
+      ],
+      "difficulty": 0.86,
+      "visually_answerable": false,
+      "answer_spans": []
+    },
+    {
+      "id": "itm_0249",
+      "node_id": "n49",
+      "type": "mcq",
+      "prompt": "Mechanism question about Stiastmaskming.",
+      "answer": "It grows once per round trip rather than once per acknowledgement.",
+      "answer_aliases": [],
+      "distractors": [
+        "It grows once per acknowledgement rather than once per round trip.",
+        "It stays fixed until a loss event occurs.",
+        "It halves on every acknowledgement received."
+      ],
+      "difficulty": 0.86,
+      "visually_answerable": false,
+      "answer_spans": []
+    },
+    {
+      "id": "itm_0250",
+      "node_id": "n49",
+      "type": "mcq",
+      "prompt": "Mechanism question about Stiastmaskming.",
+      "answer": "The sender has no estimate of available capacity yet.",
+      "answer_aliases": [],
+      "distractors": [
+        "The receiver has not advertised a window yet.",
+        "The retransmission timer has not been initialised.",
+        "The connection is still in the handshake."
+      ],
+      "difficulty": 0.86,
+      "visually_answerable": false,
       "answer_spans": []
     }
   ]

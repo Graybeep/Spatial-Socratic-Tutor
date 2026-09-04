@@ -129,6 +129,14 @@ class Config:
     # interleaved -> production: alternate visual and verbal, last rung verbal
     # visual_only -> eval arm: every hint narrows, no verbal elimination
     # verbal_only -> eval arm: nothing ever dims; focus/dimmed stay empty
+    # none        -> eval arm: NO HINTS AT ALL. The true no-interface baseline.
+    #
+    # `none` exists because verbal_only is not a no-help condition: a verbal hint
+    # still eliminates candidates by name, so a solve rate measured against it
+    # includes whatever the verbal channel gave away. Subtracting verbal_only
+    # therefore understates the visual channel's marginal contribution - a
+    # conservative error, but only `none` measures the student's own competence
+    # with nothing added.
     #
     # §9.2 is unrunnable on an interleaved ladder: a verbal hint that follows a
     # visual one is operating on an already-narrowed graph and only has to

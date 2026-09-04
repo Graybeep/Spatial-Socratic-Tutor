@@ -83,7 +83,15 @@ def test_no_alias_leaks_and_no_options_ship_on_a_non_mcq_turn(client, session):
     data = turn(client, session)
     checked = 0
     for _ in range(8):
-        if data["item"] is not None and data["expects"] != "mcq":
+        # A turn-budget forced reveal is SUPPOSED to name the answer - that is
+        # what CLAUDE.md 6 layer 3 does, and it awards zero mastery in exchange.
+        # Excluded explicitly rather than by luck of the walk;
+        # test_a_forced_reveal_does_name_the_answer pins the other half.
+        if (
+            data["item"] is not None
+            and data["expects"] != "mcq"
+            and not data["resolved_with_support"]
+        ):
             item = store.item(data["item"]["id"])
             body = json.dumps(data).lower()
             assert not data["mcq_options"], "mcq_options shipped on a non-mcq turn"
@@ -447,3 +455,28 @@ def test_a_client_that_knows_only_the_wire_cannot_name_the_answer(client, sessio
         if nxt is None:
             break
         data = turn(client, session, nxt)
+
+
+def test_a_forced_reveal_does_name_the_answer(client, session, store):
+    """The other half of the alias test, and the point of the turn budget.
+
+    After 8 turns the tutor stops withholding. It says the answer, marks
+    resolved_with_support and awards zero mastery (CLAUDE.md 6 layer 3). A
+    "leak" here is the guard doing its job; the frustration loop it prevents is
+    what actually loses real users.
+    """
+    data = turn(client, session)
+    for _ in range(CONFIG.turn_budget + 3):
+        nxt = wrong_response(data, store)
+        if nxt is None:
+            break
+        previous_item = data["item"]["id"] if data["item"] else None
+        data = turn(client, session, nxt)
+        if data["resolved_with_support"]:
+            revealed = store.item(previous_item)
+            label = store.label(revealed.answer)
+            assert label.lower() in data["utterance"].lower(), (
+                f"forced reveal did not name the answer: {data['utterance']!r}"
+            )
+            return
+    raise AssertionError("the turn budget never forced a reveal")

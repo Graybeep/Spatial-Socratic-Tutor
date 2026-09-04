@@ -14,16 +14,21 @@ reduces cwnd" with 5 lit nodes of which only 2 are mechanisms and the effective
 rate is 50%, not 20%. `MAX_GUESS_PROBABILITY` stays a policy knob that sets the
 narrowing floor; the number it derives never goes on a slide.
 
-TWO ARMS, LABELLED, BECAUSE THEY ARE DIFFERENT SYSTEMS
-------------------------------------------------------
+FOUR ARMS, LABELLED, BECAUSE THEY ARE DIFFERENT SYSTEMS
+--------------------------------------------------------
 The demo runs `interleaved` and bottoms out around 9 lit. A `visual_only` sweep
 bottoms out at 5. Reporting only the second invites "is that the system you just
-showed us", and the answer would be no. Both are run and both are labelled:
+showed us", and the answer would be no. All four run, all four labelled:
 
     product configuration     LADDER_MODE=interleaved   - what the demo runs
     isolated visual channel   LADDER_MODE=visual_only   - the mechanism alone
+    verbal channel only       LADDER_MODE=verbal_only   - nothing ever dims
+    no hints at all           LADDER_MODE=none          - the true baseline
 
-The gap between them is itself a finding.
+The gap between the first two is itself a finding. The last is what marginal
+leakage is measured against - NOT verbal_only, because a verbal hint still
+eliminates candidates by name and subtracting it would credit the verbal channel
+with everything it gave away.
 
 THREE STUDENTS, BECAUSE ZERO-KNOWLEDGE MEASURES THE FLOOR
 ----------------------------------------------------------
@@ -42,12 +47,16 @@ in congestion control" but not which mechanism gets the rest for free.
 
 METHOD
 ------
-Per item, the ladder is climbed by answering deliberately wrong. At each hint
-level the student's choice is recorded as a COUNTERFACTUAL PROBE - "would this
-student have solved it here?" - and then a wrong answer is submitted anyway so
-the ladder continues. One dialogue therefore yields the whole curve, and a
-student who would have solved at level 2 still contributes a level-3 and level-4
-data point.
+Per item, the ladder is climbed by answering deliberately wrong. At each attempt
+the student's choice is recorded as a COUNTERFACTUAL PROBE - "would this student
+have solved it here?" - and then a wrong answer is submitted anyway so the ladder
+continues. One dialogue therefore yields the whole curve, and a student who would
+have solved at attempt 2 still contributes an attempt-3 and attempt-4 data point.
+
+Arms are compared at MATCHED ATTEMPT, not matched hint level: the `none` arm has
+no hint levels, so keying on them would exclude the baseline entirely. A dialogue
+stops when the turn budget forces a reveal and moves to a new item, because
+narrowing resets there and the probe would stop measuring the hinted item.
 
 Runs in-process against server.turn. No network, no API key, no LLM.
 """
@@ -73,7 +82,15 @@ ARMS = {
     "product configuration": "interleaved",
     "isolated visual channel": "visual_only",
     "verbal channel only": "verbal_only",
+    "no hints at all": "none",
 }
+#: The true no-interface baseline. NOT verbal_only - a verbal hint still
+#: eliminates candidates by name, so a marginal figure computed against it
+#: charges the visual channel for nothing and credits the verbal one for
+#: everything it gave away. Using verbal_only would understate the visual
+#: channel's contribution: conservative, but wrong.
+BASELINE_ARM = "none"
+BASELINE_ARM_LABEL = "no hints at all"
 CONDITIONS = ("zero", "partial", "adversarial")
 
 
@@ -141,6 +158,10 @@ class Student:
 
 @dataclass
 class Probe:
+    #: Number of wrong answers already given on this item. Arms are compared at
+    #: MATCHED ATTEMPT, not matched hint level - the `none` arm has no hint
+    #: levels, so keying on them would silently exclude the baseline entirely.
+    attempt: int
     hint_level: int
     lit: int
     solved: bool
@@ -173,9 +194,17 @@ def run_dialogue(store: GraphStore, student: Student, seed: int, max_turns: int 
     phase1 = turn_mod.begin_turn(store, db, state, None)
     turn_mod.complete_turn(store, db, phase1)
 
+    attempt = 0
+    first_item = phase1.item.id if phase1.item else None
     for _ in range(max_turns):
         item = phase1.item
         if item is None or phase1.session_complete:
+            break
+        # One dialogue measures ONE item's ladder. Once the turn budget forces a
+        # reveal and advances, narrowing resets to nothing and the probe would be
+        # measuring a fresh un-hinted item - which showed up as a 50/50-lit
+        # column that dragged the terminal figure back to the unhinted rate.
+        if item.id != first_item:
             break
 
         lit = phase1.graph_state.focus_nodes
@@ -183,8 +212,9 @@ def run_dialogue(store: GraphStore, student: Student, seed: int, max_turns: int 
 
         # COUNTERFACTUAL PROBE: what would this student answer right now?
         pick = student.choose(store, item, lit, options)
-        if phase1.hint_level > 0:
+        if attempt > 0:
             out.probes.append(Probe(
+                attempt=attempt,
                 hint_level=phase1.hint_level,
                 lit=len(lit) or len(store.node_ids),
                 solved=pick == item.answer,
@@ -194,6 +224,7 @@ def run_dialogue(store: GraphStore, student: Student, seed: int, max_turns: int 
         # ...then answer wrong regardless, so the ladder keeps climbing and this
         # dialogue yields the whole curve rather than one point.
         response = _wrong(store, item, phase1.expects, options, item.answer, rng)
+        attempt += 1
         phase1 = turn_mod.begin_turn(store, db, state, response)
         turn_mod.complete_turn(store, db, phase1)
 
@@ -213,8 +244,8 @@ def measure(store: GraphStore, arm_label: str, mode: str, condition: str, n: int
             student = Student(condition=condition, rng=random.Random(f"{arm_label}:{condition}:{i}"))
             run = run_dialogue(store, student, seed=i)
             for p in run.probes:
-                by_level[p.hint_level].append(p.solved)
-                lit_at_level[p.hint_level].append(p.lit)
+                by_level[p.attempt].append(p.solved)
+                lit_at_level[p.attempt].append(p.lit)
 
     levels = {}
     for level in sorted(by_level):
@@ -224,13 +255,22 @@ def measure(store: GraphStore, arm_label: str, mode: str, condition: str, n: int
             "solve_rate": sum(hits) / len(hits),
             "mean_lit": statistics.mean(lit_at_level[level]),
         }
-    terminal = max(levels) if levels else None
+    # The deepest attempt is reached by only the few dialogues that got that far,
+    # so taking it as "terminal" unconditionally reads noise as signal - it had
+    # the flat no-hint baseline swinging 22%-45% across adjacent attempts on
+    # single-digit samples. Require a real sample before quoting a rung.
+    min_n = max(20, n // 3)
+    eligible = [lv for lv, v in levels.items() if v["n"] >= min_n]
+    terminal = max(eligible) if eligible else (max(levels) if levels else None)
     return {
         "arm": arm_label,
         "ladder_mode": mode,
         "condition": condition,
         "dialogues": n,
         "levels": levels,
+        "terminal_attempt": terminal,
+        "terminal_n": levels[terminal]["n"] if terminal else None,
+        "min_n_for_terminal": min_n,
         "terminal_solve_rate": levels[terminal]["solve_rate"] if terminal else None,
         "terminal_mean_lit": levels[terminal]["mean_lit"] if terminal else None,
     }
@@ -262,7 +302,7 @@ def render(results: list) -> str:
         lines.append(f"  {arm}  (LADDER_MODE={rows[0]['ladder_mode']}, "
                      f"n={rows[0]['dialogues']} dialogues)")
         levels = sorted({lv for r in rows for lv in r["levels"]})
-        header = "    condition      " + "".join(f"  hint {lv}" for lv in levels) + "   terminal"
+        header = "    condition      " + "".join(f"   try {lv}" for lv in levels) + "   terminal"
         lines.append(header)
         for r in rows:
             cells = ""
@@ -273,25 +313,33 @@ def render(results: list) -> str:
         lit = rows[0]["levels"]
         lines.append("    mean lit        " + "".join(
             f"  {lit[lv]['mean_lit']:>6.1f}" if lv in lit else "       -" for lv in levels))
+        lines.append("    probes          " + "".join(
+            f"  {lit[lv]['n']:>6d}" if lv in lit else "       -" for lv in levels))
+        lines.append(f"    terminal = deepest attempt with n >= {rows[0]['min_n_for_terminal']} "
+                     f"(attempt {rows[0]['terminal_attempt']}, n={rows[0]['terminal_n']})")
         lines.append("")
 
     lines.append("  MARGINAL LEAKAGE - what the NARROWING actually contributed")
     lines.append("")
     lines.append("  A partial-knowledge student solves some items from their own knowledge")
-    lines.append("  with no help from the interface. The verbal-only arm never dims anything,")
-    lines.append("  so its solve rate IS that baseline. Subtracting it condition-by-condition")
-    lines.append("  leaves what the visual channel added. Reporting the raw partial-knowledge")
-    lines.append("  rate as leakage charges the interface for the student's own competence.")
+    lines.append("  with no help at all. The 'no hints at all' arm measures exactly that, and")
+    lines.append("  subtracting it condition-by-condition leaves what the interface added.")
+    lines.append("  Reporting the raw rate as leakage charges the interface for the student's")
+    lines.append("  own competence.")
+    lines.append("")
+    lines.append("  The baseline is the no-hint arm, NOT verbal-only: a verbal hint still")
+    lines.append("  eliminates candidates by name, so subtracting it would credit the verbal")
+    lines.append("  channel with everything it gave away and understate the visual one.")
     lines.append("")
     baseline = {
         r["condition"]: r["terminal_solve_rate"]
         for r in results
-        if r["ladder_mode"] == "verbal_only" and r["terminal_solve_rate"] is not None
+        if r["arm"] == BASELINE_ARM_LABEL and r["terminal_solve_rate"] is not None
     }
     if baseline:
         lines.append("      condition        raw   baseline   marginal")
         for arm, rows in by_arm.items():
-            if rows[0]["ladder_mode"] == "verbal_only":
+            if rows[0]["ladder_mode"] == BASELINE_ARM:
                 continue
             lines.append(f"    {arm}")
             for r in rows:

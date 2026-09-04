@@ -248,8 +248,13 @@ only the first few entries.
 | mode | behaviour | why |
 |---|---|---|
 | `interleaved` | alternates visual/verbal, last rung verbal | production |
-| `visual_only` | every hint narrows | §9.2 arm |
-| `verbal_only` | **nothing ever dims** | §9.2 arm |
+| `visual_only` | every hint narrows | eval arm |
+| `verbal_only` | **nothing ever dims** | eval arm |
+| `none` | **no hints at all** | the no-interface baseline |
+
+`none` is what marginal leakage is measured against, not `verbal_only` — a verbal
+hint still eliminates candidates by name, so subtracting it would credit the
+verbal channel with everything it gave away.
 
 `verbal_only` is a real rendering case: hints arrive, `dimmed_nodes` stays empty,
 the graph never changes. The client must handle it — discovering it in week 4

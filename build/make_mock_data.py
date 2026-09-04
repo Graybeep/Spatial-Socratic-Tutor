@@ -136,6 +136,29 @@ def build_graph() -> dict:
     }
 
 
+# Mechanism questions: the answer is a proposition, not a node, so
+# visually_answerable is false. CLAUDE.md 3 expects MOST of a real bank to look
+# like this - "why does TCP halve cwnd on loss" is a mechanism, not a node - and
+# a fixture that is 100% node-answerable never exercises the path where
+# graph_state.current_node is populated. Option ids ARE the strings here;
+# GraphStore.label falls through to the raw value for a non-node id, so no schema
+# change is needed to carry them.
+MECHANISM_TEMPLATES = [
+    ("Because the {a} is treated as evidence of congestion.",
+     ["Because the receiver ran out of buffer space.",
+      "Because the round-trip time estimate expired.",
+      "Because the sender exhausted its send window."]),
+    ("It grows once per round trip rather than once per acknowledgement.",
+     ["It grows once per acknowledgement rather than once per round trip.",
+      "It stays fixed until a loss event occurs.",
+      "It halves on every acknowledgement received."]),
+    ("The sender has no estimate of available capacity yet.",
+     ["The receiver has not advertised a window yet.",
+      "The retransmission timer has not been initialised.",
+      "The connection is still in the handshake."]),
+]
+
+
 def build_items(graph: dict) -> dict:
     rng = random.Random(SEED + 1)
     node_ids = [n["id"] for n in graph["nodes"]]
@@ -155,8 +178,28 @@ def build_items(graph: dict) -> dict:
             n += 1
             distractors = rng.sample(pool, 3)
 
+            # 3 of 5 items are mechanism MCQs -> visually_answerable false, which
+            # is the majority CLAUDE.md 3 expects and the path where
+            # current_node is safe to populate.
+            if k >= 2:
+                key, wrong = MECHANISM_TEMPLATES[(k - 2) % len(MECHANISM_TEMPLATES)]
+                key = key.format(a=node["label"].lower())
+                items.append({
+                    "id": f"itm_{n:04d}",
+                    "node_id": nid,
+                    "type": "mcq",
+                    "prompt": f"Mechanism question about {node['label']}.",
+                    "answer": key,
+                    "answer_aliases": [],
+                    "distractors": list(wrong),
+                    "difficulty": round(min(0.95, node["difficulty"] + 0.05), 2),
+                    "visually_answerable": False,
+                    "answer_spans": [],
+                })
+                continue
+
             # One edge_click per node where an incoming prereq edge exists.
-            if k == ITEMS_PER_NODE - 1 and incoming.get(nid):
+            if k == 1 and incoming.get(nid):
                 parent = incoming[nid][0]
                 items.append({
                     "id": f"itm_{n:04d}",
@@ -172,7 +215,7 @@ def build_items(graph: dict) -> dict:
                 })
                 continue
 
-            kind = "node_click" if k % 2 == 0 else "mcq"
+            kind = "node_click"
             items.append({
                 "id": f"itm_{n:04d}",
                 "node_id": nid,

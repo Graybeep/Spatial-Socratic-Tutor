@@ -82,3 +82,46 @@ def test_verbal_only_arm_supplies_the_no_narrowing_baseline():
         assert r["terminal_mean_lit"] == len(GraphStore.load().node_ids), (
             "the baseline arm must never dim anything"
         )
+
+
+def test_baseline_arm_is_no_hints_not_verbal_only():
+    """verbal_only is not a no-help condition: a verbal hint still eliminates
+    candidates by name. Subtracting it would credit the verbal channel with
+    everything it gave away and understate the visual one."""
+    assert adversarial.BASELINE_ARM == "none"
+    assert adversarial.ARMS[adversarial.BASELINE_ARM_LABEL] == "none"
+
+
+def test_no_hint_arm_never_hints(store):
+    """The baseline has to actually be a baseline."""
+    from tests.conftest import config_override
+
+    with config_override(ladder_mode="none"):
+        student = adversarial.Student("zero", random.Random(0))
+        run = adversarial.run_dialogue(store, student, seed=0)
+        assert run.probes
+        for p in run.probes:
+            assert not p.action.startswith("hint"), f"baseline arm emitted {p.action}"
+            assert p.hint_level == 0, "hint level climbed in an arm with no hints"
+            assert p.lit == len(store.node_ids), "the baseline arm dimmed something"
+
+
+def test_a_dialogue_measures_one_item(store):
+    """Once the turn budget forces a reveal and advances, narrowing resets and a
+    probe would be measuring a fresh un-hinted item. That showed up as a
+    fully-lit column dragging the terminal figure back to the unhinted rate."""
+    student = adversarial.Student("zero", random.Random(3))
+    run = adversarial.run_dialogue(store, student, seed=3)
+    assert run.probes
+    attempts = [p.attempt for p in run.probes]
+    assert attempts == sorted(attempts)
+    assert len(set(attempts)) == len(attempts), "an attempt index repeated"
+
+
+def test_terminal_requires_an_adequate_sample():
+    """The deepest attempt is reached by few dialogues, so quoting it
+    unconditionally reads noise as signal."""
+    results = adversarial.run_all(n=3)
+    for r in results:
+        if r["terminal_attempt"] is not None:
+            assert r["min_n_for_terminal"] >= 20
