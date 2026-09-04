@@ -1,34 +1,41 @@
 """Scripted stand-in for Call 1 and Call 2. CLAUDE.md §11, days 1-2:
 "freeze schemas, mock the server so Person B is never blocked".
 
-This module makes NO network calls and needs NO API key. It emits objects that
-validate against the same Call1Decision / Call2Utterance schemas the real
-server/llm.py will emit in week 2, so swapping the real calls in is a one-line
-change in turn.py and touches nothing Person B built against.
+No network calls, no API key. Emits objects that validate against the same
+Call1Decision / Call2Utterance schemas the real server/llm.py will emit in week 2,
+so swapping the real calls in is a two-line change in turn.py and touches nothing
+Person B built against.
 
 What is faithfully mocked:
-  - the narrowing sequence (focus_nodes shrinks as hint_level rises) - the demo
-    mechanism, so the client must be built against real numbers
+  - the narrowing ladder, driven by CONFIG.narrow_schedule - a research variable
+    the eval sweeps, never a constant
+  - the three ladder modes §9.2 needs to run its arms pure
   - server-owned counters, hint monotonicity, turn budget
   - deterministic grading of clicks and MCQ
   - the Call 1 -> graph -> Call 2 latency profile (see main.py streaming)
 
 What is NOT mocked, deliberately: retrieval, the answer monitor, and any actual
-diagnosis. `diagnosis` here is a canned string; the week-3 read-through (§9.5)
-needs real model output and mock text would only pollute the logs.
+diagnosis. Every mock `diagnosis` is prefixed MOCK:: so a stale line can never be
+mistaken for model output during the week-3 read-through (§9.5).
 """
 from __future__ import annotations
 
+import hashlib
 import json
 import random
 from functools import lru_cache
-from pathlib import Path
 from typing import Optional
 
 from server.config import CONFIG
 from server.graph_store import GraphStore
 from server.schemas import Call1Decision, Call2Utterance, Item, StudentResponse
 from server.state import SessionState
+
+#: Every diagnosis this module produces starts with this. §9.5 hand-reads 30
+#: diagnosis fields; a mock line that slipped in unmarked would be read as the
+#: tutor's real model of the student and quietly corrupt the only check that
+#: catches that failure.
+MOCK_PREFIX = "MOCK:: "
 
 
 @lru_cache(maxsize=1)
@@ -40,8 +47,7 @@ def _templates() -> dict:
 def fallback_utterance(action: str) -> str:
     """One of the six canned fallbacks required by CLAUDE.md §5, for a Call 2
     timeout after the graph has already reacted."""
-    path = CONFIG.prompts_dir / f"fallback_{action}.txt"
-    return path.read_text(encoding="utf-8").strip()
+    return (CONFIG.prompts_dir / f"fallback_{action}.txt").read_text(encoding="utf-8").strip()
 
 
 # ---------------------------------------------------------------------------
@@ -51,9 +57,13 @@ def fallback_utterance(action: str) -> str:
 def grade(item: Item, response: Optional[StudentResponse]) -> Optional[bool]:
     """True/False for a deterministic item, None for anything unscorable.
 
-    None means "do not touch mastery". Free text always returns None: CLAUDE.md
-    §1.4 - free-text answers are for teaching and dialogue only, never scored.
-    A mock that scored them would teach Person B's client the wrong contract.
+    PURE. Grading does not touch mastery and does not mutate state - the caller
+    decides whether this observation is allowed to score at all, because a
+    turn-budget forced reveal must not credit a revealed answer (CLAUDE.md §6
+    layer 3).
+
+    None means "do not touch mastery". Free text always returns None:
+    CLAUDE.md §1.4 - free-text answers are for teaching and dialogue only.
     """
     if response is None:
         return None
@@ -67,17 +77,21 @@ def grade(item: Item, response: Optional[StudentResponse]) -> Optional[bool]:
     return None
 
 
-def mcq_option_ids(item: Item, seed: int) -> list:
-    """Answer plus distractors in a stable shuffled order.
+def mcq_option_ids(item: Item, session_id: str) -> list:
+    """Answer plus distractors, shuffled stably per (session, item).
 
-    Seeded per item so the option order is identical on every run - the eval
-    reruns the same dialogues and a reshuffle would change what "the student
-    picked option 2" means, which would quietly break the distractor screen
-    (CLAUDE.md §9.4).
+    Seeded on the session AND the item, for two reasons:
+
+      - stable across re-renders and reconnects within a session, so "the student
+        picked option 2" means one thing for the whole dialogue and the
+        distractor screen (§9.4) stays interpretable;
+      - not guessable and not constant across items, so position 0 is not always
+        the key. Shipping [answer, *distractors] in bank order would make every
+        MCQ free and every mastery number derived from one meaningless.
     """
-    options = [item.answer] + list(item.distractors)
-    rng = random.Random(f"{seed}:{item.id}")
-    rng.shuffle(options)
+    options = [item.answer] + [d for d in item.distractors if d != item.answer]
+    seed = hashlib.sha256(f"{session_id}:{item.id}".encode()).hexdigest()
+    random.Random(seed).shuffle(options)
     return options
 
 
@@ -85,42 +99,82 @@ def mcq_option_ids(item: Item, seed: int) -> list:
 # narrowing - the mechanism the whole project is about
 # ---------------------------------------------------------------------------
 
-def focus_for_hint(store: GraphStore, item: Item, hint_level: int) -> list:
-    """The node set left lit at a given hint level.
+def candidate_order(store: GraphStore, item: Item) -> list:
+    """A stable elimination order for one item: survivors first, casualties last.
+
+    The lit set at any level is a PREFIX of this list, which makes narrowing
+    monotone by construction - a node once excluded can never come back. That
+    matters twice over: a student must not be able to recover eliminated
+    candidates, and eval §9.2 matches a visual hint against a verbal one by the
+    named excluded set, which is only coherent if the sets nest.
+
+    Order: the answer, then its distractors, then graph neighbours, then
+    everything else by a per-item stable hash (not by node id, or every item
+    would eliminate the graph in the same order and a student would learn the
+    ladder rather than the material).
+    """
+    ordered: list = []
+    seen = set()
+
+    def push(node_id: str) -> None:
+        if node_id in store._nodes and node_id not in seen:
+            seen.add(node_id)
+            ordered.append(node_id)
+
+    push(item.answer if item.answer in store._nodes else item.node_id)
+    for d in item.distractors:
+        push(d)
+    for n in store.prereqs(item.node_id) + store.dependents(item.node_id):
+        push(n)
+
+    rest = [n for n in store.node_ids if n not in seen]
+    rest.sort(key=lambda n: hashlib.sha256(f"{item.id}:{n}".encode()).hexdigest())
+    for n in rest:
+        push(n)
+    return ordered
+
+
+def lit_nodes(store: GraphStore, item: Item, narrow_level: int) -> list:
+    """Nodes left lit at a given narrowing level.
 
     An empty list means NO narrowing - the whole graph stays lit. That is the
     level-0 state, not "dim everything".
-
-    The sequence is deliberately monotone: each level's set is a subset of the
-    previous one. A hint that re-lit a node it had already excluded would let a
-    student recover eliminated candidates, and would make eval §9.2's
-    "same named excluded set" incoherent.
     """
-    if hint_level <= 0:
+    schedule = CONFIG.narrow_schedule
+    target = schedule[min(narrow_level, len(schedule) - 1)] if narrow_level > 0 else 0
+    if target <= 0:
         return []
+    order = candidate_order(store, item)
+    if target >= len(order):
+        return []
+    return order[:target]
 
-    answer_nodes = [item.answer] if item.answer in set(store.node_ids) else []
-    candidates = answer_nodes + [d for d in item.distractors if d != item.answer]
-    context = store.prereqs(item.node_id) + store.dependents(item.node_id)
 
-    if hint_level == 1:
-        lit = candidates + [c for c in context if c not in candidates]
-    elif hint_level == 2:
-        lit = candidates
-    elif hint_level == 3:
-        lit = candidates[:3]
-    else:
-        lit = candidates[:2]
+def hint_action_for_level(level: int) -> str:
+    """Which hint channel fires at this level, per CONFIG.ladder_mode.
 
-    if item.node_id not in lit:
-        lit = [item.node_id] + lit
-    # Preserve order, drop duplicates.
-    seen, out = set(), []
-    for n in lit:
-        if n not in seen and n in store._nodes:
-            seen.add(n)
-            out.append(n)
-    return out
+    interleaved is production. The last rung is verbal on purpose: the ladder
+    should bottom out having said something, not having dimmed to the guess-
+    probability floor and stopped.
+    """
+    mode = CONFIG.ladder_mode
+    if mode == "visual_only":
+        return "hint_visual"
+    if mode == "verbal_only":
+        return "hint_verbal"
+    if level >= CONFIG.hint_max:
+        return "hint_verbal"
+    return "hint_visual" if level % 2 == 1 else "hint_verbal"
+
+
+def narrows(action: str) -> bool:
+    """Only a visual hint moves the narrowing level.
+
+    A verbal hint must NOT narrow further, or the two channels are confounded and
+    §9.2 cannot attribute an elimination to either one. It still inherits
+    whatever dimming is already in force for the item.
+    """
+    return action == "hint_visual" and CONFIG.ladder_mode != "verbal_only"
 
 
 # ---------------------------------------------------------------------------
@@ -132,40 +186,45 @@ def mock_call1(
     state: SessionState,
     item: Item,
     response: Optional[StudentResponse],
+    graded: Optional[bool],
 ) -> Call1Decision:
-    """Returns a schema-valid decision. Everything here is a REQUEST - the server
-    still applies guards and decides (CLAUDE.md §1.7)."""
-    correct = grade(item, response)
-
+    """A schema-valid decision. Everything here is a REQUEST - the server applies
+    guards and decides (CLAUDE.md §1.7). `graded` is passed in rather than
+    recomputed so Call 1 and the guards agree on one grading."""
     if response is None:
-        action, student_state, diagnosis = "ask", "on_track", "mock: session or item opened"
-        requested_hint = 0
-    elif correct is True:
-        action, student_state, diagnosis = "advance", "correct", "mock: deterministic item answered correctly"
+        action, student_state = "ask", "on_track"
+        diagnosis = "session or item opened"
         requested_hint = state.hint_level
-    elif correct is False:
-        # Alternate visual and verbal so the client exercises both paths.
-        action = "hint_visual" if state.hint_level % 2 == 0 else "hint_verbal"
+    elif graded is True:
+        action, student_state = "advance", "correct"
+        diagnosis = "deterministic item answered correctly"
+        requested_hint = state.hint_level
+    elif graded is False:
+        requested_hint = state.hint_level + 1
+        action = hint_action_for_level(min(requested_hint, CONFIG.hint_max))
         student_state = "guessing" if state.hint_level >= 2 else "stuck"
-        diagnosis = f"mock: wrong click at hint_level={state.hint_level}"
-        requested_hint = state.hint_level + 1
+        diagnosis = f"wrong answer at hint_level={state.hint_level}"
     else:
-        # Free text. Never scored - it moves the dialogue, not the mastery.
-        action, student_state = "hint_verbal", "confused_prereq"
-        diagnosis = "mock: free-text turn, unscored per CLAUDE.md 1.4"
         requested_hint = state.hint_level + 1
+        action = hint_action_for_level(min(requested_hint, CONFIG.hint_max))
+        student_state = "confused_prereq"
+        diagnosis = "free-text turn, unscored per CLAUDE.md 1.4"
 
-    projected_hint = min(requested_hint, CONFIG.hint_max)
-    focus = focus_for_hint(store, item, projected_hint) if action.startswith("hint") else []
-    if action in {"advance", "explain"}:
-        focus = [item.node_id]
+    projected = min(requested_hint, CONFIG.hint_max)
+    if action.startswith("hint"):
+        level = state.visual_narrow_level + 1 if narrows(action) else state.visual_narrow_level
+        focus = lit_nodes(store, item, level)
+    elif action in {"advance", "explain"}:
+        focus = []
+    else:
+        focus = lit_nodes(store, item, state.visual_narrow_level)
 
     return Call1Decision(
         student_state=student_state,
-        diagnosis=diagnosis,
-        correct=bool(correct) if correct is not None else False,
+        diagnosis=MOCK_PREFIX + diagnosis,
+        correct=bool(graded) if graded is not None else False,
         requested_action=action,
-        requested_hint_level=projected_hint,
+        requested_hint_level=projected,
         focus_nodes=focus,
         expects="text" if action == "explain" else item.type,
     )

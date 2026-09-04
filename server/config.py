@@ -6,6 +6,7 @@ Every value has a default that makes the demo run with no setup but an API key.
 """
 from __future__ import annotations
 
+import math
 import os
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -108,6 +109,33 @@ class Config:
     consecutive_failures_before_backtrack: int = field(
         default_factory=lambda: _int("CONSECUTIVE_FAILURES_BEFORE_BACKTRACK", 2))
 
+    # --- narrowing ladder (CLAUDE.md §9.1, §9.2) -----------------------------
+    # THE NARROWING SCHEDULE IS A RESEARCH VARIABLE, NOT A CONSTANT.
+    #
+    # Candidates left lit at hint level 0,1,2,...  A 0 entry means no narrowing
+    # at that level. Eval §9.1 sweeps this: effective leakage as a function of
+    # terminal candidate-set size is a curve, and the curve is the result. A
+    # single hard-coded ladder would bake one point on that curve into the
+    # client and throw the rest away.
+    narrow_schedule_raw: str = field(default_factory=lambda: _str("NARROW_SCHEDULE", "0,12,9,7,5"))
+
+    # The floor is set by GUESS PROBABILITY, not by node count. A terminal set of
+    # k candidates hands a non-reasoning student a 1/k chance, which is effective
+    # leakage under §9.1's own definition. At 0.2 the floor is 5 candidates; at
+    # 0.5 it would be 2, which is a coin flip and would lose to the verbal
+    # baseline the project is trying to beat.
+    max_guess_probability: float = field(default_factory=lambda: _float("MAX_GUESS_PROBABILITY", 0.2))
+
+    # interleaved -> production: alternate visual and verbal, last rung verbal
+    # visual_only -> eval arm: every hint narrows, no verbal elimination
+    # verbal_only -> eval arm: nothing ever dims; focus/dimmed stay empty
+    #
+    # §9.2 is unrunnable on an interleaved ladder: a verbal hint that follows a
+    # visual one is operating on an already-narrowed graph and only has to
+    # eliminate the remainder to "match", which measures nothing. The eval arms
+    # must run pure.
+    ladder_mode: str = field(default_factory=lambda: _str("LADDER_MODE", "interleaved"))
+
     # --- mock server ---------------------------------------------------------
     # Real Call 1 is ~1s; the mock fakes that gap so the client is built against
     # the true latency profile (CLAUDE.md 5, 8: graph must react before text).
@@ -119,6 +147,37 @@ class Config:
     @property
     def cors_origin_list(self) -> list[str]:
         return [o.strip() for o in self.cors_origins.split(",") if o.strip()]
+
+    @property
+    def candidate_floor(self) -> int:
+        """Smallest terminal candidate set the ladder may narrow to.
+
+        Derived from max_guess_probability so the constraint is stated in the
+        units the eval reports in.
+        """
+        return max(2, math.ceil(1.0 / max(self.max_guess_probability, 1e-9)))
+
+    @property
+    def narrow_schedule(self) -> list[int]:
+        """Candidates lit per hint level, clamped to the guess-probability floor.
+
+        Index 0 is hint level 0. A 0 entry means no narrowing. The list is padded
+        or truncated to hint_max + 1 so indexing by hint level is always safe.
+        """
+        parsed = []
+        for chunk in self.narrow_schedule_raw.split(","):
+            chunk = chunk.strip()
+            if not chunk:
+                continue
+            value = int(chunk)
+            parsed.append(0 if value <= 0 else max(value, self.candidate_floor))
+
+        if not parsed:
+            parsed = [0]
+        want = self.hint_max + 1
+        if len(parsed) < want:
+            parsed += [parsed[-1]] * (want - len(parsed))
+        return parsed[:want]
 
 
 CONFIG = Config()

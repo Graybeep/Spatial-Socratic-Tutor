@@ -32,3 +32,7 @@ data/*.pdf
 Thumbs.db
 .idea/
 .vscode/
+
+# client build + deps (scaffolded day 2)
+client/dist/
+client/.env

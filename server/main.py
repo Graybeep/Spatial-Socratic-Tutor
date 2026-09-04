@@ -116,6 +116,12 @@ async def post_turn(req: TurnRequest, stream: bool = Query(default=False)):
         phase1 = turn_mod.begin_turn(store, db, state, req.response)
 
         # The graph moves NOW. Everything below this line is text arriving late.
+        #
+        # This event carries `expects`, `item` and `mcq_options` as well as the
+        # graph, because the client has to become INTERACTIVE here, not just
+        # repaint. Withholding them until `done` would leave the student looking
+        # at a narrowed graph they cannot click for another ~1.4s, which throws
+        # away most of what the split bought (CLAUDE.md §5, §8).
         yield _sse(
             "graph_state",
             {
@@ -123,6 +129,15 @@ async def post_turn(req: TurnRequest, stream: bool = Query(default=False)):
                 "turn_id": state.turn_id,
                 "action": phase1.action,
                 "hint_level": phase1.hint_level,
+                "expects": phase1.expects,
+                "item": phase1.item_public().model_dump() if phase1.item_public() else None,
+                "mcq_options": [o.model_dump() for o in phase1.mcq_options],
+                "turn_budget": {
+                    "used": state.turns_on_item,
+                    "max": CONFIG.turn_budget,
+                },
+                "resolved_with_support": phase1.resolved_with_support,
+                "session_complete": phase1.session_complete,
                 "graph_state": phase1.graph_state.model_dump(by_alias=True),
             },
         )

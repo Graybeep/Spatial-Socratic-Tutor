@@ -1,11 +1,25 @@
 """Generate the MOCK graph.json and items.json fixtures.
 
 NOT part of the real pipeline. CLAUDE.md §4 describes the real build (PDF ->
-concepts -> edges -> human correction -> freeze_layout). This script exists only
-so the mock server and Person B's client have something schema-valid to render on
-day 2, before Person A's chapter graph lands in week 1.
+concepts -> edges -> human correction -> freeze_layout). This exists only so the
+mock server and Person B's client have something schema-valid to render on day 2,
+before Person A's chapter graph lands in week 1.
 
-Person A overwrites data/graph.json and data/items.json with the real thing and
+TWO DECISIONS THAT LOOK ODD AND ARE NOT:
+
+1. FIFTY nodes, matching CLAUDE.md §3's 40-60 bound - not a convenient dozen.
+   Dimming contrast, layout density, viewport fit, zoom behaviour and label
+   truncation all get tuned against whatever the client renders on day 2, and
+   none of that tuning survives the jump from 16 nodes to 50 with 45 dimmed.
+   Building the client against a small fixture guarantees the week-3 surprise
+   the mock exists to prevent.
+
+2. JUNK labels, not real TCP concepts. Real-looking labels invite tuning the
+   layout to content that is about to be replaced wholesale, and invite reading
+   pedagogical meaning into a graph that has none. The labels vary in length on
+   purpose, to stress truncation.
+
+Person A overwrites data/graph.json and data/items.json with the real chapter and
 deletes this file. Nothing imports it at runtime.
 
     python -m build.make_mock_data
@@ -13,162 +27,167 @@ deletes this file. Nothing imports it at runtime.
 from __future__ import annotations
 
 import json
+import random
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 
-# (id, label, definition, difficulty, section) grouped into dagre-ish layers.
-LAYERS = [
-    [
-        ("tcp_segment", "TCP Segment", "The unit TCP hands to IP, carrying a sequence number and payload.", 0.1, "3.5.1"),
-        ("tcp_reliable_delivery", "Reliable Delivery", "TCP's guarantee that bytes arrive once, in order, despite loss.", 0.15, "3.5.2"),
-    ],
-    [
-        ("tcp_rtt_estimation", "RTT Estimation", "The smoothed round-trip-time sample TCP keeps to set its timeout.", 0.3, "3.5.3"),
-        ("tcp_flow_control", "Flow Control", "Rate limiting imposed by the receiver's buffer, not the network.", 0.25, "3.5.5"),
-        ("tcp_congestion_window", "Congestion Window", "The sender-side limit cwnd on unacknowledged bytes in flight.", 0.3, "3.7.1"),
-    ],
-    [
-        ("tcp_receive_window", "Receive Window", "The advertised free buffer space the receiver returns in every ACK.", 0.25, "3.5.5"),
-        ("tcp_slow_start", "Slow Start", "The phase where cwnd doubles each RTT as the sender probes for capacity.", 0.4, "3.7.1"),
-        ("tcp_loss_event", "Loss Event", "A timeout or triple duplicate ACK, which TCP reads as congestion.", 0.35, "3.7.1"),
-    ],
-    [
-        ("tcp_congestion_avoidance", "Congestion Avoidance", "Linear growth of cwnd by one MSS per RTT once past the threshold.", 0.45, "3.7.1"),
-        ("tcp_ssthresh", "Slow Start Threshold", "The cwnd value at which the sender switches from doubling to linear growth.", 0.5, "3.7.1"),
-        ("tcp_triple_dup_ack", "Triple Duplicate ACK", "Three repeated ACKs for the same byte, signalling an isolated loss.", 0.45, "3.7.1"),
-        ("tcp_timeout", "Timeout", "Expiry of the retransmission timer, read as severe congestion.", 0.4, "3.5.3"),
-    ],
-    [
-        ("tcp_aimd", "AIMD", "Additive increase, multiplicative decrease - the shape of TCP's sawtooth.", 0.6, "3.7.2"),
-        ("tcp_fast_retransmit", "Fast Retransmit", "Resending the missing segment on the third duplicate ACK, before the timer fires.", 0.55, "3.7.1"),
-    ],
-    [
-        ("tcp_fast_recovery", "Fast Recovery", "Halving cwnd instead of dropping to one after a triple duplicate ACK.", 0.7, "3.7.1"),
-        ("tcp_fairness", "TCP Fairness", "The tendency of competing AIMD flows to converge on an equal share.", 0.75, "3.7.3"),
-    ],
-]
+SEED = 6180339
+N_LAYERS = 8
+ITEMS_PER_NODE = 5  # CLAUDE.md §4
 
-PREREQ_EDGES = [
-    ("tcp_segment", "tcp_reliable_delivery"),
-    ("tcp_segment", "tcp_congestion_window"),
-    ("tcp_reliable_delivery", "tcp_rtt_estimation"),
-    ("tcp_reliable_delivery", "tcp_flow_control"),
-    ("tcp_flow_control", "tcp_receive_window"),
-    ("tcp_congestion_window", "tcp_slow_start"),
-    ("tcp_congestion_window", "tcp_loss_event"),
-    ("tcp_rtt_estimation", "tcp_timeout"),
-    ("tcp_slow_start", "tcp_congestion_avoidance"),
-    ("tcp_slow_start", "tcp_ssthresh"),
-    ("tcp_loss_event", "tcp_triple_dup_ack"),
-    ("tcp_loss_event", "tcp_timeout"),
-    ("tcp_congestion_avoidance", "tcp_aimd"),
-    ("tcp_ssthresh", "tcp_aimd"),
-    ("tcp_triple_dup_ack", "tcp_fast_retransmit"),
-    ("tcp_aimd", "tcp_fast_recovery"),
-    ("tcp_fast_retransmit", "tcp_fast_recovery"),
-    ("tcp_aimd", "tcp_fairness"),
-]
-
-RELATED_EDGES = [
-    ("tcp_flow_control", "tcp_congestion_window"),
-    ("tcp_receive_window", "tcp_congestion_window"),
-]
-
-X_SPACING = 260
-Y_SPACING = 150
+X_SPACING = 210
+Y_SPACING = 155
 X_MARGIN = 120
-Y_MARGIN = 80
+Y_MARGIN = 90
+
+ONSETS = ["k", "t", "m", "v", "s", "dr", "fl", "th", "gr", "pr", "n", "l", "br", "st"]
+NUCLEI = ["a", "e", "i", "o", "u", "ae", "ei", "ou", "ia"]
+CODAS = ["n", "r", "l", "st", "th", "sk", "m", "ng", "rd", ""]
+SUFFIXES = ["", "", "", " phase", " window", " limit", " state", " pass", " bound"]
+
+
+def _word(rng: random.Random) -> str:
+    syllables = rng.choice([1, 2, 2, 3])
+    out = ""
+    for _ in range(syllables):
+        out += rng.choice(ONSETS) + rng.choice(NUCLEI) + rng.choice(CODAS)
+    return out.capitalize()
 
 
 def build_graph() -> dict:
+    rng = random.Random(SEED)
+
+    # 50 nodes spread over 8 layers, widths chosen to look like a real dagre
+    # output rather than a grid.
+    widths = [4, 6, 7, 8, 8, 7, 6, 4]
+    assert sum(widths) == 50, sum(widths)
+
+    layers: list = []
+    n = 0
+    used_labels = set()
+    for row, width in enumerate(widths):
+        layer = []
+        for _ in range(width):
+            label = _word(rng) + rng.choice(SUFFIXES)
+            while label in used_labels:
+                label = _word(rng) + rng.choice(SUFFIXES)
+            used_labels.add(label)
+            layer.append((f"n{n:02d}", label))
+            n += 1
+        layers.append(layer)
+
+    widest = max(widths)
     nodes = []
-    widest = max(len(layer) for layer in LAYERS)
-    for row, layer in enumerate(LAYERS):
-        # Centre each layer against the widest one, the way dagre would.
+    for row, layer in enumerate(layers):
         offset = (widest - len(layer)) * X_SPACING / 2
-        for col, (nid, label, definition, difficulty, section) in enumerate(layer):
+        for col, (nid, label) in enumerate(layer):
             nodes.append({
                 "id": nid,
                 "label": label,
-                "definition": definition,
-                "source_sections": [section],
-                "difficulty": difficulty,
+                "definition": f"Placeholder definition for {label}. Regenerated fixture, not source text.",
+                "source_sections": [f"{row + 1}.{col + 1}"],
+                # Difficulty rises with depth, jittered so selection has
+                # something to discriminate on.
+                "difficulty": round(min(0.95, 0.1 + row * 0.1 + rng.uniform(-0.04, 0.04)), 2),
                 "x": round(X_MARGIN + offset + col * X_SPACING, 1),
                 "y": round(Y_MARGIN + row * Y_SPACING, 1),
             })
-    edges = [{"from": a, "to": b, "type": "prereq"} for a, b in PREREQ_EDGES]
-    edges += [{"from": a, "to": b, "type": "related"} for a, b in RELATED_EDGES]
+
+    # Prereq edges only ever point from an earlier layer to a later one, so the
+    # result is a DAG by construction. build/validate.py checks it anyway.
+    edges = []
+    seen = set()
+    for row in range(1, len(layers)):
+        parents = layers[row - 1]
+        for idx, (nid, _) in enumerate(layers[row]):
+            # 1-2 parents, biased to the nodes sitting roughly above.
+            near = sorted(parents, key=lambda p, i=idx: abs(parents.index(p) - i))
+            for parent, _label in near[: rng.choice([1, 1, 2])]:
+                if (parent, nid) not in seen:
+                    seen.add((parent, nid))
+                    edges.append({"from": parent, "to": nid, "type": "prereq"})
+
+    # Every node needs at least one edge - validate.py rejects orphans.
+    connected = {e["from"] for e in edges} | {e["to"] for e in edges}
+    for row in range(1, len(layers)):
+        for nid, _ in layers[row]:
+            if nid not in connected:
+                parent = layers[row - 1][0][0]
+                edges.append({"from": parent, "to": nid, "type": "prereq"})
+                connected.add(nid)
+    for nid, _ in layers[0]:
+        if nid not in connected and len(layers) > 1:
+            child = layers[1][0][0]
+            edges.append({"from": nid, "to": child, "type": "prereq"})
+
+    # A few lateral 'related' edges, which are not prereqs and must not affect
+    # next-node selection.
+    for row in layers:
+        if len(row) >= 3:
+            a, b = rng.sample(row, 2)
+            edges.append({"from": a[0], "to": b[0], "type": "related"})
+
     return {
         "version": "1.0",
-        "domain": "MOCK_computer_networks_ch3",
+        "domain": "MOCK_fixture_50",
         "nodes": nodes,
         "edges": edges,
     }
 
 
 def build_items(graph: dict) -> dict:
-    by_layer = {}
-    for row, layer in enumerate(LAYERS):
-        for nid, *_ in layer:
-            by_layer[nid] = row
+    rng = random.Random(SEED + 1)
+    node_ids = [n["id"] for n in graph["nodes"]]
+    by_id = {n["id"]: n for n in graph["nodes"]}
+    incoming = {}
+    for e in graph["edges"]:
+        if e["type"] == "prereq":
+            incoming.setdefault(e["to"], []).append(e["from"])
 
     items = []
     n = 0
     for node in graph["nodes"]:
         nid = node["id"]
-        # Distractors: siblings in the same layer, then the layer above. Weak by
-        # design - eval §9.4 is meant to catch exactly this kind of lazy
-        # distractor, and it should flag them on the mock data too.
-        siblings = [m["id"] for m in graph["nodes"]
-                    if m["id"] != nid and by_layer[m["id"]] == by_layer[nid]]
-        nearby = [m["id"] for m in graph["nodes"]
-                  if m["id"] != nid and abs(by_layer[m["id"]] - by_layer[nid]) == 1]
-        distractors = (siblings + nearby)[:3]
+        pool = [m for m in node_ids if m != nid]
 
-        n += 1
-        items.append({
-            "id": f"itm_{n:04d}",
-            "node_id": nid,
-            "type": "node_click",
-            "prompt": f"Click the node that matches: {node['definition']}",
-            "answer": nid,
-            "answer_aliases": [node["label"].lower(), node["label"].lower().replace(" ", "-")],
-            "distractors": distractors,
-            "difficulty": node["difficulty"],
-            "visually_answerable": True,
-            "answer_spans": [],
-        })
+        for k in range(ITEMS_PER_NODE):
+            n += 1
+            distractors = rng.sample(pool, 3)
 
-        n += 1
-        items.append({
-            "id": f"itm_{n:04d}",
-            "node_id": nid,
-            "type": "mcq",
-            "prompt": f"Which concept is described as: {node['definition']}",
-            "answer": nid,
-            "answer_aliases": [node["label"].lower()],
-            "distractors": distractors,
-            "difficulty": round(min(1.0, node["difficulty"] + 0.05), 2),
-            "visually_answerable": True,
-            "answer_spans": [],
-        })
+            # One edge_click per node where an incoming prereq edge exists.
+            if k == ITEMS_PER_NODE - 1 and incoming.get(nid):
+                parent = incoming[nid][0]
+                items.append({
+                    "id": f"itm_{n:04d}",
+                    "node_id": nid,
+                    "type": "edge_click",
+                    "prompt": f"Click the edge leading into {node['label']}.",
+                    "answer": f"{parent}->{nid}",
+                    "answer_aliases": [f"{by_id[parent]['label'].lower()} to {node['label'].lower()}"],
+                    "distractors": distractors,
+                    "difficulty": round(min(0.95, node["difficulty"] + 0.1), 2),
+                    "visually_answerable": True,
+                    "answer_spans": [],
+                })
+                continue
 
-    # One edge_click item so the client has to implement that path too.
-    # Convention: the answer for an edge_click item is "src->dst".
-    n += 1
-    items.append({
-        "id": f"itm_{n:04d}",
-        "node_id": "tcp_fast_recovery",
-        "type": "edge_click",
-        "prompt": "Click the edge from the phase that halves cwnd to the one it depends on.",
-        "answer": "tcp_aimd->tcp_fast_recovery",
-        "answer_aliases": ["aimd to fast recovery"],
-        "distractors": ["tcp_slow_start", "tcp_timeout", "tcp_fairness"],
-        "difficulty": 0.65,
-        "visually_answerable": True,
-        "answer_spans": [],
-    })
+            kind = "node_click" if k % 2 == 0 else "mcq"
+            items.append({
+                "id": f"itm_{n:04d}",
+                "node_id": nid,
+                "type": kind,
+                "prompt": f"Which concept is described as: {node['definition']}",
+                "answer": nid,
+                "answer_aliases": [
+                    node["label"].lower(),
+                    node["label"].lower().replace(" ", "-"),
+                ],
+                "distractors": distractors,
+                "difficulty": round(min(0.95, max(0.05, node["difficulty"] + rng.uniform(-0.05, 0.05))), 2),
+                "visually_answerable": True,
+                "answer_spans": [],
+            })
 
     return {"version": "1.0", "domain": graph["domain"], "items": items}
 
@@ -180,7 +199,13 @@ def main() -> None:
     data.mkdir(exist_ok=True)
     (data / "graph.json").write_text(json.dumps(graph, indent=2) + "\n", encoding="utf-8")
     (data / "items.json").write_text(json.dumps(items, indent=2) + "\n", encoding="utf-8")
+
+    xs = [n["x"] for n in graph["nodes"]]
+    ys = [n["y"] for n in graph["nodes"]]
     print(f"wrote {len(graph['nodes'])} nodes, {len(graph['edges'])} edges, {len(items['items'])} items")
+    print(f"canvas extent: {max(xs) - min(xs):.0f} x {max(ys) - min(ys):.0f}")
+    longest = max(graph["nodes"], key=lambda n: len(n["label"]))
+    print(f"longest label: {longest['label']!r} ({len(longest['label'])} chars)")
 
 
 if __name__ == "__main__":

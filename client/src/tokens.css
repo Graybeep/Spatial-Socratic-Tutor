@@ -1,0 +1,70 @@
+@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500&family=IBM+Plex+Sans:wght@400;600&display=swap");
+
+/*
+ * TWO INDEPENDENT VISUAL CHANNELS. Do not let them collide.
+ *
+ *   mastery   -> FILL colour only        (pale slate .. deep teal)
+ *   narrowing -> stroke weight + opacity + saturation
+ *
+ * If mastery ever touches opacity, or dimming ever touches fill hue, a
+ * half-mastered lit node and a fully-mastered dim node become
+ * indistinguishable and the demo's central moment stops reading.
+ *
+ * Layout is frozen in graph.json. Nothing here may move a node.
+ */
+
+:root {
+  --ground: #f2f3f1;
+  --ink: #16181a;
+  --rule: #b9bec0;
+  --paper: #fbfbfa;
+
+  /* mastery ramp — sample with mastery-fill() in Graph.tsx */
+  --m-000: #c9cfcd;
+  --m-050: #7fa8a3;
+  --m-100: #0f6b63;
+
+  /* narrowing channel */
+  --lit-stroke: 3px;
+  --dim-stroke: 1px;
+  --dim-opacity: 0.22;
+  --dim-saturate: 0.12;
+
+  --alert: #a33a1f; /* forced reveal, leak monitor trip */
+
+  --rail: 360px;
+  --dim-ms: 420ms;
+
+  /* Confirm-or-undo (CLAUDE.md 8). A misclick scored as wrong corrupts mastery
+     permanently, so a click is a PROPOSAL until the student confirms it. */
+  --pending: #7a5cff;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root { --dim-ms: 0ms; }
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--ground);
+  color: var(--ink);
+  font-family: "IBM Plex Sans", system-ui, sans-serif;
+  font-size: 15px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Mono is reserved for one thing: the candidate count. It is the research
+   variable, not decoration. Do not use it for other labels. */
+.readout {
+  font-family: "IBM Plex Mono", ui-monospace, monospace;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+}
+
+:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 2px;
+}

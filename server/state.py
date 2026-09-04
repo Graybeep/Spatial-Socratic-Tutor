@@ -26,6 +26,7 @@ CREATE TABLE IF NOT EXISTS sessions (
     current_node          TEXT,
     current_item_id       TEXT,
     hint_counter          INTEGER NOT NULL DEFAULT 0,
+    visual_narrow_level   INTEGER NOT NULL DEFAULT 0,
     turns_on_item         INTEGER NOT NULL DEFAULT 0,
     consecutive_failures  INTEGER NOT NULL DEFAULT 0,
     theta_map             TEXT NOT NULL DEFAULT '{}',
@@ -45,6 +46,11 @@ class SessionState:
     current_item_id: Optional[str] = None
     # Monotonic within an item, reset on item change. Guard layer 2.
     hint_counter: int = 0
+    # How far the VISUAL channel has narrowed on this item. Separate from
+    # hint_counter because a verbal hint raises the hint level without dimming
+    # anything - confounding the two is exactly what makes eval 9.2 unrunnable.
+    # Monotonic within an item; only a hint_visual advances it.
+    visual_narrow_level: int = 0
     turns_on_item: int = 0
     consecutive_failures: int = 0
     theta_map: dict = field(default_factory=dict)
@@ -81,6 +87,7 @@ class SessionState:
         self.current_node = node_id
         self.current_item_id = item_id
         self.hint_counter = 0
+        self.visual_narrow_level = 0
         self.turns_on_item = 0
 
     def record_history(self, role: str, text: str, keep: int = 12) -> None:
@@ -99,7 +106,32 @@ class Store:
         self._conn = sqlite3.connect(path, check_same_thread=False)
         self._conn.row_factory = sqlite3.Row
         self._conn.executescript(SCHEMA)
+        self._migrate()
         self._conn.commit()
+
+    def _migrate(self) -> None:
+        """Add any column missing from an existing state.db.
+
+        CREATE TABLE IF NOT EXISTS does nothing to a table that already exists,
+        so adding a field to SCHEMA leaves every developer's on-disk database one
+        column behind and every write failing with `no such column`. The tests
+        all run on ":memory:" and never see it, which is exactly why this needs to
+        be handled here rather than by remembering to delete the file.
+
+        Additive only: this never drops or rewrites a column. Student state is
+        disposable demo data, but silently destroying it mid-session is still the
+        wrong default.
+        """
+        existing = {r["name"] for r in self._conn.execute("PRAGMA table_info(sessions)")}
+        for line in SCHEMA.splitlines():
+            line = line.strip().rstrip(",")
+            if not line or line.startswith(("CREATE", ")", ";")):
+                continue
+            name, _, definition = line.partition(" ")
+            if name and name not in existing and definition.strip():
+                self._conn.execute(
+                    f"ALTER TABLE sessions ADD COLUMN {name} {definition.strip()}"
+                )
 
     def close(self) -> None:
         self._conn.close()
@@ -131,6 +163,7 @@ class Store:
             current_node=row["current_node"],
             current_item_id=row["current_item_id"],
             hint_counter=row["hint_counter"],
+            visual_narrow_level=row["visual_narrow_level"],
             turns_on_item=row["turns_on_item"],
             consecutive_failures=row["consecutive_failures"],
             theta_map=json.loads(row["theta_map"]),
@@ -143,7 +176,8 @@ class Store:
     def save(self, state: SessionState) -> None:
         self._conn.execute(
             "UPDATE sessions SET updated_at=?, turn_id=?, current_node=?, current_item_id=?, "
-            "hint_counter=?, turns_on_item=?, consecutive_failures=?, theta_map=?, n_obs=?, "
+            "hint_counter=?, visual_narrow_level=?, turns_on_item=?, consecutive_failures=?, "
+            "theta_map=?, n_obs=?, "
             "completed_items=?, history=?, session_complete=? WHERE session_id=?",
             (
                 time.time(),
@@ -151,6 +185,7 @@ class Store:
                 state.current_node,
                 state.current_item_id,
                 state.hint_counter,
+                state.visual_narrow_level,
                 state.turns_on_item,
                 state.consecutive_failures,
                 json.dumps(state.theta_map),
