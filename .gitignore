@@ -1,0 +1,34 @@
+# secrets
+.env
+.env.local
+client/.env
+client/.env.local
+
+# runtime state (evidence for evals 9.1/9.4/9.5 — do not delete locally)
+logs/*.jsonl
+*.db
+*.sqlite
+*.sqlite3
+
+# python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+.mypy_cache/
+
+# node / client
+node_modules/
+client/dist/
+client/node_modules/
+*.tsbuildinfo
+
+# source material (licensing)
+data/*.pdf
+
+# os / editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
