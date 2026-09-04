@@ -230,10 +230,16 @@ MAX_GUESS_PROBABILITY=0.2       # floor = ceil(1/p) = 5 candidates
 LADDER_MODE=interleaved         # interleaved | visual_only | verbal_only
 ```
 
-The floor is set by **guess probability**, not node count. A terminal set of `k`
-hands a non-reasoning student a `1/k` chance, which is effective leakage under
-§9.1's own definition. Narrowing to 2 is a coin flip and would lose to the verbal
-baseline. Schedule entries below the floor are clamped up to it.
+The floor is set by **guess probability**, not node count: `floor = ceil(1/p)`.
+Narrowing to 2 is a coin flip. Schedule entries below the floor clamp up to it.
+
+**`MAX_GUESS_PROBABILITY` is a policy knob. `1/N` is not a leakage number and
+must never be reported as one.** It is a lower bound that assumes uniform choice,
+and students do not choose uniformly — they choose among the lit nodes that are
+plausible for the question type. Ask "which mechanism reduces cwnd" with 5 lit
+nodes of which 2 are mechanisms and the real rate is 50%, not 20%. Report the
+measured solve rate from `eval/adversarial.py`; it is the only number that has
+been observed rather than assumed.
 
 The schedule is indexed by the **visual** narrowing level, not the hint level —
 so in `interleaved` mode, where only every other rung is visual, a run consumes
@@ -258,11 +264,19 @@ meaningless.
 Measured on the 50-node fixture, `visual_only`, default schedule:
 
 ```
-hint 1  →  12/50 lit   (8% guess)
-hint 2  →   9/50 lit  (11% guess)
-hint 3  →   7/50 lit  (14% guess)
-hint 4  →   5/50 lit  (20% guess, the floor)
+hint 1  →  12/50 lit
+hint 2  →   9/50 lit
+hint 3  →   7/50 lit
+hint 4  →   5/50 lit   (the floor)
 ```
+
+Lit-set size, not leakage. For leakage run `python -m eval.adversarial`.
+
+A `hint_visual` that would dim nothing is never sent. Clamping guarantees the
+case exists — `0,12,6,3,2` becomes `0,12,6,5,5`, so the last rung would leave the
+graph untouched while the tutor said "narrowing further". The server substitutes
+`hint_verbal` instead. A dead visual beat on a projector reads as a broken demo,
+and to a student it reads as being lied to.
 
 ## MCQ
 
@@ -285,3 +299,36 @@ SCHEMA does nothing to an existing database — `CREATE TABLE IF NOT EXISTS` is 
 no-op on a table that exists — so every write would fail with `no such column`
 until the file was deleted. Tests all run on `:memory:` and never see it;
 `tests/test_state_migration.py` is the one that does.
+
+---
+
+## What the client must never infer, and what the server no longer sends
+
+`ItemPublic` has **no `node_id`**, and `graph_state.current_node` is `null`
+while a `visually_answerable` item is open.
+
+For a `node_click` or `mcq` item the answer *is* the item's node — CLAUDE.md §3's
+own worked example has `node_id: "tcp_slow_start"` and `answer: "tcp_slow_start"`,
+and it held for 204 of the 250 fixture items. Both fields therefore named the
+answer outright, in a payload that passed every string-based leak test, because
+nothing was comparing *identities*.
+
+If a future change needs the node under study on the client, it needs a reason
+that survives the question "does this name the answer for a click item".
+
+`current_node` is still populated for items whose answer is not on the graph
+(`visually_answerable: false` — CLAUDE.md §3 expects that to be most of a real
+bank), so the "where we are" affordance is not lost, only withheld where it
+would give the game away.
+
+## Session vs graph
+
+Sessions store a **content fingerprint** of the graph they were created against
+(`GET /health` reports it). `POST /turn` against a session created on a different
+graph returns **409** with a sentence explaining why, not a `KeyError` from deep
+inside next-node selection.
+
+This is the sqlite-migration failure one layer up, and it lands the week Person A
+replaces the fixture with the real chapter: every `theta_map` key in an existing
+`state.db` would name a node that no longer exists. `graph.version` does not
+catch it — it is hand-written and will still say `"1.0"`. A content hash does.

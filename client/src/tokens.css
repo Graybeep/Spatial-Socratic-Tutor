@@ -10,6 +10,20 @@
  * half-mastered lit node and a fully-mastered dim node become
  * indistinguishable and the demo's central moment stops reading.
  *
+ * THE NARROWING CHANNEL HAS TWO SUB-CHANNELS, and they are tuned separately:
+ *
+ *   --dim-shape-opacity  the rectangle. Holds around 0.20 and MUST NOT go
+ *                        lower. The dimmed boxes are what keeps the frozen
+ *                        layout legible as a spatial anchor; take them to 0.12
+ *                        and you are left with 5 boxes floating in empty
+ *                        space, which is not a spatial interface. Deleting the
+ *                        context deletes the thing the project is about.
+ *   --dim-label-opacity  the text. Drive this to near zero. The READABLE TEXT
+ *                        is what leaks; the rectangle is what makes it spatial.
+ *
+ * Collapsing these into one value forces a compromise that is wrong for both
+ * jobs. Tune the label down and the shape stays put.
+ *
  * Layout is frozen in graph.json. Nothing here may move a node.
  */
 
@@ -24,10 +38,12 @@
   --m-050: #7fa8a3;
   --m-100: #0f6b63;
 
-  /* narrowing channel */
+  /* narrowing channel - two sub-channels, see above */
   --lit-stroke: 3px;
   --dim-stroke: 1px;
-  --dim-opacity: 0.22;
+  --dim-shape-opacity: 0.20;
+  --dim-label-opacity: 0.06;
+  --dim-edge-opacity: 0.15;
   --dim-saturate: 0.12;
 
   --alert: #a33a1f; /* forced reveal, leak monitor trip */

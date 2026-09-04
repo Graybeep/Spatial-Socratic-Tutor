@@ -106,7 +106,7 @@ export function Graph({
             stroke={isPending ? "var(--pending)" : "var(--rule)"}
             strokeWidth={isPending ? 4 : e.type === "prereq" ? 1.5 : 1}
             strokeDasharray={e.type === "related" ? "4 4" : undefined}
-            opacity={isDim ? "var(--dim-opacity)" : 1}
+            opacity={isDim ? "var(--dim-edge-opacity)" : 1}
             style={{
               transition: "opacity var(--dim-ms) ease",
               cursor: edgeClickable && !isDim ? "pointer" : "default",
@@ -130,11 +130,12 @@ export function Graph({
           <g
             key={n.id}
             transform={`translate(${n.x} ${n.y})`}
-            // Three simultaneous cues. Opacity alone dies on a projector.
+            // Opacity lives on the rect and the text SEPARATELY, not here on
+            // the group - dimming the group would force one value on both, and
+            // the shape and the label need opposite treatment (see tokens.css).
             style={{
-              opacity: isDim ? "var(--dim-opacity)" : 1,
               filter: isDim ? "saturate(var(--dim-saturate))" : "none",
-              transition: "opacity var(--dim-ms) ease, filter var(--dim-ms) ease",
+              transition: "filter var(--dim-ms) ease",
               cursor: clickable ? "pointer" : "default",
             }}
             onClick={clickable ? () => onNodeClick(n.id) : undefined}
@@ -159,7 +160,12 @@ export function Graph({
               fill={masteryFill(m)}
               stroke={isPending ? "var(--pending)" : "var(--ink)"}
               strokeWidth={isPending ? 4 : isDim ? "var(--dim-stroke)" : "var(--lit-stroke)"}
-              style={{ transition: "stroke-width var(--dim-ms) ease" }}
+              // Holds at ~0.20. This rectangle is the spatial anchor.
+              opacity={isDim ? "var(--dim-shape-opacity)" : 1}
+              style={{
+                transition:
+                  "stroke-width var(--dim-ms) ease, opacity var(--dim-ms) ease",
+              }}
             />
             {isCurrent && !isPending && (
               <rect
@@ -181,6 +187,9 @@ export function Graph({
               fontSize={12}
               fontWeight={600}
               fill={m > 0.55 ? "var(--paper)" : "var(--ink)"}
+              // Driven near zero independently. The readable text is what leaks.
+              opacity={isDim ? "var(--dim-label-opacity)" : 1}
+              style={{ transition: "opacity var(--dim-ms) ease" }}
               pointerEvents="none"
             >
               {n.label.length > LABEL_MAX + 1

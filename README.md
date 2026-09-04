@@ -21,7 +21,7 @@ fixture; nothing else changes.
 pip install -r requirements.txt
 python -m build.make_mock_data   # placeholder 50-node fixture
 python -m build.validate         # strict; must be clean
-python -m pytest                 # 85 tests
+python -m pytest                 # 97 tests
 python -m server.main            # http://127.0.0.1:8000
 ```
 
@@ -37,6 +37,16 @@ No API key and no network needed — `MOCK_MODE=true` is the default.
 ```bash
 cp .env.example .env   # only needed once real LLM calls go in (week 2)
 ```
+
+Measure leakage (§9.1) — three student conditions, arms labelled:
+
+```bash
+python -m eval.adversarial --n 60
+```
+
+Never report `1/N` as leakage. It is a lower bound that assumes uniform choice;
+the measured partial-knowledge rate runs well above it. `MAX_GUESS_PROBABILITY`
+is a policy knob for the narrowing floor, not a result.
 
 Useful knobs while building (see `docs/API.md`):
 
@@ -57,6 +67,7 @@ NARROW_SCHEDULE=0,25,18,12,8 python -m server.main
 | `server/mock_tutor.py` | scripted stand-in for Call 1 and Call 2 |
 | `build/validate.py` | DAG / orphan / item checks; must pass before commit |
 | `build/make_mock_data.py` | throwaway 50-node fixture; Person A deletes this in week 1 |
+| `eval/adversarial.py` | §9.1 effective leakage — `python -m eval.adversarial` |
 | `client/src/types.ts` | reconciled against `/schemas`; supersedes `templates/` |
 
 Full layout in `CLAUDE.md` §2.

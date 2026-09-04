@@ -69,7 +69,7 @@
     },
     "ItemPublic": {
       "additionalProperties": false,
-      "description": "The only part of an item the client may see.\n\nNo prompt (the tutor's `utterance` IS the question), no answer, no aliases,\nno spans, no distractors. If a field is added here, assume it leaks until\nproven otherwise.",
+      "description": "The only part of an item the client may see.\n\nNo prompt (the tutor's `utterance` IS the question), no answer, no aliases,\nno spans, no distractors. If a field is added here, assume it leaks until\nproven otherwise.\n\nTHERE IS NO `node_id` HERE, AND IT MUST NOT COME BACK. For a node_click or\nmcq item the answer IS the item's node - CLAUDE.md \u00a73's own worked example\nhas node_id \"tcp_slow_start\" and answer \"tcp_slow_start\" - so shipping\nnode_id hands over the answer in the clear. It held for 204 of the 250\nfixture items. `graph_state.current_node` is suppressed for the same reason\nwhile such an item is open (see server/turn.py).\n\n`difficulty` stays: it is a scalar the client uses for nothing sensitive and\nreveals no identity.",
       "properties": {
         "difficulty": {
           "title": "Difficulty",
@@ -77,10 +77,6 @@
         },
         "id": {
           "title": "Id",
-          "type": "string"
-        },
-        "node_id": {
-          "title": "Node Id",
           "type": "string"
         },
         "scorable": {
@@ -91,7 +87,6 @@
       },
       "required": [
         "id",
-        "node_id",
         "difficulty",
         "scorable"
       ],

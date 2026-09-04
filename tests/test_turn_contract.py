@@ -44,8 +44,8 @@ def test_diagnosis_never_reaches_the_client(client, session):
 def test_item_payload_carries_no_answer_material(client, session):
     data = turn(client, session)
     assert data["item"] is not None
-    assert set(data["item"]) == {"id", "node_id", "difficulty", "scorable"}
-    for field in ("prompt", "answer", "answer_aliases", "answer_spans", "distractors"):
+    assert set(data["item"]) == {"id", "difficulty", "scorable"}
+    for field in ("prompt", "answer", "answer_aliases", "answer_spans", "distractors", "node_id"):
         assert field not in data["item"]
 
 
@@ -101,11 +101,11 @@ def test_no_alias_leaks_and_no_options_ship_on_a_non_mcq_turn(client, session):
 # guard layer 2 - hint monotonicity (CLAUDE.md §6)
 # ---------------------------------------------------------------------------
 
-def test_hint_level_never_jumps_and_never_decreases(client, session):
+def test_hint_level_never_jumps_and_never_decreases(client, session, store):
     data = turn(client, session)
     levels = [data["hint_level"]]
     for _ in range(6):
-        wrong = wrong_response(data, main_mod.STORE)
+        wrong = wrong_response(data, store)
         if wrong is None:
             break
         data = turn(client, session, wrong)
@@ -135,14 +135,14 @@ def test_server_ignores_a_model_request_to_skip_levels():
 # guard layer 3 - turn budget (CLAUDE.md §6)
 # ---------------------------------------------------------------------------
 
-def test_turn_budget_forces_a_reveal_and_awards_zero_mastery(client, session):
+def test_turn_budget_forces_a_reveal_and_awards_zero_mastery(client, session, store):
     data = turn(client, session)
-    node = data["item"]["node_id"]
+    node = store.item(data["item"]["id"]).node_id
     before = data["graph_state"]["mastery"][node]
 
     resolved = False
     for _ in range(CONFIG.turn_budget + 3):
-        wrong = wrong_response(data, main_mod.STORE)
+        wrong = wrong_response(data, store)
         if wrong is None:
             break
         data = turn(client, session, wrong)
@@ -164,7 +164,7 @@ def test_forced_reveal_does_not_credit_a_correct_answer_on_the_same_turn(client,
     """
     store = main_mod.STORE
     data = turn(client, session)
-    node = data["item"]["node_id"]
+    node = store.item(data["item"]["id"]).node_id
 
     # Spend the budget without ever answering correctly.
     for _ in range(CONFIG.turn_budget - 1):
@@ -172,14 +172,14 @@ def test_forced_reveal_does_not_credit_a_correct_answer_on_the_same_turn(client,
         if nxt is None or data["resolved_with_support"]:
             break
         data = turn(client, session, nxt)
-        if data["item"] is None or data["item"]["node_id"] != node:
+        if data["item"] is None or store.item(data["item"]["id"]).node_id != node:
             break
 
     if data["item"] is None or data["resolved_with_support"]:
         return  # already resolved; the assertion above covers that path
 
-    before = data["graph_state"]["mastery"][data["item"]["node_id"]]
-    scored_node = data["item"]["node_id"]
+    before = data["graph_state"]["mastery"][store.item(data["item"]["id"]).node_id]
+    scored_node = store.item(data["item"]["id"]).node_id
     answer = store.item(data["item"]["id"]).answer
     data = turn(client, session, {"type": "node_click", "node_id": answer})
 
@@ -194,7 +194,7 @@ def test_scoring_precedes_routing(client, session):
     scoring has to have already run or the tutor routes on last turn's state."""
     store = main_mod.STORE
     data = turn(client, session)
-    node = data["item"]["node_id"]
+    node = store.item(data["item"]["id"]).node_id
     answer = store.item(data["item"]["id"]).answer
     data = turn(client, session, {"type": "node_click", "node_id": answer})
     # The advance decision and the mastery bump must be visible in the same
@@ -214,9 +214,9 @@ def test_free_text_never_moves_mastery(client, session):
     assert data["graph_state"]["mastery"] == before, "free text was scored; CLAUDE.md §1.4"
 
 
-def test_a_correct_click_raises_mastery_on_that_node(client, session):
+def test_a_correct_click_raises_mastery_on_that_node(client, session, store):
     data = turn(client, session)
-    node = data["item"]["node_id"]
+    node = store.item(data["item"]["id"]).node_id
     before = data["graph_state"]["mastery"][node]
     answer = main_mod.STORE.item(data["item"]["id"]).answer
     data = turn(client, session, {"type": "node_click", "node_id": answer})
@@ -226,7 +226,7 @@ def test_a_correct_click_raises_mastery_on_that_node(client, session):
 def test_a_wrong_click_lowers_mastery_and_decays_prereqs(client, session):
     store = main_mod.STORE
     data = turn(client, session)
-    node = data["item"]["node_id"]
+    node = store.item(data["item"]["id"]).node_id
     before = dict(data["graph_state"]["mastery"])
     wrong = wrong_response(data, main_mod.STORE)
     data = turn(client, session, wrong)
@@ -250,20 +250,20 @@ def test_focus_and_dimmed_partition_the_graph(client, session):
             assert focus | dimmed == set(store.node_ids)
         else:
             assert not dimmed, "empty focus means no narrowing, so nothing is dimmed"
-        wrong = wrong_response(data, main_mod.STORE)
+        wrong = wrong_response(data, store)
         if wrong is None:
             break
         data = turn(client, session, wrong)
 
 
-def test_narrowing_is_monotone_within_an_item(client, session):
+def test_narrowing_is_monotone_within_an_item(client, session, store):
     """A hint must never re-light a node it already excluded - otherwise a student
     can recover eliminated candidates, and eval §9.2's excluded set is meaningless."""
     data = turn(client, session)
     item_id = data["item"]["id"]
     previous = None
     for _ in range(4):
-        wrong = wrong_response(data, main_mod.STORE)
+        wrong = wrong_response(data, store)
         if wrong is None:
             break
         data = turn(client, session, wrong)
@@ -384,3 +384,66 @@ def test_stream_and_json_transports_agree(client, store):
     assert plain["expects"] == done["expects"]
     assert plain["action"] == done["action"]
     assert set(plain["graph_state"]) == set(done["graph_state"])
+
+
+# ---------------------------------------------------------------------------
+# the answer's IDENTITY, not just its text (CLAUDE.md 1.6)
+# ---------------------------------------------------------------------------
+
+def test_the_answer_node_id_never_appears_as_a_distinguished_field(client, session, store):
+    """The leak that hid behind "no answer STRING appears".
+
+    For a node_click or mcq item the answer IS item.node_id - CLAUDE.md 3's own
+    worked example has node_id "tcp_slow_start" and answer "tcp_slow_start", and
+    it held for 204 of the 250 fixture items. Shipping ItemPublic.node_id, or
+    naming that node in graph_state.current_node, hands the answer over in the
+    clear while every string-based leak test passes.
+
+    Node ids appearing inside graph_state.mastery is not this: that map covers
+    all 50 nodes and singles out nothing.
+    """
+    data = turn(client, session)
+    checked = 0
+    for _ in range(10):
+        if data["item"] is not None:
+            item = store.item(data["item"]["id"])
+            assert "node_id" not in data["item"]
+            if item.visually_answerable:
+                assert data["graph_state"]["current_node"] is None, (
+                    f"current_node named {data['graph_state']['current_node']}, "
+                    f"and the answer to {item.id} is {item.answer}"
+                )
+                checked += 1
+        nxt = wrong_response(data, store)
+        if nxt is None:
+            break
+        data = turn(client, session, nxt)
+    assert checked, "no visually-answerable item was exercised"
+
+
+def test_a_client_that_knows_only_the_wire_cannot_name_the_answer(client, session, store):
+    """The adversarial-student premise, as a unit test.
+
+    Everything the client legitimately holds - the frozen graph, the response,
+    the dimmed set - must not single the answer out. The lit set narrowing toward
+    it is the intended channel and is measured in eval/adversarial.py; a field
+    that names it outright is not.
+    """
+    data = turn(client, session)
+    for _ in range(6):
+        if data["item"] is None:
+            break
+        item = store.item(data["item"]["id"])
+        singled_out = set()
+        gs = data["graph_state"]
+        if gs["current_node"]:
+            singled_out.add(gs["current_node"])
+        for option in data["mcq_options"]:
+            singled_out.add(option["id"])
+        # mcq_options legitimately contains the key among 3 distractors; a set of
+        # one is what a leak looks like.
+        assert singled_out != {item.answer}, f"the response singles out {item.answer}"
+        nxt = wrong_response(data, store)
+        if nxt is None:
+            break
+        data = turn(client, session, nxt)

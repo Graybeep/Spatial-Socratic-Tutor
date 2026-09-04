@@ -17,9 +17,14 @@ from typing import Optional
 
 from server.config import CONFIG
 
+class StaleSessionError(RuntimeError):
+    """A session whose mastery refers to a graph that has since been replaced."""
+
+
 SCHEMA = """
 CREATE TABLE IF NOT EXISTS sessions (
     session_id            TEXT PRIMARY KEY,
+    graph_fingerprint     TEXT NOT NULL DEFAULT '',
     created_at            REAL NOT NULL,
     updated_at            REAL NOT NULL,
     turn_id               INTEGER NOT NULL DEFAULT 0,
@@ -41,6 +46,8 @@ CREATE TABLE IF NOT EXISTS sessions (
 @dataclass
 class SessionState:
     session_id: str
+    #: Content hash of the graph this session's mastery rows refer to.
+    graph_fingerprint: str = ""
     turn_id: int = 0
     current_node: Optional[str] = None
     current_item_id: Optional[str] = None
@@ -136,29 +143,47 @@ class Store:
     def close(self) -> None:
         self._conn.close()
 
-    def create(self, initial_theta: dict, session_id: Optional[str] = None) -> SessionState:
+    def create(
+        self,
+        initial_theta: dict,
+        session_id: Optional[str] = None,
+        graph_fingerprint: str = "",
+    ) -> SessionState:
         state = SessionState(
             session_id=session_id or f"sess_{uuid.uuid4().hex[:12]}",
+            graph_fingerprint=graph_fingerprint,
             theta_map=dict(initial_theta),
             n_obs={k: 0 for k in initial_theta},
         )
         now = time.time()
         self._conn.execute(
-            "INSERT INTO sessions (session_id, created_at, updated_at, theta_map, n_obs) "
-            "VALUES (?, ?, ?, ?, ?)",
-            (state.session_id, now, now, json.dumps(state.theta_map), json.dumps(state.n_obs)),
+            "INSERT INTO sessions (session_id, graph_fingerprint, created_at, updated_at, "
+            "theta_map, n_obs) VALUES (?, ?, ?, ?, ?, ?)",
+            (state.session_id, state.graph_fingerprint, now, now,
+             json.dumps(state.theta_map), json.dumps(state.n_obs)),
         )
         self._conn.commit()
         return state
 
-    def get(self, session_id: str) -> Optional[SessionState]:
+    def get(self, session_id: str, graph_fingerprint: Optional[str] = None) -> Optional[SessionState]:
         row = self._conn.execute(
             "SELECT * FROM sessions WHERE session_id = ?", (session_id,)
         ).fetchone()
         if row is None:
             return None
+        if graph_fingerprint is not None and row["graph_fingerprint"] != graph_fingerprint:
+            # Person A swaps graph.json for the real chapter and every theta key
+            # in this row now names a node that no longer exists. Failing here
+            # with a sentence beats a KeyError deep inside next_node().
+            raise StaleSessionError(
+                f"session {session_id} was created against a different graph "
+                f"({row['graph_fingerprint'] or 'unknown'}, now {graph_fingerprint}). "
+                f"Its mastery refers to nodes that no longer exist. "
+                f"Start a new session, or delete {CONFIG.state_db_path.name} to reset."
+            )
         return SessionState(
             session_id=row["session_id"],
+            graph_fingerprint=row["graph_fingerprint"],
             turn_id=row["turn_id"],
             current_node=row["current_node"],
             current_item_id=row["current_item_id"],
@@ -175,11 +200,12 @@ class Store:
 
     def save(self, state: SessionState) -> None:
         self._conn.execute(
-            "UPDATE sessions SET updated_at=?, turn_id=?, current_node=?, current_item_id=?, "
+            "UPDATE sessions SET graph_fingerprint=?, updated_at=?, turn_id=?, current_node=?, current_item_id=?, "
             "hint_counter=?, visual_narrow_level=?, turns_on_item=?, consecutive_failures=?, "
             "theta_map=?, n_obs=?, "
             "completed_items=?, history=?, session_complete=? WHERE session_id=?",
             (
+                state.graph_fingerprint,
                 time.time(),
                 state.turn_id,
                 state.current_node,

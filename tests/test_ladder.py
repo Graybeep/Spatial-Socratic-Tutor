@@ -96,10 +96,24 @@ def test_interleaved_bottoms_out_verbal():
         assert mock_tutor.hint_action_for_level(CONFIG.hint_max) == "hint_verbal"
 
 
-def test_visual_only_never_speaks_an_elimination(client, session, store):
+def test_visual_only_narrows_until_the_ladder_is_spent(client, session, store):
+    """Every hint is visual WHILE the schedule still has room.
+
+    Once it flattens at the floor, a further hint_visual would dim nothing while
+    the tutor implied it had - so the server substitutes hint_verbal. Those
+    trailing verbal turns are the no-op guard working, not the mode leaking.
+    """
     with config_override(ladder_mode="visual_only"):
         seq = hint_sequence(client, session, store)
-    assert seq and all(a == "hint_visual" for a, _h, _l in seq)
+    assert seq
+    narrowing = [(a, lit) for a, _h, lit in seq]
+    # Every turn that actually reduced the lit set must have been visual.
+    for i in range(1, len(narrowing)):
+        action, lit = narrowing[i]
+        _prev_action, prev_lit = narrowing[i - 1]
+        if lit < prev_lit:
+            assert action == "hint_visual", f"a {action} narrowed the graph"
+    assert narrowing[0][0] == "hint_visual"
 
 
 def test_verbal_only_never_dims_anything(client, session, store):
@@ -195,3 +209,45 @@ def test_every_mode_produces_a_valid_turn(client, session, store, mode):
         assert data["action"] in {
             "ask", "hint_visual", "hint_verbal", "advance", "backtrack", "explain"
         }
+
+
+# ---------------------------------------------------------------------------
+# the no-op visual hint
+# ---------------------------------------------------------------------------
+
+def test_a_spent_ladder_substitutes_a_verbal_hint(client, session, store):
+    """A hint_visual that dims nothing is worse than no hint.
+
+    Clamping guarantees this case exists: 0,12,6,3,2 becomes 0,12,6,5,5, so the
+    last rung would leave the graph untouched while the tutor said "narrowing
+    further". On a projector that reads as a broken demo; to a student it reads
+    as being lied to.
+    """
+    with config_override(ladder_mode="visual_only", narrow_schedule_raw="0,12,6,3,2",
+                         max_guess_probability=0.2):
+        assert CONFIG.narrow_schedule == [0, 12, 6, 5, 5]
+        seq = hint_sequence(client, session, store)
+
+    for i in range(1, len(seq)):
+        action, _hint, lit = seq[i]
+        _pa, _ph, prev_lit = seq[i - 1]
+        if action == "hint_visual":
+            assert lit < prev_lit, (
+                f"hint_visual left the lit set at {lit}; it must narrow or "
+                f"give way to hint_verbal"
+            )
+
+
+def test_would_narrow_is_false_once_the_schedule_flattens(store):
+    item = store.bank.items[0]
+    with config_override(narrow_schedule_raw="0,12,6,3,2", max_guess_probability=0.2):
+        assert mock_tutor.would_narrow(store, item, 0) is True
+        assert mock_tutor.would_narrow(store, item, 1) is True
+        assert mock_tutor.would_narrow(store, item, 2) is True
+        assert mock_tutor.would_narrow(store, item, 3) is False  # 5 -> 5
+
+
+def test_verbal_only_never_reports_a_narrowing_opportunity(store):
+    item = store.bank.items[0]
+    with config_override(ladder_mode="verbal_only"):
+        assert mock_tutor.would_narrow(store, item, 0) is False

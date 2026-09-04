@@ -29,7 +29,7 @@ from server import turn as turn_mod
 from server.config import CONFIG
 from server.graph_store import GraphStore
 from server.schemas import SCHEMA_VERSION, TurnRequest, TurnResponse
-from server.state import Store
+from server.state import StaleSessionError, Store
 
 STORE: Optional[GraphStore] = None
 DB: Optional[Store] = None
@@ -72,6 +72,9 @@ def health() -> dict:
         "mock_mode": CONFIG.mock_mode,
         "schema_version": SCHEMA_VERSION,
         "domain": store.graph.domain,
+        "graph_fingerprint": store.fingerprint,
+        "ladder_mode": CONFIG.ladder_mode,
+        "narrow_schedule": CONFIG.narrow_schedule,
         "nodes": len(store.graph.nodes),
         "items": len(store.bank.items),
     }
@@ -92,7 +95,7 @@ def graph() -> dict:
 @app.post("/session")
 def create_session() -> dict:
     store, db = _deps()
-    state = db.create(store.initial_theta_map())
+    state = db.create(store.initial_theta_map(), graph_fingerprint=store.fingerprint)
     db.save(state)
     return {"session_id": state.session_id, "schema_version": SCHEMA_VERSION}
 
@@ -100,7 +103,13 @@ def create_session() -> dict:
 @app.post("/turn", response_model=TurnResponse, response_model_exclude_none=False)
 async def post_turn(req: TurnRequest, stream: bool = Query(default=False)):
     store, db = _deps()
-    state = db.get(req.session_id)
+    try:
+        state = db.get(req.session_id, graph_fingerprint=store.fingerprint)
+    except StaleSessionError as exc:
+        # 409, not 500: the request is well-formed, the stored session is just
+        # no longer meaningful against this graph. The client shows the message
+        # and opens a new session.
+        raise HTTPException(status_code=409, detail=str(exc)) from exc
     if state is None:
         raise HTTPException(status_code=404, detail=f"unknown session {req.session_id}")
 

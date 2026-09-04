@@ -77,6 +77,16 @@ class Phase1:
     session_complete: bool = False
     scored: Optional[bool] = None
 
+    def reveals_answer(self) -> bool:
+        """True when naming the current node would give the answer away.
+
+        For a node_click or mcq item the answer IS item.node_id, so
+        graph_state.current_node must stay None until the item is behind us.
+        Items whose answer is not on the graph (visually_answerable false -
+        CLAUDE.md §3 expects more than half the bank) are safe to locate.
+        """
+        return self.item is not None and self.item.visually_answerable
+
     def item_public(self) -> Optional[ItemPublic]:
         """The stripped item, built in ONE place so the streaming and JSON
         transports can never disagree about what an item exposes."""
@@ -84,7 +94,6 @@ class Phase1:
             return None
         return ItemPublic(
             id=self.item.id,
-            node_id=self.item.node_id,
             difficulty=self.item.difficulty,
             scorable=self.item.type in SCORABLE_EXPECTS,
         )
@@ -123,7 +132,7 @@ def _advance_to_next_node(store: GraphStore, state: SessionState) -> Optional[It
 
 
 def _build_graph_state(
-    store: GraphStore, state: SessionState, lit_nodes: list
+    store: GraphStore, state: SessionState, lit_nodes: list, reveal_current: bool
 ) -> GraphState:
     """dimmed_nodes is AUTHORITATIVE: an empty dimmed set means no narrowing.
 
@@ -133,12 +142,13 @@ def _build_graph_state(
     graph" (visually_answerable: false) - both are simply "nothing dimmed".
     """
     all_ids = store.node_ids
+    current = state.current_node if reveal_current else None
     lit = [n for n in lit_nodes if n in set(all_ids)]
     # No narrowing at all, or a "narrowing" that excludes nothing, is not a
     # narrowing. Collapse both to the empty dimmed set.
     if not lit or len(lit) >= len(all_ids):
         return GraphState(
-            current_node=state.current_node,
+            current_node=current,
             focus_nodes=[],
             focus_edges=[],
             dimmed_nodes=[],
@@ -154,7 +164,7 @@ def _build_graph_state(
         if e.from_ in focus_set and e.to in focus_set
     ]
     return GraphState(
-        current_node=state.current_node,
+        current_node=current,
         focus_nodes=focus,
         focus_edges=focus_edges,
         dimmed_nodes=dimmed,
@@ -178,7 +188,7 @@ def begin_turn(
         _advance_to_next_node(store, state)
 
     if state.session_complete or state.current_item_id is None:
-        gs = _build_graph_state(store, state, [])
+        gs = _build_graph_state(store, state, [], reveal_current=True)
         return Phase1(
             state=state,
             decision=Call1Decision(
@@ -278,7 +288,9 @@ def begin_turn(
         lit = []
 
     expects = "text" if item is None else item.type
-    graph_state = _build_graph_state(store, state, lit)
+    graph_state = _build_graph_state(
+        store, state, lit, reveal_current=not (item is not None and item.visually_answerable)
+    )
 
     mcq_options = []
     if expects == "mcq" and item is not None:

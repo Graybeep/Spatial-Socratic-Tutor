@@ -41,9 +41,21 @@ def no_latency(tmp_path):
         yield
 
 
+@pytest.fixture(scope="session")
+def _graph_store():
+    """Loaded once. Parsing 50 nodes and 250 items per test is pure overhead."""
+    return GraphStore.load()
+
+
 @pytest.fixture()
-def client(no_latency):
-    main_mod.STORE = GraphStore.load()
+def store(_graph_store):
+    """Usable WITHOUT the client fixture - eval tests need the graph but no app."""
+    return _graph_store
+
+
+@pytest.fixture()
+def client(no_latency, _graph_store):
+    main_mod.STORE = _graph_store
     main_mod.DB = Store(db_path=":memory:")
     with TestClient(main_mod.app) as c:
         yield c
@@ -52,11 +64,6 @@ def client(no_latency):
 @pytest.fixture()
 def session(client):
     return client.post("/session").json()["session_id"]
-
-
-@pytest.fixture()
-def store():
-    return main_mod.STORE
 
 
 def turn(client, session_id, response=None):

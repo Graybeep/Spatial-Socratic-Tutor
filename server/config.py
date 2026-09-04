@@ -152,8 +152,9 @@ class Config:
     def candidate_floor(self) -> int:
         """Smallest terminal candidate set the ladder may narrow to.
 
-        Derived from max_guess_probability so the constraint is stated in the
-        units the eval reports in.
+        A policy bound on how far the interface is willing to narrow. It is not
+        a prediction of the solve rate at that size - see the note on
+        max_guess_probability, and eval/adversarial.py for the measured number.
         """
         return max(2, math.ceil(1.0 / max(self.max_guess_probability, 1e-9)))
 

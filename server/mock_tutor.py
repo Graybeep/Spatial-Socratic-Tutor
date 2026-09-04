@@ -154,8 +154,8 @@ def hint_action_for_level(level: int) -> str:
     """Which hint channel fires at this level, per CONFIG.ladder_mode.
 
     interleaved is production. The last rung is verbal on purpose: the ladder
-    should bottom out having said something, not having dimmed to the guess-
-    probability floor and stopped.
+    should bottom out having said something, not having dimmed to the floor and
+    stopped.
     """
     mode = CONFIG.ladder_mode
     if mode == "visual_only":
@@ -165,6 +165,38 @@ def hint_action_for_level(level: int) -> str:
     if level >= CONFIG.hint_max:
         return "hint_verbal"
     return "hint_visual" if level % 2 == 1 else "hint_verbal"
+
+
+def would_narrow(store: GraphStore, item: Item, current_level: int) -> bool:
+    """Would one more visual step actually remove a node from the lit set?
+
+    False when the schedule has flattened - which it always does at the floor,
+    because entries below the floor are clamped UP to it, so a schedule of
+    0,12,6,3,2 becomes 0,12,6,5,5 and the last step changes nothing.
+    """
+    if CONFIG.ladder_mode == "verbal_only":
+        return False
+    before = lit_nodes(store, item, current_level)
+    after = lit_nodes(store, item, min(current_level + 1, CONFIG.hint_max))
+    if not after:
+        return False
+    # An empty `before` means nothing was dimmed yet, so any narrowing is a change.
+    return len(after) < len(before) if before else True
+
+
+def pick_hint_action(store: GraphStore, item: Item, current_level: int, requested_level: int) -> str:
+    """The hint channel to actually use, after checking it has something to say.
+
+    A `hint_visual` that dims nothing is worse than no hint: the tutor says "I've
+    narrowed it down" while the graph sits still. On a projector that reads as a
+    broken demo, and to a student it reads as being lied to. When the visual
+    channel is spent, fall through to the verbal one, which always has something
+    left to offer.
+    """
+    action = hint_action_for_level(min(requested_level, CONFIG.hint_max))
+    if action == "hint_visual" and not would_narrow(store, item, current_level):
+        return "hint_verbal"
+    return action
 
 
 def narrows(action: str) -> bool:
@@ -201,12 +233,12 @@ def mock_call1(
         requested_hint = state.hint_level
     elif graded is False:
         requested_hint = state.hint_level + 1
-        action = hint_action_for_level(min(requested_hint, CONFIG.hint_max))
+        action = pick_hint_action(store, item, state.visual_narrow_level, requested_hint)
         student_state = "guessing" if state.hint_level >= 2 else "stuck"
         diagnosis = f"wrong answer at hint_level={state.hint_level}"
     else:
         requested_hint = state.hint_level + 1
-        action = hint_action_for_level(min(requested_hint, CONFIG.hint_max))
+        action = pick_hint_action(store, item, state.visual_narrow_level, requested_hint)
         student_state = "confused_prereq"
         diagnosis = "free-text turn, unscored per CLAUDE.md 1.4"
 

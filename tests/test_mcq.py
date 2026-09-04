@@ -49,7 +49,7 @@ def test_mcq_turn_still_leaks_no_prompt(client, session, store):
     item = store.item(data["item"]["id"])
     body = str(data)
     assert item.prompt not in body
-    assert set(data["item"]) == {"id", "node_id", "difficulty", "scorable"}
+    assert set(data["item"]) == {"id", "difficulty", "scorable"}
 
 
 def test_key_position_is_not_fixed(store):
@@ -100,7 +100,7 @@ def test_mcq_scores_on_the_key_not_the_position(client, session, store):
     if data is None:
         pytest.skip("no MCQ item reached in this walk")
     item = store.item(data["item"]["id"])
-    node = data["item"]["node_id"]
+    node = store.item(data["item"]["id"]).node_id
     before = data["graph_state"]["mastery"][node]
     data = turn(client, session, {"type": "mcq", "choice_id": item.answer})
     assert data["graph_state"]["mastery"][node] > before

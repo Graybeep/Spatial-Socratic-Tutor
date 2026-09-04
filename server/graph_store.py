@@ -5,6 +5,7 @@ re-lays-out anything. Loaded once at startup; every method is a lookup.
 """
 from __future__ import annotations
 
+import hashlib
 import json
 from collections import defaultdict
 from pathlib import Path
@@ -42,6 +43,25 @@ class GraphStore:
         graph = Graph.model_validate_json(Path(graph_path).read_text(encoding="utf-8"))
         bank = ItemBank.model_validate_json(Path(items_path).read_text(encoding="utf-8"))
         return cls(graph, bank)
+
+    # --- identity ------------------------------------------------------------
+
+    @property
+    def fingerprint(self) -> str:
+        """Identifies THIS graph's content, not its version string.
+
+        `graph.version` is hand-written and will still say "1.0" on the day
+        Person A swaps the mock fixture for the real chapter - at which point
+        every mastery row in an existing state.db references node ids that no
+        longer exist. A content hash catches that; a version string does not.
+
+        Sessions store this and refuse to load against a different one
+        (server/state.py). Same failure shape as the sqlite column migration,
+        one layer up, and the test suite will not catch it either: tests build
+        a fresh store and a fresh db together.
+        """
+        material = self.graph.domain + "|" + "|".join(sorted(n.id for n in self.graph.nodes))
+        return hashlib.sha256(material.encode()).hexdigest()[:16]
 
     # --- lookups -------------------------------------------------------------
 

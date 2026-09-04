@@ -1,0 +1,272 @@
+[
+  {
+    "arm": "product configuration",
+    "ladder_mode": "interleaved",
+    "condition": "zero",
+    "dialogues": 60,
+    "levels": {
+      "1": {
+        "n": 60,
+        "solve_rate": 0.16666666666666666,
+        "mean_lit": 12
+      },
+      "2": {
+        "n": 60,
+        "solve_rate": 0.08333333333333333,
+        "mean_lit": 12
+      },
+      "3": {
+        "n": 60,
+        "solve_rate": 0.15,
+        "mean_lit": 9
+      },
+      "4": {
+        "n": 180,
+        "solve_rate": 0.1,
+        "mean_lit": 9
+      }
+    },
+    "terminal_solve_rate": 0.1,
+    "terminal_mean_lit": 9
+  },
+  {
+    "arm": "product configuration",
+    "ladder_mode": "interleaved",
+    "condition": "partial",
+    "dialogues": 60,
+    "levels": {
+      "1": {
+        "n": 60,
+        "solve_rate": 0.4166666666666667,
+        "mean_lit": 12
+      },
+      "2": {
+        "n": 60,
+        "solve_rate": 0.31666666666666665,
+        "mean_lit": 12
+      },
+      "3": {
+        "n": 60,
+        "solve_rate": 0.2833333333333333,
+        "mean_lit": 9
+      },
+      "4": {
+        "n": 180,
+        "solve_rate": 0.32222222222222224,
+        "mean_lit": 9
+      }
+    },
+    "terminal_solve_rate": 0.32222222222222224,
+    "terminal_mean_lit": 9
+  },
+  {
+    "arm": "product configuration",
+    "ladder_mode": "interleaved",
+    "condition": "adversarial",
+    "dialogues": 60,
+    "levels": {
+      "1": {
+        "n": 60,
+        "solve_rate": 0.35,
+        "mean_lit": 12
+      },
+      "2": {
+        "n": 60,
+        "solve_rate": 0.45,
+        "mean_lit": 12
+      },
+      "3": {
+        "n": 60,
+        "solve_rate": 0.21666666666666667,
+        "mean_lit": 9
+      },
+      "4": {
+        "n": 180,
+        "solve_rate": 0.3111111111111111,
+        "mean_lit": 9
+      }
+    },
+    "terminal_solve_rate": 0.3111111111111111,
+    "terminal_mean_lit": 9
+  },
+  {
+    "arm": "isolated visual channel",
+    "ladder_mode": "visual_only",
+    "condition": "zero",
+    "dialogues": 60,
+    "levels": {
+      "1": {
+        "n": 60,
+        "solve_rate": 0.03333333333333333,
+        "mean_lit": 12
+      },
+      "2": {
+        "n": 60,
+        "solve_rate": 0.08333333333333333,
+        "mean_lit": 9
+      },
+      "3": {
+        "n": 60,
+        "solve_rate": 0.08333333333333333,
+        "mean_lit": 7
+      },
+      "4": {
+        "n": 180,
+        "solve_rate": 0.2111111111111111,
+        "mean_lit": 5
+      }
+    },
+    "terminal_solve_rate": 0.2111111111111111,
+    "terminal_mean_lit": 5
+  },
+  {
+    "arm": "isolated visual channel",
+    "ladder_mode": "visual_only",
+    "condition": "partial",
+    "dialogues": 60,
+    "levels": {
+      "1": {
+        "n": 60,
+        "solve_rate": 0.26666666666666666,
+        "mean_lit": 12
+      },
+      "2": {
+        "n": 60,
+        "solve_rate": 0.31666666666666665,
+        "mean_lit": 9
+      },
+      "3": {
+        "n": 60,
+        "solve_rate": 0.38333333333333336,
+        "mean_lit": 7
+      },
+      "4": {
+        "n": 180,
+        "solve_rate": 0.4777777777777778,
+        "mean_lit": 5
+      }
+    },
+    "terminal_solve_rate": 0.4777777777777778,
+    "terminal_mean_lit": 5
+  },
+  {
+    "arm": "isolated visual channel",
+    "ladder_mode": "visual_only",
+    "condition": "adversarial",
+    "dialogues": 60,
+    "levels": {
+      "1": {
+        "n": 60,
+        "solve_rate": 0.3,
+        "mean_lit": 12
+      },
+      "2": {
+        "n": 60,
+        "solve_rate": 0.2833333333333333,
+        "mean_lit": 9
+      },
+      "3": {
+        "n": 60,
+        "solve_rate": 0.3333333333333333,
+        "mean_lit": 7
+      },
+      "4": {
+        "n": 180,
+        "solve_rate": 0.5055555555555555,
+        "mean_lit": 5
+      }
+    },
+    "terminal_solve_rate": 0.5055555555555555,
+    "terminal_mean_lit": 5
+  },
+  {
+    "arm": "verbal channel only",
+    "ladder_mode": "verbal_only",
+    "condition": "zero",
+    "dialogues": 60,
+    "levels": {
+      "1": {
+        "n": 60,
+        "solve_rate": 0.016666666666666666,
+        "mean_lit": 50
+      },
+      "2": {
+        "n": 60,
+        "solve_rate": 0.0,
+        "mean_lit": 50
+      },
+      "3": {
+        "n": 60,
+        "solve_rate": 0.05,
+        "mean_lit": 50
+      },
+      "4": {
+        "n": 180,
+        "solve_rate": 0.016666666666666666,
+        "mean_lit": 50
+      }
+    },
+    "terminal_solve_rate": 0.016666666666666666,
+    "terminal_mean_lit": 50
+  },
+  {
+    "arm": "verbal channel only",
+    "ladder_mode": "verbal_only",
+    "condition": "partial",
+    "dialogues": 60,
+    "levels": {
+      "1": {
+        "n": 60,
+        "solve_rate": 0.31666666666666665,
+        "mean_lit": 50
+      },
+      "2": {
+        "n": 60,
+        "solve_rate": 0.35,
+        "mean_lit": 50
+      },
+      "3": {
+        "n": 60,
+        "solve_rate": 0.43333333333333335,
+        "mean_lit": 50
+      },
+      "4": {
+        "n": 180,
+        "solve_rate": 0.32222222222222224,
+        "mean_lit": 50
+      }
+    },
+    "terminal_solve_rate": 0.32222222222222224,
+    "terminal_mean_lit": 50
+  },
+  {
+    "arm": "verbal channel only",
+    "ladder_mode": "verbal_only",
+    "condition": "adversarial",
+    "dialogues": 60,
+    "levels": {
+      "1": {
+        "n": 60,
+        "solve_rate": 0.25,
+        "mean_lit": 50
+      },
+      "2": {
+        "n": 60,
+        "solve_rate": 0.36666666666666664,
+        "mean_lit": 50
+      },
+      "3": {
+        "n": 60,
+        "solve_rate": 0.36666666666666664,
+        "mean_lit": 50
+      },
+      "4": {
+        "n": 180,
+        "solve_rate": 0.3277777777777778,
+        "mean_lit": 50
+      }
+    },
+    "terminal_solve_rate": 0.3277777777777778,
+    "terminal_mean_lit": 50
+  }
+]

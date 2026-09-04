@@ -194,6 +194,9 @@ class GraphState(Strict):
     """Returned/streamed before the utterance. CLAUDE.md §5 step 5 and §8: the
     graph reacts on Call 1 return and never blocks on the text."""
 
+    #: The node under study. SUPPRESSED (None) while a visually-answerable item
+    #: is open, because for a node_click or mcq item that node IS the answer.
+    #: Only populated for items whose answer is not on the graph.
     current_node: Optional[str] = None
     focus_nodes: list[str] = Field(default_factory=list)
     focus_edges: list[EdgeRef] = Field(default_factory=list)
@@ -213,10 +216,19 @@ class ItemPublic(Strict):
     No prompt (the tutor's `utterance` IS the question), no answer, no aliases,
     no spans, no distractors. If a field is added here, assume it leaks until
     proven otherwise.
+
+    THERE IS NO `node_id` HERE, AND IT MUST NOT COME BACK. For a node_click or
+    mcq item the answer IS the item's node - CLAUDE.md §3's own worked example
+    has node_id "tcp_slow_start" and answer "tcp_slow_start" - so shipping
+    node_id hands over the answer in the clear. It held for 204 of the 250
+    fixture items. `graph_state.current_node` is suppressed for the same reason
+    while such an item is open (see server/turn.py).
+
+    `difficulty` stays: it is a scalar the client uses for nothing sensitive and
+    reveals no identity.
     """
 
     id: str
-    node_id: str
     difficulty: float
     scorable: bool = Field(description="deterministic item; contributes to mastery")
 
