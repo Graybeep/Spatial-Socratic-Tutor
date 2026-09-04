@@ -36,3 +36,6 @@ Thumbs.db
 # client build + deps (scaffolded day 2)
 client/dist/
 client/.env
+
+# spec, kept local
+CLAUDE.md
