@@ -2,14 +2,21 @@
 
 Read this file fully before writing code. It encodes decisions that were argued
 through and settled. Do not re-litigate them mid-implementation. If a decision
-here blocks you, stop and ask the humans; do not route around it.
+here blocks you, stop and ask the human; do not route around it.
 
 ---
 
 ## 0. Project constraints
 
 - **Duration:** 4 weeks, hard stop.
-- **Team:** 2 people. Person A = content/graph/scoring. Person B = interface/tutor loop.
+- **Team:** one person, working both roles. "Person A" (content/graph/scoring) and
+  "Person B" (interface/tutor loop) are a **split of the work, not two people** — they
+  name the two layers and the boundary between them. Every rule below that mentions
+  Person A or Person B still applies; read it as a rule about which layer you are in
+  right now, not about who is at the keyboard. The layer separation is the point, and
+  it is worth *more* solo than it would be in a pair: it is the only thing stopping a
+  quick fix on one side from silently reaching across into the other.
+  Practical consequences of being solo are noted in §1.9, §11 and §13.2.
 - **Deliverable:** a working local demo over ONE chapter + three eval numbers.
 - **Not a deliverable:** a product, a deployment, a human study, arbitrary PDF ingestion.
 
@@ -44,7 +51,10 @@ Violating any of these invalidates the project. They are not preferences.
    The model *requests*; the server *decides*. Fields from the model are prefixed
    `requested_`.
 8. **No new dependencies after end of week 2.** No exceptions.
-9. **Neither person edits the other's layer.** Schemas are the contract.
+9. **Neither layer edits the other.** Schemas are the contract. Solo, this becomes a
+   self-discipline rather than a fact about access: when a change wants to touch both
+   layers in one sitting, that is a signal the schema is wrong — fix the schema
+   deliberately, or do the two edits as two separate commits. Never "just reach across".
 10. **No hard-coded values in code.** Model names, API keys and base URLs, file paths,
     thresholds, hint caps, turn budgets, prompt text and port numbers live in
     `server/config.py`, `.env` or `prompts/` — never as literals inside logic. See §13.
@@ -449,6 +459,20 @@ measurable pedagogical gain"* is a stronger line than *"we have five agents."*
 | Week 3 | **Integration — budget the whole week** | + projector contrast test, diagnosis read-through |
 | Week 4 | evals 9.1–9.4 | demo polish, writeup, rehearse |
 
+**One person means the two columns are not parallel.** The table stays as written —
+it is the definition of the two tracks — but a week's row is a week's *total* work,
+alternated, not two weeks of capacity. Read the columns as "both of these happen this
+week", and expect to switch tracks within a week rather than to run them at once.
+Two consequences:
+
+- The mock server (days 1–2) is still worth its cost. Its original job was to unblock
+  Person B while Person A built the graph; solo, its job is to let the interface track
+  proceed without the real graph existing yet, and to keep the schema boundary honest.
+  Do not skip it on the grounds that nobody is waiting on you.
+- The cut order in §11 matters more, not less. There is no second person to absorb a
+  slip, so when a week overruns, cut from the bottom of the list rather than borrowing
+  time from the next week.
+
 - **Feature freeze: day 22.**
 - **Record a full video walkthrough by day 26.** Cheapest insurance in the project.
 - **If week 3 slips, cut retrieval before you cut the tutor loop.** One chapter fits
@@ -512,13 +536,15 @@ Remote: `https://github.com/Graybeep/Spatial-Socratic-Tutor.git`
 
 - **Branch `main` is the demo branch and must always run.** If `main` is broken at the
   end of a day, fix it or revert it before logging off.
-- Person A and Person B work on `a/<topic>` and `b/<topic>` branches and merge to
-  `main`. §1.9 already says neither edits the other's layer, so merge conflicts should
-  be near-zero; a conflict outside `data/` or a schema file means someone crossed the
-  line.
-- **Commit at every working checkpoint. Push at least once per day, both people.**
-  Work that exists only on one laptop is the single cheapest way to lose a week of a
-  four-week project.
+- Work on `a/<topic>` and `b/<topic>` branches by **layer, not by author**, and merge
+  to `main`. §1.9 says neither layer edits the other, so merge conflicts should be
+  near-zero; a conflict outside `data/` or a schema file means the branch crossed the
+  line. Solo this costs almost nothing and buys the one thing a single worker cannot
+  get from a colleague: a diff that shows, per branch, which layer a change actually
+  touched. Committing straight to `main` erases exactly that signal.
+- **Commit at every working checkpoint. Push at least once per day.** Work that exists
+  only on one laptop is the single cheapest way to lose a week of a four-week project —
+  and with one person there is no second copy of the repo anywhere by default.
 - Tag milestones: `schemas-frozen` (day 2), `graph-frozen`, `loop-working`,
   `feature-freeze` (day 22), `demo` (day 26, matching the recorded walkthrough).
 - Commit messages: one line, imperative, naming the layer —

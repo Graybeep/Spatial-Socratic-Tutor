@@ -75,7 +75,8 @@ Full layout in `CLAUDE.md` §2.
 
 ## Contributing
 
-Person A owns content/graph/scoring; Person B owns interface/tutor loop. Neither
-edits the other's layer — schemas are the contract (§1.9). `main` must always run;
-push at least daily (§13.2). No configuration values hard-coded in source
+One person, both roles. "Person A" (content/graph/scoring) and "Person B"
+(interface/tutor loop) name the two layers, not two people — see `CLAUDE.md` §0.
+Neither layer edits the other; schemas are the contract (§1.9). `main` must always
+run; push at least daily (§13.2). No configuration values hard-coded in source
 (§1.10, §13.1).
