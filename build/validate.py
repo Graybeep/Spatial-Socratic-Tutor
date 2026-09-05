@@ -15,11 +15,9 @@ from pathlib import Path
 
 from pydantic import ValidationError
 
+from build.config import BUILD
 from server.config import CONFIG
 from server.schemas import SCORABLE_EXPECTS, Graph, ItemBank, ItemPublic
-
-MIN_NODES = 40
-MAX_NODES = 60
 
 
 class Report:
@@ -182,10 +180,10 @@ def validate(graph_path: Path, items_path: Path, fixture: bool) -> Report:
         dupes = {n for n in node_ids if node_ids.count(n) > 1}
         rep.error(f"duplicate node ids: {sorted(dupes)}")
 
-    if not fixture and not (MIN_NODES <= len(node_ids) <= MAX_NODES):
-        rep.error(f"node count {len(node_ids)} outside required {MIN_NODES}-{MAX_NODES}")
-    elif fixture and not (MIN_NODES <= len(node_ids) <= MAX_NODES):
-        rep.warn(f"node count {len(node_ids)} outside {MIN_NODES}-{MAX_NODES} (allowed: --fixture)")
+    if not fixture and not (BUILD.min_nodes <= len(node_ids) <= BUILD.max_nodes):
+        rep.error(f"node count {len(node_ids)} outside required {BUILD.min_nodes}-{BUILD.max_nodes}")
+    elif fixture and not (BUILD.min_nodes <= len(node_ids) <= BUILD.max_nodes):
+        rep.warn(f"node count {len(node_ids)} outside {BUILD.min_nodes}-{BUILD.max_nodes} (allowed: --fixture)")
 
     for e in graph.edges:
         if e.from_ not in node_set:

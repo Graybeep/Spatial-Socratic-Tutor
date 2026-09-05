@@ -21,7 +21,7 @@ fixture; nothing else changes.
 pip install -r requirements.txt
 python -m build.make_mock_data   # placeholder 50-node fixture
 python -m build.validate         # strict; must be clean
-python -m pytest                 # 121 tests
+python -m pytest                 # 132 tests
 python -m server.main            # http://127.0.0.1:8000
 ```
 
@@ -65,7 +65,9 @@ NARROW_SCHEDULE=0,25,18,12,8 python -m server.main
 | `server/turn.py` | the §5 pipeline |
 | `server/mastery.py` | deterministic scoring, no LLM |
 | `server/mock_tutor.py` | scripted stand-in for Call 1 and Call 2 |
+| `build/config.py` | build-pipeline knobs (§13.1); the server never imports it |
 | `build/validate.py` | DAG / orphan / item checks; must pass before commit |
+| `build/freeze_layout.py` | runs once, writes x/y into `graph.json`, then never again |
 | `build/make_mock_data.py` | throwaway 50-node fixture; Person A deletes this in week 1 |
 | `eval/adversarial.py` | §9.1 effective leakage — `python -m eval.adversarial` |
 | `docs/writeup/` | draft report sections — identity leakage, limitations |

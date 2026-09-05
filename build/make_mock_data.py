@@ -30,11 +30,12 @@ import json
 import random
 from pathlib import Path
 
+from build.config import BUILD
+
 ROOT = Path(__file__).resolve().parent.parent
 
 SEED = 6180339
 N_LAYERS = 8
-ITEMS_PER_NODE = 5  # CLAUDE.md §4
 
 X_SPACING = 210
 Y_SPACING = 155
@@ -174,7 +175,7 @@ def build_items(graph: dict) -> dict:
         nid = node["id"]
         pool = [m for m in node_ids if m != nid]
 
-        for k in range(ITEMS_PER_NODE):
+        for k in range(BUILD.items_per_node):
             n += 1
             distractors = rng.sample(pool, 3)
 
