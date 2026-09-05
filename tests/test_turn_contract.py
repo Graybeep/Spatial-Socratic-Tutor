@@ -96,10 +96,24 @@ def test_no_alias_leaks_and_no_options_ship_on_a_non_mcq_turn(client, session):
             and not data["resolved_with_support"]
         ):
             item = store.item(data["item"]["id"])
-            body = json.dumps(data).lower()
             assert not data["mcq_options"], "mcq_options shipped on a non-mcq turn"
+
+            # Scoped to the RENDERED text, which is `utterance` and nothing else
+            # (§1.6, guard layer 0), and which is also exactly what §6 layer 1's
+            # answer monitor examines.
+            #
+            # This used to search the whole serialised response, and that was the
+            # over-broad check this docstring already disowns one paragraph up.
+            # Every node id ships every turn in graph_state.mastery and all of
+            # them are public from GET /graph, so a substring search over the
+            # body finds ids, not leaks. Junk fixture labels hid it; the real
+            # chapter did not, because "flow" is a substring of "flow_control".
+            # Widening it back would not catch a leak, only real vocabulary.
+            rendered = data["utterance"].lower()
             for alias in item.answer_aliases:
-                assert alias not in body, f"answer alias {alias!r} leaked"
+                assert alias not in rendered, (
+                    f"answer alias {alias!r} reached the utterance"
+                )
             checked += 1
         nxt = wrong_response(data, store)
         if nxt is None:

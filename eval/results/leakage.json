@@ -12,17 +12,17 @@
       },
       "2": {
         "n": 200,
-        "solve_rate": 0.1,
+        "solve_rate": 0.105,
         "mean_lit": 12
       },
       "3": {
         "n": 200,
-        "solve_rate": 0.095,
+        "solve_rate": 0.1,
         "mean_lit": 9
       },
       "4": {
         "n": 200,
-        "solve_rate": 0.105,
+        "solve_rate": 0.1,
         "mean_lit": 9
       },
       "5": {
@@ -32,14 +32,14 @@
       },
       "6": {
         "n": 200,
-        "solve_rate": 0.15,
+        "solve_rate": 0.135,
         "mean_lit": 9
       }
     },
     "terminal_attempt": 6,
     "terminal_n": 200,
     "min_n_for_terminal": 66,
-    "terminal_solve_rate": 0.15,
+    "terminal_solve_rate": 0.135,
     "terminal_mean_lit": 9
   },
   {
@@ -50,39 +50,39 @@
     "levels": {
       "1": {
         "n": 200,
-        "solve_rate": 0.375,
+        "solve_rate": 0.21,
         "mean_lit": 12
       },
       "2": {
         "n": 200,
-        "solve_rate": 0.3,
+        "solve_rate": 0.16,
         "mean_lit": 12
       },
       "3": {
         "n": 200,
-        "solve_rate": 0.35,
+        "solve_rate": 0.21,
         "mean_lit": 9
       },
       "4": {
         "n": 200,
-        "solve_rate": 0.33,
+        "solve_rate": 0.21,
         "mean_lit": 9
       },
       "5": {
         "n": 200,
-        "solve_rate": 0.345,
+        "solve_rate": 0.185,
         "mean_lit": 9
       },
       "6": {
         "n": 200,
-        "solve_rate": 0.32,
+        "solve_rate": 0.265,
         "mean_lit": 9
       }
     },
     "terminal_attempt": 6,
     "terminal_n": 200,
     "min_n_for_terminal": 66,
-    "terminal_solve_rate": 0.32,
+    "terminal_solve_rate": 0.265,
     "terminal_mean_lit": 9
   },
   {
@@ -93,39 +93,39 @@
     "levels": {
       "1": {
         "n": 200,
-        "solve_rate": 0.36,
+        "solve_rate": 0.23,
         "mean_lit": 12
       },
       "2": {
         "n": 200,
-        "solve_rate": 0.38,
+        "solve_rate": 0.225,
         "mean_lit": 12
       },
       "3": {
         "n": 200,
-        "solve_rate": 0.305,
+        "solve_rate": 0.215,
         "mean_lit": 9
       },
       "4": {
         "n": 200,
-        "solve_rate": 0.275,
+        "solve_rate": 0.175,
         "mean_lit": 9
       },
       "5": {
         "n": 200,
-        "solve_rate": 0.335,
+        "solve_rate": 0.175,
         "mean_lit": 9
       },
       "6": {
         "n": 200,
-        "solve_rate": 0.345,
+        "solve_rate": 0.2,
         "mean_lit": 9
       }
     },
     "terminal_attempt": 6,
     "terminal_n": 200,
     "min_n_for_terminal": 66,
-    "terminal_solve_rate": 0.345,
+    "terminal_solve_rate": 0.2,
     "terminal_mean_lit": 9
   },
   {
@@ -141,34 +141,34 @@
       },
       "2": {
         "n": 200,
-        "solve_rate": 0.1,
+        "solve_rate": 0.095,
         "mean_lit": 9
       },
       "3": {
         "n": 200,
-        "solve_rate": 0.085,
+        "solve_rate": 0.095,
         "mean_lit": 7
       },
       "4": {
         "n": 200,
-        "solve_rate": 0.175,
+        "solve_rate": 0.16,
         "mean_lit": 5
       },
       "5": {
         "n": 200,
-        "solve_rate": 0.21,
+        "solve_rate": 0.235,
         "mean_lit": 5
       },
       "6": {
         "n": 200,
-        "solve_rate": 0.225,
+        "solve_rate": 0.22,
         "mean_lit": 5
       }
     },
     "terminal_attempt": 6,
     "terminal_n": 200,
     "min_n_for_terminal": 66,
-    "terminal_solve_rate": 0.225,
+    "terminal_solve_rate": 0.22,
     "terminal_mean_lit": 5
   },
   {
@@ -179,39 +179,39 @@
     "levels": {
       "1": {
         "n": 200,
-        "solve_rate": 0.305,
+        "solve_rate": 0.175,
         "mean_lit": 12
       },
       "2": {
         "n": 200,
-        "solve_rate": 0.3,
+        "solve_rate": 0.26,
         "mean_lit": 9
       },
       "3": {
         "n": 200,
-        "solve_rate": 0.35,
+        "solve_rate": 0.185,
         "mean_lit": 7
       },
       "4": {
         "n": 200,
-        "solve_rate": 0.445,
+        "solve_rate": 0.29,
         "mean_lit": 5
       },
       "5": {
         "n": 200,
-        "solve_rate": 0.5,
+        "solve_rate": 0.34,
         "mean_lit": 5
       },
       "6": {
         "n": 200,
-        "solve_rate": 0.485,
+        "solve_rate": 0.345,
         "mean_lit": 5
       }
     },
     "terminal_attempt": 6,
     "terminal_n": 200,
     "min_n_for_terminal": 66,
-    "terminal_solve_rate": 0.485,
+    "terminal_solve_rate": 0.345,
     "terminal_mean_lit": 5
   },
   {
@@ -222,39 +222,39 @@
     "levels": {
       "1": {
         "n": 200,
-        "solve_rate": 0.35,
+        "solve_rate": 0.2,
         "mean_lit": 12
       },
       "2": {
         "n": 200,
-        "solve_rate": 0.285,
+        "solve_rate": 0.175,
         "mean_lit": 9
       },
       "3": {
         "n": 200,
-        "solve_rate": 0.385,
+        "solve_rate": 0.165,
         "mean_lit": 7
       },
       "4": {
         "n": 200,
-        "solve_rate": 0.475,
+        "solve_rate": 0.335,
         "mean_lit": 5
       },
       "5": {
         "n": 200,
-        "solve_rate": 0.48,
+        "solve_rate": 0.315,
         "mean_lit": 5
       },
       "6": {
         "n": 200,
-        "solve_rate": 0.515,
+        "solve_rate": 0.35,
         "mean_lit": 5
       }
     },
     "terminal_attempt": 6,
     "terminal_n": 200,
     "min_n_for_terminal": 66,
-    "terminal_solve_rate": 0.515,
+    "terminal_solve_rate": 0.35,
     "terminal_mean_lit": 5
   },
   {
@@ -266,39 +266,39 @@
       "1": {
         "n": 200,
         "solve_rate": 0.01,
-        "mean_lit": 50
+        "mean_lit": 52
       },
       "2": {
         "n": 200,
-        "solve_rate": 0.02,
-        "mean_lit": 50
+        "solve_rate": 0.025,
+        "mean_lit": 52
       },
       "3": {
         "n": 200,
-        "solve_rate": 0.045,
-        "mean_lit": 50
+        "solve_rate": 0.035,
+        "mean_lit": 52
       },
       "4": {
         "n": 200,
         "solve_rate": 0.035,
-        "mean_lit": 50
+        "mean_lit": 52
       },
       "5": {
         "n": 200,
         "solve_rate": 0.015,
-        "mean_lit": 50
+        "mean_lit": 52
       },
       "6": {
         "n": 200,
-        "solve_rate": 0.0,
-        "mean_lit": 50
+        "solve_rate": 0.005,
+        "mean_lit": 52
       }
     },
     "terminal_attempt": 6,
     "terminal_n": 200,
     "min_n_for_terminal": 66,
-    "terminal_solve_rate": 0.0,
-    "terminal_mean_lit": 50
+    "terminal_solve_rate": 0.005,
+    "terminal_mean_lit": 52
   },
   {
     "arm": "verbal channel only",
@@ -308,40 +308,40 @@
     "levels": {
       "1": {
         "n": 200,
-        "solve_rate": 0.31,
-        "mean_lit": 50
+        "solve_rate": 0.19,
+        "mean_lit": 52
       },
       "2": {
         "n": 200,
-        "solve_rate": 0.335,
-        "mean_lit": 50
+        "solve_rate": 0.23,
+        "mean_lit": 52
       },
       "3": {
         "n": 200,
-        "solve_rate": 0.33,
-        "mean_lit": 50
+        "solve_rate": 0.23,
+        "mean_lit": 52
       },
       "4": {
         "n": 200,
-        "solve_rate": 0.34,
-        "mean_lit": 50
+        "solve_rate": 0.195,
+        "mean_lit": 52
       },
       "5": {
         "n": 200,
-        "solve_rate": 0.33,
-        "mean_lit": 50
+        "solve_rate": 0.2,
+        "mean_lit": 52
       },
       "6": {
         "n": 200,
-        "solve_rate": 0.365,
-        "mean_lit": 50
+        "solve_rate": 0.235,
+        "mean_lit": 52
       }
     },
     "terminal_attempt": 6,
     "terminal_n": 200,
     "min_n_for_terminal": 66,
-    "terminal_solve_rate": 0.365,
-    "terminal_mean_lit": 50
+    "terminal_solve_rate": 0.235,
+    "terminal_mean_lit": 52
   },
   {
     "arm": "verbal channel only",
@@ -351,40 +351,40 @@
     "levels": {
       "1": {
         "n": 200,
-        "solve_rate": 0.23,
-        "mean_lit": 50
+        "solve_rate": 0.175,
+        "mean_lit": 52
       },
       "2": {
         "n": 200,
-        "solve_rate": 0.365,
-        "mean_lit": 50
+        "solve_rate": 0.2,
+        "mean_lit": 52
       },
       "3": {
         "n": 200,
-        "solve_rate": 0.33,
-        "mean_lit": 50
+        "solve_rate": 0.23,
+        "mean_lit": 52
       },
       "4": {
         "n": 200,
-        "solve_rate": 0.36,
-        "mean_lit": 50
+        "solve_rate": 0.195,
+        "mean_lit": 52
       },
       "5": {
         "n": 200,
-        "solve_rate": 0.335,
-        "mean_lit": 50
+        "solve_rate": 0.275,
+        "mean_lit": 52
       },
       "6": {
         "n": 200,
-        "solve_rate": 0.375,
-        "mean_lit": 50
+        "solve_rate": 0.2,
+        "mean_lit": 52
       }
     },
     "terminal_attempt": 6,
     "terminal_n": 200,
     "min_n_for_terminal": 66,
-    "terminal_solve_rate": 0.375,
-    "terminal_mean_lit": 50
+    "terminal_solve_rate": 0.2,
+    "terminal_mean_lit": 52
   },
   {
     "arm": "no hints at all",
@@ -394,40 +394,40 @@
     "levels": {
       "1": {
         "n": 200,
-        "solve_rate": 0.015,
-        "mean_lit": 50
+        "solve_rate": 0.025,
+        "mean_lit": 52
       },
       "2": {
         "n": 200,
         "solve_rate": 0.015,
-        "mean_lit": 50
+        "mean_lit": 52
       },
       "3": {
         "n": 200,
-        "solve_rate": 0.02,
-        "mean_lit": 50
+        "solve_rate": 0.015,
+        "mean_lit": 52
       },
       "4": {
         "n": 200,
-        "solve_rate": 0.015,
-        "mean_lit": 50
+        "solve_rate": 0.02,
+        "mean_lit": 52
       },
       "5": {
         "n": 200,
-        "solve_rate": 0.04,
-        "mean_lit": 50
+        "solve_rate": 0.045,
+        "mean_lit": 52
       },
       "6": {
         "n": 200,
-        "solve_rate": 0.025,
-        "mean_lit": 50
+        "solve_rate": 0.01,
+        "mean_lit": 52
       }
     },
     "terminal_attempt": 6,
     "terminal_n": 200,
     "min_n_for_terminal": 66,
-    "terminal_solve_rate": 0.025,
-    "terminal_mean_lit": 50
+    "terminal_solve_rate": 0.01,
+    "terminal_mean_lit": 52
   },
   {
     "arm": "no hints at all",
@@ -437,40 +437,40 @@
     "levels": {
       "1": {
         "n": 200,
-        "solve_rate": 0.31,
-        "mean_lit": 50
+        "solve_rate": 0.16,
+        "mean_lit": 52
       },
       "2": {
         "n": 200,
-        "solve_rate": 0.33,
-        "mean_lit": 50
+        "solve_rate": 0.22,
+        "mean_lit": 52
       },
       "3": {
         "n": 200,
-        "solve_rate": 0.36,
-        "mean_lit": 50
+        "solve_rate": 0.22,
+        "mean_lit": 52
       },
       "4": {
         "n": 200,
-        "solve_rate": 0.26,
-        "mean_lit": 50
+        "solve_rate": 0.17,
+        "mean_lit": 52
       },
       "5": {
         "n": 200,
-        "solve_rate": 0.4,
-        "mean_lit": 50
+        "solve_rate": 0.205,
+        "mean_lit": 52
       },
       "6": {
         "n": 200,
-        "solve_rate": 0.345,
-        "mean_lit": 50
+        "solve_rate": 0.16,
+        "mean_lit": 52
       }
     },
     "terminal_attempt": 6,
     "terminal_n": 200,
     "min_n_for_terminal": 66,
-    "terminal_solve_rate": 0.345,
-    "terminal_mean_lit": 50
+    "terminal_solve_rate": 0.16,
+    "terminal_mean_lit": 52
   },
   {
     "arm": "no hints at all",
@@ -480,39 +480,39 @@
     "levels": {
       "1": {
         "n": 200,
-        "solve_rate": 0.34,
-        "mean_lit": 50
+        "solve_rate": 0.2,
+        "mean_lit": 52
       },
       "2": {
         "n": 200,
-        "solve_rate": 0.305,
-        "mean_lit": 50
+        "solve_rate": 0.215,
+        "mean_lit": 52
       },
       "3": {
         "n": 200,
-        "solve_rate": 0.31,
-        "mean_lit": 50
+        "solve_rate": 0.215,
+        "mean_lit": 52
       },
       "4": {
         "n": 200,
-        "solve_rate": 0.34,
-        "mean_lit": 50
+        "solve_rate": 0.27,
+        "mean_lit": 52
       },
       "5": {
         "n": 200,
-        "solve_rate": 0.355,
-        "mean_lit": 50
+        "solve_rate": 0.215,
+        "mean_lit": 52
       },
       "6": {
         "n": 200,
-        "solve_rate": 0.315,
-        "mean_lit": 50
+        "solve_rate": 0.215,
+        "mean_lit": 52
       }
     },
     "terminal_attempt": 6,
     "terminal_n": 200,
     "min_n_for_terminal": 66,
-    "terminal_solve_rate": 0.315,
-    "terminal_mean_lit": 50
+    "terminal_solve_rate": 0.215,
+    "terminal_mean_lit": 52
   }
 ]

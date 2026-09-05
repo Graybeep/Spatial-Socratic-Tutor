@@ -11,15 +11,18 @@ schedule. Do not re-litigate decisions in it mid-implementation.
 
 ## Status
 
-Day 1–2 done: schemas frozen, mock server running, client rendering 50 nodes
-against it. Person A's real chapter graph drops into `data/` and replaces the
-fixture; nothing else changes.
+Schemas frozen, mock server running, client rendering the graph against it.
+
+The chapter graph has landed: 52 hand-authored nodes over Peterson & Davie
+ch. 6 (Congestion Control), CC BY 4.0 — see `data/SOURCE.md` for attribution and
+for why it is hand-authored and why `gold_graph.json` was frozen *before* any
+extractor exists. The two-call tutor loop still runs against the mock; `MOCK_MODE`
+is still the default.
 
 ## Run the mock
 
 ```bash
 pip install -r requirements.txt
-python -m build.make_mock_data   # placeholder 50-node fixture
 python -m build.validate         # strict; must be clean
 python -m pytest                 # 132 tests
 python -m server.main            # http://127.0.0.1:8000
@@ -68,7 +71,9 @@ NARROW_SCHEDULE=0,25,18,12,8 python -m server.main
 | `build/config.py` | build-pipeline knobs (§13.1); the server never imports it |
 | `build/validate.py` | DAG / orphan / item checks; must pass before commit |
 | `build/freeze_layout.py` | runs once, writes x/y into `graph.json`, then never again |
-| `build/make_mock_data.py` | throwaway 50-node fixture; Person A deletes this in week 1 |
+| `build/generate_items.py` | items from the graph; LLM behind a mocked seam |
+| `build/llm.py` | the build-side LLM seam — mock by default, `BUILD_LLM=real` |
+| `data/SOURCE.md` | attribution, and why the gold graph was frozen first |
 | `eval/adversarial.py` | §9.1 effective leakage — `python -m eval.adversarial` |
 | `docs/writeup/` | draft report sections — identity leakage, limitations |
 | `client/src/types.ts` | reconciled against `/schemas`; supersedes `templates/` |

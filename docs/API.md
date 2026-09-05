@@ -12,8 +12,7 @@ Base URL defaults to `http://127.0.0.1:8000` (`VITE_API_BASE_URL`).
 
 ```bash
 pip install -r requirements.txt
-python -m build.make_mock_data      # writes the placeholder data/ fixtures
-python -m build.validate --fixture  # must be clean
+python -m build.validate            # strict; must be clean
 python -m server.main               # http://127.0.0.1:8000
 ```
 
@@ -34,12 +33,12 @@ move. Per-turn state comes from `graph_state` instead.
 ```json
 {
   "version": "1.0",
-  "domain": "MOCK_computer_networks_ch3",
+  "domain": "computer_networks_ch6_congestion",
   "nodes": [
-    { "id": "tcp_slow_start", "label": "Slow Start", "definition": "...",
-      "source_sections": ["3.7.1"], "difficulty": 0.4, "x": 340, "y": 180 }
+    { "id": "slow_start", "label": "Slow Start", "definition": "...",
+      "source_sections": ["6.3.2"], "difficulty": 0.4, "x": 340, "y": 180 }
   ],
-  "edges": [ { "from": "tcp_aimd", "to": "tcp_fast_recovery", "type": "prereq" } ]
+  "edges": [ { "from": "aimd", "to": "congestion_threshold", "type": "prereq" } ]
 }
 ```
 
@@ -64,9 +63,9 @@ next item.
   "response": {
     "type": "text | node_click | edge_click | mcq",
     "text":      "...",                        // type=text
-    "node_id":   "tcp_slow_start",             // type=node_click
+    "node_id":   "slow_start",                 // type=node_click
     "edge":      {"from": "a", "to": "b"},     // type=edge_click
-    "choice_id": "tcp_slow_start"              // type=mcq
+    "choice_id": "slow_start"                  // type=mcq
   }
 }
 ```
@@ -91,17 +90,17 @@ Response:
   "action": "ask | hint_visual | hint_verbal | advance | backtrack | explain",
   "hint_level": 2,
   "expects": "node_click",
-  "mcq_options": [ {"id": "tcp_slow_start", "label": "Slow Start"} ],
+  "mcq_options": [ {"id": "slow_start", "label": "Slow Start"} ],
 
   "graph_state": {
-    "current_node": "tcp_slow_start",
-    "focus_nodes": ["tcp_slow_start", "tcp_aimd"],
-    "focus_edges": [ {"from": "tcp_slow_start", "to": "tcp_aimd"} ],
-    "dimmed_nodes": ["tcp_segment", "..."],
-    "mastery": { "tcp_segment": 0.61, "tcp_slow_start": 0.43 }
+    "current_node": "slow_start",
+    "focus_nodes": ["slow_start", "aimd"],
+    "focus_edges": [ {"from": "self_clocking", "to": "slow_start"} ],
+    "dimmed_nodes": ["fifo", "..."],
+    "mastery": { "fifo": 0.61, "slow_start": 0.43 }
   },
 
-  "item": { "id": "itm_0031", "difficulty": 0.4, "scorable": true },
+  "item": { "id": "itm_0141", "difficulty": 0.4, "scorable": true },
 
   "turn_budget": { "used": 3, "max": 8 },
   "resolved_with_support": false,

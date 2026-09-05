@@ -15,12 +15,23 @@ prerequisite density all plausibly affect how much a narrowing hint gives away,
 and we varied none of them. A second chapter is the single highest-value thing we
 did not have time for.
 
-**Curated graph.** The concept graph was built by an automated extraction pass
-followed by a human correction pass, and we report extraction quality *before*
-correction precisely so the automated number is not confused with the graph we
-actually used. The comparable published systems also use curated graphs. This is
-a limitation of the demonstration, not a hidden one, but it means we have not
-shown the pipeline works end-to-end on an arbitrary chapter.
+**Curated graph, and no extraction run.** The concept graph is hand-authored:
+52 nodes over one chapter, written from the chapter's structure. §4 permits
+this, and the comparable published systems also use curated graphs, but it means
+we have not shown the pipeline works end-to-end on an arbitrary chapter — we
+have not run it on one at all.
+
+The ordering is worth stating because it inverts the usual concern. We froze
+`gold_graph.json` as a byte-identical copy of the hand-authored graph *before*
+any extractor existed. Had we extracted first and hand-corrected the output, the
+gold annotation would have been a derivative of the thing it scores — the
+annotator anchored by the extractor — which is a standard way to inflate a
+precision/recall figure. Annotating blind is the clean version, and we got it by
+accident of not having the chapter file, not by foresight.
+
+If an extraction run happens, it scores against a gold that could not have been
+contaminated by it. If it does not happen, §9.3 is simply not reported, and the
+demo is unaffected because it never depended on extraction working.
 
 **Simulated students, not people.** All leakage figures come from three scripted
 policies — zero-knowledge, partial-knowledge, adversarial — guessing over the
@@ -89,6 +100,31 @@ conservative one for the headline figure. And the boundary is enforced per item,
 not per session, so nothing stops a determined student reading all 50 definitions
 first — against which the only real defence would be removing the panel, which
 would make the graph a diagram rather than a map.
+
+**`answer_spans` is empty for every item, so span masking is untested.** §3
+specifies character offsets of the answer inside the source chunk, and §5 masks
+those spans before a chunk is handed to Call 2 on `advance` and `explain`. The
+graph was hand-authored from the chapter rather than extracted from a stored
+copy of it, so there is no chunk file to offset into and no offsets to record.
+
+The masking code path therefore has never run against a real span. We are not
+claiming it works; we are claiming the retrieval gate above it works, which is
+the coarser and more important of the two — Call 2 receives no chunk at all on
+`ask` and `hint_*`, which is where leakage would matter. Masking only ever
+mattered for the two actions that are *meant* to explain. If a chapter file
+lands, populating spans and testing the mask is a contained piece of work.
+
+**The leakage gap is smaller on the real graph than on the synthetic one.** At
+the terminal rung, the partial-knowledge advantage over zero-knowledge was +26
+points on the day-2 fixture and is +12 points on the chapter graph (34% against
+22%, n=200). The direction is unchanged and the finding stands, but the
+magnitude nearly halved when the graph stopped being synthetic.
+
+We think the fixture's generated structure made a lit region more informative
+than a real chapter's does, which is a reason to trust the smaller number and a
+concrete instance of the "one chapter" caveat above — except that here we can
+see the size of the effect, because we happen to have measured two graphs. A
+third would probably move it again.
 
 **Latency figures come from a mock.** The two-call timing profile the interface
 is built around was reproduced from configured delays, not measured against a

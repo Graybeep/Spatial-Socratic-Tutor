@@ -20,8 +20,17 @@ client, with a whitelist at the serializer and a test suite asserting no answer
 string, alias, prompt or span appears in any response. Those tests were green
 throughout.
 
-They were green while the server shipped the answer, in the clear, on **204 of
-250 items**.
+They were green while the server shipped the answer, in the clear, on every item
+whose answer was a node or an edge — **101 of the 260 items** in the chapter
+bank, and **204 of 250** in the synthetic fixture the bug was found on.
+
+The two ratios differ because they are properties of the bank, not of the
+defect: the fixture was mostly click items, the real bank is 39%
+`visually_answerable` because more than half its items ask about mechanisms
+whose answers are propositions rather than nodes. The severity does not move
+with the ratio. For every item in that subset the field named the answer
+outright, and that subset is precisely the one the leakage evaluation is run
+on.
 
 The item schema carries a `node_id` — which concept the item is about — and an
 `answer`. For a click-the-node or multiple-choice item **these are the same
