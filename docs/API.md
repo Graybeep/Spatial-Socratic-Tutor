@@ -105,7 +105,8 @@ Response:
 
   "turn_budget": { "used": 3, "max": 8 },
   "resolved_with_support": false,
-  "session_complete": false
+  "session_complete": false,
+  "panel_locked": true
 }
 ```
 
@@ -124,7 +125,7 @@ just to repaint:
 
 ```
 session_id, turn_id, action, hint_level, expects, item, mcq_options,
-turn_budget, resolved_with_support, session_complete, graph_state
+turn_budget, resolved_with_support, session_complete, panel_locked, graph_state
 ```
 
 Withholding `expects` / `item` / `mcq_options` until `done` would leave the
@@ -176,6 +177,28 @@ Dimming must survive a projector (CLAUDE.md §8): opacity **plus** desaturation
 **plus** stroke width. Opacity alone fails on bad contrast. Test on the actual
 demo hardware in week 3.
 
+**`panel_locked` gates the node panel, and the client must not compute it.**
+True while an item whose answer is a node is open, and true for *every turn of
+that item* — including turns where the tutor is not waiting for a click.
+
+Deriving it from `expects` looks equivalent and is not. `expects` is per turn;
+the property is per item. Answer wrong on purpose, take the tutor's follow-up,
+and a per-turn gate re-opens the panel with the narrowing still on screen: read
+the remaining definitions, answer next turn. The server currently pins `expects`
+to `item.type` for every turn an item is open, so that sequence is not reachable
+today — which is luck, not a defence, and not something the client can see.
+
+The node panel shows a node's definition, and definitions are extracts from the
+chapter, so for a "what does this do" item the definition is close to the answer
+verbatim. §9.1's simulated students model the lit set at the moment of
+answering; a channel that opens *between two turns of one item* is invisible to
+them, so no eval number would catch this. Same reason `node_id` left
+`ItemPublic`: eligibility the client derives is eligibility nothing tests.
+
+A node the student has already clicked may still be named in the panel while
+`panel_locked` is set — that is the confirm surface, and it tells them nothing
+they did not just do. Its definition stays hidden.
+
 **Mastery** is a float in `[0,1]` per node. It recolours nodes. It must not resize
 or reposition them.
 
@@ -211,6 +234,8 @@ calls. Nothing in this document changes.
 - free text never moves mastery (CLAUDE.md §1.4)
 - a wrong answer lowers the node *and* decays its prerequisites
 - `focus_nodes` and `dimmed_nodes` always partition the graph
+- `panel_locked` holds for every turn of an item and never tracks `expects`
+- no node id ever reaches Call 2 — labels only (§5)
 - narrowing is monotone within an item — a hint never re-lights an excluded node
 - node coordinates are identical across requests
 

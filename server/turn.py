@@ -84,6 +84,11 @@ class Phase1:
         graph_state.current_node must stay None until the item is behind us.
         Items whose answer is not on the graph (visually_answerable false -
         CLAUDE.md §3 expects more than half the bank) are safe to locate.
+
+        Also drives `panel_locked`. Both are the same question - "would telling
+        the student about this node hand them the answer" - and the answer is a
+        property of the ITEM, so it holds for every turn the item is open. It
+        must never be recomputed from per-turn state like `expects`.
         """
         return self.item is not None and self.item.visually_answerable
 
@@ -377,6 +382,7 @@ def complete_turn(store: GraphStore, db: Store, phase1: Phase1) -> TurnResponse:
         turn_budget=TurnBudget(used=state.turns_on_item, max=CONFIG.turn_budget),
         resolved_with_support=phase1.resolved_with_support,
         session_complete=phase1.session_complete,
+        panel_locked=phase1.reveals_answer(),
     )
 
     db.save(state)

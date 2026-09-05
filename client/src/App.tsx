@@ -33,6 +33,8 @@ export default function App() {
   const [hint, setHint] = useState(0);
   const [budget, setBudget] = useState<TurnBudget | null>(null);
   const [resolvedWithSupport, setResolvedWithSupport] = useState(false);
+  // Server-owned, per ITEM not per turn. The client never computes this.
+  const [panelLocked, setPanelLocked] = useState(false);
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState<string | null>(null);
   const [complete, setComplete] = useState(false);
@@ -89,6 +91,7 @@ export default function App() {
           setMcq(p.mcq_options);
           setBudget(p.turn_budget);
           setResolvedWithSupport(p.resolved_with_support);
+          setPanelLocked(p.panel_locked);
           setComplete(p.session_complete);
         },
         onUtterance: (text) => {
@@ -148,7 +151,10 @@ export default function App() {
 
   // A pending node takes over the panel: same surface, but it is now the thing
   // you are about to answer with, so it shows its name and not its definition.
-  const panelNodeId = pendingNode ?? inspected;
+  // That case survives panel_locked - naming the node the student just clicked
+  // tells them nothing they did not just do, and it is where Confirm lives.
+  // Reading does not: `inspected` is ignored entirely while locked.
+  const panelNodeId = pendingNode ?? (panelLocked ? null : inspected);
   const panelNode = panelNodeId
     ? (graph.nodes.find((n) => n.id === panelNodeId) ?? null)
     : null;
@@ -180,7 +186,8 @@ export default function App() {
           expects={expects}
           pendingNode={pendingNode}
           pendingEdge={pendingEdge}
-          inspectedNode={inspected}
+          inspectedNode={panelLocked ? null : inspected}
+          panelLocked={panelLocked}
           busy={busy}
           onNodeClick={(id) => {
             setPendingEdge(null);

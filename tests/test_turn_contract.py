@@ -30,6 +30,9 @@ def test_response_field_set_is_exactly_the_whitelist():
         "action", "hint_level", "expects", "mcq_options",
         "graph_state", "item", "turn_budget",
         "resolved_with_support", "session_complete",
+        # Added deliberately: a server-owned interaction gate, not model text.
+        # See tests/test_panel_lock.py.
+        "panel_locked",
     }
 
 
@@ -363,7 +366,7 @@ def test_stream_phase1_carries_everything_the_client_needs_to_interact(client, s
     assert set(phase1) == {
         "session_id", "turn_id", "action", "hint_level", "expects", "item",
         "mcq_options", "turn_budget", "resolved_with_support", "session_complete",
-        "graph_state",
+        "panel_locked", "graph_state",
     }
     assert set(phase1["graph_state"]) == {
         "current_node", "focus_nodes", "focus_edges", "dimmed_nodes", "mastery",

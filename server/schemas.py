@@ -262,6 +262,21 @@ class TurnResponse(Strict):
     graph_state: GraphState
     item: Optional[ItemPublic] = None
     turn_budget: TurnBudget
+
+    # True while an item whose answer is a node is open, and it stays true for
+    # every turn of that item regardless of what `expects` currently says.
+    #
+    # The client must not compute this from `expects`. A student at hint level 3
+    # with 9 nodes lit can answer wrong on purpose, take the tutor's follow-up,
+    # and the moment `expects` flips to "text" a per-turn gate would re-open the
+    # node panel with the narrowing still on screen - read the 9 definitions,
+    # answer next turn. The turn boundary sits INSIDE the interaction §9.1
+    # measures, and the simulated students cannot see it, exactly as they cannot
+    # see any channel outside the lit set.
+    #
+    # Server-side for the same reason `node_id` left ItemPublic: eligibility the
+    # client derives is eligibility nothing tests.
+    panel_locked: bool = False
     # Set when the turn budget forced a reveal. Mastery awarded is zero
     # (CLAUDE.md §6 layer 3).
     resolved_with_support: bool = False

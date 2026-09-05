@@ -21,7 +21,7 @@ fixture; nothing else changes.
 pip install -r requirements.txt
 python -m build.make_mock_data   # placeholder 50-node fixture
 python -m build.validate         # strict; must be clean
-python -m pytest                 # 113 tests
+python -m pytest                 # 121 tests
 python -m server.main            # http://127.0.0.1:8000
 ```
 

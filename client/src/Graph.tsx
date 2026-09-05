@@ -43,6 +43,8 @@ interface Props {
   pendingEdge: EdgeRef | null;
   /** Opened in the rail's node panel. Reading, not answering. */
   inspectedNode: string | null;
+  /** Server-owned. No node opens the panel while this is set - see types.ts. */
+  panelLocked: boolean;
   busy: boolean;
   onNodeClick: (id: string) => void;
   onNodeInspect: (id: string) => void;
@@ -56,6 +58,7 @@ export function Graph({
   pendingNode,
   pendingEdge,
   inspectedNode,
+  panelLocked,
   busy,
   onNodeClick,
   onNodeInspect,
@@ -87,15 +90,18 @@ export function Graph({
   const edgeClickable = expects === "edge_click" && !busy;
   const pendingEdgeKey = pendingEdge ? edgeKey(pendingEdge) : null;
 
-  // One gesture, two meanings, and which one it is depends on what the tutor
-  // just asked for. While it is waiting for a point, a click is an ANSWER and
-  // nothing else; the rest of the time it opens the node panel to read.
+  // One gesture, two meanings: while the tutor is waiting for a point a click
+  // is an ANSWER, otherwise it opens the node panel to read. They cannot both
+  // be live, because reading a definition during an item is reading your way to
+  // the answer inside the one interaction §9.1 exists to measure.
   //
-  // They cannot both be live. If clicking opened a definition during a
-  // node_click item, the student would read their way to the answer inside the
-  // one interaction the whole leakage measurement is about - and eval §9.1
-  // would never see it, because the simulated students only model the lit set.
+  // `pointing` decides which gesture the click IS. It does NOT decide whether
+  // reading is allowed - `panelLocked` does, it comes from the server, and it
+  // holds for the whole item. Gating reading on `expects` alone leaves the hole
+  // this closes: answer wrong on purpose, and on the tutor's follow-up turn
+  // `expects` is "text" while the narrowing is still on screen.
   const pointing = expects === "node_click" || expects === "edge_click";
+  const canInspect = !panelLocked && !busy;
 
   return (
     <svg
@@ -145,7 +151,7 @@ export function Graph({
         // still be read between questions - what was excluded is part of what
         // the map is for.
         const answerable = nodeClickable && !isDim;
-        const clickable = pointing ? answerable : !busy;
+        const clickable = pointing ? answerable : canInspect;
         return (
           <g
             key={n.id}

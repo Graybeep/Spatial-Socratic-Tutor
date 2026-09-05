@@ -117,6 +117,9 @@ export interface GraphStatePhase {
   turn_budget: TurnBudget;
   resolved_with_support: boolean;
   session_complete: boolean;
+  /** See TurnResponse. Arrives in phase 1 because the gate has to be live the
+   *  moment the graph becomes interactive. */
+  panel_locked: boolean;
   graph_state: GraphState;
 }
 
@@ -135,6 +138,17 @@ export interface TurnResponse {
   turn_budget: TurnBudget;
   resolved_with_support: boolean;
   session_complete: boolean;
+  /**
+   * True while an item whose answer is a node is open. The node panel must not
+   * open on ANY node while it is set.
+   *
+   * DO NOT derive this from `expects`. A per-turn gate re-opens the panel the
+   * moment the tutor stops waiting for a click - answer wrong on purpose, take
+   * the follow-up, and the panel is live again with the narrowing still on
+   * screen. It is a property of the item, so the server sends it and it holds
+   * for every turn the item is open.
+   */
+  panel_locked: boolean;
 }
 
 /** What the student did. `type` must match the `expects` last received. */

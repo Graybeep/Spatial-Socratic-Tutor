@@ -183,6 +183,11 @@
       "title": "Mcq Options",
       "type": "array"
     },
+    "panel_locked": {
+      "default": false,
+      "title": "Panel Locked",
+      "type": "boolean"
+    },
     "resolved_with_support": {
       "default": false,
       "title": "Resolved With Support",

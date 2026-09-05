@@ -118,8 +118,16 @@ export function Chat({
  * trapped" (docs/API.md). The server forces a reveal at max and awards zero
  * mastery; showing the count is what stops that landing as a surprise.
  *
+ * Two rules, and the copy carries both:
+ *
  * Silent until over halfway. A meter visible from turn 1 of 8 reads as a
  * countdown to failure, which is the opposite of the reassurance it exists for.
+ *
+ * It names what happens AT zero, not just that zero is coming. "3 turns left"
+ * is a countdown at any point in an item; "3 turns, then I show you" is the
+ * promise that there is a floor. It also says the shown item will not count,
+ * because a student who discovers that only afterwards has learnt that the
+ * interface withheld the price - which costs more than the zero does.
  */
 function Budget({
   budget,
@@ -145,9 +153,9 @@ function Budget({
     <div style={budgetBar}>
       <span className="readout">{left}</span>
       <span style={{ opacity: 0.7 }}>
-        {left === 1
-          ? " more turn on this one, then I will just show you."
-          : " more turns on this one, then I will just show you."}
+        {left === 1 ? " more turn on this one" : " more turns on this one"}
+        , then I show you the answer and we move on. A shown one does not count
+        towards mastery.
       </span>
     </div>
   );
@@ -186,14 +194,14 @@ interface NodePanelProps {
   node: GraphNode;
   mastery: number;
   /**
-   * True while the tutor is waiting for the student to POINT at something.
+   * True when this node is a click waiting to be confirmed. The panel is then
+   * the confirm surface, and shows the node's NAME and nothing else.
    *
-   * The panel then shows the node's name and nothing else. A definition is a
-   * free hint at exactly the moment the student is choosing between candidates,
-   * and §9.1 measures what the interface hands over — a readable definition on
-   * the node under consideration would be a leak channel the eval never sees,
-   * because the simulated students only model the lit set. Read the chapter
-   * between questions, not during one.
+   * This is not the leak gate - `panel_locked` is, it comes from the server,
+   * and App never renders this component for a read while it is set. This flag
+   * only picks which of the two things the panel is: somewhere to read, or
+   * somewhere to commit. Naming a node the student just clicked tells them
+   * nothing they did not just do; showing its definition would.
    */
   answering: boolean;
   onClose: () => void;

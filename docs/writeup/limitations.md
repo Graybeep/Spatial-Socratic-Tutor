@@ -64,6 +64,32 @@ distractor is chosen as often as the key by a strong student (likely ambiguous).
 Flagged items go to a human pass. We do not claim the surviving bank is clean,
 only that the obviously broken items were removed.
 
+**Node definitions are readable between items, and that is a decision.** The
+interface has a node panel: click a node, read its one-sentence definition from
+the chapter. It is locked for the whole time an item whose answer is a node is
+open — every turn of that item, not merely the turns where the tutor is waiting
+for a click — and open otherwise.
+
+The boundary is worth stating because a reviewer will ask what stops a student
+reading ahead, and the answer is: nothing does. `graph.json` definitions are
+extracts from the source, so for a node whose item asks what that node does, the
+definition is close to the answer verbatim. A student can browse the whole graph
+before any item on it opens, and our leakage figures assume they have not.
+
+We think that is the right boundary for a study tool rather than a test. A
+student reading their own textbook is not leakage; it is the activity. What
+would be leakage is the *tutor* handing over the sentence at the moment of
+being asked, which is what the lock prevents. The distinction we are drawing is
+between material the student went and got, and material the interface pushed at
+them mid-question, and only the second is what §9.1 measures.
+
+Two honest consequences. Our numbers describe a student who has not pre-read,
+which is the leakier direction to assume for the mechanism but the less
+conservative one for the headline figure. And the boundary is enforced per item,
+not per session, so nothing stops a determined student reading all 50 definitions
+first — against which the only real defence would be removing the panel, which
+would make the graph a diagram rather than a map.
+
 **Latency figures come from a mock.** The two-call timing profile the interface
 is built around was reproduced from configured delays, not measured against a
 live model under load.
