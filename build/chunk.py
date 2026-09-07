@@ -46,7 +46,28 @@ from typing import Iterable, Protocol
 from build.config import BUILD
 
 #: A heading like "6.3.1 Additive Increase/Multiplicative Decrease".
-HEADING = re.compile(r"^\s*(\d+(?:\.\d+)*)\s+(\S.*?)\s*$")
+#:
+#: Deliberately NOT `\d+(\.\d+)*`. That also matches the line
+#: "1 unit of data per second. We can see that the ..." - a sentence fragment
+#: left by a line break - which then becomes section "1" and injects a fake
+#: position into the reading order the whole precedence filter depends on. Real
+#: input produced exactly that. A heading is short, has no sentence punctuation,
+#: and its number is either dotted or followed by a very short title.
+HEADING = re.compile(r"^\s*(\d+(?:\.\d+)*)\s+(\S[^.!?]{0,78})\s*$")
+
+#: Chrome from an HTML render, and the page furniture around a chapter.
+_NAV = frozenset({
+    "view page source", "previous", "next", "contents", "on this page",
+    "table of contents", "index", "search", "copyright",
+})
+
+#: Private-use glyphs (anchor-link icons) and zero-width junk survive an HTML
+#: strip and then crash a Windows console on the first print.
+_JUNK = re.compile(r"[-​-‏﻿]")
+
+#: Below this a "chunk" is a heading that was immediately followed by another
+#: heading. Real input produced eight of them out of twenty-nine.
+MIN_CHUNK_CHARS = 200
 #: Operators that mark a line as a candidate formula. See _is_equation.
 _SYMBOLS = re.compile(r"[=+\-*/^<>|∑∫≤≥±×÷]")
 
@@ -85,34 +106,59 @@ def _sections(lines: Iterable[str]) -> list[Chunk]:
 
     Shared by both implementations, because the *sectioning* rule is the same
     whatever produced the lines. Only getting the lines differs.
+
+    Everything after the loop exists because of real input. A rendered chapter
+    repeats each heading two or three times (page title, nav, then the real
+    one), so the same section number arrives more than once; downstream,
+    extract_edges maps section -> reading position in a dict, where a duplicate
+    silently overwrites and the precedence filter then works from the wrong
+    order. Bodies for a repeated section are therefore MERGED, not appended as
+    separate chunks.
     """
-    out: list[Chunk] = []
+    collected: dict[str, dict] = {}
+    order: list[str] = []
     section, heading, body = "", "", []
 
     def flush() -> None:
         text = " ".join(body).strip()
-        if section and text:
-            out.append(Chunk(
-                id=f"chunk_{section.replace('.', '_')}",
-                section=section,
-                heading_path=heading,
-                text=text,
-            ))
+        if not section or not text:
+            return
+        if section not in collected:
+            collected[section] = {"heading": heading, "parts": []}
+            order.append(section)
+        collected[section]["parts"].append(text)
+        # Keep the longest heading seen: the nav copy is usually bare, the page
+        # title carries the book name, the real one is in between.
+        if len(heading) > len(collected[section]["heading"]):
+            collected[section]["heading"] = heading
 
     for raw in lines:
-        line = raw.strip()
-        if not line:
+        line = _JUNK.sub("", raw).strip()
+        if not line or line.lower() in _NAV:
             continue
         m = HEADING.match(line)
         if m:
             flush()
-            section, heading, body = m.group(1), m.group(2), []
+            section, heading, body = m.group(1), _JUNK.sub("", m.group(2)).strip(), []
             continue
         if _is_equation(line):
             continue
         body.append(line)
 
     flush()
+
+    out: list[Chunk] = []
+    for sec in order:
+        text = " ".join(collected[sec]["parts"]).strip()
+        if len(text) < MIN_CHUNK_CHARS:
+            # A heading followed straight by another heading. Not a section.
+            continue
+        out.append(Chunk(
+            id=f"chunk_{sec.replace('.', '_')}",
+            section=sec,
+            heading_path=collected[sec]["heading"],
+            text=text,
+        ))
     return out
 
 
@@ -190,7 +236,10 @@ def main(argv=None) -> int:
     chunks = chunker.chunks()
     print(f"{len(chunks)} chunks")
     for c in chunks[:5]:
-        print(f"  {c.section:<8} {c.heading_path[:48]:<50} {len(c.text):>6} chars")
+        # Real chapter text carries glyphs a cp1252 console cannot encode, and
+        # an UnicodeEncodeError in a progress line would fail the whole build.
+        heading = c.heading_path[:48].encode("ascii", "replace").decode()
+        print(f"  {c.section:<8} {heading:<50} {len(c.text):>6} chars")
     if len(chunks) > 5:
         print(f"  ... and {len(chunks) - 5} more")
 

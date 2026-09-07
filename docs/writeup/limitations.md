@@ -114,6 +114,37 @@ the coarser and more important of the two — Call 2 receives no chunk at all on
 mattered for the two actions that are *meant* to explain. If a chapter file
 lands, populating spans and testing the mask is a contained piece of work.
 
+**§9.3's recall has a ceiling of 59% that has nothing to do with the model.**
+Edge extraction only asks the model about pairs that survive a filter: A must
+precede B in the text, and the two must appear within N sections. Measured
+against our hand-annotated graph on the real chapter, that filter passes 39 of
+66 true prerequisite edges at the shipped window. No extraction run can score
+above that, however good the model is, so the ceiling belongs beside the recall
+figure rather than being discovered when the number comes back low.
+
+It was 21% before we ran the pipeline on real text. Comparing sections alone
+discarded every pair whose two concepts appear in the *same* section, and 34 of
+our 66 edges are exactly that — a textbook introduces several related concepts
+in one section, in order, and section-level position cannot see that order. We
+now resolve position within the section. We would not have found this from a
+test fixture, because a fixture has one concept per section by construction.
+
+**The answer monitor's similarity metric misses synonym paraphrase, and that is
+the biased direction.** §6 specifies embedding cosine; embeddings are a
+dependency we do not have, so the implemented metric is the maximum of a
+stemmed, stopword-stripped token cosine and character-trigram containment. That
+catches morphological variants and reordered phrasing. It does not catch a
+restatement built from different words — "the sender backs off, cutting its
+allowance in half once the path shows strain" scores 0.06 against the answer it
+paraphrases.
+
+This matters more than a generic "approximate metric" caveat, because
+reconstruction *means* restating in the model's own words. The metric is
+therefore weakest precisely where the phenomenon is strongest, so the reported
+parametric-reconstruction rate is not merely a lower bound: it is biased
+downward in the direction of the thing being measured. Treat it as a floor, and
+do not report it as an estimate of the true rate.
+
 **The leakage gap is smaller on the real graph than on the synthetic one.** At
 the terminal rung, the partial-knowledge advantage over zero-knowledge was +26
 points on the day-2 fixture and is +12 points on the chapter graph (34% against

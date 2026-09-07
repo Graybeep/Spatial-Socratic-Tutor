@@ -155,6 +155,54 @@ def test_an_innocent_utterance_does_not_fire():
         "Four left — what do they have in common?", "slow_start", ["slow start"])
 
 
+ANSWER = ("it reduces the sending rate when the network signals overload "
+          "by halving the congestion window")
+
+
+def test_morphological_variants_are_caught():
+    """Stemming. "halves"/"halving", "signals"/"signalled" are the first thing
+    a restatement reaches for, and raw token matching misses all of them."""
+    assert guards.check_answer_leak(
+        "It reduced the sending rates when the network signalled overload, and "
+        "halved the congestion windows.", ANSWER, [])
+
+
+def test_reordered_phrasing_is_caught():
+    """Character trigrams survive word order that token identity does not."""
+    assert guards.check_answer_leak(
+        "By halving the congestion window it reduces sending rate on overload "
+        "signals.", ANSWER, [])
+
+
+def test_a_synonym_level_paraphrase_is_STILL_MISSED():
+    """The residual bias, pinned rather than hidden.
+
+    Reconstruction means restating in the model's own words, so paraphrase is
+    the DOMINANT form of the thing layer 1 is trying to detect — and a
+    paraphrase built from synonyms shares neither tokens nor trigrams with the
+    answer. It scores near zero.
+
+    This test asserts the miss on purpose. If someone later adds embeddings it
+    will fail, and the correct response is to delete it and raise the reported
+    rate, not to weaken it. Until then the reported parametric-reconstruction
+    rate is a lower bound biased towards under-counting, which is stated in
+    docs/writeup/limitations.md.
+    """
+    check = guards.check_answer_leak(
+        "The sender backs off, cutting its allowance in half once the path "
+        "shows strain.", ANSWER, [])
+    assert not check.hit
+    assert check.score < 0.2
+
+
+def test_stopwords_do_not_float_the_score():
+    """Two unrelated sentences share "the", "of", "is". Without stripping them
+    every comparison starts from a noise floor and the threshold has to rise to
+    compensate, which costs real detections."""
+    assert not guards.check_answer_leak(
+        "It is the one that is in the middle of the group of them.", ANSWER, [])
+
+
 def test_long_answers_use_the_similarity_branch():
     answer = ("it reduces the sending rate when the network signals overload "
               "by halving the congestion window")
@@ -170,7 +218,7 @@ def test_the_two_branches_are_split_by_answer_length():
     short = guards.check_answer_leak("nothing here", "slow_start", ["slow start"])
     long = guards.check_answer_leak("nothing here", " ".join(["word"] * 12), [])
     assert "alias" in short.reason
-    assert "cosine" in long.reason
+    assert "similarity" in long.reason
 
 
 # ---------------------------------------------------------------------------

@@ -41,16 +41,25 @@ not: `embed()` needs an embedding model, which is either a new dependency
 (forbidden after week 2, §1.8) or a third API call on a latency path §5 spends
 considerable effort keeping short.
 
-Implemented instead: a cosine over token-frequency vectors. Same shape, much
-weaker — it catches an utterance that reuses the answer's wording and misses a
-paraphrase that shares no vocabulary, which is exactly the case an embedding
-would have caught. The threshold is therefore a different number under a
-different name (`answer_similarity_threshold`), because reusing 0.85 across two
-metrics that are not on the same scale would be a silent miscalibration rather
-than an approximation.
+Implemented instead: max(stemmed token cosine, character-trigram containment),
+both over content words with stopwords stripped. The two catch different things
+and each is a lower bound alone, so the max rather than the mean.
 
-Consequence for the writeup: the reported parametric-reconstruction rate is a
-LOWER BOUND. Recorded in docs/writeup/limitations.md.
+Measured on a long answer: verbatim 1.00, reordered 0.89, morphological variants
+0.94, innocent utterances 0.03. The margin is wide.
+
+WHAT IT STILL MISSES, and why that matters more than a generic caveat.
+Reconstruction MEANS restating in the model's own words, so synonym-level
+paraphrase is the dominant form of the thing this is trying to detect - and a
+paraphrase built from different words shares neither tokens nor trigrams. "The
+sender backs off, cutting its allowance in half once the path shows strain"
+scores 0.06 against the answer it paraphrases. The metric is weakest exactly
+where the phenomenon is strongest.
+
+So the reported rate is not merely a lower bound; it is biased downward in the
+direction of the thing being measured. Treat it as a floor, never as an
+estimate. `tests/test_llm_and_guards.py` pins the miss on purpose. Recorded in
+docs/writeup/limitations.md.
 """
 from __future__ import annotations
 
@@ -145,9 +154,35 @@ def _sublist(haystack: list[str], needle: list[str]) -> bool:
     )
 
 
-def _token_cosine(a: str, b: str) -> float:
-    """Cosine over token counts. See the module docstring: NOT embeddings."""
-    ca, cb = Counter(tokenize(a)), Counter(tokenize(b))
+#: Function words carry no evidence of reconstruction and inflate every score:
+#: two unrelated sentences share "the", "of" and "is". Stripping them makes a
+#: real overlap stand out instead of sitting on a noise floor.
+_STOPWORDS = frozenset("""
+a an the of to in on at by for from with without and or but if then than that
+this these those it its is are was were be been being do does did done have has
+had you your we our they their he she i as so such not no nor can could will
+would shall should may might must about into over under between each any all
+""".split())
+
+#: Crude suffix stripping. Not a real stemmer - that is a dependency (§1.8) -
+#: but it collapses the morphological variants a paraphrase reaches for first:
+#: "halves"/"halving", "reduces"/"reducing", "signals"/"signal".
+_SUFFIXES = ("ing", "edly", "ely", "es", "ed", "ly", "s")
+
+
+def _stem(token: str) -> str:
+    for suffix in _SUFFIXES:
+        if len(token) > len(suffix) + 2 and token.endswith(suffix):
+            return token[: -len(suffix)]
+    return token
+
+
+def _content(text: str) -> list[str]:
+    return [_stem(t) for t in tokenize(text) if t not in _STOPWORDS]
+
+
+def _cosine(a_tokens: list[str], b_tokens: list[str]) -> float:
+    ca, cb = Counter(a_tokens), Counter(b_tokens)
     if not ca or not cb:
         return 0.0
     shared = set(ca) & set(cb)
@@ -157,6 +192,39 @@ def _token_cosine(a: str, b: str) -> float:
     na = math.sqrt(sum(v * v for v in ca.values()))
     nb = math.sqrt(sum(v * v for v in cb.values()))
     return dot / (na * nb) if na and nb else 0.0
+
+
+def _trigram_overlap(a: str, b: str) -> float:
+    """Character-trigram containment, as a second opinion on token cosine.
+
+    Token cosine is order-blind but token-identity-bound: reorder a phrase and
+    it scores the same, change the words and it collapses. Character trigrams
+    survive morphology and word order that token matching does not, and are
+    scored by CONTAINMENT of the answer's trigrams in the utterance rather than
+    symmetrically - a long utterance that restates a short answer should score
+    high, and Jaccard would divide that signal away by the utterance's length.
+    """
+    def grams(text: str) -> set:
+        joined = " ".join(_content(text))
+        return {joined[i:i + 3] for i in range(len(joined) - 2)}
+
+    ga, gb = grams(a), grams(b)
+    if not gb:
+        return 0.0
+    return len(ga & gb) / len(gb)
+
+
+def _similarity(utterance: str, answer: str) -> float:
+    """max(token cosine, trigram containment), both over stemmed content words.
+
+    The max, not the mean: these detect different things and each is a lower
+    bound on its own. Averaging would let a clean miss on one metric drag a
+    genuine hit on the other below the threshold.
+    """
+    return max(
+        _cosine(_content(utterance), _content(answer)),
+        _trigram_overlap(utterance, answer),
+    )
 
 
 def check_answer_leak(
@@ -197,11 +265,11 @@ def check_answer_leak(
             STATS["hits"] += 1
         return LeakCheck(hit, f"alias {which!r} at {best:.2f}", best)
 
-    score = _token_cosine(utterance, answer)
+    score = _similarity(utterance, answer)
     hit = score > CONFIG.answer_similarity_threshold
     if hit:
         STATS["hits"] += 1
-    return LeakCheck(hit, f"token cosine {score:.2f}", score)
+    return LeakCheck(hit, f"similarity {score:.2f}", score)
 
 
 def screen_utterance(

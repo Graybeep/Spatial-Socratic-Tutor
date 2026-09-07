@@ -9,7 +9,8 @@
       "prompt": "Which concept is this: A sequence of packets travelling between one source-destination pair along the same route.",
       "answer": "flow",
       "answer_aliases": [
-        "flow"
+        "packet flow",
+        "packet-flow"
       ],
       "distractors": [
         "weighted_fair_queuing",
@@ -24,7 +25,7 @@
       "id": "itm_0002",
       "node_id": "flow",
       "type": "mcq",
-      "prompt": "What does Flow actually do?",
+      "prompt": "What does Packet Flow actually do?",
       "answer": "it reacts to a signal the sender can observe without router support",
       "answer_aliases": [],
       "distractors": [
@@ -40,7 +41,7 @@
       "id": "itm_0003",
       "node_id": "flow",
       "type": "mcq",
-      "prompt": "What does Flow actually do?",
+      "prompt": "What does Packet Flow actually do?",
       "answer": "it trades some throughput for a shorter queue at the bottleneck",
       "answer_aliases": [],
       "distractors": [
@@ -56,7 +57,7 @@
       "id": "itm_0004",
       "node_id": "flow",
       "type": "mcq",
-      "prompt": "What does Flow actually do?",
+      "prompt": "What does Packet Flow actually do?",
       "answer": "it reduces the sending rate when the network signals overload",
       "answer_aliases": [],
       "distractors": [
@@ -72,7 +73,7 @@
       "id": "itm_0005",
       "node_id": "flow",
       "type": "mcq",
-      "prompt": "What does Flow actually do?",
+      "prompt": "What does Packet Flow actually do?",
       "answer": "it reacts to a signal the sender can observe without router support",
       "answer_aliases": [],
       "distractors": [
@@ -109,9 +110,7 @@
       "type": "edge_click",
       "prompt": "Click the link showing what you need to understand before Best-Effort Service.",
       "answer": "resource_allocation->best_effort",
-      "answer_aliases": [
-        "resource allocation to best-effort service"
-      ],
+      "answer_aliases": [],
       "distractors": [
         "resource_allocation",
         "flow",
@@ -194,9 +193,7 @@
       "type": "edge_click",
       "prompt": "Click the link showing what you need to understand before Bottleneck Router.",
       "answer": "flow->bottleneck_router",
-      "answer_aliases": [
-        "flow to bottleneck router"
-      ],
+      "answer_aliases": [],
       "distractors": [
         "router_centric",
         "flow",
@@ -279,9 +276,7 @@
       "type": "edge_click",
       "prompt": "Click the link showing what you need to understand before Soft State.",
       "answer": "flow->soft_state",
-      "answer_aliases": [
-        "flow to soft state"
-      ],
+      "answer_aliases": [],
       "distractors": [
         "bottleneck_router",
         "resource_allocation",
@@ -364,9 +359,7 @@
       "type": "edge_click",
       "prompt": "Click the link showing what you need to understand before Resource Allocation.",
       "answer": "flow->resource_allocation",
-      "answer_aliases": [
-        "flow to resource allocation"
-      ],
+      "answer_aliases": [],
       "distractors": [
         "best_effort",
         "stability",
@@ -449,9 +442,7 @@
       "type": "edge_click",
       "prompt": "Click the link showing what you need to understand before Congestion Control.",
       "answer": "resource_allocation->congestion_control",
-      "answer_aliases": [
-        "resource allocation to congestion control"
-      ],
+      "answer_aliases": [],
       "distractors": [
         "flow",
         "best_effort",
@@ -534,9 +525,7 @@
       "type": "edge_click",
       "prompt": "Click the link showing what you need to understand before Flow Control.",
       "answer": "congestion_control->flow_control",
-      "answer_aliases": [
-        "congestion control to flow control"
-      ],
+      "answer_aliases": [],
       "distractors": [
         "self_clocking",
         "resource_allocation",
@@ -783,9 +772,7 @@
       "type": "edge_click",
       "prompt": "Click the link showing what you need to understand before Power.",
       "answer": "throughput->power_metric",
-      "answer_aliases": [
-        "throughput to power"
-      ],
+      "answer_aliases": [],
       "distractors": [
         "queuing_delay",
         "throughput",
@@ -868,9 +855,7 @@
       "type": "edge_click",
       "prompt": "Click the link showing what you need to understand before Congestion Collapse.",
       "answer": "throughput->congestion_collapse",
-      "answer_aliases": [
-        "throughput to congestion collapse"
-      ],
+      "answer_aliases": [],
       "distractors": [
         "fairness_index",
         "stability",
@@ -952,9 +937,7 @@
       "type": "edge_click",
       "prompt": "Click the link showing what you need to understand before Stability.",
       "answer": "congestion_control->stability",
-      "answer_aliases": [
-        "congestion control to stability"
-      ],
+      "answer_aliases": [],
       "distractors": [
         "feedback_based",
         "throughput",
@@ -1038,9 +1021,7 @@
       "type": "edge_click",
       "prompt": "Click the link showing what you need to understand before Jain's Fairness Index.",
       "answer": "throughput->fairness_index",
-      "answer_aliases": [
-        "throughput to jain's fairness index"
-      ],
+      "answer_aliases": [],
       "distractors": [
         "weighted_fair_queuing",
         "bit_round_robin",
@@ -1122,9 +1103,7 @@
       "type": "edge_click",
       "prompt": "Click the link showing what you need to understand before Router-Centric.",
       "answer": "congestion_control->router_centric",
-      "answer_aliases": [
-        "congestion control to router-centric"
-      ],
+      "answer_aliases": [],
       "distractors": [
         "fair_queuing",
         "bottleneck_router",
@@ -1206,9 +1185,7 @@
       "type": "edge_click",
       "prompt": "Click the link showing what you need to understand before Host-Centric.",
       "answer": "congestion_control->host_centric",
-      "answer_aliases": [
-        "congestion control to host-centric"
-      ],
+      "answer_aliases": [],
       "distractors": [
         "effective_window",
         "feedback_based",
@@ -1290,9 +1267,7 @@
       "type": "edge_click",
       "prompt": "Click the link showing what you need to understand before Reservation-Based.",
       "answer": "congestion_control->reservation_based",
-      "answer_aliases": [
-        "congestion control to reservation-based"
-      ],
+      "answer_aliases": [],
       "distractors": [
         "host_centric",
         "flow_control",
@@ -1374,9 +1349,7 @@
       "type": "edge_click",
       "prompt": "Click the link showing what you need to understand before Feedback-Based.",
       "answer": "congestion_control->feedback_based",
-      "answer_aliases": [
-        "congestion control to feedback-based"
-      ],
+      "answer_aliases": [],
       "distractors": [
         "window_based",
         "reservation_based",
@@ -1459,9 +1432,7 @@
       "type": "edge_click",
       "prompt": "Click the link showing what you need to understand before Explicit Feedback.",
       "answer": "feedback_based->explicit_feedback",
-      "answer_aliases": [
-        "feedback-based to explicit feedback"
-      ],
+      "answer_aliases": [],
       "distractors": [
         "congestion_control",
         "window_based",
@@ -1544,9 +1515,7 @@
       "type": "edge_click",
       "prompt": "Click the link showing what you need to understand before Implicit Feedback.",
       "answer": "feedback_based->implicit_feedback",
-      "answer_aliases": [
-        "feedback-based to implicit feedback"
-      ],
+      "answer_aliases": [],
       "distractors": [
         "feedback_based",
         "congestion_control",
@@ -1629,9 +1598,7 @@
       "type": "edge_click",
       "prompt": "Click the link showing what you need to understand before Window-Based Control.",
       "answer": "feedback_based->window_based",
-      "answer_aliases": [
-        "feedback-based to window-based control"
-      ],
+      "answer_aliases": [],
       "distractors": [
         "congestion_control",
         "explicit_feedback",
@@ -1714,9 +1681,7 @@
       "type": "edge_click",
       "prompt": "Click the link showing what you need to understand before Rate-Based Control.",
       "answer": "feedback_based->rate_based",
-      "answer_aliases": [
-        "feedback-based to rate-based control"
-      ],
+      "answer_aliases": [],
       "distractors": [
         "bbr",
         "explicit_feedback",
@@ -1799,9 +1764,7 @@
       "type": "edge_click",
       "prompt": "Click the link showing what you need to understand before FIFO Queuing.",
       "answer": "bottleneck_router->fifo",
-      "answer_aliases": [
-        "bottleneck router to fifo queuing"
-      ],
+      "answer_aliases": [],
       "distractors": [
         "bit_round_robin",
         "weighted_fair_queuing",
@@ -1884,9 +1847,7 @@
       "type": "edge_click",
       "prompt": "Click the link showing what you need to understand before Tail Drop.",
       "answer": "fifo->tail_drop",
-      "answer_aliases": [
-        "fifo queuing to tail drop"
-      ],
+      "answer_aliases": [],
       "distractors": [
         "ecn",
         "avg_queue_length",
@@ -1969,9 +1930,7 @@
       "type": "edge_click",
       "prompt": "Click the link showing what you need to understand before Priority Queuing.",
       "answer": "fifo->priority_queuing",
-      "answer_aliases": [
-        "fifo queuing to priority queuing"
-      ],
+      "answer_aliases": [],
       "distractors": [
         "bottleneck_router",
         "fifo",
@@ -2054,9 +2013,7 @@
       "type": "edge_click",
       "prompt": "Click the link showing what you need to understand before Fair Queuing.",
       "answer": "flow->fair_queuing",
-      "answer_aliases": [
-        "flow to fair queuing"
-      ],
+      "answer_aliases": [],
       "distractors": [
         "soft_state",
         "tail_drop",
@@ -2139,9 +2096,7 @@
       "type": "edge_click",
       "prompt": "Click the link showing what you need to understand before Bit-by-Bit Round Robin.",
       "answer": "fair_queuing->bit_round_robin",
-      "answer_aliases": [
-        "fair queuing to bit-by-bit round robin"
-      ],
+      "answer_aliases": [],
       "distractors": [
         "flow",
         "weighted_fair_queuing",
@@ -2224,9 +2179,7 @@
       "type": "edge_click",
       "prompt": "Click the link showing what you need to understand before Finish Time.",
       "answer": "bit_round_robin->finish_time",
-      "answer_aliases": [
-        "bit-by-bit round robin to finish time"
-      ],
+      "answer_aliases": [],
       "distractors": [
         "duplicate_ack",
         "queuing_delay",
@@ -2309,9 +2262,7 @@
       "type": "edge_click",
       "prompt": "Click the link showing what you need to understand before Weighted Fair Queuing.",
       "answer": "fair_queuing->weighted_fair_queuing",
-      "answer_aliases": [
-        "fair queuing to weighted fair queuing"
-      ],
+      "answer_aliases": [],
       "distractors": [
         "bit_round_robin",
         "fairness_index",
@@ -2394,9 +2345,7 @@
       "type": "edge_click",
       "prompt": "Click the link showing what you need to understand before Congestion Window.",
       "answer": "window_based->congestion_window",
-      "answer_aliases": [
-        "window-based control to congestion window"
-      ],
+      "answer_aliases": [],
       "distractors": [
         "fast_recovery",
         "vegas_expected_rate",
@@ -2479,9 +2428,7 @@
       "type": "edge_click",
       "prompt": "Click the link showing what you need to understand before Effective Window.",
       "answer": "flow_control->effective_window",
-      "answer_aliases": [
-        "flow control to effective window"
-      ],
+      "answer_aliases": [],
       "distractors": [
         "congestion_window",
         "flow_control",
@@ -2564,9 +2511,7 @@
       "type": "edge_click",
       "prompt": "Click the link showing what you need to understand before Loss as a Congestion Signal.",
       "answer": "implicit_feedback->loss_as_signal",
-      "answer_aliases": [
-        "implicit feedback to loss as a congestion signal"
-      ],
+      "answer_aliases": [],
       "distractors": [
         "congestion_window",
         "duplicate_ack",
@@ -2648,9 +2593,7 @@
       "type": "edge_click",
       "prompt": "Click the link showing what you need to understand before AIMD.",
       "answer": "congestion_window->aimd",
-      "answer_aliases": [
-        "congestion window to aimd"
-      ],
+      "answer_aliases": [],
       "distractors": [
         "duplicate_ack",
         "sawtooth",
@@ -2733,9 +2676,7 @@
       "type": "edge_click",
       "prompt": "Click the link showing what you need to understand before Sawtooth Pattern.",
       "answer": "aimd->sawtooth",
-      "answer_aliases": [
-        "aimd to sawtooth pattern"
-      ],
+      "answer_aliases": [],
       "distractors": [
         "congestion_threshold",
         "loss_as_signal",
@@ -2817,9 +2758,7 @@
       "type": "edge_click",
       "prompt": "Click the link showing what you need to understand before Self-Clocking.",
       "answer": "congestion_window->self_clocking",
-      "answer_aliases": [
-        "congestion window to self-clocking"
-      ],
+      "answer_aliases": [],
       "distractors": [
         "slow_start",
         "flow_control",
@@ -2902,9 +2841,7 @@
       "type": "edge_click",
       "prompt": "Click the link showing what you need to understand before Slow Start.",
       "answer": "self_clocking->slow_start",
-      "answer_aliases": [
-        "self-clocking to slow start"
-      ],
+      "answer_aliases": [],
       "distractors": [
         "congestion_threshold",
         "host_centric",
@@ -2987,9 +2924,7 @@
       "type": "edge_click",
       "prompt": "Click the link showing what you need to understand before Congestion Threshold.",
       "answer": "slow_start->congestion_threshold",
-      "answer_aliases": [
-        "slow start to congestion threshold"
-      ],
+      "answer_aliases": [],
       "distractors": [
         "self_clocking",
         "congestion_window",
@@ -3072,9 +3007,7 @@
       "type": "edge_click",
       "prompt": "Click the link showing what you need to understand before Coarse-Grained Timeout.",
       "answer": "loss_as_signal->coarse_timeout",
-      "answer_aliases": [
-        "loss as a congestion signal to coarse-grained timeout"
-      ],
+      "answer_aliases": [],
       "distractors": [
         "duplicate_ack",
         "fast_retransmit",
@@ -3157,9 +3090,7 @@
       "type": "edge_click",
       "prompt": "Click the link showing what you need to understand before Duplicate ACK.",
       "answer": "loss_as_signal->duplicate_ack",
-      "answer_aliases": [
-        "loss as a congestion signal to duplicate ack"
-      ],
+      "answer_aliases": [],
       "distractors": [
         "fast_recovery",
         "fast_retransmit",
@@ -3242,9 +3173,7 @@
       "type": "edge_click",
       "prompt": "Click the link showing what you need to understand before Fast Retransmit.",
       "answer": "coarse_timeout->fast_retransmit",
-      "answer_aliases": [
-        "coarse-grained timeout to fast retransmit"
-      ],
+      "answer_aliases": [],
       "distractors": [
         "loss_as_signal",
         "fast_recovery",
@@ -3327,9 +3256,7 @@
       "type": "edge_click",
       "prompt": "Click the link showing what you need to understand before Fast Recovery.",
       "answer": "fast_retransmit->fast_recovery",
-      "answer_aliases": [
-        "fast retransmit to fast recovery"
-      ],
+      "answer_aliases": [],
       "distractors": [
         "duplicate_ack",
         "congestion_threshold",
@@ -3412,9 +3339,7 @@
       "type": "edge_click",
       "prompt": "Click the link showing what you need to understand before TCP CUBIC.",
       "answer": "aimd->tcp_cubic",
-      "answer_aliases": [
-        "aimd to tcp cubic"
-      ],
+      "answer_aliases": [],
       "distractors": [
         "congestion_threshold",
         "dctcp",
@@ -3496,9 +3421,7 @@
       "type": "edge_click",
       "prompt": "Click the link showing what you need to understand before DECbit.",
       "answer": "explicit_feedback->decbit",
-      "answer_aliases": [
-        "explicit feedback to decbit"
-      ],
+      "answer_aliases": [],
       "distractors": [
         "congestion_control",
         "feedback_based",
@@ -3581,9 +3504,7 @@
       "type": "edge_click",
       "prompt": "Click the link showing what you need to understand before Random Early Detection.",
       "answer": "tail_drop->red",
-      "answer_aliases": [
-        "tail drop to random early detection"
-      ],
+      "answer_aliases": [],
       "distractors": [
         "drop_probability",
         "decbit",
@@ -3666,9 +3587,7 @@
       "type": "edge_click",
       "prompt": "Click the link showing what you need to understand before Average Queue Length.",
       "answer": "fifo->avg_queue_length",
-      "answer_aliases": [
-        "fifo queuing to average queue length"
-      ],
+      "answer_aliases": [],
       "distractors": [
         "ecn",
         "fifo",
@@ -3751,9 +3670,7 @@
       "type": "edge_click",
       "prompt": "Click the link showing what you need to understand before RED Thresholds.",
       "answer": "red->red_thresholds",
-      "answer_aliases": [
-        "random early detection to red thresholds"
-      ],
+      "answer_aliases": [],
       "distractors": [
         "tail_drop",
         "avg_queue_length",
@@ -3836,9 +3753,7 @@
       "type": "edge_click",
       "prompt": "Click the link showing what you need to understand before Drop Probability.",
       "answer": "red_thresholds->drop_probability",
-      "answer_aliases": [
-        "red thresholds to drop probability"
-      ],
+      "answer_aliases": [],
       "distractors": [
         "congestion_window",
         "decbit",
@@ -3921,9 +3836,7 @@
       "type": "edge_click",
       "prompt": "Click the link showing what you need to understand before Explicit Congestion Notification.",
       "answer": "decbit->ecn",
-      "answer_aliases": [
-        "decbit to explicit congestion notification"
-      ],
+      "answer_aliases": [],
       "distractors": [
         "avg_queue_length",
         "red_thresholds",
@@ -4006,9 +3919,7 @@
       "type": "edge_click",
       "prompt": "Click the link showing what you need to understand before Expected Rate.",
       "answer": "congestion_window->vegas_expected_rate",
-      "answer_aliases": [
-        "congestion window to expected rate"
-      ],
+      "answer_aliases": [],
       "distractors": [
         "vegas_actual_rate",
         "effective_window",
@@ -4091,9 +4002,7 @@
       "type": "edge_click",
       "prompt": "Click the link showing what you need to understand before Actual Rate.",
       "answer": "queuing_delay->vegas_actual_rate",
-      "answer_aliases": [
-        "queuing delay to actual rate"
-      ],
+      "answer_aliases": [],
       "distractors": [
         "vegas",
         "bbr",
@@ -4176,9 +4085,7 @@
       "type": "edge_click",
       "prompt": "Click the link showing what you need to understand before TCP Vegas.",
       "answer": "vegas_expected_rate->vegas",
-      "answer_aliases": [
-        "expected rate to tcp vegas"
-      ],
+      "answer_aliases": [],
       "distractors": [
         "rate_based",
         "throughput",
@@ -4260,9 +4167,7 @@
       "type": "edge_click",
       "prompt": "Click the link showing what you need to understand before BBR.",
       "answer": "vegas->bbr",
-      "answer_aliases": [
-        "tcp vegas to bbr"
-      ],
+      "answer_aliases": [],
       "distractors": [
         "power_metric",
         "feedback_based",
@@ -4344,9 +4249,7 @@
       "type": "edge_click",
       "prompt": "Click the link showing what you need to understand before DCTCP.",
       "answer": "ecn->dctcp",
-      "answer_aliases": [
-        "explicit congestion notification to dctcp"
-      ],
+      "answer_aliases": [],
       "distractors": [
         "sawtooth",
         "congestion_window",

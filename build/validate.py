@@ -8,6 +8,8 @@ human should look at, not things that break the system.
 """
 from __future__ import annotations
 
+import re
+
 import argparse
 import json
 import sys
@@ -18,6 +20,12 @@ from pydantic import ValidationError
 from build.config import BUILD
 from server.config import CONFIG
 from server.schemas import SCORABLE_EXPECTS, Graph, ItemBank, ItemPublic
+
+
+def _norm(text: str) -> str:
+    """Lowercase word tokens joined by single spaces, so "Fast Retransmit",
+    "fast-retransmit" and "fast  retransmit" are one surface."""
+    return " ".join(re.findall(r"[a-z0-9]+", text.lower()))
 
 
 class Report:
@@ -81,6 +89,68 @@ def find_cycle(nodes: list, prereq_edges: list):
             if found:
                 return found
     return None
+
+
+def check_alias_collisions(graph: Graph, bank: ItemBank, rep: Report) -> None:
+    """No two concepts may be confusable by their names (CLAUDE.md §3, §6).
+
+    An alias is a matching surface. If two nodes share one, every consumer that
+    matches on names is ambiguous, and the consumers are not all equally
+    visible: guard layer 1 reports a hit rate, so noise there is at least
+    countable, whereas anything that matched aliases while scoring would corrupt
+    mastery with nothing watching.
+
+    Grading does NOT currently use aliases - it compares ids, and free text is
+    never scored at all (§1.4) - so mastery is not corrupted today. That is a
+    thinner guarantee than it sounds: it holds only while §1.4 holds and while
+    nothing else starts consuming aliases. This check is what makes it hold by
+    construction rather than by nobody having done it yet.
+
+    TWO SEVERITIES, and the split is a real constraint rather than a softening:
+
+    - EQUALITY is an error. Two nodes with the same surface is unambiguously
+      broken data, always, with no domain in which it is correct.
+
+    - CONTAINMENT is a warning, listed in full. A hard substring ban is not
+      satisfiable on real terminology: "Weighted Fair Queuing" contains "Fair
+      Queuing" because WFQ *is* FQ plus weights, and that is what the field
+      calls them. Renaming one to satisfy a lint would distort the subject to
+      make a check pass. Every containment is therefore printed on every build,
+      and every consumer that matches on names must be containment-aware -
+      server/guards.py takes the other node labels as `context_phrases` for
+      exactly this reason.
+
+    This check found 53 collisions when it was written. 51 were one bug:
+    edge_click aliases were generated as "<parent label> to <child label>",
+    which contains both endpoint labels by construction. Those aliases are gone
+    - no student types that phrase and the edge is graded by id.
+    """
+    surfaces: dict[str, set] = {}
+    for node in graph.nodes:
+        surfaces.setdefault(node.id, set()).add(_norm(node.label))
+    for item in bank.items:
+        for alias in item.answer_aliases:
+            if _norm(alias):
+                surfaces.setdefault(item.node_id, set()).add(_norm(alias))
+
+    ids = sorted(surfaces)
+    nested: list[str] = []
+    for i, a in enumerate(ids):
+        for b in ids[i + 1:]:
+            for sa in sorted(surfaces[a]):
+                for sb in sorted(surfaces[b]):
+                    if sa == sb:
+                        rep.error(
+                            f"alias collision: {a} and {b} share the surface "
+                            f"{sa!r}; every name-based matcher is ambiguous"
+                        )
+                    elif f" {sa} " in f" {sb} ":
+                        nested.append(f"{sa!r} ({a}) inside {sb!r} ({b})")
+                    elif f" {sb} " in f" {sa} ":
+                        nested.append(f"{sb!r} ({b}) inside {sa!r} ({a})")
+
+    for line in sorted(set(nested)):
+        rep.warn(f"nested concept name: {line} — consumers must be containment-aware")
 
 
 def check_answer_identity(graph: Graph, bank: ItemBank, rep: Report) -> None:
@@ -283,13 +353,24 @@ def validate(graph_path: Path, items_path: Path, fixture: bool) -> Report:
         # longer answers use cosine against the answer itself. Warning about a
         # missing alias on a proposition answer is noise, and 150 lines of noise
         # is how a real warning gets missed.
-        if not item.answer_aliases and len(item.answer.split()) <= CONFIG.short_answer_token_cutoff:
+        # edge_click is excluded, and not as a convenience. Its answer is
+        # "src->dst", an id pair no student ever types, and the only alias that
+        # could mean anything - "<parent label> to <child label>" - contains
+        # both endpoint labels by construction and so collides with both of
+        # those nodes. Warning that an edge item has no aliases is asking for
+        # the collision back. Layer 1 uses the answer string on these.
+        if (
+            item.type != "edge_click"
+            and not item.answer_aliases
+            and len(item.answer.split()) <= CONFIG.short_answer_token_cutoff
+        ):
             rep.warn(f"{where}: short answer with no aliases; guard layer 1 fuzzy match will not fire")
 
     for node_id in sorted(node_set - covered):
         rep.error(f"node has no items: {node_id}")
 
     check_answer_identity(graph, bank, rep)
+    check_alias_collisions(graph, bank, rep)
 
     if not fixture:
         for node_id in sorted(covered):

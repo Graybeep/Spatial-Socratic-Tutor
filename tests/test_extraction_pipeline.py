@@ -1,14 +1,16 @@
 """The offline extraction pipeline: chunk -> concepts -> edge candidates.
 
-There is no chapter file in the repo, so none of this has met real input. What
-IS tested is the logic that does not depend on the model: sectioning, the
-pairwise precedence + co-occurrence filter, and canonicalisation.
+No chapter file is committed, but this HAS now met real input: the chapter was
+fetched, chunked and run through the filter locally, and four of the tests below
+exist because of what that produced. Anything a mock could have told us is not
+worth a test here; these pin the logic that does not depend on the model.
 
-The pairwise filter is the one worth real tests. §4 leans on it to turn 2,450
+The pairwise filter is the one worth real tests. §4 leans on it to turn 2,652
 ordered pairs into roughly 150 LLM calls, and a filter that is subtly wrong
 either costs a fortune in calls or silently discards most of the true edges —
 neither of which announces itself, because the human pass downstream sees only
-what survived.
+what survived. Measured on the real chapter it kept 381 candidates, 14% of the
+pair space, with a 59% recall ceiling against the hand-authored graph.
 """
 from __future__ import annotations
 
@@ -22,20 +24,31 @@ from build.config import BUILD
 
 CHAPTER = """\
 6.1 Issues in Resource Allocation
-Resource allocation is the process by which network elements meet demands.
-A flow is a sequence of packets between one source and destination.
+Resource allocation is the process by which network elements meet the competing
+demands that applications have for network resources, primarily link bandwidth
+and buffer space. A flow is a sequence of packets sent between one source and
+one destination pair, following the same route through the network. Routers may
+keep some state per flow in order to make allocation decisions.
 
 6.2 Queuing Disciplines
-FIFO means the first packet to arrive is the first transmitted.
-Tail drop discards arriving packets once the queue is full.
+FIFO means the first packet to arrive at the router is the first one to be
+transmitted onward. Tail drop discards arriving packets once the queue is
+already full, and it is the drop policy that pairs naturally with FIFO. Because
+FIFO makes no distinction between flows, one aggressive sender can occupy most
+of the buffer and push everyone else out of it.
 F_i = max(F_{i-1}, A_i) + P_i
 
 6.3 TCP Congestion Control
-The congestion window limits unacknowledged data.
-AIMD grows the window by one packet per RTT and halves it on loss.
+The congestion window limits how much unacknowledged data a sender may have in
+flight at one time, and it is kept separately from the window the receiver
+advertises. AIMD grows that congestion window by roughly one packet per
+round-trip time while nothing is going wrong, and halves it on loss.
 
 6.4 Advanced Congestion Control
-RED drops a packet probabilistically before the queue is full.
+RED drops a packet probabilistically before the queue is completely full, so
+that senders are told to slow down early rather than all at once. It uses a
+weighted running average of the queue length, reacting to sustained load
+rather than to a momentary burst of arrivals.
 """
 
 
@@ -205,3 +218,98 @@ def test_missing_chunks_is_a_clear_stop_not_a_traceback():
         extract_concepts.main(["--chunks", "does/not/exist.json"])
     with pytest.raises(SystemExit, match="hand-authored"):
         extract_edges.main(["--chunks", "does/not/exist.json"])
+
+
+# ---------------------------------------------------------------------------
+# alias collisions (build/validate.py)
+# ---------------------------------------------------------------------------
+
+def test_two_nodes_sharing_a_surface_is_an_error():
+    """Unambiguously broken data: every name-based matcher becomes ambiguous,
+    and not every consumer reports a hit rate the way guard layer 1 does."""
+    from build.validate import Report, check_alias_collisions
+    from server.schemas import Graph, ItemBank
+
+    graph = Graph.model_validate({
+        "version": "1.0", "domain": "t",
+        "nodes": [
+            {"id": "a", "label": "Slow Start", "definition": "d",
+             "source_sections": ["1"], "difficulty": 0.5, "x": 0, "y": 0},
+            {"id": "b", "label": "slow-start", "definition": "d",
+             "source_sections": ["1"], "difficulty": 0.5, "x": 0, "y": 0},
+        ],
+        "edges": [{"from": "a", "to": "b", "type": "prereq"}],
+    })
+    rep = Report()
+    check_alias_collisions(graph, ItemBank(version="1.0", domain="t", items=[]), rep)
+    assert any("alias collision" in e for e in rep.errors)
+
+
+def test_nesting_is_a_warning_not_an_error():
+    """A hard substring ban is unsatisfiable on real terminology: Weighted Fair
+    Queuing contains Fair Queuing because WFQ is FQ plus weights. Renaming one
+    to pass a lint would distort the subject."""
+    from build.validate import Report, check_alias_collisions
+    from server.schemas import Graph, ItemBank
+
+    graph = Graph.model_validate({
+        "version": "1.0", "domain": "t",
+        "nodes": [
+            {"id": "fq", "label": "Fair Queuing", "definition": "d",
+             "source_sections": ["1"], "difficulty": 0.5, "x": 0, "y": 0},
+            {"id": "wfq", "label": "Weighted Fair Queuing", "definition": "d",
+             "source_sections": ["1"], "difficulty": 0.5, "x": 0, "y": 0},
+        ],
+        "edges": [{"from": "fq", "to": "wfq", "type": "prereq"}],
+    })
+    rep = Report()
+    check_alias_collisions(graph, ItemBank(version="1.0", domain="t", items=[]), rep)
+    assert not rep.errors
+    assert any("nested concept name" in w for w in rep.warnings)
+
+
+def test_the_shipped_bank_has_no_equality_collisions():
+    """The regression this exists to prevent. The bank had 53 collisions when
+    the check was written; 51 were generated edge aliases of the form
+    "<parent> to <child>", which contain both endpoint labels by construction."""
+    from build.validate import Report, check_alias_collisions
+    from server.graph_store import GraphStore
+
+    store = GraphStore.load()
+    rep = Report()
+    check_alias_collisions(store.graph, store.bank, rep)
+    assert rep.errors == [], rep.errors
+
+
+def test_same_section_concepts_still_get_an_order():
+    """The bug real text exposed, and the reason position is (section, offset).
+
+    Comparing sections alone discards every same-section pair. Measured against
+    the hand-authored graph that was 34 of 66 true prerequisite edges — more
+    than half, thrown away before the model was asked anything — and it capped
+    §9.3's achievable recall at 21%. A textbook introduces several related
+    concepts in one section, in order, and that order is the evidence.
+    """
+    chunks = [{
+        "section": "6.2",
+        "heading_path": "Queuing Disciplines",
+        "text": ("FIFO means the first packet to arrive is transmitted first. "
+                 "Tail drop discards arriving packets once the queue is full."),
+    }]
+    concepts = [{"id": "fifo", "label": "FIFO"},
+                {"id": "tail_drop", "label": "tail drop"}]
+
+    pairs = extract_edges.candidates(concepts, chunks, window=2)
+    assert any(p.from_id == "fifo" and p.to_id == "tail_drop" for p in pairs),         "same-section pair was discarded"
+    assert not any(p.from_id == "tail_drop" and p.to_id == "fifo" for p in pairs),         "order within the section was ignored"
+
+
+def test_source_sections_locate_a_concept_the_prose_never_names():
+    """An authored label is a tidy noun phrase; prose is not. The graph says
+    "Jain's Fairness Index", the chapter says "fairness index"."""
+    chunks = [{"section": "6.1.3", "heading_path": "Evaluation Criteria",
+               "text": "The fairness index gives a number between zero and one."}]
+    pos = extract_edges.first_appearance(
+        [{"id": "fi", "label": "Jain's Fairness Index", "source_sections": ["6.1.3"]}],
+        chunks)
+    assert "fi" in pos

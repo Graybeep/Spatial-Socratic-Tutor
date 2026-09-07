@@ -13,11 +13,10 @@ frozen data. The output is a worklist, not a result.
 
     edge CANDIDATES only where A precedes B in text AND co-occur within 2 sections
 
-Fifty nodes is 1,225 unordered pairs — 2,450 if you ask about both directions,
-which a naive implementation does. At one LLM call per pair that is a slow,
-expensive way to be told "no" two thousand times. The ordering prior plus the
-co-occurrence window cuts it to roughly 150 calls, and both halves are doing
-real work:
+Fifty-two nodes is 2,652 ordered pairs. At one LLM call per pair that is a slow,
+expensive way to be told "no" two thousand times. Measured against the real
+chapter the filter keeps 381 — 14% of the space, in the same order as §4's
+estimate — and both halves are doing real work:
 
 - **Precedence.** A prerequisite relation is directional and textbooks are
   written in dependency order. If B is explained before A ever appears, B is not
@@ -34,6 +33,17 @@ acceptable because a human pass follows, and because §9.3 reports extraction
 quality BEFORE correction: a filter that improves precision at some cost in
 recall is exactly what makes that number honest rather than flattering.
 
+MEASURED, against the hand-authored graph on the real chapter: the filter's
+recall CEILING is 59% at window 2 (39 of 66 true prerequisite edges survive to
+be asked about) and 63% at window 3. No extraction run can beat that ceiling,
+whatever the model does, so it is an upper bound on §9.3's recall and belongs in
+the writeup beside the number rather than being discovered afterwards.
+
+It was 21% until the ordering was fixed. Comparing SECTIONS alone discarded
+every same-section pair, and 34 of the 66 true edges connect concepts that a
+textbook introduces in one section — more than half, thrown away before the
+model was asked anything.
+
 # What the LLM does, and what it does not
 
 It classifies a surviving candidate as prereq | related | none. It does not
@@ -45,6 +55,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -67,21 +78,78 @@ def _section_index(chunks: list[dict]) -> dict[str, int]:
     return {c["section"]: i for i, c in enumerate(chunks)}
 
 
-def first_appearance(concepts: list[dict], chunks: list[dict]) -> dict[str, int]:
-    """Reading position where each concept's label first occurs.
+def _norm(text: str) -> str:
+    return " ".join(re.findall(r"[a-z0-9]+", text.lower()))
 
-    Concepts never mentioned in the text get no position and are skipped
-    entirely rather than defaulted to 0 — a default would make an unmentioned
-    concept look like a prerequisite of everything.
+
+def first_appearance(concepts: list[dict], chunks: list[dict]) -> dict[str, int]:
+    """Reading position where each concept first occurs.
+
+    Concepts that cannot be located get no position and are skipped entirely
+    rather than defaulted to 0 — a default would make an unlocatable concept
+    look like a prerequisite of everything.
+
+    TWO STRATEGIES, and the order matters.
+
+    `source_sections` first, when the concept carries one. That is where the
+    concept was found, recorded by whatever produced it, and it is exact. In a
+    real run extract_concepts writes it; here the hand-authored graph carries it.
+
+    Raw label matching is the fallback and it is weak. Measured against the real
+    chapter it located only 40 of 52 concepts, because an authored label is a
+    tidy noun phrase and prose is not: the graph says "Packet Flow",
+    "Window-Based Control", "Jain's Fairness Index"; the text says "flow",
+    "window based", "fairness index". Those twelve misses capped the whole
+    filter's recall ceiling at 21% — a limit on §9.3 that had nothing to do with
+    the model and would have looked like poor extraction.
+
+    So the fallback normalises to word tokens (dropping case, hyphens and
+    possessives) and also tries the label's head words, which is what a section
+    heading usually carries.
     """
     order = _section_index(chunks)
-    out: dict[str, int] = {}
-    for c in concepts:
-        needle = c["label"].lower()
-        for chunk in chunks:
-            if needle in chunk["text"].lower() or needle in chunk.get("heading_path", "").lower():
-                out[c["id"]] = order[chunk["section"]]
-                break
+    normalised = [(c, _norm(c["text"]), _norm(c.get("heading_path", ""))) for c in chunks]
+    by_section = {c["section"]: (t, h) for c, t, h in normalised}
+
+    def needles_for(label: str) -> list[str]:
+        # Longest first: "congestion window" before "window".
+        out = [label]
+        words = label.split()
+        if len(words) > 1:
+            out.append(" ".join(words[-2:]))
+            out.append(words[-1])
+        return out
+
+    def offset_in(section: str, label: str) -> int:
+        text, heading = by_section.get(section, ("", ""))
+        for needle in needles_for(label):
+            if needle and needle in heading:
+                return 0
+            idx = text.find(needle) if needle else -1
+            if idx >= 0:
+                return idx
+        return 0
+
+    out: dict[str, tuple] = {}
+    for concept in concepts:
+        label = _norm(concept["label"])
+
+        section = next(
+            (s for s in (concept.get("source_sections") or []) if s in order), None)
+        if section is None:
+            for needle in needles_for(label):
+                hit = next(
+                    (chunk for chunk, text, heading in normalised
+                     if f" {needle} " in f" {text} " or f" {needle} " in f" {heading} "),
+                    None,
+                )
+                if hit is not None:
+                    section = hit["section"]
+                    break
+        if section is None:
+            continue
+
+        out[concept["id"]] = (order[section], offset_in(section, label))
     return out
 
 
@@ -102,14 +170,20 @@ def candidates(concepts: list[dict], chunks: list[dict], window: int) -> list[Ca
             pa, pb = pos.get(a["id"]), pos.get(b["id"])
             if pa is None or pb is None:
                 continue
+            # (section, offset). Comparing SECTIONS alone discarded every
+            # same-section pair, and measured against the hand-authored graph
+            # that was 34 of 66 true edges - more than half, thrown away before
+            # the model was asked anything. A textbook introduces several
+            # related concepts in one section, in order, and that order is the
+            # evidence; section granularity simply cannot see it.
             if pa >= pb:            # A must PRECEDE B to be its prerequisite
                 continue
-            distance = pb - pa
+            distance = pb[0] - pa[0]
             if distance > window:   # and they must appear near each other
                 continue
             out.append(Candidate(
                 from_id=a["id"], to_id=b["id"],
-                first_section=sections.get(pa, ""), second_section=sections.get(pb, ""),
+                first_section=sections.get(pa[0], ""), second_section=sections.get(pb[0], ""),
                 distance=distance,
             ))
     return sorted(out, key=lambda c: (c.distance, c.from_id, c.to_id))

@@ -82,10 +82,13 @@ class Config:
         effort=_str("CALL1_EFFORT", "medium"),
         timeout_s=_float("CALL1_TIMEOUT_S", 10.0),
     ))
-    # Call 2 writes one sentence. Low effort, because the whole latency argument
-    # in CLAUDE.md 5 depends on it arriving shortly after the graph has moved.
+    # Call 2 writes ONE SENTENCE from an action, a hint level and some node
+    # labels. The split deliberately left it nothing to reason about: it has no
+    # answer, no item and no diagnosis. Opus on this path buys nothing and
+    # spends seconds of a 4.5s p95 budget, so the default is Haiku and the
+    # judgement stays on Call 1, whose diagnosis is hand-read in week 3.
     call2: LLMCallConfig = field(default_factory=lambda: LLMCallConfig(
-        model=_str("CALL2_MODEL", "claude-opus-5"),
+        model=_str("CALL2_MODEL", "claude-haiku-4-5"),
         max_tokens=_int("CALL2_MAX_TOKENS", 250),
         effort=_str("CALL2_EFFORT", "low"),
         timeout_s=_float("CALL2_TIMEOUT_S", 10.0),

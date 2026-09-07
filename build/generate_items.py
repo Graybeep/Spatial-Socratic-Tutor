@@ -137,9 +137,14 @@ def build_items(graph: dict, llm) -> dict:
                         f"before {node['label']}."
                     ),
                     "answer": f"{parent}->{nid}",
-                    "answer_aliases": [
-                        f"{by_id[parent]['label'].lower()} to {node['label'].lower()}"
-                    ],
+                    # NO ALIASES ON AN EDGE ITEM. The only alias that could
+                    # mean anything is "<parent> to <child>", which contains
+                    # both endpoint labels by construction and therefore
+                    # collides with both of those nodes' own aliases. That is 51
+                    # of the 53 collisions this bank used to have, and it bought
+                    # nothing: no student types that phrase, and the edge is
+                    # graded by id. Layer 1 falls back to the answer string.
+                    "answer_aliases": [],
                     "distractors": rng.sample(pool, 3),
                     "difficulty": round(min(0.95, node["difficulty"] + 0.10), 2),
                     "visually_answerable": True,

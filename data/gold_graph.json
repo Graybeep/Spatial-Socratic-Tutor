@@ -4,7 +4,7 @@
   "nodes": [
     {
       "id": "flow",
-      "label": "Flow",
+      "label": "Packet Flow",
       "definition": "A sequence of packets travelling between one source-destination pair along the same route.",
       "source_sections": [
         "6.1.1"
