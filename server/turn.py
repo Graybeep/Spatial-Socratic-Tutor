@@ -42,6 +42,8 @@ import time
 from dataclasses import dataclass, field
 from typing import Optional
 
+from server import guards
+from server import llm as llm_mod
 from server import mastery as mastery_mod
 from server import mock_tutor
 from server.config import CONFIG
@@ -76,6 +78,8 @@ class Phase1:
     resolved_with_support: bool = False
     session_complete: bool = False
     scored: Optional[bool] = None
+    #: Set when guard layer 1 fired. Always logged (§6, §10).
+    leak_note: Optional[str] = None
 
     def reveals_answer(self) -> bool:
         """True when naming the current node would give the answer away.
@@ -178,6 +182,61 @@ def _build_graph_state(
 
 
 # ---------------------------------------------------------------------------
+# the two calls (CLAUDE.md §5), and what happens when they fail
+# ---------------------------------------------------------------------------
+#
+# MOCK_MODE is the default and stays the default. `main` must always run
+# (§13.2), and it must run with no API key and no network.
+#
+# Neither wrapper is allowed to fail a turn. A model that times out or returns
+# an unparseable object costs the student a good utterance, not their session:
+# Call 1 falls back to the mock's deterministic decision, Call 2 to the canned
+# per-action line §5 requires. Every fallback is logged (§10).
+
+
+def _call1(store, state, item, response, graded) -> Call1Decision:
+    if CONFIG.mock_mode:
+        return mock_tutor.mock_call1(store, state, item, response, graded)
+
+    try:
+        return llm_mod.call1(
+            item_prompt=item.prompt,
+            answer=item.answer,
+            item_type=item.type,
+            node_label=store.label(item.node_id),
+            graph_digest=llm_mod.graph_digest(store),
+            history=state.history[-6:],
+            hint_level=state.hint_level,
+            turns_on_item=state.turns_on_item,
+            mastery_note=f"{mastery_mod.mastery(state.theta_map.get(item.node_id, 0.0)):.2f} "
+                         f"on {store.label(item.node_id)}",
+        )
+    except llm_mod.LLMError as exc:
+        # A degraded turn beats a dead one, but never a silent one.
+        _log_event("call1_fallback", {"error": str(exc)[:400]})
+        return mock_tutor.mock_call1(store, state, item, response, graded)
+
+
+def _call2(state, action: str, hint_level: int, labels: list, n_lit: int) -> str:
+    if CONFIG.mock_mode:
+        return mock_tutor.mock_call2(action, hint_level, labels, n_lit).utterance
+
+    try:
+        # No item, no answer, no aliases, no chunk. The argument list IS the
+        # retrieval gate for `ask` and `hint_*` (§5).
+        return llm_mod.call2(
+            action=action,
+            hint_level=hint_level,
+            focus_labels=labels,
+            n_lit=n_lit,
+            recent=state.history[-2:],
+        ).utterance
+    except llm_mod.LLMError as exc:
+        _log_event("call2_fallback", {"action": action, "error": str(exc)[:400]})
+        return mock_tutor.fallback_utterance(action)
+
+
+# ---------------------------------------------------------------------------
 # steps 1-5
 # ---------------------------------------------------------------------------
 
@@ -223,7 +282,7 @@ def begin_turn(
     graded = mock_tutor.grade(item, response)
 
     # --- step 3: Call 1 ----------------------------------------------------
-    decision = mock_tutor.mock_call1(store, state, item, response, graded)
+    decision = _call1(store, state, item, response, graded)
 
     # --- step 4b: guards decide the final action AND whether we may score ---
     # Guard layer 2: the server owns the counter, the model only asked.
@@ -363,10 +422,32 @@ def complete_turn(store: GraphStore, db: Store, phase1: Phase1) -> TurnResponse:
     n_lit = len(phase1.graph_state.focus_nodes) or len(store.node_ids)
 
     if phase1.resolved_with_support:
-        utterance = mock_tutor.mock_call2("resolved_with_support", 0, labels, n_lit).utterance
+        # The budget forced a reveal, which is SUPPOSED to name the answer
+        # (§6 layer 3, zero mastery in exchange). Layer 1 is not run on it:
+        # screening this turn would trip on the system working correctly.
+        utterance = _call2(state, "resolved_with_support", 0, labels, n_lit)
+        leak_note = None
     else:
-        utterance = mock_tutor.mock_call2(action, phase1.hint_level, labels, n_lit).utterance
+        utterance = _call2(state, action, phase1.hint_level, labels, n_lit)
+        leak_note = None
+        if phase1.item is not None:
+            utterance, leak_note = guards.screen_utterance(
+                utterance,
+                phase1.item.answer,
+                phase1.item.answer_aliases,
+                regenerate=lambda: _call2(
+                    state, action, phase1.hint_level, labels, n_lit),
+                fallback=mock_tutor.fallback_utterance(action),
+                # Every other concept name on the map. Without these, a hint
+                # naming the lit node "Flow Control" would be recorded as
+                # leaking the answer "Flow" - both are nodes here.
+                context_phrases=[
+                    n.label for n in store.graph.nodes
+                    if n.id != phase1.item.node_id
+                ],
+            )
 
+    phase1.leak_note = leak_note
     state.record_history("tutor", utterance)
 
     response = TurnResponse(
@@ -394,6 +475,18 @@ def complete_turn(store: GraphStore, db: Store, phase1: Phase1) -> TurnResponse:
 # step 9 - log everything (CLAUDE.md §5, §10: no silent anything)
 # ---------------------------------------------------------------------------
 
+def _log_event(kind: str, payload: dict) -> None:
+    """A non-turn event: a fallback, a retry, a guard trip.
+
+    §10 forbids silent retries and silent guard triggers. These go to the same
+    jsonl as the turns so a single file is the whole record of a session.
+    """
+    CONFIG.log_dir.mkdir(parents=True, exist_ok=True)
+    record = {"ts": time.time(), "event": kind, **payload}
+    with (CONFIG.log_dir / "turns.jsonl").open("a", encoding="utf-8") as fh:
+        fh.write(json.dumps(record, ensure_ascii=False) + chr(10))
+
+
 def _log(phase1: Phase1, response: TurnResponse) -> None:
     """One jsonl line per turn holding the FULL Call 1 output.
 
@@ -420,6 +513,11 @@ def _log(phase1: Phase1, response: TurnResponse) -> None:
         "focus_nodes": response.graph_state.focus_nodes,
         "dimmed_nodes": response.graph_state.dimmed_nodes,
         "utterance": response.utterance,
+        # Guard layer 1. None when it did not fire. The rate is a result
+        # (§6): post-split, a hit means the model reconstructed the answer
+        # parametrically, because Call 2 never saw it.
+        "leak_note": phase1.leak_note,
+        "llm": llm_mod.stats_snapshot() if not CONFIG.mock_mode else None,
     }
     path = CONFIG.log_dir / "turns.jsonl"
     with path.open("a", encoding="utf-8") as fh:

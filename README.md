@@ -24,7 +24,7 @@ is still the default.
 ```bash
 pip install -r requirements.txt
 python -m build.validate         # strict; must be clean
-python -m pytest                 # 132 tests
+python -m pytest                 # 156 tests
 python -m server.main            # http://127.0.0.1:8000
 ```
 
@@ -36,6 +36,11 @@ npm run dev                      # http://localhost:5173
 ```
 
 No API key and no network needed — `MOCK_MODE=true` is the default.
+
+To use the real model, put a key in `.env` and set `MOCK_MODE=false`. Without a
+key it still runs: Call 1 falls back to the mock's deterministic decision and
+Call 2 to the canned per-action line, and both fallbacks are logged. `main`
+always runs (§13.2).
 
 ```bash
 cp .env.example .env   # only needed once real LLM calls go in (week 2)
@@ -66,6 +71,9 @@ NARROW_SCHEDULE=0,25,18,12,8 python -m server.main
 | `server/schemas.py` | the frozen schemas; authoritative |
 | `/schemas` | JSON Schema snapshots; CI fails if `schemas.py` drifts |
 | `server/turn.py` | the §5 pipeline |
+| `server/llm.py` | the two hand-written calls; Call 2's signature is the leak guarantee |
+| `server/guards.py` | layers 1, 4 and 6 (0/2/3/5 live where they can be enforced) |
+| `prompts/` | tutor contract + both call instructions; never Python literals |
 | `server/mastery.py` | deterministic scoring, no LLM |
 | `server/mock_tutor.py` | scripted stand-in for Call 1 and Call 2 |
 | `build/config.py` | build-pipeline knobs (§13.1); the server never imports it |

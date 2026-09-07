@@ -52,9 +52,18 @@ def _path(name: str, default: str) -> Path:
 
 @dataclass(frozen=True)
 class LLMCallConfig:
+    """One of the two calls in CLAUDE.md 5.
+
+    NO TEMPERATURE FIELD. Sampling parameters - temperature, top_p, top_k - are
+    removed on the Claude 5 models and sending one returns a 400, so a knob here
+    would be a knob that breaks the call. Depth is controlled by `effort`
+    instead, which is the parameter that replaced it.
+    """
+
     model: str
     max_tokens: int
-    temperature: float
+    #: output_config.effort: low | medium | high | xhigh | max.
+    effort: str
     timeout_s: float
 
 
@@ -65,18 +74,27 @@ class Config:
     base_url: str = field(default_factory=lambda: _str("ANTHROPIC_BASE_URL", "https://api.anthropic.com"))
 
     # --- the two calls (CLAUDE.md 5) ----------------------------------------
+    # Call 1 diagnoses. Its `diagnosis` field is what a human hand-reads thirty of
+    # in week 3 (CLAUDE.md 9.5), so it gets the higher effort of the two.
     call1: LLMCallConfig = field(default_factory=lambda: LLMCallConfig(
-        model=_str("CALL1_MODEL", "claude-sonnet-5"),
+        model=_str("CALL1_MODEL", "claude-opus-5"),
         max_tokens=_int("CALL1_MAX_TOKENS", 300),
-        temperature=_float("CALL1_TEMPERATURE", 0.0),
+        effort=_str("CALL1_EFFORT", "medium"),
         timeout_s=_float("CALL1_TIMEOUT_S", 10.0),
     ))
+    # Call 2 writes one sentence. Low effort, because the whole latency argument
+    # in CLAUDE.md 5 depends on it arriving shortly after the graph has moved.
     call2: LLMCallConfig = field(default_factory=lambda: LLMCallConfig(
-        model=_str("CALL2_MODEL", "claude-sonnet-5"),
+        model=_str("CALL2_MODEL", "claude-opus-5"),
         max_tokens=_int("CALL2_MAX_TOKENS", 250),
-        temperature=_float("CALL2_TEMPERATURE", 0.7),
+        effort=_str("CALL2_EFFORT", "low"),
         timeout_s=_float("CALL2_TIMEOUT_S", 10.0),
     ))
+    #: Retries per call on a transport error or a schema-invalid response.
+    #: CLAUDE.md 10: every retry is logged. There are no silent ones.
+    llm_max_retries: int = field(default_factory=lambda: _int("LLM_MAX_RETRIES", 1))
+    anthropic_version: str = field(
+        default_factory=lambda: _str("ANTHROPIC_VERSION", "2023-06-01"))
 
     # --- paths ---------------------------------------------------------------
     graph_path: Path = field(default_factory=lambda: _path("GRAPH_PATH", "data/graph.json"))
@@ -95,7 +113,15 @@ class Config:
     hint_max: int = field(default_factory=lambda: _int("HINT_MAX", 4))
     turn_budget: int = field(default_factory=lambda: _int("TURN_BUDGET", 8))
     answer_fuzzy_threshold: float = field(default_factory=lambda: _float("ANSWER_FUZZY_THRESHOLD", 0.9))
-    answer_cosine_threshold: float = field(default_factory=lambda: _float("ANSWER_COSINE_THRESHOLD", 0.85))
+    # NOT an embedding cosine. CLAUDE.md 6 specifies
+    # cosine(embed(utterance), embed(answer)) > 0.85; embeddings would be a new
+    # dependency (1.8) or a third API call on the latency path (5), so the
+    # implemented metric is a cosine over token-frequency vectors. Different
+    # metric, different calibration - hence a different name and a different
+    # default, rather than reusing 0.85 as though it meant the same thing.
+    # See server/guards.py and docs/writeup/limitations.md.
+    answer_similarity_threshold: float = field(
+        default_factory=lambda: _float("ANSWER_SIMILARITY_THRESHOLD", 0.55))
     short_answer_token_cutoff: int = field(default_factory=lambda: _int("SHORT_ANSWER_TOKEN_CUTOFF", 5))
     retrieval_score_floor: float = field(default_factory=lambda: _float("RETRIEVAL_SCORE_FLOOR", 0.35))
 
