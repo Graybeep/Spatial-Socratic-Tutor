@@ -25,6 +25,7 @@ from fastapi import FastAPI, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import StreamingResponse
 
+from server import retrieval
 from server import turn as turn_mod
 from server.config import CONFIG
 from server.graph_store import GraphStore
@@ -77,6 +78,10 @@ def health() -> dict:
         "narrow_schedule": CONFIG.narrow_schedule,
         "nodes": len(store.graph.nodes),
         "items": len(store.bank.items),
+        # 0 means retrieval contributes nothing and guard layer 4 refuses every
+        # query. Reported so that is visible here rather than inferred from a
+        # tutor that keeps saying the chapter does not cover it.
+        "retrieval_chunks": retrieval.corpus_size(),
     }
 
 

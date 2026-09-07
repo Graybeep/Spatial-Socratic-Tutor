@@ -24,7 +24,7 @@ is still the default.
 ```bash
 pip install -r requirements.txt
 python -m build.validate         # strict; must be clean
-python -m pytest                 # 156 tests
+python -m pytest                 # 170 tests
 python -m server.main            # http://127.0.0.1:8000
 ```
 
@@ -77,6 +77,10 @@ NARROW_SCHEDULE=0,25,18,12,8 python -m server.main
 | `server/mastery.py` | deterministic scoring, no LLM |
 | `server/mock_tutor.py` | scripted stand-in for Call 1 and Call 2 |
 | `build/config.py` | build-pipeline knobs (§13.1); the server never imports it |
+| `build/chunk.py` | chapter → chunks; the seam to swap when real PDF text arrives |
+| `build/extract_concepts.py` | pass 1, candidates for the human review |
+| `build/extract_edges.py` | pass 2; the precedence + co-occurrence filter |
+| `server/retrieval.py` | TF-IDF chunk search, gated by layer 4; no corpus yet |
 | `build/validate.py` | DAG / orphan / item checks; must pass before commit |
 | `build/freeze_layout.py` | runs once, writes x/y into `graph.json`, then never again |
 | `build/generate_items.py` | items from the graph; LLM behind a mocked seam |
