@@ -1,0 +1,3331 @@
+{
+  "findings": [
+    {
+      "item_id": "itm_0007",
+      "node_id": "best_effort",
+      "item_type": "edge_click",
+      "rule": "coin_flip",
+      "detail": "5 candidates lit but only 2 survive a partial-knowledge region filter (best_effort, resource_allocation) - effective guess probability 0.50 against a 0.20 policy ceiling; dead: flow, reservation_based, window_based",
+      "rates": {
+        "best_effort": 0.5125,
+        "resource_allocation": 0.4875,
+        "flow": 0.0,
+        "reservation_based": 0.0,
+        "window_based": 0.0
+      }
+    },
+    {
+      "item_id": "itm_0067",
+      "node_id": "router_centric",
+      "item_type": "edge_click",
+      "rule": "coin_flip",
+      "detail": "5 candidates lit but only 2 survive a partial-knowledge region filter (congestion_control, router_centric) - effective guess probability 0.50 against a 0.20 policy ceiling; dead: bottleneck_router, fair_queuing, resource_allocation",
+      "rates": {
+        "router_centric": 0.49,
+        "fair_queuing": 0.0,
+        "bottleneck_router": 0.0,
+        "resource_allocation": 0.0,
+        "congestion_control": 0.51
+      }
+    },
+    {
+      "item_id": "itm_0096",
+      "node_id": "window_based",
+      "item_type": "node_click",
+      "rule": "coin_flip",
+      "detail": "5 candidates lit but only 2 survive a partial-knowledge region filter (feedback_based, window_based) - effective guess probability 0.50 against a 0.20 policy ceiling; dead: congestion_control, flow_control, slow_start",
+      "rates": {
+        "window_based": 0.4775,
+        "slow_start": 0.0,
+        "congestion_control": 0.0,
+        "flow_control": 0.0,
+        "feedback_based": 0.5225
+      }
+    },
+    {
+      "item_id": "itm_0117",
+      "node_id": "priority_queuing",
+      "item_type": "edge_click",
+      "rule": "coin_flip",
+      "detail": "5 candidates lit but only 2 survive a partial-knowledge region filter (fifo, priority_queuing) - effective guess probability 0.50 against a 0.20 policy ceiling; dead: bottleneck_router, congestion_window, weighted_fair_queuing",
+      "rates": {
+        "priority_queuing": 0.5175,
+        "bottleneck_router": 0.0,
+        "fifo": 0.4825,
+        "weighted_fair_queuing": 0.0,
+        "congestion_window": 0.0
+      }
+    },
+    {
+      "item_id": "itm_0131",
+      "node_id": "finish_time",
+      "item_type": "node_click",
+      "rule": "coin_flip",
+      "detail": "5 candidates lit but only 2 survive a partial-knowledge region filter (bit_round_robin, finish_time) - effective guess probability 0.50 against a 0.20 policy ceiling; dead: resource_allocation, tail_drop, vegas_expected_rate",
+      "rates": {
+        "finish_time": 0.4925,
+        "tail_drop": 0.0,
+        "vegas_expected_rate": 0.0,
+        "resource_allocation": 0.0,
+        "bit_round_robin": 0.5075
+      }
+    },
+    {
+      "item_id": "itm_0132",
+      "node_id": "finish_time",
+      "item_type": "edge_click",
+      "rule": "coin_flip",
+      "detail": "5 candidates lit but only 2 survive a partial-knowledge region filter (bit_round_robin, finish_time) - effective guess probability 0.50 against a 0.20 policy ceiling; dead: duplicate_ack, queuing_delay, slow_start",
+      "rates": {
+        "finish_time": 0.5125,
+        "duplicate_ack": 0.0,
+        "queuing_delay": 0.0,
+        "slow_start": 0.0,
+        "bit_round_robin": 0.4875
+      }
+    },
+    {
+      "item_id": "itm_0212",
+      "node_id": "red",
+      "item_type": "edge_click",
+      "rule": "coin_flip",
+      "detail": "5 candidates lit but only 2 survive a partial-knowledge region filter (red, tail_drop) - effective guess probability 0.50 against a 0.20 policy ceiling; dead: dctcp, decbit, drop_probability",
+      "rates": {
+        "red": 0.52,
+        "drop_probability": 0.0,
+        "decbit": 0.0,
+        "dctcp": 0.0,
+        "tail_drop": 0.48
+      }
+    },
+    {
+      "item_id": "itm_0226",
+      "node_id": "drop_probability",
+      "item_type": "node_click",
+      "rule": "coin_flip",
+      "detail": "5 candidates lit but only 2 survive a partial-knowledge region filter (drop_probability, red_thresholds) - effective guess probability 0.50 against a 0.20 policy ceiling; dead: bottleneck_router, coarse_timeout, feedback_based",
+      "rates": {
+        "drop_probability": 0.47,
+        "bottleneck_router": 0.0,
+        "feedback_based": 0.0,
+        "coarse_timeout": 0.0,
+        "red_thresholds": 0.53
+      }
+    },
+    {
+      "item_id": "itm_0227",
+      "node_id": "drop_probability",
+      "item_type": "edge_click",
+      "rule": "coin_flip",
+      "detail": "5 candidates lit but only 2 survive a partial-knowledge region filter (drop_probability, red_thresholds) - effective guess probability 0.50 against a 0.20 policy ceiling; dead: congestion_window, decbit, red",
+      "rates": {
+        "drop_probability": 0.525,
+        "congestion_window": 0.0,
+        "decbit": 0.0,
+        "red": 0.0,
+        "red_thresholds": 0.475
+      }
+    },
+    {
+      "item_id": "itm_0247",
+      "node_id": "vegas",
+      "item_type": "edge_click",
+      "rule": "coin_flip",
+      "detail": "5 candidates lit but only 2 survive a partial-knowledge region filter (vegas, vegas_expected_rate) - effective guess probability 0.50 against a 0.20 policy ceiling; dead: power_metric, rate_based, throughput",
+      "rates": {
+        "vegas": 0.535,
+        "rate_based": 0.0,
+        "throughput": 0.0,
+        "power_metric": 0.0,
+        "vegas_expected_rate": 0.465
+      }
+    },
+    {
+      "item_id": "itm_0251",
+      "node_id": "bbr",
+      "item_type": "node_click",
+      "rule": "coin_flip",
+      "detail": "5 candidates lit but only 2 survive a partial-knowledge region filter (bbr, vegas) - effective guess probability 0.50 against a 0.20 policy ceiling; dead: feedback_based, power_metric, rate_based",
+      "rates": {
+        "bbr": 0.52,
+        "power_metric": 0.0,
+        "rate_based": 0.0,
+        "feedback_based": 0.0,
+        "vegas": 0.48
+      }
+    },
+    {
+      "item_id": "itm_0252",
+      "node_id": "bbr",
+      "item_type": "edge_click",
+      "rule": "coin_flip",
+      "detail": "5 candidates lit but only 2 survive a partial-knowledge region filter (bbr, vegas) - effective guess probability 0.50 against a 0.20 policy ceiling; dead: feedback_based, power_metric, vegas_expected_rate",
+      "rates": {
+        "bbr": 0.49,
+        "power_metric": 0.0,
+        "feedback_based": 0.0,
+        "vegas_expected_rate": 0.0,
+        "vegas": 0.51
+      }
+    },
+    {
+      "item_id": "itm_0002",
+      "node_id": "flow",
+      "item_type": "mcq",
+      "rule": "duplicate_item",
+      "detail": "option set shared with 54 other item(s) - key 'it reacts to a signal the sender can observe without rou'",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0002",
+      "node_id": "flow",
+      "item_type": "mcq",
+      "rule": "key_not_node_specific",
+      "detail": "this key is the correct answer for 52 different nodes - it cannot be node-specific, so at most one of those items is scoreable",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0003",
+      "node_id": "flow",
+      "item_type": "mcq",
+      "rule": "duplicate_item",
+      "detail": "option set shared with 51 other item(s) - key 'it trades some throughput for a shorter queue at the bot'",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0003",
+      "node_id": "flow",
+      "item_type": "mcq",
+      "rule": "key_not_node_specific",
+      "detail": "this key is the correct answer for 52 different nodes - it cannot be node-specific, so at most one of those items is scoreable",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0004",
+      "node_id": "flow",
+      "item_type": "mcq",
+      "rule": "duplicate_item",
+      "detail": "option set shared with 51 other item(s) - key 'it reduces the sending rate when the network signals ove'",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0004",
+      "node_id": "flow",
+      "item_type": "mcq",
+      "rule": "key_not_node_specific",
+      "detail": "this key is the correct answer for 52 different nodes - it cannot be node-specific, so at most one of those items is scoreable",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0004",
+      "node_id": "flow",
+      "item_type": "mcq",
+      "rule": "length_tell",
+      "detail": "key is 10 words against a 5.3-word mean distractor (ratio 1.88)",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0005",
+      "node_id": "flow",
+      "item_type": "mcq",
+      "rule": "duplicate_item",
+      "detail": "option set shared with 54 other item(s) - key 'it reacts to a signal the sender can observe without rou'",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0005",
+      "node_id": "flow",
+      "item_type": "mcq",
+      "rule": "key_not_node_specific",
+      "detail": "this key is the correct answer for 52 different nodes - it cannot be node-specific, so at most one of those items is scoreable",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0008",
+      "node_id": "best_effort",
+      "item_type": "mcq",
+      "rule": "duplicate_item",
+      "detail": "option set shared with 51 other item(s) - key 'it trades some throughput for a shorter queue at the bot'",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0008",
+      "node_id": "best_effort",
+      "item_type": "mcq",
+      "rule": "key_not_node_specific",
+      "detail": "this key is the correct answer for 52 different nodes - it cannot be node-specific, so at most one of those items is scoreable",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0009",
+      "node_id": "best_effort",
+      "item_type": "mcq",
+      "rule": "duplicate_item",
+      "detail": "option set shared with 51 other item(s) - key 'it reduces the sending rate when the network signals ove'",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0009",
+      "node_id": "best_effort",
+      "item_type": "mcq",
+      "rule": "key_not_node_specific",
+      "detail": "this key is the correct answer for 52 different nodes - it cannot be node-specific, so at most one of those items is scoreable",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0009",
+      "node_id": "best_effort",
+      "item_type": "mcq",
+      "rule": "length_tell",
+      "detail": "key is 10 words against a 5.3-word mean distractor (ratio 1.88)",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0010",
+      "node_id": "best_effort",
+      "item_type": "mcq",
+      "rule": "duplicate_item",
+      "detail": "option set shared with 54 other item(s) - key 'it reacts to a signal the sender can observe without rou'",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0010",
+      "node_id": "best_effort",
+      "item_type": "mcq",
+      "rule": "key_not_node_specific",
+      "detail": "this key is the correct answer for 52 different nodes - it cannot be node-specific, so at most one of those items is scoreable",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0013",
+      "node_id": "bottleneck_router",
+      "item_type": "mcq",
+      "rule": "duplicate_item",
+      "detail": "option set shared with 51 other item(s) - key 'it trades some throughput for a shorter queue at the bot'",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0013",
+      "node_id": "bottleneck_router",
+      "item_type": "mcq",
+      "rule": "key_not_node_specific",
+      "detail": "this key is the correct answer for 52 different nodes - it cannot be node-specific, so at most one of those items is scoreable",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0014",
+      "node_id": "bottleneck_router",
+      "item_type": "mcq",
+      "rule": "duplicate_item",
+      "detail": "option set shared with 51 other item(s) - key 'it reduces the sending rate when the network signals ove'",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0014",
+      "node_id": "bottleneck_router",
+      "item_type": "mcq",
+      "rule": "key_not_node_specific",
+      "detail": "this key is the correct answer for 52 different nodes - it cannot be node-specific, so at most one of those items is scoreable",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0014",
+      "node_id": "bottleneck_router",
+      "item_type": "mcq",
+      "rule": "length_tell",
+      "detail": "key is 10 words against a 5.3-word mean distractor (ratio 1.88)",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0015",
+      "node_id": "bottleneck_router",
+      "item_type": "mcq",
+      "rule": "duplicate_item",
+      "detail": "option set shared with 54 other item(s) - key 'it reacts to a signal the sender can observe without rou'",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0015",
+      "node_id": "bottleneck_router",
+      "item_type": "mcq",
+      "rule": "key_not_node_specific",
+      "detail": "this key is the correct answer for 52 different nodes - it cannot be node-specific, so at most one of those items is scoreable",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0018",
+      "node_id": "soft_state",
+      "item_type": "mcq",
+      "rule": "duplicate_item",
+      "detail": "option set shared with 51 other item(s) - key 'it trades some throughput for a shorter queue at the bot'",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0018",
+      "node_id": "soft_state",
+      "item_type": "mcq",
+      "rule": "key_not_node_specific",
+      "detail": "this key is the correct answer for 52 different nodes - it cannot be node-specific, so at most one of those items is scoreable",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0019",
+      "node_id": "soft_state",
+      "item_type": "mcq",
+      "rule": "duplicate_item",
+      "detail": "option set shared with 51 other item(s) - key 'it reduces the sending rate when the network signals ove'",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0019",
+      "node_id": "soft_state",
+      "item_type": "mcq",
+      "rule": "key_not_node_specific",
+      "detail": "this key is the correct answer for 52 different nodes - it cannot be node-specific, so at most one of those items is scoreable",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0019",
+      "node_id": "soft_state",
+      "item_type": "mcq",
+      "rule": "length_tell",
+      "detail": "key is 10 words against a 5.3-word mean distractor (ratio 1.88)",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0020",
+      "node_id": "soft_state",
+      "item_type": "mcq",
+      "rule": "duplicate_item",
+      "detail": "option set shared with 54 other item(s) - key 'it reacts to a signal the sender can observe without rou'",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0020",
+      "node_id": "soft_state",
+      "item_type": "mcq",
+      "rule": "key_not_node_specific",
+      "detail": "this key is the correct answer for 52 different nodes - it cannot be node-specific, so at most one of those items is scoreable",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0023",
+      "node_id": "resource_allocation",
+      "item_type": "mcq",
+      "rule": "duplicate_item",
+      "detail": "option set shared with 51 other item(s) - key 'it trades some throughput for a shorter queue at the bot'",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0023",
+      "node_id": "resource_allocation",
+      "item_type": "mcq",
+      "rule": "key_not_node_specific",
+      "detail": "this key is the correct answer for 52 different nodes - it cannot be node-specific, so at most one of those items is scoreable",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0024",
+      "node_id": "resource_allocation",
+      "item_type": "mcq",
+      "rule": "duplicate_item",
+      "detail": "option set shared with 51 other item(s) - key 'it reduces the sending rate when the network signals ove'",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0024",
+      "node_id": "resource_allocation",
+      "item_type": "mcq",
+      "rule": "key_not_node_specific",
+      "detail": "this key is the correct answer for 52 different nodes - it cannot be node-specific, so at most one of those items is scoreable",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0024",
+      "node_id": "resource_allocation",
+      "item_type": "mcq",
+      "rule": "length_tell",
+      "detail": "key is 10 words against a 5.3-word mean distractor (ratio 1.88)",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0025",
+      "node_id": "resource_allocation",
+      "item_type": "mcq",
+      "rule": "duplicate_item",
+      "detail": "option set shared with 54 other item(s) - key 'it reacts to a signal the sender can observe without rou'",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0025",
+      "node_id": "resource_allocation",
+      "item_type": "mcq",
+      "rule": "key_not_node_specific",
+      "detail": "this key is the correct answer for 52 different nodes - it cannot be node-specific, so at most one of those items is scoreable",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0028",
+      "node_id": "congestion_control",
+      "item_type": "mcq",
+      "rule": "duplicate_item",
+      "detail": "option set shared with 51 other item(s) - key 'it trades some throughput for a shorter queue at the bot'",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0028",
+      "node_id": "congestion_control",
+      "item_type": "mcq",
+      "rule": "key_not_node_specific",
+      "detail": "this key is the correct answer for 52 different nodes - it cannot be node-specific, so at most one of those items is scoreable",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0029",
+      "node_id": "congestion_control",
+      "item_type": "mcq",
+      "rule": "duplicate_item",
+      "detail": "option set shared with 51 other item(s) - key 'it reduces the sending rate when the network signals ove'",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0029",
+      "node_id": "congestion_control",
+      "item_type": "mcq",
+      "rule": "key_not_node_specific",
+      "detail": "this key is the correct answer for 52 different nodes - it cannot be node-specific, so at most one of those items is scoreable",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0029",
+      "node_id": "congestion_control",
+      "item_type": "mcq",
+      "rule": "length_tell",
+      "detail": "key is 10 words against a 5.3-word mean distractor (ratio 1.88)",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0030",
+      "node_id": "congestion_control",
+      "item_type": "mcq",
+      "rule": "duplicate_item",
+      "detail": "option set shared with 54 other item(s) - key 'it reacts to a signal the sender can observe without rou'",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0030",
+      "node_id": "congestion_control",
+      "item_type": "mcq",
+      "rule": "key_not_node_specific",
+      "detail": "this key is the correct answer for 52 different nodes - it cannot be node-specific, so at most one of those items is scoreable",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0033",
+      "node_id": "flow_control",
+      "item_type": "mcq",
+      "rule": "duplicate_item",
+      "detail": "option set shared with 51 other item(s) - key 'it trades some throughput for a shorter queue at the bot'",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0033",
+      "node_id": "flow_control",
+      "item_type": "mcq",
+      "rule": "key_not_node_specific",
+      "detail": "this key is the correct answer for 52 different nodes - it cannot be node-specific, so at most one of those items is scoreable",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0034",
+      "node_id": "flow_control",
+      "item_type": "mcq",
+      "rule": "duplicate_item",
+      "detail": "option set shared with 51 other item(s) - key 'it reduces the sending rate when the network signals ove'",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0034",
+      "node_id": "flow_control",
+      "item_type": "mcq",
+      "rule": "key_not_node_specific",
+      "detail": "this key is the correct answer for 52 different nodes - it cannot be node-specific, so at most one of those items is scoreable",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0034",
+      "node_id": "flow_control",
+      "item_type": "mcq",
+      "rule": "length_tell",
+      "detail": "key is 10 words against a 5.3-word mean distractor (ratio 1.88)",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0035",
+      "node_id": "flow_control",
+      "item_type": "mcq",
+      "rule": "duplicate_item",
+      "detail": "option set shared with 54 other item(s) - key 'it reacts to a signal the sender can observe without rou'",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0035",
+      "node_id": "flow_control",
+      "item_type": "mcq",
+      "rule": "key_not_node_specific",
+      "detail": "this key is the correct answer for 52 different nodes - it cannot be node-specific, so at most one of those items is scoreable",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0037",
+      "node_id": "throughput",
+      "item_type": "mcq",
+      "rule": "duplicate_item",
+      "detail": "option set shared with 54 other item(s) - key 'it reacts to a signal the sender can observe without rou'",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0037",
+      "node_id": "throughput",
+      "item_type": "mcq",
+      "rule": "key_not_node_specific",
+      "detail": "this key is the correct answer for 52 different nodes - it cannot be node-specific, so at most one of those items is scoreable",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0038",
+      "node_id": "throughput",
+      "item_type": "mcq",
+      "rule": "duplicate_item",
+      "detail": "option set shared with 51 other item(s) - key 'it trades some throughput for a shorter queue at the bot'",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0038",
+      "node_id": "throughput",
+      "item_type": "mcq",
+      "rule": "key_not_node_specific",
+      "detail": "this key is the correct answer for 52 different nodes - it cannot be node-specific, so at most one of those items is scoreable",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0039",
+      "node_id": "throughput",
+      "item_type": "mcq",
+      "rule": "duplicate_item",
+      "detail": "option set shared with 51 other item(s) - key 'it reduces the sending rate when the network signals ove'",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0039",
+      "node_id": "throughput",
+      "item_type": "mcq",
+      "rule": "key_not_node_specific",
+      "detail": "this key is the correct answer for 52 different nodes - it cannot be node-specific, so at most one of those items is scoreable",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0039",
+      "node_id": "throughput",
+      "item_type": "mcq",
+      "rule": "length_tell",
+      "detail": "key is 10 words against a 5.3-word mean distractor (ratio 1.88)",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0040",
+      "node_id": "throughput",
+      "item_type": "mcq",
+      "rule": "duplicate_item",
+      "detail": "option set shared with 54 other item(s) - key 'it reacts to a signal the sender can observe without rou'",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0040",
+      "node_id": "throughput",
+      "item_type": "mcq",
+      "rule": "key_not_node_specific",
+      "detail": "this key is the correct answer for 52 different nodes - it cannot be node-specific, so at most one of those items is scoreable",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0042",
+      "node_id": "queuing_delay",
+      "item_type": "mcq",
+      "rule": "duplicate_item",
+      "detail": "option set shared with 54 other item(s) - key 'it reacts to a signal the sender can observe without rou'",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0042",
+      "node_id": "queuing_delay",
+      "item_type": "mcq",
+      "rule": "key_not_node_specific",
+      "detail": "this key is the correct answer for 52 different nodes - it cannot be node-specific, so at most one of those items is scoreable",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0043",
+      "node_id": "queuing_delay",
+      "item_type": "mcq",
+      "rule": "duplicate_item",
+      "detail": "option set shared with 51 other item(s) - key 'it trades some throughput for a shorter queue at the bot'",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0043",
+      "node_id": "queuing_delay",
+      "item_type": "mcq",
+      "rule": "key_not_node_specific",
+      "detail": "this key is the correct answer for 52 different nodes - it cannot be node-specific, so at most one of those items is scoreable",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0044",
+      "node_id": "queuing_delay",
+      "item_type": "mcq",
+      "rule": "duplicate_item",
+      "detail": "option set shared with 51 other item(s) - key 'it reduces the sending rate when the network signals ove'",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0044",
+      "node_id": "queuing_delay",
+      "item_type": "mcq",
+      "rule": "key_not_node_specific",
+      "detail": "this key is the correct answer for 52 different nodes - it cannot be node-specific, so at most one of those items is scoreable",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0044",
+      "node_id": "queuing_delay",
+      "item_type": "mcq",
+      "rule": "length_tell",
+      "detail": "key is 10 words against a 5.3-word mean distractor (ratio 1.88)",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0045",
+      "node_id": "queuing_delay",
+      "item_type": "mcq",
+      "rule": "duplicate_item",
+      "detail": "option set shared with 54 other item(s) - key 'it reacts to a signal the sender can observe without rou'",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0045",
+      "node_id": "queuing_delay",
+      "item_type": "mcq",
+      "rule": "key_not_node_specific",
+      "detail": "this key is the correct answer for 52 different nodes - it cannot be node-specific, so at most one of those items is scoreable",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0048",
+      "node_id": "power_metric",
+      "item_type": "mcq",
+      "rule": "duplicate_item",
+      "detail": "option set shared with 51 other item(s) - key 'it trades some throughput for a shorter queue at the bot'",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0048",
+      "node_id": "power_metric",
+      "item_type": "mcq",
+      "rule": "key_not_node_specific",
+      "detail": "this key is the correct answer for 52 different nodes - it cannot be node-specific, so at most one of those items is scoreable",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0049",
+      "node_id": "power_metric",
+      "item_type": "mcq",
+      "rule": "duplicate_item",
+      "detail": "option set shared with 51 other item(s) - key 'it reduces the sending rate when the network signals ove'",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0049",
+      "node_id": "power_metric",
+      "item_type": "mcq",
+      "rule": "key_not_node_specific",
+      "detail": "this key is the correct answer for 52 different nodes - it cannot be node-specific, so at most one of those items is scoreable",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0049",
+      "node_id": "power_metric",
+      "item_type": "mcq",
+      "rule": "length_tell",
+      "detail": "key is 10 words against a 5.3-word mean distractor (ratio 1.88)",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0050",
+      "node_id": "power_metric",
+      "item_type": "mcq",
+      "rule": "duplicate_item",
+      "detail": "option set shared with 54 other item(s) - key 'it reacts to a signal the sender can observe without rou'",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0050",
+      "node_id": "power_metric",
+      "item_type": "mcq",
+      "rule": "key_not_node_specific",
+      "detail": "this key is the correct answer for 52 different nodes - it cannot be node-specific, so at most one of those items is scoreable",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0053",
+      "node_id": "congestion_collapse",
+      "item_type": "mcq",
+      "rule": "duplicate_item",
+      "detail": "option set shared with 51 other item(s) - key 'it trades some throughput for a shorter queue at the bot'",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0053",
+      "node_id": "congestion_collapse",
+      "item_type": "mcq",
+      "rule": "key_not_node_specific",
+      "detail": "this key is the correct answer for 52 different nodes - it cannot be node-specific, so at most one of those items is scoreable",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0054",
+      "node_id": "congestion_collapse",
+      "item_type": "mcq",
+      "rule": "duplicate_item",
+      "detail": "option set shared with 51 other item(s) - key 'it reduces the sending rate when the network signals ove'",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0054",
+      "node_id": "congestion_collapse",
+      "item_type": "mcq",
+      "rule": "key_not_node_specific",
+      "detail": "this key is the correct answer for 52 different nodes - it cannot be node-specific, so at most one of those items is scoreable",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0054",
+      "node_id": "congestion_collapse",
+      "item_type": "mcq",
+      "rule": "length_tell",
+      "detail": "key is 10 words against a 5.3-word mean distractor (ratio 1.88)",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0055",
+      "node_id": "congestion_collapse",
+      "item_type": "mcq",
+      "rule": "duplicate_item",
+      "detail": "option set shared with 54 other item(s) - key 'it reacts to a signal the sender can observe without rou'",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0055",
+      "node_id": "congestion_collapse",
+      "item_type": "mcq",
+      "rule": "key_not_node_specific",
+      "detail": "this key is the correct answer for 52 different nodes - it cannot be node-specific, so at most one of those items is scoreable",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0058",
+      "node_id": "stability",
+      "item_type": "mcq",
+      "rule": "duplicate_item",
+      "detail": "option set shared with 51 other item(s) - key 'it trades some throughput for a shorter queue at the bot'",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0058",
+      "node_id": "stability",
+      "item_type": "mcq",
+      "rule": "key_not_node_specific",
+      "detail": "this key is the correct answer for 52 different nodes - it cannot be node-specific, so at most one of those items is scoreable",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0059",
+      "node_id": "stability",
+      "item_type": "mcq",
+      "rule": "duplicate_item",
+      "detail": "option set shared with 51 other item(s) - key 'it reduces the sending rate when the network signals ove'",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0059",
+      "node_id": "stability",
+      "item_type": "mcq",
+      "rule": "key_not_node_specific",
+      "detail": "this key is the correct answer for 52 different nodes - it cannot be node-specific, so at most one of those items is scoreable",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0059",
+      "node_id": "stability",
+      "item_type": "mcq",
+      "rule": "length_tell",
+      "detail": "key is 10 words against a 5.3-word mean distractor (ratio 1.88)",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0060",
+      "node_id": "stability",
+      "item_type": "mcq",
+      "rule": "duplicate_item",
+      "detail": "option set shared with 54 other item(s) - key 'it reacts to a signal the sender can observe without rou'",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0060",
+      "node_id": "stability",
+      "item_type": "mcq",
+      "rule": "key_not_node_specific",
+      "detail": "this key is the correct answer for 52 different nodes - it cannot be node-specific, so at most one of those items is scoreable",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0063",
+      "node_id": "fairness_index",
+      "item_type": "mcq",
+      "rule": "duplicate_item",
+      "detail": "option set shared with 51 other item(s) - key 'it trades some throughput for a shorter queue at the bot'",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0063",
+      "node_id": "fairness_index",
+      "item_type": "mcq",
+      "rule": "key_not_node_specific",
+      "detail": "this key is the correct answer for 52 different nodes - it cannot be node-specific, so at most one of those items is scoreable",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0064",
+      "node_id": "fairness_index",
+      "item_type": "mcq",
+      "rule": "duplicate_item",
+      "detail": "option set shared with 51 other item(s) - key 'it reduces the sending rate when the network signals ove'",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0064",
+      "node_id": "fairness_index",
+      "item_type": "mcq",
+      "rule": "key_not_node_specific",
+      "detail": "this key is the correct answer for 52 different nodes - it cannot be node-specific, so at most one of those items is scoreable",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0064",
+      "node_id": "fairness_index",
+      "item_type": "mcq",
+      "rule": "length_tell",
+      "detail": "key is 10 words against a 5.3-word mean distractor (ratio 1.88)",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0065",
+      "node_id": "fairness_index",
+      "item_type": "mcq",
+      "rule": "duplicate_item",
+      "detail": "option set shared with 54 other item(s) - key 'it reacts to a signal the sender can observe without rou'",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0065",
+      "node_id": "fairness_index",
+      "item_type": "mcq",
+      "rule": "key_not_node_specific",
+      "detail": "this key is the correct answer for 52 different nodes - it cannot be node-specific, so at most one of those items is scoreable",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0068",
+      "node_id": "router_centric",
+      "item_type": "mcq",
+      "rule": "duplicate_item",
+      "detail": "option set shared with 51 other item(s) - key 'it trades some throughput for a shorter queue at the bot'",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0068",
+      "node_id": "router_centric",
+      "item_type": "mcq",
+      "rule": "key_not_node_specific",
+      "detail": "this key is the correct answer for 52 different nodes - it cannot be node-specific, so at most one of those items is scoreable",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0069",
+      "node_id": "router_centric",
+      "item_type": "mcq",
+      "rule": "duplicate_item",
+      "detail": "option set shared with 51 other item(s) - key 'it reduces the sending rate when the network signals ove'",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0069",
+      "node_id": "router_centric",
+      "item_type": "mcq",
+      "rule": "key_not_node_specific",
+      "detail": "this key is the correct answer for 52 different nodes - it cannot be node-specific, so at most one of those items is scoreable",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0069",
+      "node_id": "router_centric",
+      "item_type": "mcq",
+      "rule": "length_tell",
+      "detail": "key is 10 words against a 5.3-word mean distractor (ratio 1.88)",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0070",
+      "node_id": "router_centric",
+      "item_type": "mcq",
+      "rule": "duplicate_item",
+      "detail": "option set shared with 54 other item(s) - key 'it reacts to a signal the sender can observe without rou'",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0070",
+      "node_id": "router_centric",
+      "item_type": "mcq",
+      "rule": "key_not_node_specific",
+      "detail": "this key is the correct answer for 52 different nodes - it cannot be node-specific, so at most one of those items is scoreable",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0073",
+      "node_id": "host_centric",
+      "item_type": "mcq",
+      "rule": "duplicate_item",
+      "detail": "option set shared with 51 other item(s) - key 'it trades some throughput for a shorter queue at the bot'",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0073",
+      "node_id": "host_centric",
+      "item_type": "mcq",
+      "rule": "key_not_node_specific",
+      "detail": "this key is the correct answer for 52 different nodes - it cannot be node-specific, so at most one of those items is scoreable",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0074",
+      "node_id": "host_centric",
+      "item_type": "mcq",
+      "rule": "duplicate_item",
+      "detail": "option set shared with 51 other item(s) - key 'it reduces the sending rate when the network signals ove'",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0074",
+      "node_id": "host_centric",
+      "item_type": "mcq",
+      "rule": "key_not_node_specific",
+      "detail": "this key is the correct answer for 52 different nodes - it cannot be node-specific, so at most one of those items is scoreable",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0074",
+      "node_id": "host_centric",
+      "item_type": "mcq",
+      "rule": "length_tell",
+      "detail": "key is 10 words against a 5.3-word mean distractor (ratio 1.88)",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0075",
+      "node_id": "host_centric",
+      "item_type": "mcq",
+      "rule": "duplicate_item",
+      "detail": "option set shared with 54 other item(s) - key 'it reacts to a signal the sender can observe without rou'",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0075",
+      "node_id": "host_centric",
+      "item_type": "mcq",
+      "rule": "key_not_node_specific",
+      "detail": "this key is the correct answer for 52 different nodes - it cannot be node-specific, so at most one of those items is scoreable",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0078",
+      "node_id": "reservation_based",
+      "item_type": "mcq",
+      "rule": "duplicate_item",
+      "detail": "option set shared with 51 other item(s) - key 'it trades some throughput for a shorter queue at the bot'",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0078",
+      "node_id": "reservation_based",
+      "item_type": "mcq",
+      "rule": "key_not_node_specific",
+      "detail": "this key is the correct answer for 52 different nodes - it cannot be node-specific, so at most one of those items is scoreable",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0079",
+      "node_id": "reservation_based",
+      "item_type": "mcq",
+      "rule": "duplicate_item",
+      "detail": "option set shared with 51 other item(s) - key 'it reduces the sending rate when the network signals ove'",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0079",
+      "node_id": "reservation_based",
+      "item_type": "mcq",
+      "rule": "key_not_node_specific",
+      "detail": "this key is the correct answer for 52 different nodes - it cannot be node-specific, so at most one of those items is scoreable",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0079",
+      "node_id": "reservation_based",
+      "item_type": "mcq",
+      "rule": "length_tell",
+      "detail": "key is 10 words against a 5.3-word mean distractor (ratio 1.88)",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0080",
+      "node_id": "reservation_based",
+      "item_type": "mcq",
+      "rule": "duplicate_item",
+      "detail": "option set shared with 54 other item(s) - key 'it reacts to a signal the sender can observe without rou'",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0080",
+      "node_id": "reservation_based",
+      "item_type": "mcq",
+      "rule": "key_not_node_specific",
+      "detail": "this key is the correct answer for 52 different nodes - it cannot be node-specific, so at most one of those items is scoreable",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0083",
+      "node_id": "feedback_based",
+      "item_type": "mcq",
+      "rule": "duplicate_item",
+      "detail": "option set shared with 51 other item(s) - key 'it trades some throughput for a shorter queue at the bot'",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0083",
+      "node_id": "feedback_based",
+      "item_type": "mcq",
+      "rule": "key_not_node_specific",
+      "detail": "this key is the correct answer for 52 different nodes - it cannot be node-specific, so at most one of those items is scoreable",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0084",
+      "node_id": "feedback_based",
+      "item_type": "mcq",
+      "rule": "duplicate_item",
+      "detail": "option set shared with 51 other item(s) - key 'it reduces the sending rate when the network signals ove'",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0084",
+      "node_id": "feedback_based",
+      "item_type": "mcq",
+      "rule": "key_not_node_specific",
+      "detail": "this key is the correct answer for 52 different nodes - it cannot be node-specific, so at most one of those items is scoreable",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0084",
+      "node_id": "feedback_based",
+      "item_type": "mcq",
+      "rule": "length_tell",
+      "detail": "key is 10 words against a 5.3-word mean distractor (ratio 1.88)",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0085",
+      "node_id": "feedback_based",
+      "item_type": "mcq",
+      "rule": "duplicate_item",
+      "detail": "option set shared with 54 other item(s) - key 'it reacts to a signal the sender can observe without rou'",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0085",
+      "node_id": "feedback_based",
+      "item_type": "mcq",
+      "rule": "key_not_node_specific",
+      "detail": "this key is the correct answer for 52 different nodes - it cannot be node-specific, so at most one of those items is scoreable",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0088",
+      "node_id": "explicit_feedback",
+      "item_type": "mcq",
+      "rule": "duplicate_item",
+      "detail": "option set shared with 51 other item(s) - key 'it trades some throughput for a shorter queue at the bot'",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0088",
+      "node_id": "explicit_feedback",
+      "item_type": "mcq",
+      "rule": "key_not_node_specific",
+      "detail": "this key is the correct answer for 52 different nodes - it cannot be node-specific, so at most one of those items is scoreable",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0089",
+      "node_id": "explicit_feedback",
+      "item_type": "mcq",
+      "rule": "duplicate_item",
+      "detail": "option set shared with 51 other item(s) - key 'it reduces the sending rate when the network signals ove'",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0089",
+      "node_id": "explicit_feedback",
+      "item_type": "mcq",
+      "rule": "key_not_node_specific",
+      "detail": "this key is the correct answer for 52 different nodes - it cannot be node-specific, so at most one of those items is scoreable",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0089",
+      "node_id": "explicit_feedback",
+      "item_type": "mcq",
+      "rule": "length_tell",
+      "detail": "key is 10 words against a 5.3-word mean distractor (ratio 1.88)",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0090",
+      "node_id": "explicit_feedback",
+      "item_type": "mcq",
+      "rule": "duplicate_item",
+      "detail": "option set shared with 54 other item(s) - key 'it reacts to a signal the sender can observe without rou'",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0090",
+      "node_id": "explicit_feedback",
+      "item_type": "mcq",
+      "rule": "key_not_node_specific",
+      "detail": "this key is the correct answer for 52 different nodes - it cannot be node-specific, so at most one of those items is scoreable",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0093",
+      "node_id": "implicit_feedback",
+      "item_type": "mcq",
+      "rule": "duplicate_item",
+      "detail": "option set shared with 51 other item(s) - key 'it trades some throughput for a shorter queue at the bot'",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0093",
+      "node_id": "implicit_feedback",
+      "item_type": "mcq",
+      "rule": "key_not_node_specific",
+      "detail": "this key is the correct answer for 52 different nodes - it cannot be node-specific, so at most one of those items is scoreable",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0094",
+      "node_id": "implicit_feedback",
+      "item_type": "mcq",
+      "rule": "duplicate_item",
+      "detail": "option set shared with 51 other item(s) - key 'it reduces the sending rate when the network signals ove'",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0094",
+      "node_id": "implicit_feedback",
+      "item_type": "mcq",
+      "rule": "key_not_node_specific",
+      "detail": "this key is the correct answer for 52 different nodes - it cannot be node-specific, so at most one of those items is scoreable",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0094",
+      "node_id": "implicit_feedback",
+      "item_type": "mcq",
+      "rule": "length_tell",
+      "detail": "key is 10 words against a 5.3-word mean distractor (ratio 1.88)",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0095",
+      "node_id": "implicit_feedback",
+      "item_type": "mcq",
+      "rule": "duplicate_item",
+      "detail": "option set shared with 54 other item(s) - key 'it reacts to a signal the sender can observe without rou'",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0095",
+      "node_id": "implicit_feedback",
+      "item_type": "mcq",
+      "rule": "key_not_node_specific",
+      "detail": "this key is the correct answer for 52 different nodes - it cannot be node-specific, so at most one of those items is scoreable",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0098",
+      "node_id": "window_based",
+      "item_type": "mcq",
+      "rule": "duplicate_item",
+      "detail": "option set shared with 51 other item(s) - key 'it trades some throughput for a shorter queue at the bot'",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0098",
+      "node_id": "window_based",
+      "item_type": "mcq",
+      "rule": "key_not_node_specific",
+      "detail": "this key is the correct answer for 52 different nodes - it cannot be node-specific, so at most one of those items is scoreable",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0099",
+      "node_id": "window_based",
+      "item_type": "mcq",
+      "rule": "duplicate_item",
+      "detail": "option set shared with 51 other item(s) - key 'it reduces the sending rate when the network signals ove'",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0099",
+      "node_id": "window_based",
+      "item_type": "mcq",
+      "rule": "key_not_node_specific",
+      "detail": "this key is the correct answer for 52 different nodes - it cannot be node-specific, so at most one of those items is scoreable",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0099",
+      "node_id": "window_based",
+      "item_type": "mcq",
+      "rule": "length_tell",
+      "detail": "key is 10 words against a 5.3-word mean distractor (ratio 1.88)",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0100",
+      "node_id": "window_based",
+      "item_type": "mcq",
+      "rule": "duplicate_item",
+      "detail": "option set shared with 54 other item(s) - key 'it reacts to a signal the sender can observe without rou'",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0100",
+      "node_id": "window_based",
+      "item_type": "mcq",
+      "rule": "key_not_node_specific",
+      "detail": "this key is the correct answer for 52 different nodes - it cannot be node-specific, so at most one of those items is scoreable",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0103",
+      "node_id": "rate_based",
+      "item_type": "mcq",
+      "rule": "duplicate_item",
+      "detail": "option set shared with 51 other item(s) - key 'it trades some throughput for a shorter queue at the bot'",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0103",
+      "node_id": "rate_based",
+      "item_type": "mcq",
+      "rule": "key_not_node_specific",
+      "detail": "this key is the correct answer for 52 different nodes - it cannot be node-specific, so at most one of those items is scoreable",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0104",
+      "node_id": "rate_based",
+      "item_type": "mcq",
+      "rule": "duplicate_item",
+      "detail": "option set shared with 51 other item(s) - key 'it reduces the sending rate when the network signals ove'",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0104",
+      "node_id": "rate_based",
+      "item_type": "mcq",
+      "rule": "key_not_node_specific",
+      "detail": "this key is the correct answer for 52 different nodes - it cannot be node-specific, so at most one of those items is scoreable",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0104",
+      "node_id": "rate_based",
+      "item_type": "mcq",
+      "rule": "length_tell",
+      "detail": "key is 10 words against a 5.3-word mean distractor (ratio 1.88)",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0105",
+      "node_id": "rate_based",
+      "item_type": "mcq",
+      "rule": "duplicate_item",
+      "detail": "option set shared with 54 other item(s) - key 'it reacts to a signal the sender can observe without rou'",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0105",
+      "node_id": "rate_based",
+      "item_type": "mcq",
+      "rule": "key_not_node_specific",
+      "detail": "this key is the correct answer for 52 different nodes - it cannot be node-specific, so at most one of those items is scoreable",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0108",
+      "node_id": "fifo",
+      "item_type": "mcq",
+      "rule": "duplicate_item",
+      "detail": "option set shared with 51 other item(s) - key 'it trades some throughput for a shorter queue at the bot'",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0108",
+      "node_id": "fifo",
+      "item_type": "mcq",
+      "rule": "key_not_node_specific",
+      "detail": "this key is the correct answer for 52 different nodes - it cannot be node-specific, so at most one of those items is scoreable",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0109",
+      "node_id": "fifo",
+      "item_type": "mcq",
+      "rule": "duplicate_item",
+      "detail": "option set shared with 51 other item(s) - key 'it reduces the sending rate when the network signals ove'",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0109",
+      "node_id": "fifo",
+      "item_type": "mcq",
+      "rule": "key_not_node_specific",
+      "detail": "this key is the correct answer for 52 different nodes - it cannot be node-specific, so at most one of those items is scoreable",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0109",
+      "node_id": "fifo",
+      "item_type": "mcq",
+      "rule": "length_tell",
+      "detail": "key is 10 words against a 5.3-word mean distractor (ratio 1.88)",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0110",
+      "node_id": "fifo",
+      "item_type": "mcq",
+      "rule": "duplicate_item",
+      "detail": "option set shared with 54 other item(s) - key 'it reacts to a signal the sender can observe without rou'",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0110",
+      "node_id": "fifo",
+      "item_type": "mcq",
+      "rule": "key_not_node_specific",
+      "detail": "this key is the correct answer for 52 different nodes - it cannot be node-specific, so at most one of those items is scoreable",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0113",
+      "node_id": "tail_drop",
+      "item_type": "mcq",
+      "rule": "duplicate_item",
+      "detail": "option set shared with 51 other item(s) - key 'it trades some throughput for a shorter queue at the bot'",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0113",
+      "node_id": "tail_drop",
+      "item_type": "mcq",
+      "rule": "key_not_node_specific",
+      "detail": "this key is the correct answer for 52 different nodes - it cannot be node-specific, so at most one of those items is scoreable",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0114",
+      "node_id": "tail_drop",
+      "item_type": "mcq",
+      "rule": "duplicate_item",
+      "detail": "option set shared with 51 other item(s) - key 'it reduces the sending rate when the network signals ove'",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0114",
+      "node_id": "tail_drop",
+      "item_type": "mcq",
+      "rule": "key_not_node_specific",
+      "detail": "this key is the correct answer for 52 different nodes - it cannot be node-specific, so at most one of those items is scoreable",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0114",
+      "node_id": "tail_drop",
+      "item_type": "mcq",
+      "rule": "length_tell",
+      "detail": "key is 10 words against a 5.3-word mean distractor (ratio 1.88)",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0115",
+      "node_id": "tail_drop",
+      "item_type": "mcq",
+      "rule": "duplicate_item",
+      "detail": "option set shared with 54 other item(s) - key 'it reacts to a signal the sender can observe without rou'",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0115",
+      "node_id": "tail_drop",
+      "item_type": "mcq",
+      "rule": "key_not_node_specific",
+      "detail": "this key is the correct answer for 52 different nodes - it cannot be node-specific, so at most one of those items is scoreable",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0118",
+      "node_id": "priority_queuing",
+      "item_type": "mcq",
+      "rule": "duplicate_item",
+      "detail": "option set shared with 51 other item(s) - key 'it trades some throughput for a shorter queue at the bot'",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0118",
+      "node_id": "priority_queuing",
+      "item_type": "mcq",
+      "rule": "key_not_node_specific",
+      "detail": "this key is the correct answer for 52 different nodes - it cannot be node-specific, so at most one of those items is scoreable",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0119",
+      "node_id": "priority_queuing",
+      "item_type": "mcq",
+      "rule": "duplicate_item",
+      "detail": "option set shared with 51 other item(s) - key 'it reduces the sending rate when the network signals ove'",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0119",
+      "node_id": "priority_queuing",
+      "item_type": "mcq",
+      "rule": "key_not_node_specific",
+      "detail": "this key is the correct answer for 52 different nodes - it cannot be node-specific, so at most one of those items is scoreable",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0119",
+      "node_id": "priority_queuing",
+      "item_type": "mcq",
+      "rule": "length_tell",
+      "detail": "key is 10 words against a 5.3-word mean distractor (ratio 1.88)",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0120",
+      "node_id": "priority_queuing",
+      "item_type": "mcq",
+      "rule": "duplicate_item",
+      "detail": "option set shared with 54 other item(s) - key 'it reacts to a signal the sender can observe without rou'",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0120",
+      "node_id": "priority_queuing",
+      "item_type": "mcq",
+      "rule": "key_not_node_specific",
+      "detail": "this key is the correct answer for 52 different nodes - it cannot be node-specific, so at most one of those items is scoreable",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0123",
+      "node_id": "fair_queuing",
+      "item_type": "mcq",
+      "rule": "duplicate_item",
+      "detail": "option set shared with 51 other item(s) - key 'it trades some throughput for a shorter queue at the bot'",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0123",
+      "node_id": "fair_queuing",
+      "item_type": "mcq",
+      "rule": "key_not_node_specific",
+      "detail": "this key is the correct answer for 52 different nodes - it cannot be node-specific, so at most one of those items is scoreable",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0124",
+      "node_id": "fair_queuing",
+      "item_type": "mcq",
+      "rule": "duplicate_item",
+      "detail": "option set shared with 51 other item(s) - key 'it reduces the sending rate when the network signals ove'",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0124",
+      "node_id": "fair_queuing",
+      "item_type": "mcq",
+      "rule": "key_not_node_specific",
+      "detail": "this key is the correct answer for 52 different nodes - it cannot be node-specific, so at most one of those items is scoreable",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0124",
+      "node_id": "fair_queuing",
+      "item_type": "mcq",
+      "rule": "length_tell",
+      "detail": "key is 10 words against a 5.3-word mean distractor (ratio 1.88)",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0125",
+      "node_id": "fair_queuing",
+      "item_type": "mcq",
+      "rule": "duplicate_item",
+      "detail": "option set shared with 54 other item(s) - key 'it reacts to a signal the sender can observe without rou'",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0125",
+      "node_id": "fair_queuing",
+      "item_type": "mcq",
+      "rule": "key_not_node_specific",
+      "detail": "this key is the correct answer for 52 different nodes - it cannot be node-specific, so at most one of those items is scoreable",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0128",
+      "node_id": "bit_round_robin",
+      "item_type": "mcq",
+      "rule": "duplicate_item",
+      "detail": "option set shared with 51 other item(s) - key 'it trades some throughput for a shorter queue at the bot'",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0128",
+      "node_id": "bit_round_robin",
+      "item_type": "mcq",
+      "rule": "key_not_node_specific",
+      "detail": "this key is the correct answer for 52 different nodes - it cannot be node-specific, so at most one of those items is scoreable",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0129",
+      "node_id": "bit_round_robin",
+      "item_type": "mcq",
+      "rule": "duplicate_item",
+      "detail": "option set shared with 51 other item(s) - key 'it reduces the sending rate when the network signals ove'",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0129",
+      "node_id": "bit_round_robin",
+      "item_type": "mcq",
+      "rule": "key_not_node_specific",
+      "detail": "this key is the correct answer for 52 different nodes - it cannot be node-specific, so at most one of those items is scoreable",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0129",
+      "node_id": "bit_round_robin",
+      "item_type": "mcq",
+      "rule": "length_tell",
+      "detail": "key is 10 words against a 5.3-word mean distractor (ratio 1.88)",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0130",
+      "node_id": "bit_round_robin",
+      "item_type": "mcq",
+      "rule": "duplicate_item",
+      "detail": "option set shared with 54 other item(s) - key 'it reacts to a signal the sender can observe without rou'",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0130",
+      "node_id": "bit_round_robin",
+      "item_type": "mcq",
+      "rule": "key_not_node_specific",
+      "detail": "this key is the correct answer for 52 different nodes - it cannot be node-specific, so at most one of those items is scoreable",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0133",
+      "node_id": "finish_time",
+      "item_type": "mcq",
+      "rule": "duplicate_item",
+      "detail": "option set shared with 51 other item(s) - key 'it trades some throughput for a shorter queue at the bot'",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0133",
+      "node_id": "finish_time",
+      "item_type": "mcq",
+      "rule": "key_not_node_specific",
+      "detail": "this key is the correct answer for 52 different nodes - it cannot be node-specific, so at most one of those items is scoreable",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0134",
+      "node_id": "finish_time",
+      "item_type": "mcq",
+      "rule": "duplicate_item",
+      "detail": "option set shared with 51 other item(s) - key 'it reduces the sending rate when the network signals ove'",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0134",
+      "node_id": "finish_time",
+      "item_type": "mcq",
+      "rule": "key_not_node_specific",
+      "detail": "this key is the correct answer for 52 different nodes - it cannot be node-specific, so at most one of those items is scoreable",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0134",
+      "node_id": "finish_time",
+      "item_type": "mcq",
+      "rule": "length_tell",
+      "detail": "key is 10 words against a 5.3-word mean distractor (ratio 1.88)",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0135",
+      "node_id": "finish_time",
+      "item_type": "mcq",
+      "rule": "duplicate_item",
+      "detail": "option set shared with 54 other item(s) - key 'it reacts to a signal the sender can observe without rou'",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0135",
+      "node_id": "finish_time",
+      "item_type": "mcq",
+      "rule": "key_not_node_specific",
+      "detail": "this key is the correct answer for 52 different nodes - it cannot be node-specific, so at most one of those items is scoreable",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0138",
+      "node_id": "weighted_fair_queuing",
+      "item_type": "mcq",
+      "rule": "duplicate_item",
+      "detail": "option set shared with 51 other item(s) - key 'it trades some throughput for a shorter queue at the bot'",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0138",
+      "node_id": "weighted_fair_queuing",
+      "item_type": "mcq",
+      "rule": "key_not_node_specific",
+      "detail": "this key is the correct answer for 52 different nodes - it cannot be node-specific, so at most one of those items is scoreable",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0139",
+      "node_id": "weighted_fair_queuing",
+      "item_type": "mcq",
+      "rule": "duplicate_item",
+      "detail": "option set shared with 51 other item(s) - key 'it reduces the sending rate when the network signals ove'",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0139",
+      "node_id": "weighted_fair_queuing",
+      "item_type": "mcq",
+      "rule": "key_not_node_specific",
+      "detail": "this key is the correct answer for 52 different nodes - it cannot be node-specific, so at most one of those items is scoreable",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0139",
+      "node_id": "weighted_fair_queuing",
+      "item_type": "mcq",
+      "rule": "length_tell",
+      "detail": "key is 10 words against a 5.3-word mean distractor (ratio 1.88)",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0140",
+      "node_id": "weighted_fair_queuing",
+      "item_type": "mcq",
+      "rule": "duplicate_item",
+      "detail": "option set shared with 54 other item(s) - key 'it reacts to a signal the sender can observe without rou'",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0140",
+      "node_id": "weighted_fair_queuing",
+      "item_type": "mcq",
+      "rule": "key_not_node_specific",
+      "detail": "this key is the correct answer for 52 different nodes - it cannot be node-specific, so at most one of those items is scoreable",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0143",
+      "node_id": "congestion_window",
+      "item_type": "mcq",
+      "rule": "duplicate_item",
+      "detail": "option set shared with 51 other item(s) - key 'it trades some throughput for a shorter queue at the bot'",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0143",
+      "node_id": "congestion_window",
+      "item_type": "mcq",
+      "rule": "key_not_node_specific",
+      "detail": "this key is the correct answer for 52 different nodes - it cannot be node-specific, so at most one of those items is scoreable",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0144",
+      "node_id": "congestion_window",
+      "item_type": "mcq",
+      "rule": "duplicate_item",
+      "detail": "option set shared with 51 other item(s) - key 'it reduces the sending rate when the network signals ove'",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0144",
+      "node_id": "congestion_window",
+      "item_type": "mcq",
+      "rule": "key_not_node_specific",
+      "detail": "this key is the correct answer for 52 different nodes - it cannot be node-specific, so at most one of those items is scoreable",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0144",
+      "node_id": "congestion_window",
+      "item_type": "mcq",
+      "rule": "length_tell",
+      "detail": "key is 10 words against a 5.3-word mean distractor (ratio 1.88)",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0145",
+      "node_id": "congestion_window",
+      "item_type": "mcq",
+      "rule": "duplicate_item",
+      "detail": "option set shared with 54 other item(s) - key 'it reacts to a signal the sender can observe without rou'",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0145",
+      "node_id": "congestion_window",
+      "item_type": "mcq",
+      "rule": "key_not_node_specific",
+      "detail": "this key is the correct answer for 52 different nodes - it cannot be node-specific, so at most one of those items is scoreable",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0148",
+      "node_id": "effective_window",
+      "item_type": "mcq",
+      "rule": "duplicate_item",
+      "detail": "option set shared with 51 other item(s) - key 'it trades some throughput for a shorter queue at the bot'",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0148",
+      "node_id": "effective_window",
+      "item_type": "mcq",
+      "rule": "key_not_node_specific",
+      "detail": "this key is the correct answer for 52 different nodes - it cannot be node-specific, so at most one of those items is scoreable",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0149",
+      "node_id": "effective_window",
+      "item_type": "mcq",
+      "rule": "duplicate_item",
+      "detail": "option set shared with 51 other item(s) - key 'it reduces the sending rate when the network signals ove'",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0149",
+      "node_id": "effective_window",
+      "item_type": "mcq",
+      "rule": "key_not_node_specific",
+      "detail": "this key is the correct answer for 52 different nodes - it cannot be node-specific, so at most one of those items is scoreable",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0149",
+      "node_id": "effective_window",
+      "item_type": "mcq",
+      "rule": "length_tell",
+      "detail": "key is 10 words against a 5.3-word mean distractor (ratio 1.88)",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0150",
+      "node_id": "effective_window",
+      "item_type": "mcq",
+      "rule": "duplicate_item",
+      "detail": "option set shared with 54 other item(s) - key 'it reacts to a signal the sender can observe without rou'",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0150",
+      "node_id": "effective_window",
+      "item_type": "mcq",
+      "rule": "key_not_node_specific",
+      "detail": "this key is the correct answer for 52 different nodes - it cannot be node-specific, so at most one of those items is scoreable",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0153",
+      "node_id": "loss_as_signal",
+      "item_type": "mcq",
+      "rule": "duplicate_item",
+      "detail": "option set shared with 51 other item(s) - key 'it trades some throughput for a shorter queue at the bot'",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0153",
+      "node_id": "loss_as_signal",
+      "item_type": "mcq",
+      "rule": "key_not_node_specific",
+      "detail": "this key is the correct answer for 52 different nodes - it cannot be node-specific, so at most one of those items is scoreable",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0154",
+      "node_id": "loss_as_signal",
+      "item_type": "mcq",
+      "rule": "duplicate_item",
+      "detail": "option set shared with 51 other item(s) - key 'it reduces the sending rate when the network signals ove'",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0154",
+      "node_id": "loss_as_signal",
+      "item_type": "mcq",
+      "rule": "key_not_node_specific",
+      "detail": "this key is the correct answer for 52 different nodes - it cannot be node-specific, so at most one of those items is scoreable",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0154",
+      "node_id": "loss_as_signal",
+      "item_type": "mcq",
+      "rule": "length_tell",
+      "detail": "key is 10 words against a 5.3-word mean distractor (ratio 1.88)",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0155",
+      "node_id": "loss_as_signal",
+      "item_type": "mcq",
+      "rule": "duplicate_item",
+      "detail": "option set shared with 54 other item(s) - key 'it reacts to a signal the sender can observe without rou'",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0155",
+      "node_id": "loss_as_signal",
+      "item_type": "mcq",
+      "rule": "key_not_node_specific",
+      "detail": "this key is the correct answer for 52 different nodes - it cannot be node-specific, so at most one of those items is scoreable",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0158",
+      "node_id": "aimd",
+      "item_type": "mcq",
+      "rule": "duplicate_item",
+      "detail": "option set shared with 51 other item(s) - key 'it trades some throughput for a shorter queue at the bot'",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0158",
+      "node_id": "aimd",
+      "item_type": "mcq",
+      "rule": "key_not_node_specific",
+      "detail": "this key is the correct answer for 52 different nodes - it cannot be node-specific, so at most one of those items is scoreable",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0159",
+      "node_id": "aimd",
+      "item_type": "mcq",
+      "rule": "duplicate_item",
+      "detail": "option set shared with 51 other item(s) - key 'it reduces the sending rate when the network signals ove'",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0159",
+      "node_id": "aimd",
+      "item_type": "mcq",
+      "rule": "key_not_node_specific",
+      "detail": "this key is the correct answer for 52 different nodes - it cannot be node-specific, so at most one of those items is scoreable",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0159",
+      "node_id": "aimd",
+      "item_type": "mcq",
+      "rule": "length_tell",
+      "detail": "key is 10 words against a 5.3-word mean distractor (ratio 1.88)",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0160",
+      "node_id": "aimd",
+      "item_type": "mcq",
+      "rule": "duplicate_item",
+      "detail": "option set shared with 54 other item(s) - key 'it reacts to a signal the sender can observe without rou'",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0160",
+      "node_id": "aimd",
+      "item_type": "mcq",
+      "rule": "key_not_node_specific",
+      "detail": "this key is the correct answer for 52 different nodes - it cannot be node-specific, so at most one of those items is scoreable",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0163",
+      "node_id": "sawtooth",
+      "item_type": "mcq",
+      "rule": "duplicate_item",
+      "detail": "option set shared with 51 other item(s) - key 'it trades some throughput for a shorter queue at the bot'",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0163",
+      "node_id": "sawtooth",
+      "item_type": "mcq",
+      "rule": "key_not_node_specific",
+      "detail": "this key is the correct answer for 52 different nodes - it cannot be node-specific, so at most one of those items is scoreable",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0164",
+      "node_id": "sawtooth",
+      "item_type": "mcq",
+      "rule": "duplicate_item",
+      "detail": "option set shared with 51 other item(s) - key 'it reduces the sending rate when the network signals ove'",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0164",
+      "node_id": "sawtooth",
+      "item_type": "mcq",
+      "rule": "key_not_node_specific",
+      "detail": "this key is the correct answer for 52 different nodes - it cannot be node-specific, so at most one of those items is scoreable",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0164",
+      "node_id": "sawtooth",
+      "item_type": "mcq",
+      "rule": "length_tell",
+      "detail": "key is 10 words against a 5.3-word mean distractor (ratio 1.88)",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0165",
+      "node_id": "sawtooth",
+      "item_type": "mcq",
+      "rule": "duplicate_item",
+      "detail": "option set shared with 54 other item(s) - key 'it reacts to a signal the sender can observe without rou'",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0165",
+      "node_id": "sawtooth",
+      "item_type": "mcq",
+      "rule": "key_not_node_specific",
+      "detail": "this key is the correct answer for 52 different nodes - it cannot be node-specific, so at most one of those items is scoreable",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0168",
+      "node_id": "self_clocking",
+      "item_type": "mcq",
+      "rule": "duplicate_item",
+      "detail": "option set shared with 51 other item(s) - key 'it trades some throughput for a shorter queue at the bot'",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0168",
+      "node_id": "self_clocking",
+      "item_type": "mcq",
+      "rule": "key_not_node_specific",
+      "detail": "this key is the correct answer for 52 different nodes - it cannot be node-specific, so at most one of those items is scoreable",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0169",
+      "node_id": "self_clocking",
+      "item_type": "mcq",
+      "rule": "duplicate_item",
+      "detail": "option set shared with 51 other item(s) - key 'it reduces the sending rate when the network signals ove'",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0169",
+      "node_id": "self_clocking",
+      "item_type": "mcq",
+      "rule": "key_not_node_specific",
+      "detail": "this key is the correct answer for 52 different nodes - it cannot be node-specific, so at most one of those items is scoreable",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0169",
+      "node_id": "self_clocking",
+      "item_type": "mcq",
+      "rule": "length_tell",
+      "detail": "key is 10 words against a 5.3-word mean distractor (ratio 1.88)",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0170",
+      "node_id": "self_clocking",
+      "item_type": "mcq",
+      "rule": "duplicate_item",
+      "detail": "option set shared with 54 other item(s) - key 'it reacts to a signal the sender can observe without rou'",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0170",
+      "node_id": "self_clocking",
+      "item_type": "mcq",
+      "rule": "key_not_node_specific",
+      "detail": "this key is the correct answer for 52 different nodes - it cannot be node-specific, so at most one of those items is scoreable",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0173",
+      "node_id": "slow_start",
+      "item_type": "mcq",
+      "rule": "duplicate_item",
+      "detail": "option set shared with 51 other item(s) - key 'it trades some throughput for a shorter queue at the bot'",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0173",
+      "node_id": "slow_start",
+      "item_type": "mcq",
+      "rule": "key_not_node_specific",
+      "detail": "this key is the correct answer for 52 different nodes - it cannot be node-specific, so at most one of those items is scoreable",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0174",
+      "node_id": "slow_start",
+      "item_type": "mcq",
+      "rule": "duplicate_item",
+      "detail": "option set shared with 51 other item(s) - key 'it reduces the sending rate when the network signals ove'",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0174",
+      "node_id": "slow_start",
+      "item_type": "mcq",
+      "rule": "key_not_node_specific",
+      "detail": "this key is the correct answer for 52 different nodes - it cannot be node-specific, so at most one of those items is scoreable",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0174",
+      "node_id": "slow_start",
+      "item_type": "mcq",
+      "rule": "length_tell",
+      "detail": "key is 10 words against a 5.3-word mean distractor (ratio 1.88)",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0175",
+      "node_id": "slow_start",
+      "item_type": "mcq",
+      "rule": "duplicate_item",
+      "detail": "option set shared with 54 other item(s) - key 'it reacts to a signal the sender can observe without rou'",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0175",
+      "node_id": "slow_start",
+      "item_type": "mcq",
+      "rule": "key_not_node_specific",
+      "detail": "this key is the correct answer for 52 different nodes - it cannot be node-specific, so at most one of those items is scoreable",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0178",
+      "node_id": "congestion_threshold",
+      "item_type": "mcq",
+      "rule": "duplicate_item",
+      "detail": "option set shared with 51 other item(s) - key 'it trades some throughput for a shorter queue at the bot'",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0178",
+      "node_id": "congestion_threshold",
+      "item_type": "mcq",
+      "rule": "key_not_node_specific",
+      "detail": "this key is the correct answer for 52 different nodes - it cannot be node-specific, so at most one of those items is scoreable",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0179",
+      "node_id": "congestion_threshold",
+      "item_type": "mcq",
+      "rule": "duplicate_item",
+      "detail": "option set shared with 51 other item(s) - key 'it reduces the sending rate when the network signals ove'",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0179",
+      "node_id": "congestion_threshold",
+      "item_type": "mcq",
+      "rule": "key_not_node_specific",
+      "detail": "this key is the correct answer for 52 different nodes - it cannot be node-specific, so at most one of those items is scoreable",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0179",
+      "node_id": "congestion_threshold",
+      "item_type": "mcq",
+      "rule": "length_tell",
+      "detail": "key is 10 words against a 5.3-word mean distractor (ratio 1.88)",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0180",
+      "node_id": "congestion_threshold",
+      "item_type": "mcq",
+      "rule": "duplicate_item",
+      "detail": "option set shared with 54 other item(s) - key 'it reacts to a signal the sender can observe without rou'",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0180",
+      "node_id": "congestion_threshold",
+      "item_type": "mcq",
+      "rule": "key_not_node_specific",
+      "detail": "this key is the correct answer for 52 different nodes - it cannot be node-specific, so at most one of those items is scoreable",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0183",
+      "node_id": "coarse_timeout",
+      "item_type": "mcq",
+      "rule": "duplicate_item",
+      "detail": "option set shared with 51 other item(s) - key 'it trades some throughput for a shorter queue at the bot'",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0183",
+      "node_id": "coarse_timeout",
+      "item_type": "mcq",
+      "rule": "key_not_node_specific",
+      "detail": "this key is the correct answer for 52 different nodes - it cannot be node-specific, so at most one of those items is scoreable",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0184",
+      "node_id": "coarse_timeout",
+      "item_type": "mcq",
+      "rule": "duplicate_item",
+      "detail": "option set shared with 51 other item(s) - key 'it reduces the sending rate when the network signals ove'",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0184",
+      "node_id": "coarse_timeout",
+      "item_type": "mcq",
+      "rule": "key_not_node_specific",
+      "detail": "this key is the correct answer for 52 different nodes - it cannot be node-specific, so at most one of those items is scoreable",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0184",
+      "node_id": "coarse_timeout",
+      "item_type": "mcq",
+      "rule": "length_tell",
+      "detail": "key is 10 words against a 5.3-word mean distractor (ratio 1.88)",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0185",
+      "node_id": "coarse_timeout",
+      "item_type": "mcq",
+      "rule": "duplicate_item",
+      "detail": "option set shared with 54 other item(s) - key 'it reacts to a signal the sender can observe without rou'",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0185",
+      "node_id": "coarse_timeout",
+      "item_type": "mcq",
+      "rule": "key_not_node_specific",
+      "detail": "this key is the correct answer for 52 different nodes - it cannot be node-specific, so at most one of those items is scoreable",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0188",
+      "node_id": "duplicate_ack",
+      "item_type": "mcq",
+      "rule": "duplicate_item",
+      "detail": "option set shared with 51 other item(s) - key 'it trades some throughput for a shorter queue at the bot'",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0188",
+      "node_id": "duplicate_ack",
+      "item_type": "mcq",
+      "rule": "key_not_node_specific",
+      "detail": "this key is the correct answer for 52 different nodes - it cannot be node-specific, so at most one of those items is scoreable",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0189",
+      "node_id": "duplicate_ack",
+      "item_type": "mcq",
+      "rule": "duplicate_item",
+      "detail": "option set shared with 51 other item(s) - key 'it reduces the sending rate when the network signals ove'",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0189",
+      "node_id": "duplicate_ack",
+      "item_type": "mcq",
+      "rule": "key_not_node_specific",
+      "detail": "this key is the correct answer for 52 different nodes - it cannot be node-specific, so at most one of those items is scoreable",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0189",
+      "node_id": "duplicate_ack",
+      "item_type": "mcq",
+      "rule": "length_tell",
+      "detail": "key is 10 words against a 5.3-word mean distractor (ratio 1.88)",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0190",
+      "node_id": "duplicate_ack",
+      "item_type": "mcq",
+      "rule": "duplicate_item",
+      "detail": "option set shared with 54 other item(s) - key 'it reacts to a signal the sender can observe without rou'",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0190",
+      "node_id": "duplicate_ack",
+      "item_type": "mcq",
+      "rule": "key_not_node_specific",
+      "detail": "this key is the correct answer for 52 different nodes - it cannot be node-specific, so at most one of those items is scoreable",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0193",
+      "node_id": "fast_retransmit",
+      "item_type": "mcq",
+      "rule": "duplicate_item",
+      "detail": "option set shared with 51 other item(s) - key 'it trades some throughput for a shorter queue at the bot'",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0193",
+      "node_id": "fast_retransmit",
+      "item_type": "mcq",
+      "rule": "key_not_node_specific",
+      "detail": "this key is the correct answer for 52 different nodes - it cannot be node-specific, so at most one of those items is scoreable",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0194",
+      "node_id": "fast_retransmit",
+      "item_type": "mcq",
+      "rule": "duplicate_item",
+      "detail": "option set shared with 51 other item(s) - key 'it reduces the sending rate when the network signals ove'",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0194",
+      "node_id": "fast_retransmit",
+      "item_type": "mcq",
+      "rule": "key_not_node_specific",
+      "detail": "this key is the correct answer for 52 different nodes - it cannot be node-specific, so at most one of those items is scoreable",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0194",
+      "node_id": "fast_retransmit",
+      "item_type": "mcq",
+      "rule": "length_tell",
+      "detail": "key is 10 words against a 5.3-word mean distractor (ratio 1.88)",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0195",
+      "node_id": "fast_retransmit",
+      "item_type": "mcq",
+      "rule": "duplicate_item",
+      "detail": "option set shared with 54 other item(s) - key 'it reacts to a signal the sender can observe without rou'",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0195",
+      "node_id": "fast_retransmit",
+      "item_type": "mcq",
+      "rule": "key_not_node_specific",
+      "detail": "this key is the correct answer for 52 different nodes - it cannot be node-specific, so at most one of those items is scoreable",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0198",
+      "node_id": "fast_recovery",
+      "item_type": "mcq",
+      "rule": "duplicate_item",
+      "detail": "option set shared with 51 other item(s) - key 'it trades some throughput for a shorter queue at the bot'",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0198",
+      "node_id": "fast_recovery",
+      "item_type": "mcq",
+      "rule": "key_not_node_specific",
+      "detail": "this key is the correct answer for 52 different nodes - it cannot be node-specific, so at most one of those items is scoreable",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0199",
+      "node_id": "fast_recovery",
+      "item_type": "mcq",
+      "rule": "duplicate_item",
+      "detail": "option set shared with 51 other item(s) - key 'it reduces the sending rate when the network signals ove'",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0199",
+      "node_id": "fast_recovery",
+      "item_type": "mcq",
+      "rule": "key_not_node_specific",
+      "detail": "this key is the correct answer for 52 different nodes - it cannot be node-specific, so at most one of those items is scoreable",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0199",
+      "node_id": "fast_recovery",
+      "item_type": "mcq",
+      "rule": "length_tell",
+      "detail": "key is 10 words against a 5.3-word mean distractor (ratio 1.88)",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0200",
+      "node_id": "fast_recovery",
+      "item_type": "mcq",
+      "rule": "duplicate_item",
+      "detail": "option set shared with 54 other item(s) - key 'it reacts to a signal the sender can observe without rou'",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0200",
+      "node_id": "fast_recovery",
+      "item_type": "mcq",
+      "rule": "key_not_node_specific",
+      "detail": "this key is the correct answer for 52 different nodes - it cannot be node-specific, so at most one of those items is scoreable",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0203",
+      "node_id": "tcp_cubic",
+      "item_type": "mcq",
+      "rule": "duplicate_item",
+      "detail": "option set shared with 51 other item(s) - key 'it trades some throughput for a shorter queue at the bot'",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0203",
+      "node_id": "tcp_cubic",
+      "item_type": "mcq",
+      "rule": "key_not_node_specific",
+      "detail": "this key is the correct answer for 52 different nodes - it cannot be node-specific, so at most one of those items is scoreable",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0204",
+      "node_id": "tcp_cubic",
+      "item_type": "mcq",
+      "rule": "duplicate_item",
+      "detail": "option set shared with 51 other item(s) - key 'it reduces the sending rate when the network signals ove'",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0204",
+      "node_id": "tcp_cubic",
+      "item_type": "mcq",
+      "rule": "key_not_node_specific",
+      "detail": "this key is the correct answer for 52 different nodes - it cannot be node-specific, so at most one of those items is scoreable",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0204",
+      "node_id": "tcp_cubic",
+      "item_type": "mcq",
+      "rule": "length_tell",
+      "detail": "key is 10 words against a 5.3-word mean distractor (ratio 1.88)",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0205",
+      "node_id": "tcp_cubic",
+      "item_type": "mcq",
+      "rule": "duplicate_item",
+      "detail": "option set shared with 54 other item(s) - key 'it reacts to a signal the sender can observe without rou'",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0205",
+      "node_id": "tcp_cubic",
+      "item_type": "mcq",
+      "rule": "key_not_node_specific",
+      "detail": "this key is the correct answer for 52 different nodes - it cannot be node-specific, so at most one of those items is scoreable",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0208",
+      "node_id": "decbit",
+      "item_type": "mcq",
+      "rule": "duplicate_item",
+      "detail": "option set shared with 51 other item(s) - key 'it trades some throughput for a shorter queue at the bot'",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0208",
+      "node_id": "decbit",
+      "item_type": "mcq",
+      "rule": "key_not_node_specific",
+      "detail": "this key is the correct answer for 52 different nodes - it cannot be node-specific, so at most one of those items is scoreable",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0209",
+      "node_id": "decbit",
+      "item_type": "mcq",
+      "rule": "duplicate_item",
+      "detail": "option set shared with 51 other item(s) - key 'it reduces the sending rate when the network signals ove'",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0209",
+      "node_id": "decbit",
+      "item_type": "mcq",
+      "rule": "key_not_node_specific",
+      "detail": "this key is the correct answer for 52 different nodes - it cannot be node-specific, so at most one of those items is scoreable",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0209",
+      "node_id": "decbit",
+      "item_type": "mcq",
+      "rule": "length_tell",
+      "detail": "key is 10 words against a 5.3-word mean distractor (ratio 1.88)",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0210",
+      "node_id": "decbit",
+      "item_type": "mcq",
+      "rule": "duplicate_item",
+      "detail": "option set shared with 54 other item(s) - key 'it reacts to a signal the sender can observe without rou'",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0210",
+      "node_id": "decbit",
+      "item_type": "mcq",
+      "rule": "key_not_node_specific",
+      "detail": "this key is the correct answer for 52 different nodes - it cannot be node-specific, so at most one of those items is scoreable",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0213",
+      "node_id": "red",
+      "item_type": "mcq",
+      "rule": "duplicate_item",
+      "detail": "option set shared with 51 other item(s) - key 'it trades some throughput for a shorter queue at the bot'",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0213",
+      "node_id": "red",
+      "item_type": "mcq",
+      "rule": "key_not_node_specific",
+      "detail": "this key is the correct answer for 52 different nodes - it cannot be node-specific, so at most one of those items is scoreable",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0214",
+      "node_id": "red",
+      "item_type": "mcq",
+      "rule": "duplicate_item",
+      "detail": "option set shared with 51 other item(s) - key 'it reduces the sending rate when the network signals ove'",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0214",
+      "node_id": "red",
+      "item_type": "mcq",
+      "rule": "key_not_node_specific",
+      "detail": "this key is the correct answer for 52 different nodes - it cannot be node-specific, so at most one of those items is scoreable",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0214",
+      "node_id": "red",
+      "item_type": "mcq",
+      "rule": "length_tell",
+      "detail": "key is 10 words against a 5.3-word mean distractor (ratio 1.88)",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0215",
+      "node_id": "red",
+      "item_type": "mcq",
+      "rule": "duplicate_item",
+      "detail": "option set shared with 54 other item(s) - key 'it reacts to a signal the sender can observe without rou'",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0215",
+      "node_id": "red",
+      "item_type": "mcq",
+      "rule": "key_not_node_specific",
+      "detail": "this key is the correct answer for 52 different nodes - it cannot be node-specific, so at most one of those items is scoreable",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0218",
+      "node_id": "avg_queue_length",
+      "item_type": "mcq",
+      "rule": "duplicate_item",
+      "detail": "option set shared with 51 other item(s) - key 'it trades some throughput for a shorter queue at the bot'",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0218",
+      "node_id": "avg_queue_length",
+      "item_type": "mcq",
+      "rule": "key_not_node_specific",
+      "detail": "this key is the correct answer for 52 different nodes - it cannot be node-specific, so at most one of those items is scoreable",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0219",
+      "node_id": "avg_queue_length",
+      "item_type": "mcq",
+      "rule": "duplicate_item",
+      "detail": "option set shared with 51 other item(s) - key 'it reduces the sending rate when the network signals ove'",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0219",
+      "node_id": "avg_queue_length",
+      "item_type": "mcq",
+      "rule": "key_not_node_specific",
+      "detail": "this key is the correct answer for 52 different nodes - it cannot be node-specific, so at most one of those items is scoreable",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0219",
+      "node_id": "avg_queue_length",
+      "item_type": "mcq",
+      "rule": "length_tell",
+      "detail": "key is 10 words against a 5.3-word mean distractor (ratio 1.88)",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0220",
+      "node_id": "avg_queue_length",
+      "item_type": "mcq",
+      "rule": "duplicate_item",
+      "detail": "option set shared with 54 other item(s) - key 'it reacts to a signal the sender can observe without rou'",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0220",
+      "node_id": "avg_queue_length",
+      "item_type": "mcq",
+      "rule": "key_not_node_specific",
+      "detail": "this key is the correct answer for 52 different nodes - it cannot be node-specific, so at most one of those items is scoreable",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0223",
+      "node_id": "red_thresholds",
+      "item_type": "mcq",
+      "rule": "duplicate_item",
+      "detail": "option set shared with 51 other item(s) - key 'it trades some throughput for a shorter queue at the bot'",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0223",
+      "node_id": "red_thresholds",
+      "item_type": "mcq",
+      "rule": "key_not_node_specific",
+      "detail": "this key is the correct answer for 52 different nodes - it cannot be node-specific, so at most one of those items is scoreable",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0224",
+      "node_id": "red_thresholds",
+      "item_type": "mcq",
+      "rule": "duplicate_item",
+      "detail": "option set shared with 51 other item(s) - key 'it reduces the sending rate when the network signals ove'",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0224",
+      "node_id": "red_thresholds",
+      "item_type": "mcq",
+      "rule": "key_not_node_specific",
+      "detail": "this key is the correct answer for 52 different nodes - it cannot be node-specific, so at most one of those items is scoreable",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0224",
+      "node_id": "red_thresholds",
+      "item_type": "mcq",
+      "rule": "length_tell",
+      "detail": "key is 10 words against a 5.3-word mean distractor (ratio 1.88)",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0225",
+      "node_id": "red_thresholds",
+      "item_type": "mcq",
+      "rule": "duplicate_item",
+      "detail": "option set shared with 54 other item(s) - key 'it reacts to a signal the sender can observe without rou'",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0225",
+      "node_id": "red_thresholds",
+      "item_type": "mcq",
+      "rule": "key_not_node_specific",
+      "detail": "this key is the correct answer for 52 different nodes - it cannot be node-specific, so at most one of those items is scoreable",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0228",
+      "node_id": "drop_probability",
+      "item_type": "mcq",
+      "rule": "duplicate_item",
+      "detail": "option set shared with 51 other item(s) - key 'it trades some throughput for a shorter queue at the bot'",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0228",
+      "node_id": "drop_probability",
+      "item_type": "mcq",
+      "rule": "key_not_node_specific",
+      "detail": "this key is the correct answer for 52 different nodes - it cannot be node-specific, so at most one of those items is scoreable",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0229",
+      "node_id": "drop_probability",
+      "item_type": "mcq",
+      "rule": "duplicate_item",
+      "detail": "option set shared with 51 other item(s) - key 'it reduces the sending rate when the network signals ove'",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0229",
+      "node_id": "drop_probability",
+      "item_type": "mcq",
+      "rule": "key_not_node_specific",
+      "detail": "this key is the correct answer for 52 different nodes - it cannot be node-specific, so at most one of those items is scoreable",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0229",
+      "node_id": "drop_probability",
+      "item_type": "mcq",
+      "rule": "length_tell",
+      "detail": "key is 10 words against a 5.3-word mean distractor (ratio 1.88)",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0230",
+      "node_id": "drop_probability",
+      "item_type": "mcq",
+      "rule": "duplicate_item",
+      "detail": "option set shared with 54 other item(s) - key 'it reacts to a signal the sender can observe without rou'",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0230",
+      "node_id": "drop_probability",
+      "item_type": "mcq",
+      "rule": "key_not_node_specific",
+      "detail": "this key is the correct answer for 52 different nodes - it cannot be node-specific, so at most one of those items is scoreable",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0233",
+      "node_id": "ecn",
+      "item_type": "mcq",
+      "rule": "duplicate_item",
+      "detail": "option set shared with 51 other item(s) - key 'it trades some throughput for a shorter queue at the bot'",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0233",
+      "node_id": "ecn",
+      "item_type": "mcq",
+      "rule": "key_not_node_specific",
+      "detail": "this key is the correct answer for 52 different nodes - it cannot be node-specific, so at most one of those items is scoreable",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0234",
+      "node_id": "ecn",
+      "item_type": "mcq",
+      "rule": "duplicate_item",
+      "detail": "option set shared with 51 other item(s) - key 'it reduces the sending rate when the network signals ove'",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0234",
+      "node_id": "ecn",
+      "item_type": "mcq",
+      "rule": "key_not_node_specific",
+      "detail": "this key is the correct answer for 52 different nodes - it cannot be node-specific, so at most one of those items is scoreable",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0234",
+      "node_id": "ecn",
+      "item_type": "mcq",
+      "rule": "length_tell",
+      "detail": "key is 10 words against a 5.3-word mean distractor (ratio 1.88)",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0235",
+      "node_id": "ecn",
+      "item_type": "mcq",
+      "rule": "duplicate_item",
+      "detail": "option set shared with 54 other item(s) - key 'it reacts to a signal the sender can observe without rou'",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0235",
+      "node_id": "ecn",
+      "item_type": "mcq",
+      "rule": "key_not_node_specific",
+      "detail": "this key is the correct answer for 52 different nodes - it cannot be node-specific, so at most one of those items is scoreable",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0238",
+      "node_id": "vegas_expected_rate",
+      "item_type": "mcq",
+      "rule": "duplicate_item",
+      "detail": "option set shared with 51 other item(s) - key 'it trades some throughput for a shorter queue at the bot'",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0238",
+      "node_id": "vegas_expected_rate",
+      "item_type": "mcq",
+      "rule": "key_not_node_specific",
+      "detail": "this key is the correct answer for 52 different nodes - it cannot be node-specific, so at most one of those items is scoreable",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0239",
+      "node_id": "vegas_expected_rate",
+      "item_type": "mcq",
+      "rule": "duplicate_item",
+      "detail": "option set shared with 51 other item(s) - key 'it reduces the sending rate when the network signals ove'",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0239",
+      "node_id": "vegas_expected_rate",
+      "item_type": "mcq",
+      "rule": "key_not_node_specific",
+      "detail": "this key is the correct answer for 52 different nodes - it cannot be node-specific, so at most one of those items is scoreable",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0239",
+      "node_id": "vegas_expected_rate",
+      "item_type": "mcq",
+      "rule": "length_tell",
+      "detail": "key is 10 words against a 5.3-word mean distractor (ratio 1.88)",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0240",
+      "node_id": "vegas_expected_rate",
+      "item_type": "mcq",
+      "rule": "duplicate_item",
+      "detail": "option set shared with 54 other item(s) - key 'it reacts to a signal the sender can observe without rou'",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0240",
+      "node_id": "vegas_expected_rate",
+      "item_type": "mcq",
+      "rule": "key_not_node_specific",
+      "detail": "this key is the correct answer for 52 different nodes - it cannot be node-specific, so at most one of those items is scoreable",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0243",
+      "node_id": "vegas_actual_rate",
+      "item_type": "mcq",
+      "rule": "duplicate_item",
+      "detail": "option set shared with 51 other item(s) - key 'it trades some throughput for a shorter queue at the bot'",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0243",
+      "node_id": "vegas_actual_rate",
+      "item_type": "mcq",
+      "rule": "key_not_node_specific",
+      "detail": "this key is the correct answer for 52 different nodes - it cannot be node-specific, so at most one of those items is scoreable",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0244",
+      "node_id": "vegas_actual_rate",
+      "item_type": "mcq",
+      "rule": "duplicate_item",
+      "detail": "option set shared with 51 other item(s) - key 'it reduces the sending rate when the network signals ove'",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0244",
+      "node_id": "vegas_actual_rate",
+      "item_type": "mcq",
+      "rule": "key_not_node_specific",
+      "detail": "this key is the correct answer for 52 different nodes - it cannot be node-specific, so at most one of those items is scoreable",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0244",
+      "node_id": "vegas_actual_rate",
+      "item_type": "mcq",
+      "rule": "length_tell",
+      "detail": "key is 10 words against a 5.3-word mean distractor (ratio 1.88)",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0245",
+      "node_id": "vegas_actual_rate",
+      "item_type": "mcq",
+      "rule": "duplicate_item",
+      "detail": "option set shared with 54 other item(s) - key 'it reacts to a signal the sender can observe without rou'",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0245",
+      "node_id": "vegas_actual_rate",
+      "item_type": "mcq",
+      "rule": "key_not_node_specific",
+      "detail": "this key is the correct answer for 52 different nodes - it cannot be node-specific, so at most one of those items is scoreable",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0248",
+      "node_id": "vegas",
+      "item_type": "mcq",
+      "rule": "duplicate_item",
+      "detail": "option set shared with 51 other item(s) - key 'it trades some throughput for a shorter queue at the bot'",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0248",
+      "node_id": "vegas",
+      "item_type": "mcq",
+      "rule": "key_not_node_specific",
+      "detail": "this key is the correct answer for 52 different nodes - it cannot be node-specific, so at most one of those items is scoreable",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0249",
+      "node_id": "vegas",
+      "item_type": "mcq",
+      "rule": "duplicate_item",
+      "detail": "option set shared with 51 other item(s) - key 'it reduces the sending rate when the network signals ove'",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0249",
+      "node_id": "vegas",
+      "item_type": "mcq",
+      "rule": "key_not_node_specific",
+      "detail": "this key is the correct answer for 52 different nodes - it cannot be node-specific, so at most one of those items is scoreable",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0249",
+      "node_id": "vegas",
+      "item_type": "mcq",
+      "rule": "length_tell",
+      "detail": "key is 10 words against a 5.3-word mean distractor (ratio 1.88)",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0250",
+      "node_id": "vegas",
+      "item_type": "mcq",
+      "rule": "duplicate_item",
+      "detail": "option set shared with 54 other item(s) - key 'it reacts to a signal the sender can observe without rou'",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0250",
+      "node_id": "vegas",
+      "item_type": "mcq",
+      "rule": "key_not_node_specific",
+      "detail": "this key is the correct answer for 52 different nodes - it cannot be node-specific, so at most one of those items is scoreable",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0253",
+      "node_id": "bbr",
+      "item_type": "mcq",
+      "rule": "duplicate_item",
+      "detail": "option set shared with 51 other item(s) - key 'it trades some throughput for a shorter queue at the bot'",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0253",
+      "node_id": "bbr",
+      "item_type": "mcq",
+      "rule": "key_not_node_specific",
+      "detail": "this key is the correct answer for 52 different nodes - it cannot be node-specific, so at most one of those items is scoreable",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0254",
+      "node_id": "bbr",
+      "item_type": "mcq",
+      "rule": "duplicate_item",
+      "detail": "option set shared with 51 other item(s) - key 'it reduces the sending rate when the network signals ove'",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0254",
+      "node_id": "bbr",
+      "item_type": "mcq",
+      "rule": "key_not_node_specific",
+      "detail": "this key is the correct answer for 52 different nodes - it cannot be node-specific, so at most one of those items is scoreable",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0254",
+      "node_id": "bbr",
+      "item_type": "mcq",
+      "rule": "length_tell",
+      "detail": "key is 10 words against a 5.3-word mean distractor (ratio 1.88)",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0255",
+      "node_id": "bbr",
+      "item_type": "mcq",
+      "rule": "duplicate_item",
+      "detail": "option set shared with 54 other item(s) - key 'it reacts to a signal the sender can observe without rou'",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0255",
+      "node_id": "bbr",
+      "item_type": "mcq",
+      "rule": "key_not_node_specific",
+      "detail": "this key is the correct answer for 52 different nodes - it cannot be node-specific, so at most one of those items is scoreable",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0258",
+      "node_id": "dctcp",
+      "item_type": "mcq",
+      "rule": "duplicate_item",
+      "detail": "option set shared with 51 other item(s) - key 'it trades some throughput for a shorter queue at the bot'",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0258",
+      "node_id": "dctcp",
+      "item_type": "mcq",
+      "rule": "key_not_node_specific",
+      "detail": "this key is the correct answer for 52 different nodes - it cannot be node-specific, so at most one of those items is scoreable",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0259",
+      "node_id": "dctcp",
+      "item_type": "mcq",
+      "rule": "duplicate_item",
+      "detail": "option set shared with 51 other item(s) - key 'it reduces the sending rate when the network signals ove'",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0259",
+      "node_id": "dctcp",
+      "item_type": "mcq",
+      "rule": "key_not_node_specific",
+      "detail": "this key is the correct answer for 52 different nodes - it cannot be node-specific, so at most one of those items is scoreable",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0259",
+      "node_id": "dctcp",
+      "item_type": "mcq",
+      "rule": "length_tell",
+      "detail": "key is 10 words against a 5.3-word mean distractor (ratio 1.88)",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0260",
+      "node_id": "dctcp",
+      "item_type": "mcq",
+      "rule": "duplicate_item",
+      "detail": "option set shared with 54 other item(s) - key 'it reacts to a signal the sender can observe without rou'",
+      "rates": {}
+    },
+    {
+      "item_id": "itm_0260",
+      "node_id": "dctcp",
+      "item_type": "mcq",
+      "rule": "key_not_node_specific",
+      "detail": "this key is the correct answer for 52 different nodes - it cannot be node-specific, so at most one of those items is scoreable",
+      "rates": {}
+    }
+  ],
+  "behavioural": {
+    "items": 101,
+    "screened": 101,
+    "terminal_level": 4,
+    "trials": 400,
+    "mean_lit": 5.0,
+    "mean_live": 3.45,
+    "live_distribution": {
+      "2": 12,
+      "3": 41,
+      "4": 39,
+      "5": 9
+    },
+    "nominal_guess_probability": 0.2,
+    "effective_guess_probability": 0.309,
+    "policy_ceiling": 0.2
+  },
+  "structural": {
+    "items": 159,
+    "distinct_option_sets": 3,
+    "distinct_prompts": 52,
+    "key_is_longest": 159,
+    "key_is_longest_rate": 1.0,
+    "chance_rate": 0.25,
+    "mean_length_ratio": 1.561
+  },
+  "flagged_item_ids": [
+    "itm_0002",
+    "itm_0003",
+    "itm_0004",
+    "itm_0005",
+    "itm_0007",
+    "itm_0008",
+    "itm_0009",
+    "itm_0010",
+    "itm_0013",
+    "itm_0014",
+    "itm_0015",
+    "itm_0018",
+    "itm_0019",
+    "itm_0020",
+    "itm_0023",
+    "itm_0024",
+    "itm_0025",
+    "itm_0028",
+    "itm_0029",
+    "itm_0030",
+    "itm_0033",
+    "itm_0034",
+    "itm_0035",
+    "itm_0037",
+    "itm_0038",
+    "itm_0039",
+    "itm_0040",
+    "itm_0042",
+    "itm_0043",
+    "itm_0044",
+    "itm_0045",
+    "itm_0048",
+    "itm_0049",
+    "itm_0050",
+    "itm_0053",
+    "itm_0054",
+    "itm_0055",
+    "itm_0058",
+    "itm_0059",
+    "itm_0060",
+    "itm_0063",
+    "itm_0064",
+    "itm_0065",
+    "itm_0067",
+    "itm_0068",
+    "itm_0069",
+    "itm_0070",
+    "itm_0073",
+    "itm_0074",
+    "itm_0075",
+    "itm_0078",
+    "itm_0079",
+    "itm_0080",
+    "itm_0083",
+    "itm_0084",
+    "itm_0085",
+    "itm_0088",
+    "itm_0089",
+    "itm_0090",
+    "itm_0093",
+    "itm_0094",
+    "itm_0095",
+    "itm_0096",
+    "itm_0098",
+    "itm_0099",
+    "itm_0100",
+    "itm_0103",
+    "itm_0104",
+    "itm_0105",
+    "itm_0108",
+    "itm_0109",
+    "itm_0110",
+    "itm_0113",
+    "itm_0114",
+    "itm_0115",
+    "itm_0117",
+    "itm_0118",
+    "itm_0119",
+    "itm_0120",
+    "itm_0123",
+    "itm_0124",
+    "itm_0125",
+    "itm_0128",
+    "itm_0129",
+    "itm_0130",
+    "itm_0131",
+    "itm_0132",
+    "itm_0133",
+    "itm_0134",
+    "itm_0135",
+    "itm_0138",
+    "itm_0139",
+    "itm_0140",
+    "itm_0143",
+    "itm_0144",
+    "itm_0145",
+    "itm_0148",
+    "itm_0149",
+    "itm_0150",
+    "itm_0153",
+    "itm_0154",
+    "itm_0155",
+    "itm_0158",
+    "itm_0159",
+    "itm_0160",
+    "itm_0163",
+    "itm_0164",
+    "itm_0165",
+    "itm_0168",
+    "itm_0169",
+    "itm_0170",
+    "itm_0173",
+    "itm_0174",
+    "itm_0175",
+    "itm_0178",
+    "itm_0179",
+    "itm_0180",
+    "itm_0183",
+    "itm_0184",
+    "itm_0185",
+    "itm_0188",
+    "itm_0189",
+    "itm_0190",
+    "itm_0193",
+    "itm_0194",
+    "itm_0195",
+    "itm_0198",
+    "itm_0199",
+    "itm_0200",
+    "itm_0203",
+    "itm_0204",
+    "itm_0205",
+    "itm_0208",
+    "itm_0209",
+    "itm_0210",
+    "itm_0212",
+    "itm_0213",
+    "itm_0214",
+    "itm_0215",
+    "itm_0218",
+    "itm_0219",
+    "itm_0220",
+    "itm_0223",
+    "itm_0224",
+    "itm_0225",
+    "itm_0226",
+    "itm_0227",
+    "itm_0228",
+    "itm_0229",
+    "itm_0230",
+    "itm_0233",
+    "itm_0234",
+    "itm_0235",
+    "itm_0238",
+    "itm_0239",
+    "itm_0240",
+    "itm_0243",
+    "itm_0244",
+    "itm_0245",
+    "itm_0247",
+    "itm_0248",
+    "itm_0249",
+    "itm_0250",
+    "itm_0251",
+    "itm_0252",
+    "itm_0253",
+    "itm_0254",
+    "itm_0255",
+    "itm_0258",
+    "itm_0259",
+    "itm_0260"
+  ]
+}

@@ -54,6 +54,11 @@ class BuildConfig:
     #: 40-60 nodes. Below 40 the graph is too thin for narrowing to mean
     #: anything; above 60 no chapter teaches them in one sitting.
     min_nodes: int = field(default_factory=lambda: _int("MIN_NODES", 40))
+    # Rate at which the mcq key being the longest option stops looking like
+    # chance (0.25 at 4 options) and starts looking like a generator habit.
+    length_tell_alarm_rate: float = field(
+        default_factory=lambda: _float("LENGTH_TELL_ALARM_RATE", 0.5))
+
     max_nodes: int = field(default_factory=lambda: _int("MAX_NODES", 60))
 
     # --- layout (§1.2, §8) ----------------------------------------------------

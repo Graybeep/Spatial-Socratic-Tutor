@@ -166,6 +166,11 @@ class Probe:
     lit: int
     solved: bool
     action: str
+    #: The item this probe was drawn on. THE RESAMPLING UNIT for 9.1's error
+    #: bars: dialogues are drawn over a bank of ~101 visually-answerable items,
+    #: so repeated draws on one item are not independent evidence about the
+    #: bank. Bootstrapping dialogues would understate every interval.
+    item_id: str = ""
 
 
 @dataclass
@@ -185,11 +190,23 @@ def _wrong(store: GraphStore, item, expects: str, options: list, avoid: str, rng
     return StudentResponse(type="node_click", node_id=rng.choice(wrong))
 
 
-def run_dialogue(store: GraphStore, student: Student, seed: int, max_turns: int = 8) -> Run:
+def run_dialogue(store: GraphStore, student: Student, seed: int,
+                 max_turns: int = 8, item_id: Optional[str] = None) -> Run:
     db = Store(db_path=":memory:")
     state = db.create(store.initial_theta_map(), graph_fingerprint=store.fingerprint)
     rng = student.rng
     out = Run()
+
+    # FORCE THE STARTING ITEM. Without this every dialogue probes the same item:
+    # the initial theta map is identical across dialogues, so next_node() is
+    # deterministic, _pick_item() takes the first unused item on that node, and
+    # the first_item guard below then pins the whole dialogue to it. Measured:
+    # 60 dialogues, 360 probes, ONE distinct item. The n was 200 draws of the
+    # student's RNG against one fixed narrowing, not 200 samples of the bank.
+    if item_id is not None:
+        forced = store.item(item_id)
+        state.start_item(forced.node_id, forced.id)
+        db.save(state)
 
     phase1 = turn_mod.begin_turn(store, db, state, None)
     turn_mod.complete_turn(store, db, phase1)
@@ -215,6 +232,7 @@ def run_dialogue(store: GraphStore, student: Student, seed: int, max_turns: int 
         if attempt > 0:
             out.probes.append(Probe(
                 attempt=attempt,
+                item_id=item.id,
                 hint_level=phase1.hint_level,
                 lit=len(lit) or len(store.node_ids),
                 solved=pick == item.answer,
@@ -236,16 +254,135 @@ def run_dialogue(store: GraphStore, student: Student, seed: int, max_turns: int 
 # the sweep
 # ---------------------------------------------------------------------------
 
+def bootstrap_ci(by_item: dict, resamples: int, confidence: float, seed: int) -> dict:
+    """Cluster bootstrap over ITEMS for one rate.
+
+    `by_item` maps item_id -> list of booleans (that item's probe outcomes).
+
+    THE UNIT MATTERS AND IT IS NOT THE DIALOGUE. n=200 dialogues are drawn over
+    ~101 visually-answerable items, so a dialogue is not an independent draw
+    from the population we are generalising to: the population is items. Two
+    dialogues that happen to land on the same item share whatever makes that
+    item easy or hard. Resampling dialogues would treat those as independent
+    evidence and report an interval far narrower than the data supports.
+
+    So we resample ITEMS with replacement and pool all probes belonging to each
+    drawn item - the standard cluster bootstrap. The interval widens accordingly,
+    which is the honest direction.
+
+    Percentile interval, not bias-corrected: BCa needs a jackknife per resample
+    and the extra machinery would not change a conclusion at this precision.
+    """
+    items = sorted(by_item)
+    if not items:
+        return {"lo": None, "hi": None, "point": None, "resamples": 0, "items": 0}
+
+    flat = [x for i in items for x in by_item[i]]
+    point = sum(flat) / len(flat) if flat else 0.0
+
+    rng = random.Random(seed)
+    k = len(items)
+    dist = []
+    for _ in range(resamples):
+        pool = []
+        for _ in range(k):
+            pool.extend(by_item[items[rng.randrange(k)]])
+        if pool:
+            dist.append(sum(pool) / len(pool))
+
+    if not dist:
+        return {"lo": None, "hi": None, "point": point,
+                "resamples": 0, "items": k}
+
+    dist.sort()
+    alpha = (1.0 - confidence) / 2.0
+    lo = dist[max(0, int(alpha * len(dist)) - 1)]
+    hi = dist[min(len(dist) - 1, int((1.0 - alpha) * len(dist)))]
+    return {
+        "lo": round(lo, 4),
+        "hi": round(hi, 4),
+        "point": round(point, 4),
+        "half_width": round((hi - lo) / 2, 4),
+        "resamples": len(dist),
+        "items": k,
+        "confidence": confidence,
+    }
+
+
+def marginal_ci(treat_by_item: dict, base_by_item: dict, resamples: int,
+                confidence: float, seed: int) -> dict:
+    """CI for a DIFFERENCE of two rates, resampling the shared item set jointly.
+
+    Marginal leakage is treatment minus the no-hints baseline. Bootstrapping the
+    two arms independently and subtracting the intervals would be wrong twice
+    over: it ignores that both arms run on the SAME items, and subtracting
+    interval endpoints overstates the width of a difference between correlated
+    quantities.
+
+    Drawing one item index and taking that item's probes from BOTH arms keeps
+    the pairing, so item difficulty - the dominant nuisance term - cancels
+    within each resample the way it does in the point estimate.
+    """
+    items = sorted(set(treat_by_item) & set(base_by_item))
+    if not items:
+        return {"lo": None, "hi": None, "point": None, "items": 0}
+
+    def rate(d, keys):
+        pool = [x for k in keys for x in d.get(k, [])]
+        return (sum(pool) / len(pool)) if pool else None
+
+    point_t = rate(treat_by_item, items)
+    point_b = rate(base_by_item, items)
+    point = None if point_t is None or point_b is None else point_t - point_b
+
+    rng = random.Random(seed)
+    k = len(items)
+    dist = []
+    for _ in range(resamples):
+        drawn = [items[rng.randrange(k)] for _ in range(k)]
+        t, b = rate(treat_by_item, drawn), rate(base_by_item, drawn)
+        if t is not None and b is not None:
+            dist.append(t - b)
+
+    if not dist:
+        return {"lo": None, "hi": None, "point": point, "items": k}
+
+    dist.sort()
+    alpha = (1.0 - confidence) / 2.0
+    lo = dist[max(0, int(alpha * len(dist)) - 1)]
+    hi = dist[min(len(dist) - 1, int((1.0 - alpha) * len(dist)))]
+    return {
+        "lo": round(lo, 4),
+        "hi": round(hi, 4),
+        "point": round(point, 4) if point is not None else None,
+        "half_width": round((hi - lo) / 2, 4),
+        "crosses_zero": lo <= 0.0 <= hi,
+        "resamples": len(dist),
+        "items": k,
+        "confidence": confidence,
+    }
+
+
 def measure(store: GraphStore, arm_label: str, mode: str, condition: str, n: int) -> dict:
     by_level = defaultdict(list)
     lit_at_level = defaultdict(list)
+    #: attempt -> item_id -> outcomes. Kept so the rate at each rung can be
+    #: bootstrapped over its true resampling unit; see bootstrap_ci.
+    by_item = defaultdict(lambda: defaultdict(list))
+    # SWEEP THE ITEM BANK. 9.1 runs on the visually-answerable subset (3), so
+    # that subset is the population, and n dialogues are spread across it rather
+    # than spent re-rolling one item. With n < len(bank) this is a sample of
+    # items; with n > len(bank) each item is probed round-robin.
+    bank = [i.id for i in store.bank.items if i.visually_answerable]
     with _config(ladder_mode=mode):
         for i in range(n):
             student = Student(condition=condition, rng=random.Random(f"{arm_label}:{condition}:{i}"))
-            run = run_dialogue(store, student, seed=i)
+            run = run_dialogue(store, student, seed=i,
+                               item_id=bank[i % len(bank)] if bank else None)
             for p in run.probes:
                 by_level[p.attempt].append(p.solved)
                 lit_at_level[p.attempt].append(p.lit)
+                by_item[p.attempt][p.item_id].append(p.solved)
 
     levels = {}
     for level in sorted(by_level):
@@ -273,6 +410,12 @@ def measure(store: GraphStore, arm_label: str, mode: str, condition: str, n: int
         "min_n_for_terminal": min_n,
         "terminal_solve_rate": levels[terminal]["solve_rate"] if terminal else None,
         "terminal_mean_lit": levels[terminal]["mean_lit"] if terminal else None,
+        "terminal_ci": bootstrap_ci(
+            by_item[terminal], CONFIG.bootstrap_resamples,
+            CONFIG.bootstrap_confidence, CONFIG.bootstrap_seed) if terminal else None,
+        "distinct_items": len(by_item[terminal]) if terminal else 0,
+        # Retained so marginal_ci can pair arms on the same items.
+        "_by_item_terminal": {k: list(v) for k, v in by_item[terminal].items()} if terminal else {},
     }
 
 
@@ -383,7 +526,10 @@ def main() -> int:
     print(render(results))
     if args.json:
         with open(args.json, "w", encoding="utf-8") as fh:
-            json.dump(results, fh, indent=2)
+            # Strip the per-item probe map: it is an intermediate the CI
+            # needs in-process, not a result, and it inflates the file ~8x.
+            json.dump([{k: v for k, v in r.items() if not k.startswith("_")}
+                       for r in results], fh, indent=2)
         print(f"\nraw results -> {args.json}")
     return 0
 

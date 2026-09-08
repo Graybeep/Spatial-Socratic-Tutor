@@ -173,6 +173,51 @@ class Config:
     # must run pure.
     ladder_mode: str = field(default_factory=lambda: _str("LADDER_MODE", "interleaved"))
 
+    # --- eval: distractor screen (CLAUDE.md §9.4) ---------------------------
+    # The screen runs in two halves because the item bank has two kinds of
+    # option set, and only one of them a simulated student can discriminate.
+    #
+    #   click items  -> options are NODE IDS. The region filter in
+    #                   eval/adversarial.py accepts or rejects each one, so
+    #                   selection frequency carries signal. Screened behaviourally.
+    #   mcq items    -> options are PROSE. The region filter matches nothing,
+    #                   falls through, and the student picks uniformly (measured:
+    #                   .245/.253/.253/.249 over 4000 draws). A behavioural screen
+    #                   there would flag 100% of items ambiguous and 0% dead, so
+    #                   the mcq half is screened STRUCTURALLY instead.
+    #
+    # Do not "fix" this by giving the student prose reasoning: that needs a model
+    # in the loop (§1.3 keeps judgement out of scoring, and it would need a key).
+    distractor_screen_trials: int = field(
+        default_factory=lambda: _int("DISTRACTOR_SCREEN_TRIALS", 400))
+    # Selection rate at or below which a candidate is dead weight: the item is
+    # silently (k-1)-choice while the interface presents k.
+    distractor_dead_rate: float = field(
+        default_factory=lambda: _float("DISTRACTOR_DEAD_RATE", 0.02))
+    # A non-key option selected at least this often RELATIVE to the key is
+    # competing with it - likely also-correct or ambiguous.
+    distractor_ambiguous_ratio: float = field(
+        default_factory=lambda: _float("DISTRACTOR_AMBIGUOUS_RATIO", 1.0))
+    # Structural (mcq) screen. Key longer than the mean distractor by this factor
+    # is the classic test-wiseness tell: a strong student picks the long option
+    # without reading it.
+    distractor_length_tell_ratio: float = field(
+        default_factory=lambda: _float("DISTRACTOR_LENGTH_TELL_RATIO", 1.6))
+    # Two options this similar are effectively one option.
+    distractor_similarity_ceiling: float = field(
+        default_factory=lambda: _float("DISTRACTOR_SIMILARITY_CEILING", 0.7))
+
+    # --- eval: bootstrap (§9.1 error bars) -----------------------------------
+    # Resampling unit is the ITEM, not the dialogue. Dialogues are drawn over a
+    # bank of ~101 visually-answerable items; resampling dialogues would treat
+    # repeated draws on one item as independent evidence and understate the
+    # interval badly.
+    bootstrap_resamples: int = field(
+        default_factory=lambda: _int("BOOTSTRAP_RESAMPLES", 2000))
+    bootstrap_confidence: float = field(
+        default_factory=lambda: _float("BOOTSTRAP_CONFIDENCE", 0.95))
+    bootstrap_seed: int = field(default_factory=lambda: _int("BOOTSTRAP_SEED", 20260908))
+
     # --- mock server ---------------------------------------------------------
     # Real Call 1 is ~1s; the mock fakes that gap so the client is built against
     # the true latency profile (CLAUDE.md 5, 8: graph must react before text).

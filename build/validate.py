@@ -228,6 +228,72 @@ def check_answer_identity(graph: Graph, bank: ItemBank, rep: Report) -> None:
             )
 
 
+def check_item_distinctness(bank: ItemBank, rep: Report, fixture: bool) -> None:
+    """Catch a generator fixture reaching data/ as though it were content.
+
+    This check exists because it did happen and nothing caught it. 159 mcq items
+    were committed carrying 3 distinct option sets, because build/generate_items.py
+    cycles MOCK_MECHANISMS with `k % 3` under BUILD_LLM=mock - which is the
+    default, since build.RealLLM is unimplemented. Every other check passed: the
+    ids were unique, the schema was satisfied, the counts were right, the DAG was
+    clean. Nothing in the pipeline asked whether the items were DIFFERENT.
+
+    Two rules, both about the same failure from different angles:
+
+      option-set reuse   the same (key, distractors) tuple on many items
+      key reuse ACROSS NODES   one key that is correct for several concepts,
+                               which is the harder error - it means at most one
+                               of those items can be scoreable, and 1.4 scores
+                               mcq into mastery and the adaptive path
+
+    ERROR in strict mode, WARNING under --fixture, where placeholder content is
+    the point.
+    """
+    mcq = [i for i in bank.items if i.type == "mcq"]
+    if not mcq:
+        return
+
+    say = rep.warn if fixture else rep.error
+
+    option_sets = {}
+    for item in mcq:
+        option_sets.setdefault(
+            (item.answer, tuple(sorted(item.distractors))), []).append(item.id)
+
+    reused = {k: v for k, v in option_sets.items() if len(v) > 1}
+    if reused:
+        worst = max(reused.items(), key=lambda kv: len(kv[1]))
+        affected = sum(len(v) for v in reused.values())
+        say(f"mcq option sets not distinct: {len(mcq)} items carry "
+            f"{len(option_sets)} distinct (key, distractors) tuples; "
+            f"{affected} items affected, worst reused {len(worst[1])}x "
+            f"(key {worst[0][0][:48]!r}). This is what a mock item bank looks "
+            f"like - check BUILD_LLM before trusting data/items.json.")
+
+    key_nodes = {}
+    for item in mcq:
+        key_nodes.setdefault(item.answer, set()).add(item.node_id)
+    cross = {k: v for k, v in key_nodes.items() if len(v) > 1}
+    if cross:
+        worst = max(cross.items(), key=lambda kv: len(kv[1]))
+        say(f"{len(cross)} mcq key(s) are correct for more than one node; worst "
+            f"answers {len(worst[1])} different nodes ({worst[0][:48]!r}). A key "
+            f"that answers many concepts is not node-specific, so at most one of "
+            f"those items is scoreable.")
+
+    # Length tell. Not a distinctness problem, but the same human pass fixes it
+    # and it is free to compute here. Warning in both modes: a real bank can
+    # legitimately have a few long keys; what is damning is the RATE.
+    longest = sum(1 for i in mcq
+                  if i.distractors
+                  and len(i.answer.split()) > max(len(d.split()) for d in i.distractors))
+    rate = longest / len(mcq)
+    if rate > BUILD.length_tell_alarm_rate:
+        rep.warn(f"key is the longest option in {longest}/{len(mcq)} mcq items "
+                 f"({rate:.0%}; chance is 25% at 4 options). Pick-the-longest is a "
+                 f"content-free strategy that scores these items.")
+
+
 def validate(graph_path: Path, items_path: Path, fixture: bool) -> Report:
     rep = Report()
 
@@ -241,6 +307,8 @@ def validate(graph_path: Path, items_path: Path, fixture: bool) -> Report:
     except ValidationError as exc:
         rep.error(f"items.json failed schema validation:\n{exc}")
         return rep
+
+    check_item_distinctness(bank, rep, fixture)
 
     node_ids = [n.id for n in graph.nodes]
     node_set = set(node_ids)

@@ -227,6 +227,19 @@ def _similarity(utterance: str, answer: str) -> float:
     )
 
 
+def similarity(a: str, b: str) -> float:
+    """Public alias for the answer-monitor metric.
+
+    Exported so eval/distractor_screen.py (§9.4) can ask "are these two options
+    the same option?" with the SAME metric the leak monitor uses, rather than
+    growing a second, differently-calibrated notion of similarity in the repo.
+    Its known weakness - synonym paraphrase scores near zero, see
+    docs/writeup/limitations.md - applies to that use too, and in the same
+    direction: it under-flags.
+    """
+    return _similarity(a, b)
+
+
 def check_answer_leak(
     utterance: str,
     answer: str,
