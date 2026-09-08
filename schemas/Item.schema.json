@@ -55,6 +55,11 @@
       "title": "Prompt",
       "type": "string"
     },
+    "scorable": {
+      "default": true,
+      "title": "Scorable",
+      "type": "boolean"
+    },
     "type": {
       "enum": [
         "node_click",

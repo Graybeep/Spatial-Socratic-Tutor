@@ -191,7 +191,7 @@ def check_answer_identity(graph: Graph, bank: ItemBank, rep: Report) -> None:
         public = ItemPublic(
             id=item.id,
             difficulty=item.difficulty,
-            scorable=item.type in SCORABLE_EXPECTS,
+            scorable=item.type in SCORABLE_EXPECTS and item.scorable,
         )
         payload = json.dumps(public.model_dump()).lower()
 
@@ -228,6 +228,85 @@ def check_answer_identity(graph: Graph, bank: ItemBank, rep: Report) -> None:
             )
 
 
+def check_item_distinctness(bank: ItemBank, rep: Report, fixture: bool) -> None:
+    """Catch a generator fixture reaching data/ as though it were content.
+
+    This check exists because it did happen and nothing caught it. 159 mcq items
+    were committed carrying 3 distinct option sets, because build/generate_items.py
+    cycles MOCK_MECHANISMS with `k % 3` under BUILD_LLM=mock - which is the
+    default, since build.RealLLM is unimplemented. Every other check passed: the
+    ids were unique, the schema was satisfied, the counts were right, the DAG was
+    clean. Nothing in the pipeline asked whether the items were DIFFERENT.
+
+    Two rules, both about the same failure from different angles:
+
+      option-set reuse   the same (key, distractors) tuple on many items
+      key reuse ACROSS NODES   one key that is correct for several concepts,
+                               which is the harder error - it means at most one
+                               of those items can be scoreable, and 1.4 scores
+                               mcq into mastery and the adaptive path
+
+    ERROR in strict mode, WARNING under --fixture, where placeholder content is
+    the point.
+    """
+    mcq = [i for i in bank.items if i.type == "mcq"]
+    if not mcq:
+        return
+
+    # SEVERITY IS KEYED ON CONSEQUENCE, NOT ON LENIENCY. The rule itself is
+    # unchanged and still fires on exactly the same condition; what changes is
+    # whether a fixture bank is currently allowed to corrupt anything. A
+    # non-distinct bank that feeds theta is an ERROR because mastery and the
+    # adaptive path are computed from it. The same bank marked scorable=false
+    # still teaches and still appears in dialogue, but moves no number, so it is
+    # a WARNING that prints on every build until the items are regenerated.
+    #
+    # This is what makes "flip a flag" the whole remediation when a real bank
+    # lands: set scorable=true and the same check goes straight back to ERROR
+    # without anything here being edited.
+    scorable_mcq = [i for i in mcq if i.scorable]
+    say = rep.error if (scorable_mcq and not fixture) else rep.warn
+    scope = ("scored" if scorable_mcq else "unscored (scorable=false)")
+
+    option_sets = {}
+    for item in mcq:
+        option_sets.setdefault(
+            (item.answer, tuple(sorted(item.distractors))), []).append(item.id)
+
+    reused = {k: v for k, v in option_sets.items() if len(v) > 1}
+    if reused:
+        worst = max(reused.items(), key=lambda kv: len(kv[1]))
+        affected = sum(len(v) for v in reused.values())
+        say(f"[{scope}] mcq option sets not distinct: {len(mcq)} items carry "
+            f"{len(option_sets)} distinct (key, distractors) tuples; "
+            f"{affected} items affected, worst reused {len(worst[1])}x "
+            f"(key {worst[0][0][:48]!r}). This is what a mock item bank looks "
+            f"like - check BUILD_LLM before trusting data/items.json.")
+
+    key_nodes = {}
+    for item in mcq:
+        key_nodes.setdefault(item.answer, set()).add(item.node_id)
+    cross = {k: v for k, v in key_nodes.items() if len(v) > 1}
+    if cross:
+        worst = max(cross.items(), key=lambda kv: len(kv[1]))
+        say(f"[{scope}] {len(cross)} mcq key(s) answer more than one node; worst "
+            f"answers {len(worst[1])} different nodes ({worst[0][:48]!r}). A key "
+            f"that answers many concepts is not node-specific, so at most one of "
+            f"those items is scoreable.")
+
+    # Length tell. Not a distinctness problem, but the same human pass fixes it
+    # and it is free to compute here. Warning in both modes: a real bank can
+    # legitimately have a few long keys; what is damning is the RATE.
+    longest = sum(1 for i in mcq
+                  if i.distractors
+                  and len(i.answer.split()) > max(len(d.split()) for d in i.distractors))
+    rate = longest / len(mcq)
+    if rate > BUILD.length_tell_alarm_rate:
+        rep.warn(f"key is the longest option in {longest}/{len(mcq)} mcq items "
+                 f"({rate:.0%}; chance is 25% at 4 options). Pick-the-longest is a "
+                 f"content-free strategy that scores these items.")
+
+
 def validate(graph_path: Path, items_path: Path, fixture: bool) -> Report:
     rep = Report()
 
@@ -241,6 +320,8 @@ def validate(graph_path: Path, items_path: Path, fixture: bool) -> Report:
     except ValidationError as exc:
         rep.error(f"items.json failed schema validation:\n{exc}")
         return rep
+
+    check_item_distinctness(bank, rep, fixture)
 
     node_ids = [n.id for n in graph.nodes]
     node_set = set(node_ids)

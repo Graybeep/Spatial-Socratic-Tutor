@@ -92,6 +92,16 @@ class Item(Strict):
     # CLAUDE.md §3: true only if the answer is a node or edge ON the graph.
     # The matched-hint eval (§9.2) runs on the true subset only.
     visually_answerable: bool
+    # Whether this item may contribute to mastery. Type is necessary but not
+    # sufficient: an item of a deterministic TYPE can still be unfit to score,
+    # and the mcq bank currently is - 159 items carrying 3 distinct option sets
+    # from a generator fixture, whose keys each answer 52 different concepts.
+    #
+    # A FLAG, NOT A DELETION. The items stay in the bank so that regenerating
+    # them is a flag flip rather than reconstructing a third of the bank under
+    # time pressure. They still teach and still appear in dialogue; they simply
+    # do not move theta.
+    scorable: bool = True
     # Character offsets into the source chunk, for masking on advance/explain.
     answer_spans: list[tuple[int, int]] = Field(default_factory=list)
 

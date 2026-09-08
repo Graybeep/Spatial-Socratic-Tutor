@@ -145,17 +145,175 @@ parametric-reconstruction rate is not merely a lower bound: it is biased
 downward in the direction of the thing being measured. Treat it as a floor, and
 do not report it as an estimate of the true rate.
 
-**The leakage gap is smaller on the real graph than on the synthetic one.** At
-the terminal rung, the partial-knowledge advantage over zero-knowledge was +26
-points on the day-2 fixture and is +12 points on the chapter graph (34% against
-22%, n=200). The direction is unchanged and the finding stands, but the
-magnitude nearly halved when the graph stopped being synthetic.
+**Every §9.1 figure before day 5 was measured on one item.** This is the most
+serious error we have made and it invalidated an earlier draft of this section,
+so it is stated first and in full.
 
-We think the fixture's generated structure made a lit region more informative
-than a real chapter's does, which is a reason to trust the smaller number and a
-concrete instance of the "one chapter" caveat above — except that here we can
-see the size of the effect, because we happen to have measured two graphs. A
-third would probably move it again.
+`run_dialogue` built each dialogue from a fresh student state with an identical
+initial theta map. `next_node()` is deterministic on that map, `_pick_item()`
+returns the first unused item on the chosen node, and a guard confined each
+dialogue to its opening item so the ladder would not reset mid-measurement. The
+three interact: every dialogue opened on the same node, drew the same item, and
+stopped there. Sixty dialogues produced 360 probes over **one** item out of 101.
+
+The reported n=200 was therefore 200 draws of the *student's* random number
+generator against a single fixed narrowing — not 200 samples of the item bank.
+The number had no sampling relationship to the bank it was generalised to, and
+no confidence interval over items existed to be computed.
+
+It was found by trying to compute that interval. The cluster bootstrap reported
+`items=1`, which is the signature of the defect rather than an artefact of the
+method. Nothing else would have caught it: all 179 tests passed throughout,
+because every one of them asserted on the *shape* of the eval output — keys
+present, rates within [0,1], arms labelled — and a rate computed over one item
+has exactly the same shape as a rate computed over a hundred.
+
+Two consequences we want on the record. The earlier claim that the
+partial-knowledge advantage "was +26 points on the day-2 fixture and is +12
+points on the chapter graph", which we attributed to the synthetic graph having
+a more informative lit region than a real one, was **not a graph-shape effect at
+all**: it was two different single items. That explanation is withdrawn. And the
+headline inverted once the bank was actually sampled — see below.
+
+**Corrected §9.1, over the visually-answerable bank (101 items, n=200
+dialogues, 95% percentile cluster bootstrap over items, 2000 resamples):**
+
+| arm | zero | partial | adversarial |
+|---|---|---|---|
+| product configuration | .090 [.055, .131] | .150 [.100, .207] | .130 [.085, .179] |
+| isolated visual channel | .030 [.010, .055] | .130 [.084, .183] | .165 [.105, .228] |
+| verbal channel only | .020 [.005, .040] | .125 [.079, .176] | .080 [.040, .126] |
+| no hints at all | .010 [.000, .025] | .110 [.065, .160] | .095 [.055, .144] |
+
+Marginal over the no-hints baseline, paired on item:
+
+| arm | condition | marginal | 95% CI |
+|---|---|---|---|
+| product configuration | zero | **+.080** | [+.040, +.124] |
+| product configuration | partial | +.040 | [−.010, +.090] |
+| product configuration | adversarial | +.035 | [−.020, +.090] |
+| isolated visual channel | adversarial | **+.070** | [+.010, +.130] |
+| isolated visual channel | zero | +.020 | [−.005, +.050] |
+| isolated visual channel | partial | +.020 | [−.040, +.080] |
+| verbal channel only | zero | +.010 | [−.015, +.035] |
+| verbal channel only | partial | +.015 | [−.040, +.065] |
+| verbal channel only | adversarial | −.015 | [−.070, +.041] |
+
+The interval is a **cluster** bootstrap: it resamples items, not dialogues, and
+pools all of a drawn item's probes. Resampling dialogues would treat repeated
+draws on one item as independent evidence about the bank and report an interval
+far narrower than the data supports. The marginal is paired — one item index is
+drawn and both arms take that item's probes — so item difficulty cancels within
+each resample as it does in the point estimate.
+
+**What survives, and it is less than we claimed.** Exactly one marginal in the
+shipped configuration is distinguishable from zero: the narrowing hands a
+**zero-knowledge** student +8.0 points over no hints at all, CI [+4.0, +12.4].
+The partial-knowledge marginal is +4.0 points with an interval crossing zero,
+and so is the adversarial one.
+
+This inverts the earlier story, and we hold the new framing more loosely than the old one deserved to be held. We previously reported that partial knowledge
+extracts substantially more from a narrowing than zero knowledge does, and
+called the direction more robust than the magnitude. On a properly sampled bank
+the *reverse* is the only significant effect: the measurable leakage is to the
+student who knows nothing, which is the student for whom a five-candidate lit
+set is a genuine reduction from fifty. A partially-knowledgeable student had
+already narrowed the field themselves, so the interface tells them less — that
+is a coherent mechanism, and it is a better result for the thesis than the one
+we lost, but we did not predict it and we are not going to present it as though
+we had.
+
+We are not treating the crossing-zero marginals as evidence of no effect. Over
+101 items the half-widths run around 5 points, and a real effect of 3 points
+would not be detected here. **"Crosses zero at n=101 items" is the claim; "no
+leakage to partially-knowledgeable students" is not** - the partial and
+adversarial arms are underpowered, not null, and we report all three rows with
+their intervals rather than the one that reached significance.
+
+The pattern across the three - narrowing helping most where the student has
+least, and mattering less once they have narrowed the field themselves - is the
+sentence we would lead with, because it is a hint behaving the way a hint
+should. But it rests on a corrected eval one day old, and only the
+zero-knowledge interval is tight enough to carry a claim on its own. We would
+want it reproduced on a second chapter before leaning on it.
+
+**The effective candidate set is smaller than the policy floor.** `candidate_floor`
+is derived from `max_guess_probability = 0.2`, so the ladder lights five nodes at
+the terminal rung and the interface presents a nominal 1-in-5 guess. Measured
+through the partial-knowledge student's region filter, only 3.45 of those five
+survive as plausible: the remainder is the hash-ordered filler `candidate_order`
+appends after the answer, its distractors and its graph neighbours. Effective
+guess probability is **0.309 against a 0.20 ceiling**, and twelve items narrow to
+two live candidates — the coin flip the configuration explicitly sets out to
+avoid. Survivor distribution over 101 items: {2: 12, 3: 41, 4: 39, 5: 9}.
+
+The measurement is conditional on our region filter being a reasonable model of
+plausibility, which is the same construct caveat that applies to the
+partial-knowledge student above. It is not conditional on anything about the
+model, and it is a property of the narrowing schedule rather than of any item.
+
+**Mastery is measured through a single modality, and that modality is the thing
+under test.** Every scored item is now a node click or an edge click. MCQ was the
+only scored type that was not a graph interaction, and we demoted it (below), so
+θ is estimated entirely from what the student does on the graph.
+
+This is a confound between **concept knowledge and interface fluency**. A student
+who reads the layout well looks knowledgeable; a student who understands TCP
+congestion control but has not built a mental model of *our particular picture of
+it* looks weak, and the adaptive path will route them backwards through
+prerequisites they already know. Worse for our purposes, the same channel carries
+both the measurement and the intervention: §9.1 asks how much the narrowing gives
+away, and mastery is estimated from performance on narrowed items. The two are
+not independent, so a narrowing that helps a student answer also raises their
+measured mastery, and we cannot fully separate "learned the concept" from "read
+the hint".
+
+We accepted it for one reason: the alternative was worse. The MCQ bank is
+generator fixture (below), so keeping it scored would mean estimating θ partly
+from items whose keys each answer 52 different concepts. **Narrow but honest
+beats broad but corrupt**, and a confound we can name and bound is preferable to
+a corruption we cannot see. A demo whose mastery numbers are wrong in a
+*known* direction is still demonstrable; one whose numbers are wrong in an
+unknown direction is not.
+
+The honest scope of the claim, then: our mastery estimates describe *performance
+on graph-mediated items*, and we do not claim they are a modality-independent
+measure of concept knowledge. Restoring a second modality is a flag flip — the
+MCQ items remain in the bank at `scorable: false` — so this is a property of the
+current bank rather than of the architecture.
+
+We would want two things before treating θ as a real ability estimate: a scored
+item type that does not route through the graph, and a check that the two types
+rank students similarly. Neither is in scope in four weeks, and we would rather
+state the confound than let a reviewer with an assessment background find it.
+
+**61% of the item bank is generator fixture, and it is now unscored.** 159 of 260
+items are mcq, and those 159 carry **three** distinct (key, distractors) tuples:
+`generate_items.py` cycles a three-element `MOCK_MECHANISMS` list with `k % 3`
+under `BUILD_LLM=mock`, which is the default because `build.RealLLM` is
+unimplemented. The same key is therefore the correct answer for 52 different
+concepts, which cannot be true of any of them. The key is the longest option in
+159/159 items against a chance rate of 25%, so pick-the-longest scores the entire
+mcq bank with no domain knowledge.
+
+§9.1 is unaffected: `visually_answerable` is exactly the 101 click items, whose
+answers are node ids derived from the graph, and the mcq items are excluded from
+the leakage subset by construction. Mastery **was** affected — §1.4 scores mcq —
+which is why those items now carry `scorable: false` and contribute nothing to θ,
+next-node selection or backtracking. They still appear in dialogue and still
+teach; they move no number.
+
+They are flagged, not deleted, so that a real bank is a flag flip rather than a
+reconstruction of a third of the item bank under time pressure. `build/validate.py`
+keeps the check at full strength and keys only its *severity* on consequence: a
+non-distinct bank that feeds θ is an error, the same bank marked unscored is a
+warning that prints on every build. Setting `scorable: true` restores the error
+without anything in the validator being edited.
+
+Nothing flagged this for four days. The ids were unique, the schema validated,
+the counts were right and the DAG was clean — no check asked whether the items
+were *different from each other*. See `eval-harness-failures.md`; it is the same
+failure class as the two recorded there.
 
 **Latency figures come from a mock.** The two-call timing profile the interface
 is built around was reproduced from configured delays, not measured against a
