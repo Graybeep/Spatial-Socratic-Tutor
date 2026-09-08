@@ -3,11 +3,11 @@
     "arm": "product configuration",
     "ladder_mode": "interleaved",
     "condition": "zero",
-    "dialogues": 200,
+    "dialogues": 202,
     "levels": {
       "1": {
-        "n": 200,
-        "solve_rate": 0.09,
+        "n": 202,
+        "solve_rate": 0.0891089108910891,
         "mean_lit": 12
       },
       "2": {
@@ -37,15 +37,24 @@
       }
     },
     "terminal_attempt": 1,
-    "terminal_n": 200,
-    "min_n_for_terminal": 66,
-    "terminal_solve_rate": 0.09,
+    "terminal_n": 202,
+    "min_n_for_terminal": 67,
+    "terminal_solve_rate": 0.0891089108910891,
     "terminal_mean_lit": 12,
+    "provenance": {
+      "population": 101,
+      "distinct": 101,
+      "observations": 202,
+      "unit": "items",
+      "expect_full": true,
+      "coverage": 1.0,
+      "complete": true
+    },
     "terminal_ci": {
-      "lo": 0.0547,
-      "hi": 0.1307,
-      "point": 0.09,
-      "half_width": 0.038,
+      "lo": 0.0545,
+      "hi": 0.1287,
+      "point": 0.0891,
+      "half_width": 0.0371,
       "resamples": 2000,
       "items": 101,
       "confidence": 0.95
@@ -56,11 +65,11 @@
     "arm": "product configuration",
     "ladder_mode": "interleaved",
     "condition": "partial",
-    "dialogues": 200,
+    "dialogues": 202,
     "levels": {
       "1": {
-        "n": 200,
-        "solve_rate": 0.15,
+        "n": 202,
+        "solve_rate": 0.15346534653465346,
         "mean_lit": 12
       },
       "2": {
@@ -90,15 +99,24 @@
       }
     },
     "terminal_attempt": 1,
-    "terminal_n": 200,
-    "min_n_for_terminal": 66,
-    "terminal_solve_rate": 0.15,
+    "terminal_n": 202,
+    "min_n_for_terminal": 67,
+    "terminal_solve_rate": 0.15346534653465346,
     "terminal_mean_lit": 12,
+    "provenance": {
+      "population": 101,
+      "distinct": 101,
+      "observations": 202,
+      "unit": "items",
+      "expect_full": true,
+      "coverage": 1.0,
+      "complete": true
+    },
     "terminal_ci": {
-      "lo": 0.1,
-      "hi": 0.2071,
-      "point": 0.15,
-      "half_width": 0.0535,
+      "lo": 0.099,
+      "hi": 0.2129,
+      "point": 0.1535,
+      "half_width": 0.0569,
       "resamples": 2000,
       "items": 101,
       "confidence": 0.95
@@ -109,11 +127,11 @@
     "arm": "product configuration",
     "ladder_mode": "interleaved",
     "condition": "adversarial",
-    "dialogues": 200,
+    "dialogues": 202,
     "levels": {
       "1": {
-        "n": 200,
-        "solve_rate": 0.13,
+        "n": 202,
+        "solve_rate": 0.12871287128712872,
         "mean_lit": 12
       },
       "2": {
@@ -143,15 +161,24 @@
       }
     },
     "terminal_attempt": 1,
-    "terminal_n": 200,
-    "min_n_for_terminal": 66,
-    "terminal_solve_rate": 0.13,
+    "terminal_n": 202,
+    "min_n_for_terminal": 67,
+    "terminal_solve_rate": 0.12871287128712872,
     "terminal_mean_lit": 12,
+    "provenance": {
+      "population": 101,
+      "distinct": 101,
+      "observations": 202,
+      "unit": "items",
+      "expect_full": true,
+      "coverage": 1.0,
+      "complete": true
+    },
     "terminal_ci": {
-      "lo": 0.0846,
-      "hi": 0.1791,
-      "point": 0.13,
-      "half_width": 0.0473,
+      "lo": 0.0842,
+      "hi": 0.1782,
+      "point": 0.1287,
+      "half_width": 0.047,
       "resamples": 2000,
       "items": 101,
       "confidence": 0.95
@@ -162,11 +189,11 @@
     "arm": "isolated visual channel",
     "ladder_mode": "visual_only",
     "condition": "zero",
-    "dialogues": 200,
+    "dialogues": 202,
     "levels": {
       "1": {
-        "n": 200,
-        "solve_rate": 0.03,
+        "n": 202,
+        "solve_rate": 0.0297029702970297,
         "mean_lit": 12
       },
       "2": {
@@ -196,15 +223,24 @@
       }
     },
     "terminal_attempt": 1,
-    "terminal_n": 200,
-    "min_n_for_terminal": 66,
-    "terminal_solve_rate": 0.03,
+    "terminal_n": 202,
+    "min_n_for_terminal": 67,
+    "terminal_solve_rate": 0.0297029702970297,
     "terminal_mean_lit": 12,
+    "provenance": {
+      "population": 101,
+      "distinct": 101,
+      "observations": 202,
+      "unit": "items",
+      "expect_full": true,
+      "coverage": 1.0,
+      "complete": true
+    },
     "terminal_ci": {
-      "lo": 0.01,
-      "hi": 0.0553,
-      "point": 0.03,
-      "half_width": 0.0227,
+      "lo": 0.0099,
+      "hi": 0.0545,
+      "point": 0.0297,
+      "half_width": 0.0223,
       "resamples": 2000,
       "items": 101,
       "confidence": 0.95
@@ -215,11 +251,11 @@
     "arm": "isolated visual channel",
     "ladder_mode": "visual_only",
     "condition": "partial",
-    "dialogues": 200,
+    "dialogues": 202,
     "levels": {
       "1": {
-        "n": 200,
-        "solve_rate": 0.13,
+        "n": 202,
+        "solve_rate": 0.12871287128712872,
         "mean_lit": 12
       },
       "2": {
@@ -249,14 +285,23 @@
       }
     },
     "terminal_attempt": 1,
-    "terminal_n": 200,
-    "min_n_for_terminal": 66,
-    "terminal_solve_rate": 0.13,
+    "terminal_n": 202,
+    "min_n_for_terminal": 67,
+    "terminal_solve_rate": 0.12871287128712872,
     "terminal_mean_lit": 12,
+    "provenance": {
+      "population": 101,
+      "distinct": 101,
+      "observations": 202,
+      "unit": "items",
+      "expect_full": true,
+      "coverage": 1.0,
+      "complete": true
+    },
     "terminal_ci": {
       "lo": 0.0842,
       "hi": 0.1832,
-      "point": 0.13,
+      "point": 0.1287,
       "half_width": 0.0495,
       "resamples": 2000,
       "items": 101,
@@ -268,11 +313,11 @@
     "arm": "isolated visual channel",
     "ladder_mode": "visual_only",
     "condition": "adversarial",
-    "dialogues": 200,
+    "dialogues": 202,
     "levels": {
       "1": {
-        "n": 200,
-        "solve_rate": 0.165,
+        "n": 202,
+        "solve_rate": 0.16831683168316833,
         "mean_lit": 12
       },
       "2": {
@@ -302,15 +347,24 @@
       }
     },
     "terminal_attempt": 1,
-    "terminal_n": 200,
-    "min_n_for_terminal": 66,
-    "terminal_solve_rate": 0.165,
+    "terminal_n": 202,
+    "min_n_for_terminal": 67,
+    "terminal_solve_rate": 0.16831683168316833,
     "terminal_mean_lit": 12,
+    "provenance": {
+      "population": 101,
+      "distinct": 101,
+      "observations": 202,
+      "unit": "items",
+      "expect_full": true,
+      "coverage": 1.0,
+      "complete": true
+    },
     "terminal_ci": {
-      "lo": 0.1055,
+      "lo": 0.1089,
       "hi": 0.2277,
-      "point": 0.165,
-      "half_width": 0.0611,
+      "point": 0.1683,
+      "half_width": 0.0594,
       "resamples": 2000,
       "items": 101,
       "confidence": 0.95
@@ -321,11 +375,11 @@
     "arm": "verbal channel only",
     "ladder_mode": "verbal_only",
     "condition": "zero",
-    "dialogues": 200,
+    "dialogues": 202,
     "levels": {
       "1": {
-        "n": 200,
-        "solve_rate": 0.02,
+        "n": 202,
+        "solve_rate": 0.019801980198019802,
         "mean_lit": 52
       },
       "2": {
@@ -355,15 +409,24 @@
       }
     },
     "terminal_attempt": 1,
-    "terminal_n": 200,
-    "min_n_for_terminal": 66,
-    "terminal_solve_rate": 0.02,
+    "terminal_n": 202,
+    "min_n_for_terminal": 67,
+    "terminal_solve_rate": 0.019801980198019802,
     "terminal_mean_lit": 52,
+    "provenance": {
+      "population": 101,
+      "distinct": 101,
+      "observations": 202,
+      "unit": "items",
+      "expect_full": true,
+      "coverage": 1.0,
+      "complete": true
+    },
     "terminal_ci": {
       "lo": 0.005,
-      "hi": 0.04,
-      "point": 0.02,
-      "half_width": 0.0175,
+      "hi": 0.0396,
+      "point": 0.0198,
+      "half_width": 0.0173,
       "resamples": 2000,
       "items": 101,
       "confidence": 0.95
@@ -374,11 +437,11 @@
     "arm": "verbal channel only",
     "ladder_mode": "verbal_only",
     "condition": "partial",
-    "dialogues": 200,
+    "dialogues": 202,
     "levels": {
       "1": {
-        "n": 200,
-        "solve_rate": 0.125,
+        "n": 202,
+        "solve_rate": 0.12871287128712872,
         "mean_lit": 52
       },
       "2": {
@@ -408,15 +471,24 @@
       }
     },
     "terminal_attempt": 1,
-    "terminal_n": 200,
-    "min_n_for_terminal": 66,
-    "terminal_solve_rate": 0.125,
+    "terminal_n": 202,
+    "min_n_for_terminal": 67,
+    "terminal_solve_rate": 0.12871287128712872,
     "terminal_mean_lit": 52,
+    "provenance": {
+      "population": 101,
+      "distinct": 101,
+      "observations": 202,
+      "unit": "items",
+      "expect_full": true,
+      "coverage": 1.0,
+      "complete": true
+    },
     "terminal_ci": {
       "lo": 0.0792,
-      "hi": 0.1759,
-      "point": 0.125,
-      "half_width": 0.0483,
+      "hi": 0.1832,
+      "point": 0.1287,
+      "half_width": 0.052,
       "resamples": 2000,
       "items": 101,
       "confidence": 0.95
@@ -427,11 +499,11 @@
     "arm": "verbal channel only",
     "ladder_mode": "verbal_only",
     "condition": "adversarial",
-    "dialogues": 200,
+    "dialogues": 202,
     "levels": {
       "1": {
-        "n": 200,
-        "solve_rate": 0.08,
+        "n": 202,
+        "solve_rate": 0.07920792079207921,
         "mean_lit": 52
       },
       "2": {
@@ -461,15 +533,24 @@
       }
     },
     "terminal_attempt": 1,
-    "terminal_n": 200,
-    "min_n_for_terminal": 66,
-    "terminal_solve_rate": 0.08,
+    "terminal_n": 202,
+    "min_n_for_terminal": 67,
+    "terminal_solve_rate": 0.07920792079207921,
     "terminal_mean_lit": 52,
+    "provenance": {
+      "population": 101,
+      "distinct": 101,
+      "observations": 202,
+      "unit": "items",
+      "expect_full": true,
+      "coverage": 1.0,
+      "complete": true
+    },
     "terminal_ci": {
-      "lo": 0.04,
-      "hi": 0.1263,
-      "point": 0.08,
-      "half_width": 0.0431,
+      "lo": 0.0396,
+      "hi": 0.1238,
+      "point": 0.0792,
+      "half_width": 0.0421,
       "resamples": 2000,
       "items": 101,
       "confidence": 0.95
@@ -480,11 +561,11 @@
     "arm": "no hints at all",
     "ladder_mode": "none",
     "condition": "zero",
-    "dialogues": 200,
+    "dialogues": 202,
     "levels": {
       "1": {
-        "n": 200,
-        "solve_rate": 0.01,
+        "n": 202,
+        "solve_rate": 0.009900990099009901,
         "mean_lit": 52
       },
       "2": {
@@ -514,15 +595,24 @@
       }
     },
     "terminal_attempt": 1,
-    "terminal_n": 200,
-    "min_n_for_terminal": 66,
-    "terminal_solve_rate": 0.01,
+    "terminal_n": 202,
+    "min_n_for_terminal": 67,
+    "terminal_solve_rate": 0.009900990099009901,
     "terminal_mean_lit": 52,
+    "provenance": {
+      "population": 101,
+      "distinct": 101,
+      "observations": 202,
+      "unit": "items",
+      "expect_full": true,
+      "coverage": 1.0,
+      "complete": true
+    },
     "terminal_ci": {
       "lo": 0.0,
-      "hi": 0.025,
-      "point": 0.01,
-      "half_width": 0.0125,
+      "hi": 0.0248,
+      "point": 0.0099,
+      "half_width": 0.0124,
       "resamples": 2000,
       "items": 101,
       "confidence": 0.95
@@ -533,11 +623,11 @@
     "arm": "no hints at all",
     "ladder_mode": "none",
     "condition": "partial",
-    "dialogues": 200,
+    "dialogues": 202,
     "levels": {
       "1": {
-        "n": 200,
-        "solve_rate": 0.11,
+        "n": 202,
+        "solve_rate": 0.10891089108910891,
         "mean_lit": 52
       },
       "2": {
@@ -567,15 +657,24 @@
       }
     },
     "terminal_attempt": 1,
-    "terminal_n": 200,
-    "min_n_for_terminal": 66,
-    "terminal_solve_rate": 0.11,
+    "terminal_n": 202,
+    "min_n_for_terminal": 67,
+    "terminal_solve_rate": 0.10891089108910891,
     "terminal_mean_lit": 52,
+    "provenance": {
+      "population": 101,
+      "distinct": 101,
+      "observations": 202,
+      "unit": "items",
+      "expect_full": true,
+      "coverage": 1.0,
+      "complete": true
+    },
     "terminal_ci": {
-      "lo": 0.065,
-      "hi": 0.16,
-      "point": 0.11,
-      "half_width": 0.0475,
+      "lo": 0.0644,
+      "hi": 0.1584,
+      "point": 0.1089,
+      "half_width": 0.047,
       "resamples": 2000,
       "items": 101,
       "confidence": 0.95
@@ -586,11 +685,11 @@
     "arm": "no hints at all",
     "ladder_mode": "none",
     "condition": "adversarial",
-    "dialogues": 200,
+    "dialogues": 202,
     "levels": {
       "1": {
-        "n": 200,
-        "solve_rate": 0.095,
+        "n": 202,
+        "solve_rate": 0.09900990099009901,
         "mean_lit": 52
       },
       "2": {
@@ -620,15 +719,24 @@
       }
     },
     "terminal_attempt": 1,
-    "terminal_n": 200,
-    "min_n_for_terminal": 66,
-    "terminal_solve_rate": 0.095,
+    "terminal_n": 202,
+    "min_n_for_terminal": 67,
+    "terminal_solve_rate": 0.09900990099009901,
     "terminal_mean_lit": 52,
+    "provenance": {
+      "population": 101,
+      "distinct": 101,
+      "observations": 202,
+      "unit": "items",
+      "expect_full": true,
+      "coverage": 1.0,
+      "complete": true
+    },
     "terminal_ci": {
-      "lo": 0.0547,
-      "hi": 0.1443,
-      "point": 0.095,
-      "half_width": 0.0448,
+      "lo": 0.0594,
+      "hi": 0.1485,
+      "point": 0.099,
+      "half_width": 0.0446,
       "resamples": 2000,
       "items": 101,
       "confidence": 0.95

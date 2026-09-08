@@ -57,6 +57,7 @@ from server.config import CONFIG
 from server.graph_store import GraphStore
 from server.guards import similarity
 from server.mock_tutor import lit_nodes
+from eval import provenance
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
@@ -129,6 +130,7 @@ def behavioural_screen(store: GraphStore, trials: int, seed: int) -> tuple[list,
     terminal_level = max(1, len(CONFIG.narrow_schedule) - 1)
     live_counts: list = []
     lit_counts: list = []
+    screened_ids: list = []
 
     for item in items:
         lit = lit_nodes(store, item, terminal_level)
@@ -144,6 +146,7 @@ def behavioural_screen(store: GraphStore, trials: int, seed: int) -> tuple[list,
         dead = [n for n, r in rates.items() if r <= CONFIG.distractor_dead_rate]
         live_counts.append(len(live))
         lit_counts.append(len(lit))
+        screened_ids.append(item.id)
 
         # Per-item flag ONLY where narrowing has gone past the policy floor into
         # a coin flip or worse. Everything milder is aggregated below: a flag on
@@ -166,6 +169,9 @@ def behavioural_screen(store: GraphStore, trials: int, seed: int) -> tuple[list,
     return findings, {
         "items": len(items),
         "screened": len(live_counts),
+        "provenance": provenance.over(
+            population=[i.id for i in items], sampled=screened_ids,
+            observations=len(live_counts) * trials, unit="click items").as_dict(),
         "terminal_level": terminal_level,
         "trials": trials,
         "mean_lit": round(mean_lit, 2),
@@ -243,6 +249,9 @@ def structural_screen(store: GraphStore) -> tuple[list, dict]:
     n = len(items) or 1
     return findings, {
         "items": len(items),
+        "provenance": provenance.over(
+            population=[i.id for i in items], sampled=[i.id for i in items],
+            observations=len(items), unit="mcq items").as_dict(),
         "distinct_option_sets": len(option_sets),
         "distinct_prompts": len({i.prompt for i in items}),
         "key_is_longest": longest_key,
@@ -304,6 +313,11 @@ def render(findings: list, behav: dict, struct: dict) -> str:
              f"{behav['policy_ceiling']} policy ceiling "
              f"(nominal {behav['nominal_guess_probability']}).")
     L.append(f"  survivors per item: {behav['live_distribution']}")
+    L.append("")
+    bp, sp = behav["provenance"], struct["provenance"]
+    L.append(f"  sampling: behavioural {bp['distinct']}/{bp['population']} "
+             f"{bp['unit']} ({bp['coverage']:.0%}), structural "
+             f"{sp['distinct']}/{sp['population']} {sp['unit']} ({sp['coverage']:.0%})")
     L.append("")
     L.append("PER-ITEM FLAGS -> human pass")
     L.append("-" * 76)

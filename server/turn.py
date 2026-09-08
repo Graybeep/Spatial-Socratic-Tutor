@@ -104,7 +104,7 @@ class Phase1:
         return ItemPublic(
             id=self.item.id,
             difficulty=self.item.difficulty,
-            scorable=self.item.type in SCORABLE_EXPECTS,
+            scorable=_is_scorable(self.item),
         )
 
 
@@ -112,17 +112,38 @@ class Phase1:
 # selection helpers
 # ---------------------------------------------------------------------------
 
+def _is_scorable(item) -> bool:
+    """CLAUDE.md §1.4 plus the item's own flag.
+
+    Type is necessary but not sufficient. §1.4 names the three deterministic
+    types; an item of one of those types can still be unfit to score, and the
+    mcq bank currently is. Both conditions, always - a future bank that sets
+    scorable=True on a free-text item must still not score.
+    """
+    if item is None:
+        return False
+    return item.type in SCORABLE_EXPECTS and getattr(item, "scorable", True)
+
+
 def _mastery_map(state: SessionState) -> dict:
     return {n: mastery_mod.mastery(t) for n, t in state.theta_map.items()}
 
 
 def _pick_item(store: GraphStore, state: SessionState, node_id: str) -> Optional[Item]:
-    """First unused item on the node, else the least recently used one."""
+    """First unused SCORABLE item on the node, then any unused, then reuse.
+
+    Scorable-first matters once a type is demoted. With mcq unscored, 3 of the
+    ~5 items on a node move no number, and bank order interleaves them - so a
+    student answering correctly could work three items before anything credited
+    them, and the node would advance on the strength of two. Preferring scorable
+    items keeps the adaptive path fed; the rest still teach, in the turns after.
+    """
     items = store.items_for(node_id)
     if not items:
         return None
     unused = [i for i in items if i.id not in state.completed_items]
-    return unused[0] if unused else items[0]
+    pool = unused or items
+    return next((i for i in pool if _is_scorable(i)), pool[0])
 
 
 def _advance_to_next_node(store: GraphStore, state: SessionState) -> Optional[Item]:
@@ -298,6 +319,7 @@ def begin_turn(
         graded is not None
         and response is not None
         and response.type in SCORABLE_EXPECTS
+        and _is_scorable(item)
         and not resolved_with_support
     )
 

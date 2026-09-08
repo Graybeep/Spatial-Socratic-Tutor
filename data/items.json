@@ -19,7 +19,8 @@
       ],
       "difficulty": 0.1,
       "visually_answerable": true,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": true
     },
     {
       "id": "itm_0002",
@@ -35,7 +36,8 @@
       ],
       "difficulty": 0.15,
       "visually_answerable": false,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": false
     },
     {
       "id": "itm_0003",
@@ -51,7 +53,8 @@
       ],
       "difficulty": 0.15,
       "visually_answerable": false,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": false
     },
     {
       "id": "itm_0004",
@@ -67,7 +70,8 @@
       ],
       "difficulty": 0.15,
       "visually_answerable": false,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": false
     },
     {
       "id": "itm_0005",
@@ -83,7 +87,8 @@
       ],
       "difficulty": 0.15,
       "visually_answerable": false,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": false
     },
     {
       "id": "itm_0006",
@@ -102,7 +107,8 @@
       ],
       "difficulty": 0.15,
       "visually_answerable": true,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": true
     },
     {
       "id": "itm_0007",
@@ -118,7 +124,8 @@
       ],
       "difficulty": 0.25,
       "visually_answerable": true,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": true
     },
     {
       "id": "itm_0008",
@@ -134,7 +141,8 @@
       ],
       "difficulty": 0.2,
       "visually_answerable": false,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": false
     },
     {
       "id": "itm_0009",
@@ -150,7 +158,8 @@
       ],
       "difficulty": 0.2,
       "visually_answerable": false,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": false
     },
     {
       "id": "itm_0010",
@@ -166,7 +175,8 @@
       ],
       "difficulty": 0.2,
       "visually_answerable": false,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": false
     },
     {
       "id": "itm_0011",
@@ -185,7 +195,8 @@
       ],
       "difficulty": 0.2,
       "visually_answerable": true,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": true
     },
     {
       "id": "itm_0012",
@@ -201,7 +212,8 @@
       ],
       "difficulty": 0.3,
       "visually_answerable": true,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": true
     },
     {
       "id": "itm_0013",
@@ -217,7 +229,8 @@
       ],
       "difficulty": 0.25,
       "visually_answerable": false,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": false
     },
     {
       "id": "itm_0014",
@@ -233,7 +246,8 @@
       ],
       "difficulty": 0.25,
       "visually_answerable": false,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": false
     },
     {
       "id": "itm_0015",
@@ -249,7 +263,8 @@
       ],
       "difficulty": 0.25,
       "visually_answerable": false,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": false
     },
     {
       "id": "itm_0016",
@@ -268,7 +283,8 @@
       ],
       "difficulty": 0.35,
       "visually_answerable": true,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": true
     },
     {
       "id": "itm_0017",
@@ -284,7 +300,8 @@
       ],
       "difficulty": 0.45,
       "visually_answerable": true,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": true
     },
     {
       "id": "itm_0018",
@@ -300,7 +317,8 @@
       ],
       "difficulty": 0.4,
       "visually_answerable": false,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": false
     },
     {
       "id": "itm_0019",
@@ -316,7 +334,8 @@
       ],
       "difficulty": 0.4,
       "visually_answerable": false,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": false
     },
     {
       "id": "itm_0020",
@@ -332,7 +351,8 @@
       ],
       "difficulty": 0.4,
       "visually_answerable": false,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": false
     },
     {
       "id": "itm_0021",
@@ -351,7 +371,8 @@
       ],
       "difficulty": 0.15,
       "visually_answerable": true,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": true
     },
     {
       "id": "itm_0022",
@@ -367,7 +388,8 @@
       ],
       "difficulty": 0.25,
       "visually_answerable": true,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": true
     },
     {
       "id": "itm_0023",
@@ -383,7 +405,8 @@
       ],
       "difficulty": 0.2,
       "visually_answerable": false,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": false
     },
     {
       "id": "itm_0024",
@@ -399,7 +422,8 @@
       ],
       "difficulty": 0.2,
       "visually_answerable": false,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": false
     },
     {
       "id": "itm_0025",
@@ -415,7 +439,8 @@
       ],
       "difficulty": 0.2,
       "visually_answerable": false,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": false
     },
     {
       "id": "itm_0026",
@@ -434,7 +459,8 @@
       ],
       "difficulty": 0.2,
       "visually_answerable": true,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": true
     },
     {
       "id": "itm_0027",
@@ -450,7 +476,8 @@
       ],
       "difficulty": 0.3,
       "visually_answerable": true,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": true
     },
     {
       "id": "itm_0028",
@@ -466,7 +493,8 @@
       ],
       "difficulty": 0.25,
       "visually_answerable": false,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": false
     },
     {
       "id": "itm_0029",
@@ -482,7 +510,8 @@
       ],
       "difficulty": 0.25,
       "visually_answerable": false,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": false
     },
     {
       "id": "itm_0030",
@@ -498,7 +527,8 @@
       ],
       "difficulty": 0.25,
       "visually_answerable": false,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": false
     },
     {
       "id": "itm_0031",
@@ -517,7 +547,8 @@
       ],
       "difficulty": 0.25,
       "visually_answerable": true,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": true
     },
     {
       "id": "itm_0032",
@@ -533,7 +564,8 @@
       ],
       "difficulty": 0.35,
       "visually_answerable": true,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": true
     },
     {
       "id": "itm_0033",
@@ -549,7 +581,8 @@
       ],
       "difficulty": 0.3,
       "visually_answerable": false,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": false
     },
     {
       "id": "itm_0034",
@@ -565,7 +598,8 @@
       ],
       "difficulty": 0.3,
       "visually_answerable": false,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": false
     },
     {
       "id": "itm_0035",
@@ -581,7 +615,8 @@
       ],
       "difficulty": 0.3,
       "visually_answerable": false,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": false
     },
     {
       "id": "itm_0036",
@@ -599,7 +634,8 @@
       ],
       "difficulty": 0.1,
       "visually_answerable": true,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": true
     },
     {
       "id": "itm_0037",
@@ -615,7 +651,8 @@
       ],
       "difficulty": 0.15,
       "visually_answerable": false,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": false
     },
     {
       "id": "itm_0038",
@@ -631,7 +668,8 @@
       ],
       "difficulty": 0.15,
       "visually_answerable": false,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": false
     },
     {
       "id": "itm_0039",
@@ -647,7 +685,8 @@
       ],
       "difficulty": 0.15,
       "visually_answerable": false,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": false
     },
     {
       "id": "itm_0040",
@@ -663,7 +702,8 @@
       ],
       "difficulty": 0.15,
       "visually_answerable": false,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": false
     },
     {
       "id": "itm_0041",
@@ -682,7 +722,8 @@
       ],
       "difficulty": 0.15,
       "visually_answerable": true,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": true
     },
     {
       "id": "itm_0042",
@@ -698,7 +739,8 @@
       ],
       "difficulty": 0.2,
       "visually_answerable": false,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": false
     },
     {
       "id": "itm_0043",
@@ -714,7 +756,8 @@
       ],
       "difficulty": 0.2,
       "visually_answerable": false,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": false
     },
     {
       "id": "itm_0044",
@@ -730,7 +773,8 @@
       ],
       "difficulty": 0.2,
       "visually_answerable": false,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": false
     },
     {
       "id": "itm_0045",
@@ -746,7 +790,8 @@
       ],
       "difficulty": 0.2,
       "visually_answerable": false,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": false
     },
     {
       "id": "itm_0046",
@@ -764,7 +809,8 @@
       ],
       "difficulty": 0.45,
       "visually_answerable": true,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": true
     },
     {
       "id": "itm_0047",
@@ -780,7 +826,8 @@
       ],
       "difficulty": 0.55,
       "visually_answerable": true,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": true
     },
     {
       "id": "itm_0048",
@@ -796,7 +843,8 @@
       ],
       "difficulty": 0.5,
       "visually_answerable": false,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": false
     },
     {
       "id": "itm_0049",
@@ -812,7 +860,8 @@
       ],
       "difficulty": 0.5,
       "visually_answerable": false,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": false
     },
     {
       "id": "itm_0050",
@@ -828,7 +877,8 @@
       ],
       "difficulty": 0.5,
       "visually_answerable": false,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": false
     },
     {
       "id": "itm_0051",
@@ -847,7 +897,8 @@
       ],
       "difficulty": 0.4,
       "visually_answerable": true,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": true
     },
     {
       "id": "itm_0052",
@@ -863,7 +914,8 @@
       ],
       "difficulty": 0.5,
       "visually_answerable": true,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": true
     },
     {
       "id": "itm_0053",
@@ -879,7 +931,8 @@
       ],
       "difficulty": 0.45,
       "visually_answerable": false,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": false
     },
     {
       "id": "itm_0054",
@@ -895,7 +948,8 @@
       ],
       "difficulty": 0.45,
       "visually_answerable": false,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": false
     },
     {
       "id": "itm_0055",
@@ -911,7 +965,8 @@
       ],
       "difficulty": 0.45,
       "visually_answerable": false,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": false
     },
     {
       "id": "itm_0056",
@@ -929,7 +984,8 @@
       ],
       "difficulty": 0.3,
       "visually_answerable": true,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": true
     },
     {
       "id": "itm_0057",
@@ -945,7 +1001,8 @@
       ],
       "difficulty": 0.4,
       "visually_answerable": true,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": true
     },
     {
       "id": "itm_0058",
@@ -961,7 +1018,8 @@
       ],
       "difficulty": 0.35,
       "visually_answerable": false,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": false
     },
     {
       "id": "itm_0059",
@@ -977,7 +1035,8 @@
       ],
       "difficulty": 0.35,
       "visually_answerable": false,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": false
     },
     {
       "id": "itm_0060",
@@ -993,7 +1052,8 @@
       ],
       "difficulty": 0.35,
       "visually_answerable": false,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": false
     },
     {
       "id": "itm_0061",
@@ -1013,7 +1073,8 @@
       ],
       "difficulty": 0.45,
       "visually_answerable": true,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": true
     },
     {
       "id": "itm_0062",
@@ -1029,7 +1090,8 @@
       ],
       "difficulty": 0.55,
       "visually_answerable": true,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": true
     },
     {
       "id": "itm_0063",
@@ -1045,7 +1107,8 @@
       ],
       "difficulty": 0.5,
       "visually_answerable": false,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": false
     },
     {
       "id": "itm_0064",
@@ -1061,7 +1124,8 @@
       ],
       "difficulty": 0.5,
       "visually_answerable": false,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": false
     },
     {
       "id": "itm_0065",
@@ -1077,7 +1141,8 @@
       ],
       "difficulty": 0.5,
       "visually_answerable": false,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": false
     },
     {
       "id": "itm_0066",
@@ -1095,7 +1160,8 @@
       ],
       "difficulty": 0.3,
       "visually_answerable": true,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": true
     },
     {
       "id": "itm_0067",
@@ -1111,7 +1177,8 @@
       ],
       "difficulty": 0.4,
       "visually_answerable": true,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": true
     },
     {
       "id": "itm_0068",
@@ -1127,7 +1194,8 @@
       ],
       "difficulty": 0.35,
       "visually_answerable": false,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": false
     },
     {
       "id": "itm_0069",
@@ -1143,7 +1211,8 @@
       ],
       "difficulty": 0.35,
       "visually_answerable": false,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": false
     },
     {
       "id": "itm_0070",
@@ -1159,7 +1228,8 @@
       ],
       "difficulty": 0.35,
       "visually_answerable": false,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": false
     },
     {
       "id": "itm_0071",
@@ -1177,7 +1247,8 @@
       ],
       "difficulty": 0.3,
       "visually_answerable": true,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": true
     },
     {
       "id": "itm_0072",
@@ -1193,7 +1264,8 @@
       ],
       "difficulty": 0.4,
       "visually_answerable": true,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": true
     },
     {
       "id": "itm_0073",
@@ -1209,7 +1281,8 @@
       ],
       "difficulty": 0.35,
       "visually_answerable": false,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": false
     },
     {
       "id": "itm_0074",
@@ -1225,7 +1298,8 @@
       ],
       "difficulty": 0.35,
       "visually_answerable": false,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": false
     },
     {
       "id": "itm_0075",
@@ -1241,7 +1315,8 @@
       ],
       "difficulty": 0.35,
       "visually_answerable": false,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": false
     },
     {
       "id": "itm_0076",
@@ -1259,7 +1334,8 @@
       ],
       "difficulty": 0.35,
       "visually_answerable": true,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": true
     },
     {
       "id": "itm_0077",
@@ -1275,7 +1351,8 @@
       ],
       "difficulty": 0.45,
       "visually_answerable": true,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": true
     },
     {
       "id": "itm_0078",
@@ -1291,7 +1368,8 @@
       ],
       "difficulty": 0.4,
       "visually_answerable": false,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": false
     },
     {
       "id": "itm_0079",
@@ -1307,7 +1385,8 @@
       ],
       "difficulty": 0.4,
       "visually_answerable": false,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": false
     },
     {
       "id": "itm_0080",
@@ -1323,7 +1402,8 @@
       ],
       "difficulty": 0.4,
       "visually_answerable": false,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": false
     },
     {
       "id": "itm_0081",
@@ -1341,7 +1421,8 @@
       ],
       "difficulty": 0.35,
       "visually_answerable": true,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": true
     },
     {
       "id": "itm_0082",
@@ -1357,7 +1438,8 @@
       ],
       "difficulty": 0.45,
       "visually_answerable": true,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": true
     },
     {
       "id": "itm_0083",
@@ -1373,7 +1455,8 @@
       ],
       "difficulty": 0.4,
       "visually_answerable": false,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": false
     },
     {
       "id": "itm_0084",
@@ -1389,7 +1472,8 @@
       ],
       "difficulty": 0.4,
       "visually_answerable": false,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": false
     },
     {
       "id": "itm_0085",
@@ -1405,7 +1489,8 @@
       ],
       "difficulty": 0.4,
       "visually_answerable": false,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": false
     },
     {
       "id": "itm_0086",
@@ -1424,7 +1509,8 @@
       ],
       "difficulty": 0.4,
       "visually_answerable": true,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": true
     },
     {
       "id": "itm_0087",
@@ -1440,7 +1526,8 @@
       ],
       "difficulty": 0.5,
       "visually_answerable": true,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": true
     },
     {
       "id": "itm_0088",
@@ -1456,7 +1543,8 @@
       ],
       "difficulty": 0.45,
       "visually_answerable": false,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": false
     },
     {
       "id": "itm_0089",
@@ -1472,7 +1560,8 @@
       ],
       "difficulty": 0.45,
       "visually_answerable": false,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": false
     },
     {
       "id": "itm_0090",
@@ -1488,7 +1577,8 @@
       ],
       "difficulty": 0.45,
       "visually_answerable": false,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": false
     },
     {
       "id": "itm_0091",
@@ -1507,7 +1597,8 @@
       ],
       "difficulty": 0.4,
       "visually_answerable": true,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": true
     },
     {
       "id": "itm_0092",
@@ -1523,7 +1614,8 @@
       ],
       "difficulty": 0.5,
       "visually_answerable": true,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": true
     },
     {
       "id": "itm_0093",
@@ -1539,7 +1631,8 @@
       ],
       "difficulty": 0.45,
       "visually_answerable": false,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": false
     },
     {
       "id": "itm_0094",
@@ -1555,7 +1648,8 @@
       ],
       "difficulty": 0.45,
       "visually_answerable": false,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": false
     },
     {
       "id": "itm_0095",
@@ -1571,7 +1665,8 @@
       ],
       "difficulty": 0.45,
       "visually_answerable": false,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": false
     },
     {
       "id": "itm_0096",
@@ -1590,7 +1685,8 @@
       ],
       "difficulty": 0.35,
       "visually_answerable": true,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": true
     },
     {
       "id": "itm_0097",
@@ -1606,7 +1702,8 @@
       ],
       "difficulty": 0.45,
       "visually_answerable": true,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": true
     },
     {
       "id": "itm_0098",
@@ -1622,7 +1719,8 @@
       ],
       "difficulty": 0.4,
       "visually_answerable": false,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": false
     },
     {
       "id": "itm_0099",
@@ -1638,7 +1736,8 @@
       ],
       "difficulty": 0.4,
       "visually_answerable": false,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": false
     },
     {
       "id": "itm_0100",
@@ -1654,7 +1753,8 @@
       ],
       "difficulty": 0.4,
       "visually_answerable": false,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": false
     },
     {
       "id": "itm_0101",
@@ -1673,7 +1773,8 @@
       ],
       "difficulty": 0.35,
       "visually_answerable": true,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": true
     },
     {
       "id": "itm_0102",
@@ -1689,7 +1790,8 @@
       ],
       "difficulty": 0.45,
       "visually_answerable": true,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": true
     },
     {
       "id": "itm_0103",
@@ -1705,7 +1807,8 @@
       ],
       "difficulty": 0.4,
       "visually_answerable": false,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": false
     },
     {
       "id": "itm_0104",
@@ -1721,7 +1824,8 @@
       ],
       "difficulty": 0.4,
       "visually_answerable": false,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": false
     },
     {
       "id": "itm_0105",
@@ -1737,7 +1841,8 @@
       ],
       "difficulty": 0.4,
       "visually_answerable": false,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": false
     },
     {
       "id": "itm_0106",
@@ -1756,7 +1861,8 @@
       ],
       "difficulty": 0.15,
       "visually_answerable": true,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": true
     },
     {
       "id": "itm_0107",
@@ -1772,7 +1878,8 @@
       ],
       "difficulty": 0.25,
       "visually_answerable": true,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": true
     },
     {
       "id": "itm_0108",
@@ -1788,7 +1895,8 @@
       ],
       "difficulty": 0.2,
       "visually_answerable": false,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": false
     },
     {
       "id": "itm_0109",
@@ -1804,7 +1912,8 @@
       ],
       "difficulty": 0.2,
       "visually_answerable": false,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": false
     },
     {
       "id": "itm_0110",
@@ -1820,7 +1929,8 @@
       ],
       "difficulty": 0.2,
       "visually_answerable": false,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": false
     },
     {
       "id": "itm_0111",
@@ -1839,7 +1949,8 @@
       ],
       "difficulty": 0.2,
       "visually_answerable": true,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": true
     },
     {
       "id": "itm_0112",
@@ -1855,7 +1966,8 @@
       ],
       "difficulty": 0.3,
       "visually_answerable": true,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": true
     },
     {
       "id": "itm_0113",
@@ -1871,7 +1983,8 @@
       ],
       "difficulty": 0.25,
       "visually_answerable": false,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": false
     },
     {
       "id": "itm_0114",
@@ -1887,7 +2000,8 @@
       ],
       "difficulty": 0.25,
       "visually_answerable": false,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": false
     },
     {
       "id": "itm_0115",
@@ -1903,7 +2017,8 @@
       ],
       "difficulty": 0.25,
       "visually_answerable": false,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": false
     },
     {
       "id": "itm_0116",
@@ -1922,7 +2037,8 @@
       ],
       "difficulty": 0.3,
       "visually_answerable": true,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": true
     },
     {
       "id": "itm_0117",
@@ -1938,7 +2054,8 @@
       ],
       "difficulty": 0.4,
       "visually_answerable": true,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": true
     },
     {
       "id": "itm_0118",
@@ -1954,7 +2071,8 @@
       ],
       "difficulty": 0.35,
       "visually_answerable": false,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": false
     },
     {
       "id": "itm_0119",
@@ -1970,7 +2088,8 @@
       ],
       "difficulty": 0.35,
       "visually_answerable": false,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": false
     },
     {
       "id": "itm_0120",
@@ -1986,7 +2105,8 @@
       ],
       "difficulty": 0.35,
       "visually_answerable": false,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": false
     },
     {
       "id": "itm_0121",
@@ -2005,7 +2125,8 @@
       ],
       "difficulty": 0.45,
       "visually_answerable": true,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": true
     },
     {
       "id": "itm_0122",
@@ -2021,7 +2142,8 @@
       ],
       "difficulty": 0.55,
       "visually_answerable": true,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": true
     },
     {
       "id": "itm_0123",
@@ -2037,7 +2159,8 @@
       ],
       "difficulty": 0.5,
       "visually_answerable": false,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": false
     },
     {
       "id": "itm_0124",
@@ -2053,7 +2176,8 @@
       ],
       "difficulty": 0.5,
       "visually_answerable": false,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": false
     },
     {
       "id": "itm_0125",
@@ -2069,7 +2193,8 @@
       ],
       "difficulty": 0.5,
       "visually_answerable": false,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": false
     },
     {
       "id": "itm_0126",
@@ -2088,7 +2213,8 @@
       ],
       "difficulty": 0.55,
       "visually_answerable": true,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": true
     },
     {
       "id": "itm_0127",
@@ -2104,7 +2230,8 @@
       ],
       "difficulty": 0.65,
       "visually_answerable": true,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": true
     },
     {
       "id": "itm_0128",
@@ -2120,7 +2247,8 @@
       ],
       "difficulty": 0.6,
       "visually_answerable": false,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": false
     },
     {
       "id": "itm_0129",
@@ -2136,7 +2264,8 @@
       ],
       "difficulty": 0.6,
       "visually_answerable": false,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": false
     },
     {
       "id": "itm_0130",
@@ -2152,7 +2281,8 @@
       ],
       "difficulty": 0.6,
       "visually_answerable": false,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": false
     },
     {
       "id": "itm_0131",
@@ -2171,7 +2301,8 @@
       ],
       "difficulty": 0.65,
       "visually_answerable": true,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": true
     },
     {
       "id": "itm_0132",
@@ -2187,7 +2318,8 @@
       ],
       "difficulty": 0.75,
       "visually_answerable": true,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": true
     },
     {
       "id": "itm_0133",
@@ -2203,7 +2335,8 @@
       ],
       "difficulty": 0.7,
       "visually_answerable": false,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": false
     },
     {
       "id": "itm_0134",
@@ -2219,7 +2352,8 @@
       ],
       "difficulty": 0.7,
       "visually_answerable": false,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": false
     },
     {
       "id": "itm_0135",
@@ -2235,7 +2369,8 @@
       ],
       "difficulty": 0.7,
       "visually_answerable": false,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": false
     },
     {
       "id": "itm_0136",
@@ -2254,7 +2389,8 @@
       ],
       "difficulty": 0.55,
       "visually_answerable": true,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": true
     },
     {
       "id": "itm_0137",
@@ -2270,7 +2406,8 @@
       ],
       "difficulty": 0.65,
       "visually_answerable": true,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": true
     },
     {
       "id": "itm_0138",
@@ -2286,7 +2423,8 @@
       ],
       "difficulty": 0.6,
       "visually_answerable": false,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": false
     },
     {
       "id": "itm_0139",
@@ -2302,7 +2440,8 @@
       ],
       "difficulty": 0.6,
       "visually_answerable": false,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": false
     },
     {
       "id": "itm_0140",
@@ -2318,7 +2457,8 @@
       ],
       "difficulty": 0.6,
       "visually_answerable": false,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": false
     },
     {
       "id": "itm_0141",
@@ -2337,7 +2477,8 @@
       ],
       "difficulty": 0.3,
       "visually_answerable": true,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": true
     },
     {
       "id": "itm_0142",
@@ -2353,7 +2494,8 @@
       ],
       "difficulty": 0.4,
       "visually_answerable": true,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": true
     },
     {
       "id": "itm_0143",
@@ -2369,7 +2511,8 @@
       ],
       "difficulty": 0.35,
       "visually_answerable": false,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": false
     },
     {
       "id": "itm_0144",
@@ -2385,7 +2528,8 @@
       ],
       "difficulty": 0.35,
       "visually_answerable": false,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": false
     },
     {
       "id": "itm_0145",
@@ -2401,7 +2545,8 @@
       ],
       "difficulty": 0.35,
       "visually_answerable": false,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": false
     },
     {
       "id": "itm_0146",
@@ -2420,7 +2565,8 @@
       ],
       "difficulty": 0.4,
       "visually_answerable": true,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": true
     },
     {
       "id": "itm_0147",
@@ -2436,7 +2582,8 @@
       ],
       "difficulty": 0.5,
       "visually_answerable": true,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": true
     },
     {
       "id": "itm_0148",
@@ -2452,7 +2599,8 @@
       ],
       "difficulty": 0.45,
       "visually_answerable": false,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": false
     },
     {
       "id": "itm_0149",
@@ -2468,7 +2616,8 @@
       ],
       "difficulty": 0.45,
       "visually_answerable": false,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": false
     },
     {
       "id": "itm_0150",
@@ -2484,7 +2633,8 @@
       ],
       "difficulty": 0.45,
       "visually_answerable": false,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": false
     },
     {
       "id": "itm_0151",
@@ -2503,7 +2653,8 @@
       ],
       "difficulty": 0.35,
       "visually_answerable": true,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": true
     },
     {
       "id": "itm_0152",
@@ -2519,7 +2670,8 @@
       ],
       "difficulty": 0.45,
       "visually_answerable": true,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": true
     },
     {
       "id": "itm_0153",
@@ -2535,7 +2687,8 @@
       ],
       "difficulty": 0.4,
       "visually_answerable": false,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": false
     },
     {
       "id": "itm_0154",
@@ -2551,7 +2704,8 @@
       ],
       "difficulty": 0.4,
       "visually_answerable": false,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": false
     },
     {
       "id": "itm_0155",
@@ -2567,7 +2721,8 @@
       ],
       "difficulty": 0.4,
       "visually_answerable": false,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": false
     },
     {
       "id": "itm_0156",
@@ -2585,7 +2740,8 @@
       ],
       "difficulty": 0.5,
       "visually_answerable": true,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": true
     },
     {
       "id": "itm_0157",
@@ -2601,7 +2757,8 @@
       ],
       "difficulty": 0.6,
       "visually_answerable": true,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": true
     },
     {
       "id": "itm_0158",
@@ -2617,7 +2774,8 @@
       ],
       "difficulty": 0.55,
       "visually_answerable": false,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": false
     },
     {
       "id": "itm_0159",
@@ -2633,7 +2791,8 @@
       ],
       "difficulty": 0.55,
       "visually_answerable": false,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": false
     },
     {
       "id": "itm_0160",
@@ -2649,7 +2808,8 @@
       ],
       "difficulty": 0.55,
       "visually_answerable": false,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": false
     },
     {
       "id": "itm_0161",
@@ -2668,7 +2828,8 @@
       ],
       "difficulty": 0.45,
       "visually_answerable": true,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": true
     },
     {
       "id": "itm_0162",
@@ -2684,7 +2845,8 @@
       ],
       "difficulty": 0.55,
       "visually_answerable": true,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": true
     },
     {
       "id": "itm_0163",
@@ -2700,7 +2862,8 @@
       ],
       "difficulty": 0.5,
       "visually_answerable": false,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": false
     },
     {
       "id": "itm_0164",
@@ -2716,7 +2879,8 @@
       ],
       "difficulty": 0.5,
       "visually_answerable": false,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": false
     },
     {
       "id": "itm_0165",
@@ -2732,7 +2896,8 @@
       ],
       "difficulty": 0.5,
       "visually_answerable": false,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": false
     },
     {
       "id": "itm_0166",
@@ -2750,7 +2915,8 @@
       ],
       "difficulty": 0.5,
       "visually_answerable": true,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": true
     },
     {
       "id": "itm_0167",
@@ -2766,7 +2932,8 @@
       ],
       "difficulty": 0.6,
       "visually_answerable": true,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": true
     },
     {
       "id": "itm_0168",
@@ -2782,7 +2949,8 @@
       ],
       "difficulty": 0.55,
       "visually_answerable": false,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": false
     },
     {
       "id": "itm_0169",
@@ -2798,7 +2966,8 @@
       ],
       "difficulty": 0.55,
       "visually_answerable": false,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": false
     },
     {
       "id": "itm_0170",
@@ -2814,7 +2983,8 @@
       ],
       "difficulty": 0.55,
       "visually_answerable": false,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": false
     },
     {
       "id": "itm_0171",
@@ -2833,7 +3003,8 @@
       ],
       "difficulty": 0.4,
       "visually_answerable": true,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": true
     },
     {
       "id": "itm_0172",
@@ -2849,7 +3020,8 @@
       ],
       "difficulty": 0.5,
       "visually_answerable": true,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": true
     },
     {
       "id": "itm_0173",
@@ -2865,7 +3037,8 @@
       ],
       "difficulty": 0.45,
       "visually_answerable": false,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": false
     },
     {
       "id": "itm_0174",
@@ -2881,7 +3054,8 @@
       ],
       "difficulty": 0.45,
       "visually_answerable": false,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": false
     },
     {
       "id": "itm_0175",
@@ -2897,7 +3071,8 @@
       ],
       "difficulty": 0.45,
       "visually_answerable": false,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": false
     },
     {
       "id": "itm_0176",
@@ -2916,7 +3091,8 @@
       ],
       "difficulty": 0.55,
       "visually_answerable": true,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": true
     },
     {
       "id": "itm_0177",
@@ -2932,7 +3108,8 @@
       ],
       "difficulty": 0.65,
       "visually_answerable": true,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": true
     },
     {
       "id": "itm_0178",
@@ -2948,7 +3125,8 @@
       ],
       "difficulty": 0.6,
       "visually_answerable": false,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": false
     },
     {
       "id": "itm_0179",
@@ -2964,7 +3142,8 @@
       ],
       "difficulty": 0.6,
       "visually_answerable": false,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": false
     },
     {
       "id": "itm_0180",
@@ -2980,7 +3159,8 @@
       ],
       "difficulty": 0.6,
       "visually_answerable": false,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": false
     },
     {
       "id": "itm_0181",
@@ -2999,7 +3179,8 @@
       ],
       "difficulty": 0.45,
       "visually_answerable": true,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": true
     },
     {
       "id": "itm_0182",
@@ -3015,7 +3196,8 @@
       ],
       "difficulty": 0.55,
       "visually_answerable": true,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": true
     },
     {
       "id": "itm_0183",
@@ -3031,7 +3213,8 @@
       ],
       "difficulty": 0.5,
       "visually_answerable": false,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": false
     },
     {
       "id": "itm_0184",
@@ -3047,7 +3230,8 @@
       ],
       "difficulty": 0.5,
       "visually_answerable": false,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": false
     },
     {
       "id": "itm_0185",
@@ -3063,7 +3247,8 @@
       ],
       "difficulty": 0.5,
       "visually_answerable": false,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": false
     },
     {
       "id": "itm_0186",
@@ -3082,7 +3267,8 @@
       ],
       "difficulty": 0.4,
       "visually_answerable": true,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": true
     },
     {
       "id": "itm_0187",
@@ -3098,7 +3284,8 @@
       ],
       "difficulty": 0.5,
       "visually_answerable": true,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": true
     },
     {
       "id": "itm_0188",
@@ -3114,7 +3301,8 @@
       ],
       "difficulty": 0.45,
       "visually_answerable": false,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": false
     },
     {
       "id": "itm_0189",
@@ -3130,7 +3318,8 @@
       ],
       "difficulty": 0.45,
       "visually_answerable": false,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": false
     },
     {
       "id": "itm_0190",
@@ -3146,7 +3335,8 @@
       ],
       "difficulty": 0.45,
       "visually_answerable": false,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": false
     },
     {
       "id": "itm_0191",
@@ -3165,7 +3355,8 @@
       ],
       "difficulty": 0.5,
       "visually_answerable": true,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": true
     },
     {
       "id": "itm_0192",
@@ -3181,7 +3372,8 @@
       ],
       "difficulty": 0.6,
       "visually_answerable": true,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": true
     },
     {
       "id": "itm_0193",
@@ -3197,7 +3389,8 @@
       ],
       "difficulty": 0.55,
       "visually_answerable": false,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": false
     },
     {
       "id": "itm_0194",
@@ -3213,7 +3406,8 @@
       ],
       "difficulty": 0.55,
       "visually_answerable": false,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": false
     },
     {
       "id": "itm_0195",
@@ -3229,7 +3423,8 @@
       ],
       "difficulty": 0.55,
       "visually_answerable": false,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": false
     },
     {
       "id": "itm_0196",
@@ -3248,7 +3443,8 @@
       ],
       "difficulty": 0.6,
       "visually_answerable": true,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": true
     },
     {
       "id": "itm_0197",
@@ -3264,7 +3460,8 @@
       ],
       "difficulty": 0.7,
       "visually_answerable": true,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": true
     },
     {
       "id": "itm_0198",
@@ -3280,7 +3477,8 @@
       ],
       "difficulty": 0.65,
       "visually_answerable": false,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": false
     },
     {
       "id": "itm_0199",
@@ -3296,7 +3494,8 @@
       ],
       "difficulty": 0.65,
       "visually_answerable": false,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": false
     },
     {
       "id": "itm_0200",
@@ -3312,7 +3511,8 @@
       ],
       "difficulty": 0.65,
       "visually_answerable": false,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": false
     },
     {
       "id": "itm_0201",
@@ -3331,7 +3531,8 @@
       ],
       "difficulty": 0.7,
       "visually_answerable": true,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": true
     },
     {
       "id": "itm_0202",
@@ -3347,7 +3548,8 @@
       ],
       "difficulty": 0.8,
       "visually_answerable": true,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": true
     },
     {
       "id": "itm_0203",
@@ -3363,7 +3565,8 @@
       ],
       "difficulty": 0.75,
       "visually_answerable": false,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": false
     },
     {
       "id": "itm_0204",
@@ -3379,7 +3582,8 @@
       ],
       "difficulty": 0.75,
       "visually_answerable": false,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": false
     },
     {
       "id": "itm_0205",
@@ -3395,7 +3599,8 @@
       ],
       "difficulty": 0.75,
       "visually_answerable": false,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": false
     },
     {
       "id": "itm_0206",
@@ -3413,7 +3618,8 @@
       ],
       "difficulty": 0.45,
       "visually_answerable": true,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": true
     },
     {
       "id": "itm_0207",
@@ -3429,7 +3635,8 @@
       ],
       "difficulty": 0.55,
       "visually_answerable": true,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": true
     },
     {
       "id": "itm_0208",
@@ -3445,7 +3652,8 @@
       ],
       "difficulty": 0.5,
       "visually_answerable": false,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": false
     },
     {
       "id": "itm_0209",
@@ -3461,7 +3669,8 @@
       ],
       "difficulty": 0.5,
       "visually_answerable": false,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": false
     },
     {
       "id": "itm_0210",
@@ -3477,7 +3686,8 @@
       ],
       "difficulty": 0.5,
       "visually_answerable": false,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": false
     },
     {
       "id": "itm_0211",
@@ -3496,7 +3706,8 @@
       ],
       "difficulty": 0.55,
       "visually_answerable": true,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": true
     },
     {
       "id": "itm_0212",
@@ -3512,7 +3723,8 @@
       ],
       "difficulty": 0.65,
       "visually_answerable": true,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": true
     },
     {
       "id": "itm_0213",
@@ -3528,7 +3740,8 @@
       ],
       "difficulty": 0.6,
       "visually_answerable": false,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": false
     },
     {
       "id": "itm_0214",
@@ -3544,7 +3757,8 @@
       ],
       "difficulty": 0.6,
       "visually_answerable": false,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": false
     },
     {
       "id": "itm_0215",
@@ -3560,7 +3774,8 @@
       ],
       "difficulty": 0.6,
       "visually_answerable": false,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": false
     },
     {
       "id": "itm_0216",
@@ -3579,7 +3794,8 @@
       ],
       "difficulty": 0.6,
       "visually_answerable": true,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": true
     },
     {
       "id": "itm_0217",
@@ -3595,7 +3811,8 @@
       ],
       "difficulty": 0.7,
       "visually_answerable": true,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": true
     },
     {
       "id": "itm_0218",
@@ -3611,7 +3828,8 @@
       ],
       "difficulty": 0.65,
       "visually_answerable": false,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": false
     },
     {
       "id": "itm_0219",
@@ -3627,7 +3845,8 @@
       ],
       "difficulty": 0.65,
       "visually_answerable": false,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": false
     },
     {
       "id": "itm_0220",
@@ -3643,7 +3862,8 @@
       ],
       "difficulty": 0.65,
       "visually_answerable": false,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": false
     },
     {
       "id": "itm_0221",
@@ -3662,7 +3882,8 @@
       ],
       "difficulty": 0.6,
       "visually_answerable": true,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": true
     },
     {
       "id": "itm_0222",
@@ -3678,7 +3899,8 @@
       ],
       "difficulty": 0.7,
       "visually_answerable": true,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": true
     },
     {
       "id": "itm_0223",
@@ -3694,7 +3916,8 @@
       ],
       "difficulty": 0.65,
       "visually_answerable": false,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": false
     },
     {
       "id": "itm_0224",
@@ -3710,7 +3933,8 @@
       ],
       "difficulty": 0.65,
       "visually_answerable": false,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": false
     },
     {
       "id": "itm_0225",
@@ -3726,7 +3950,8 @@
       ],
       "difficulty": 0.65,
       "visually_answerable": false,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": false
     },
     {
       "id": "itm_0226",
@@ -3745,7 +3970,8 @@
       ],
       "difficulty": 0.65,
       "visually_answerable": true,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": true
     },
     {
       "id": "itm_0227",
@@ -3761,7 +3987,8 @@
       ],
       "difficulty": 0.75,
       "visually_answerable": true,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": true
     },
     {
       "id": "itm_0228",
@@ -3777,7 +4004,8 @@
       ],
       "difficulty": 0.7,
       "visually_answerable": false,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": false
     },
     {
       "id": "itm_0229",
@@ -3793,7 +4021,8 @@
       ],
       "difficulty": 0.7,
       "visually_answerable": false,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": false
     },
     {
       "id": "itm_0230",
@@ -3809,7 +4038,8 @@
       ],
       "difficulty": 0.7,
       "visually_answerable": false,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": false
     },
     {
       "id": "itm_0231",
@@ -3828,7 +4058,8 @@
       ],
       "difficulty": 0.55,
       "visually_answerable": true,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": true
     },
     {
       "id": "itm_0232",
@@ -3844,7 +4075,8 @@
       ],
       "difficulty": 0.65,
       "visually_answerable": true,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": true
     },
     {
       "id": "itm_0233",
@@ -3860,7 +4092,8 @@
       ],
       "difficulty": 0.6,
       "visually_answerable": false,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": false
     },
     {
       "id": "itm_0234",
@@ -3876,7 +4109,8 @@
       ],
       "difficulty": 0.6,
       "visually_answerable": false,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": false
     },
     {
       "id": "itm_0235",
@@ -3892,7 +4126,8 @@
       ],
       "difficulty": 0.6,
       "visually_answerable": false,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": false
     },
     {
       "id": "itm_0236",
@@ -3911,7 +4146,8 @@
       ],
       "difficulty": 0.65,
       "visually_answerable": true,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": true
     },
     {
       "id": "itm_0237",
@@ -3927,7 +4163,8 @@
       ],
       "difficulty": 0.75,
       "visually_answerable": true,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": true
     },
     {
       "id": "itm_0238",
@@ -3943,7 +4180,8 @@
       ],
       "difficulty": 0.7,
       "visually_answerable": false,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": false
     },
     {
       "id": "itm_0239",
@@ -3959,7 +4197,8 @@
       ],
       "difficulty": 0.7,
       "visually_answerable": false,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": false
     },
     {
       "id": "itm_0240",
@@ -3975,7 +4214,8 @@
       ],
       "difficulty": 0.7,
       "visually_answerable": false,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": false
     },
     {
       "id": "itm_0241",
@@ -3994,7 +4234,8 @@
       ],
       "difficulty": 0.65,
       "visually_answerable": true,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": true
     },
     {
       "id": "itm_0242",
@@ -4010,7 +4251,8 @@
       ],
       "difficulty": 0.75,
       "visually_answerable": true,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": true
     },
     {
       "id": "itm_0243",
@@ -4026,7 +4268,8 @@
       ],
       "difficulty": 0.7,
       "visually_answerable": false,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": false
     },
     {
       "id": "itm_0244",
@@ -4042,7 +4285,8 @@
       ],
       "difficulty": 0.7,
       "visually_answerable": false,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": false
     },
     {
       "id": "itm_0245",
@@ -4058,7 +4302,8 @@
       ],
       "difficulty": 0.7,
       "visually_answerable": false,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": false
     },
     {
       "id": "itm_0246",
@@ -4077,7 +4322,8 @@
       ],
       "difficulty": 0.7,
       "visually_answerable": true,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": true
     },
     {
       "id": "itm_0247",
@@ -4093,7 +4339,8 @@
       ],
       "difficulty": 0.8,
       "visually_answerable": true,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": true
     },
     {
       "id": "itm_0248",
@@ -4109,7 +4356,8 @@
       ],
       "difficulty": 0.75,
       "visually_answerable": false,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": false
     },
     {
       "id": "itm_0249",
@@ -4125,7 +4373,8 @@
       ],
       "difficulty": 0.75,
       "visually_answerable": false,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": false
     },
     {
       "id": "itm_0250",
@@ -4141,7 +4390,8 @@
       ],
       "difficulty": 0.75,
       "visually_answerable": false,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": false
     },
     {
       "id": "itm_0251",
@@ -4159,7 +4409,8 @@
       ],
       "difficulty": 0.75,
       "visually_answerable": true,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": true
     },
     {
       "id": "itm_0252",
@@ -4175,7 +4426,8 @@
       ],
       "difficulty": 0.85,
       "visually_answerable": true,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": true
     },
     {
       "id": "itm_0253",
@@ -4191,7 +4443,8 @@
       ],
       "difficulty": 0.8,
       "visually_answerable": false,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": false
     },
     {
       "id": "itm_0254",
@@ -4207,7 +4460,8 @@
       ],
       "difficulty": 0.8,
       "visually_answerable": false,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": false
     },
     {
       "id": "itm_0255",
@@ -4223,7 +4477,8 @@
       ],
       "difficulty": 0.8,
       "visually_answerable": false,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": false
     },
     {
       "id": "itm_0256",
@@ -4241,7 +4496,8 @@
       ],
       "difficulty": 0.75,
       "visually_answerable": true,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": true
     },
     {
       "id": "itm_0257",
@@ -4257,7 +4513,8 @@
       ],
       "difficulty": 0.85,
       "visually_answerable": true,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": true
     },
     {
       "id": "itm_0258",
@@ -4273,7 +4530,8 @@
       ],
       "difficulty": 0.8,
       "visually_answerable": false,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": false
     },
     {
       "id": "itm_0259",
@@ -4289,7 +4547,8 @@
       ],
       "difficulty": 0.8,
       "visually_answerable": false,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": false
     },
     {
       "id": "itm_0260",
@@ -4305,7 +4564,8 @@
       ],
       "difficulty": 0.8,
       "visually_answerable": false,
-      "answer_spans": []
+      "answer_spans": [],
+      "scorable": false
     }
   ]
 }

@@ -14,7 +14,7 @@ import pytest
 from eval.adversarial import (
     Student, run_dialogue, measure, bootstrap_ci, marginal_ci, _config,
 )
-from eval import distractor_screen
+from eval import distractor_screen, provenance
 from server.config import CONFIG
 from server.graph_store import GraphStore
 
@@ -129,3 +129,87 @@ def test_screen_suppresses_bank_level_rules_from_per_item_list(store):
     result = distractor_screen.run(trials=50)
     per_item = [f for f in result["_objects"] if f.rule not in distractor_screen.BANK_LEVEL]
     assert len(per_item) < 40
+
+
+# ---------------------------------------------------------------------------
+# the generalized guard: every eval output declares what it sampled
+# ---------------------------------------------------------------------------
+
+def test_provenance_catches_the_one_item_bug():
+    """The assertion that would have caught 9.1 on day one, at the cost of a
+    line. 360 observations over 1 of 101 items is degenerate however healthy the
+    observation count looks."""
+    bad = provenance.Provenance(population=101, distinct=1, observations=360,
+                                unit="items")
+    assert bad.degenerate
+    assert "describes one item" in bad.problem()
+    with pytest.raises(AssertionError, match="not sound"):
+        provenance.check(bad)
+
+
+def test_provenance_catches_silent_partial_coverage():
+    """The softer version, and the one actually live: n=60 dialogues over a
+    101-item bank covers 59% while looking like a complete run."""
+    partial = provenance.over(population=[f"i{k}" for k in range(101)],
+                              sampled=[f"i{k}" for k in range(60)],
+                              observations=60, unit="items")
+    assert not partial.complete
+    assert partial.coverage == pytest.approx(0.594, abs=0.01)
+    with pytest.raises(AssertionError):
+        provenance.check(partial)
+
+
+def test_provenance_accepts_a_sound_sample():
+    good = provenance.over(population=[f"i{k}" for k in range(101)],
+                           sampled=[f"i{k}" for k in range(101)],
+                           observations=606, unit="items")
+    assert good.complete and not good.degenerate
+    provenance.check(good)
+
+
+def test_deliberate_subsample_is_not_an_error():
+    """Coverage below 1 is legitimate when the run says so. What must never
+    happen is coverage collapsing silently."""
+    sub = provenance.over(population=range(101), sampled=range(30),
+                          observations=30, unit="items", expect_full=False)
+    provenance.check(sub)
+    assert sub.coverage < 1.0
+
+
+@pytest.mark.parametrize("condition", ["zero", "partial", "adversarial"])
+def test_leakage_arms_declare_sound_sampling(store, condition):
+    """THE REGRESSION, in its generalized form. Runs the real measurement and
+    asserts on its declared provenance rather than on its shape."""
+    bank = [i for i in store.bank.items if i.visually_answerable]
+    result = measure(store, "product configuration", "interleaved",
+                     condition, n=2 * len(bank))
+    prov = provenance.Provenance(**{k: v for k, v in result["provenance"].items()
+                                    if k in {"population", "distinct", "observations",
+                                             "unit", "expect_full"}})
+    provenance.check(prov)
+    assert prov.population == len(bank)
+
+
+def test_distractor_screen_declares_sound_sampling(store):
+    result = distractor_screen.run(trials=50)
+    for half in ("behavioural", "structural"):
+        raw = result[half]["provenance"]
+        prov = provenance.Provenance(**{k: v for k, v in raw.items()
+                                        if k in {"population", "distinct", "observations",
+                                                 "unit", "expect_full"}})
+        provenance.check(prov)
+
+
+def test_every_eval_result_carries_provenance(store):
+    """A number without provenance is a number nobody can audit. If a new eval
+    lands without it, this fails and says so."""
+    bank = [i for i in store.bank.items if i.visually_answerable]
+    outputs = [
+        measure(store, "product configuration", "interleaved", "zero", n=2 * len(bank)),
+        distractor_screen.run(trials=50)["behavioural"],
+        distractor_screen.run(trials=50)["structural"],
+    ]
+    for out in outputs:
+        assert "provenance" in out, f"eval output has no provenance: {sorted(out)[:6]}"
+        for key in ("population", "distinct", "observations", "unit", "coverage"):
+            assert key in out["provenance"]

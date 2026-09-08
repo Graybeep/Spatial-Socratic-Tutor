@@ -24,7 +24,7 @@ is still the default.
 ```bash
 pip install -r requirements.txt
 python -m build.validate         # strict; must be clean
-python -m pytest                 # 179 tests
+python -m pytest                 # 197 tests
 python -m server.main            # http://127.0.0.1:8000
 ```
 
@@ -49,8 +49,20 @@ cp .env.example .env   # only needed once real LLM calls go in (week 2)
 Measure leakage (§9.1) — three student conditions, arms labelled:
 
 ```bash
-python -m eval.adversarial --n 60
+python -m eval.adversarial       # n defaults to 2 per item
 ```
+
+Screen the item bank (§9.4) - no key, no chapter, no network:
+
+```bash
+python -m eval.distractor_screen
+```
+
+Every eval output carries a `provenance` block saying what it sampled
+(`population`, `distinct`, `coverage`). Check it before quoting a number: §9.1
+was measured over ONE item for four days and every test passed, because a rate
+over one item has the same shape as a rate over a hundred. See
+`docs/writeup/eval-harness-failures.md`.
 
 Never report `1/N` as leakage. It is a lower bound that assumes uniform choice;
 the measured partial-knowledge rate runs well above it. `MAX_GUESS_PROBABILITY`

@@ -191,7 +191,7 @@ def check_answer_identity(graph: Graph, bank: ItemBank, rep: Report) -> None:
         public = ItemPublic(
             id=item.id,
             difficulty=item.difficulty,
-            scorable=item.type in SCORABLE_EXPECTS,
+            scorable=item.type in SCORABLE_EXPECTS and item.scorable,
         )
         payload = json.dumps(public.model_dump()).lower()
 
@@ -253,7 +253,20 @@ def check_item_distinctness(bank: ItemBank, rep: Report, fixture: bool) -> None:
     if not mcq:
         return
 
-    say = rep.warn if fixture else rep.error
+    # SEVERITY IS KEYED ON CONSEQUENCE, NOT ON LENIENCY. The rule itself is
+    # unchanged and still fires on exactly the same condition; what changes is
+    # whether a fixture bank is currently allowed to corrupt anything. A
+    # non-distinct bank that feeds theta is an ERROR because mastery and the
+    # adaptive path are computed from it. The same bank marked scorable=false
+    # still teaches and still appears in dialogue, but moves no number, so it is
+    # a WARNING that prints on every build until the items are regenerated.
+    #
+    # This is what makes "flip a flag" the whole remediation when a real bank
+    # lands: set scorable=true and the same check goes straight back to ERROR
+    # without anything here being edited.
+    scorable_mcq = [i for i in mcq if i.scorable]
+    say = rep.error if (scorable_mcq and not fixture) else rep.warn
+    scope = ("scored" if scorable_mcq else "unscored (scorable=false)")
 
     option_sets = {}
     for item in mcq:
@@ -264,7 +277,7 @@ def check_item_distinctness(bank: ItemBank, rep: Report, fixture: bool) -> None:
     if reused:
         worst = max(reused.items(), key=lambda kv: len(kv[1]))
         affected = sum(len(v) for v in reused.values())
-        say(f"mcq option sets not distinct: {len(mcq)} items carry "
+        say(f"[{scope}] mcq option sets not distinct: {len(mcq)} items carry "
             f"{len(option_sets)} distinct (key, distractors) tuples; "
             f"{affected} items affected, worst reused {len(worst[1])}x "
             f"(key {worst[0][0][:48]!r}). This is what a mock item bank looks "
@@ -276,7 +289,7 @@ def check_item_distinctness(bank: ItemBank, rep: Report, fixture: bool) -> None:
     cross = {k: v for k, v in key_nodes.items() if len(v) > 1}
     if cross:
         worst = max(cross.items(), key=lambda kv: len(kv[1]))
-        say(f"{len(cross)} mcq key(s) are correct for more than one node; worst "
+        say(f"[{scope}] {len(cross)} mcq key(s) answer more than one node; worst "
             f"answers {len(worst[1])} different nodes ({worst[0][:48]!r}). A key "
             f"that answers many concepts is not node-specific, so at most one of "
             f"those items is scoreable.")

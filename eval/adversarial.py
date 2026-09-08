@@ -75,6 +75,7 @@ from server import mock_tutor
 from server import turn as turn_mod
 from server.config import CONFIG
 from server.graph_store import GraphStore
+from eval import provenance
 from server.schemas import EdgeRef, StudentResponse
 from server.state import Store
 
@@ -410,6 +411,12 @@ def measure(store: GraphStore, arm_label: str, mode: str, condition: str, n: int
         "min_n_for_terminal": min_n,
         "terminal_solve_rate": levels[terminal]["solve_rate"] if terminal else None,
         "terminal_mean_lit": levels[terminal]["mean_lit"] if terminal else None,
+        "provenance": provenance.over(
+            population=bank,
+            sampled=by_item[terminal] if terminal else [],
+            observations=sum(len(v) for v in (by_item[terminal].values() if terminal else [])),
+            unit="items",
+        ).as_dict(),
         "terminal_ci": bootstrap_ci(
             by_item[terminal], CONFIG.bootstrap_resamples,
             CONFIG.bootstrap_confidence, CONFIG.bootstrap_seed) if terminal else None,
@@ -417,6 +424,14 @@ def measure(store: GraphStore, arm_label: str, mode: str, condition: str, n: int
         # Retained so marginal_ci can pair arms on the same items.
         "_by_item_terminal": {k: list(v) for k, v in by_item[terminal].items()} if terminal else {},
     }
+
+
+def _default_n(n: Optional[int]) -> int:
+    """Two dialogues per visually-answerable item, unless told otherwise."""
+    if n is not None:
+        return n
+    bank = [i for i in GraphStore.load().bank.items if i.visually_answerable]
+    return max(2 * len(bank), 60)
 
 
 def run_all(n: int, arms: Optional[dict] = None) -> list:
@@ -517,12 +532,16 @@ def render(results: list) -> str:
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--n", type=int, default=60,
+    # DEFAULT COVERS THE BANK. 9.1 says "60 dialogues, not 30", which was about
+    # statistical power when a dialogue was the unit. Once measure() sweeps
+    # items, the unit is the item and 60 dialogues cover 60 of 101 - a silently
+    # partial run. Default is two dialogues per item; --n still overrides.
+    parser.add_argument("--n", type=int, default=None,
                         help="dialogues per arm per condition (CLAUDE.md 9.1 wants 60)")
     parser.add_argument("--json", type=str, default=None, help="also write raw results here")
     args = parser.parse_args()
 
-    results = run_all(args.n)
+    results = run_all(_default_n(args.n))
     print(render(results))
     if args.json:
         with open(args.json, "w", encoding="utf-8") as fh:

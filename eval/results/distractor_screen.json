@@ -3132,6 +3132,15 @@
   "behavioural": {
     "items": 101,
     "screened": 101,
+    "provenance": {
+      "population": 101,
+      "distinct": 101,
+      "observations": 40400,
+      "unit": "click items",
+      "expect_full": true,
+      "coverage": 1.0,
+      "complete": true
+    },
     "terminal_level": 4,
     "trials": 400,
     "mean_lit": 5.0,
@@ -3148,6 +3157,15 @@
   },
   "structural": {
     "items": 159,
+    "provenance": {
+      "population": 159,
+      "distinct": 159,
+      "observations": 159,
+      "unit": "mcq items",
+      "expect_full": true,
+      "coverage": 1.0,
+      "complete": true
+    },
     "distinct_option_sets": 3,
     "distinct_prompts": 52,
     "key_is_longest": 159,

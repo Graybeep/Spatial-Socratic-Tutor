@@ -95,12 +95,31 @@ def test_option_order_differs_across_items_in_one_session(store):
     assert len(orders) > 1
 
 
-def test_mcq_scores_on_the_key_not_the_position(client, session, store):
+def test_mcq_grades_on_the_key_but_does_not_move_mastery(client, session, store):
+    """MCQ is DEMOTED, not deleted: it still grades, it no longer scores.
+
+    This test previously asserted the opposite - a correct mcq raised mastery -
+    and that was right until the bank was found to be generator fixture (159
+    items, 3 distinct option sets, each key answering 52 concepts). The items
+    stay in the bank marked scorable=false so a real bank is a flag flip, and
+    until then they teach without moving theta.
+
+    Flip data/items.json back to scorable=true and this test should fail. That
+    is the intended signal, not a regression.
+    """
     data = drive_to_mcq(client, session, store)
     if data is None:
         pytest.skip("no MCQ item reached in this walk")
     item = store.item(data["item"]["id"])
-    node = store.item(data["item"]["id"]).node_id
+    node = item.node_id
     before = data["graph_state"]["mastery"][node]
+
+    assert data["item"]["scorable"] is False, (
+        "the client is being told an unscorable item counts"
+    )
+
     data = turn(client, session, {"type": "mcq", "choice_id": item.answer})
-    assert data["graph_state"]["mastery"][node] > before
+    assert data["graph_state"]["mastery"][node] == before, (
+        "an unscorable item moved mastery - 1.4's scoring gate is not honouring "
+        "Item.scorable"
+    )

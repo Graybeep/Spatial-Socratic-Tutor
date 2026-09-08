@@ -212,7 +212,7 @@ shipped configuration is distinguishable from zero: the narrowing hands a
 The partial-knowledge marginal is +4.0 points with an interval crossing zero,
 and so is the adversarial one.
 
-This inverts the earlier story. We previously reported that partial knowledge
+This inverts the earlier story, and we hold the new framing more loosely than the old one deserved to be held. We previously reported that partial knowledge
 extracts substantially more from a narrowing than zero knowledge does, and
 called the direction more robust than the magnitude. On a properly sampled bank
 the *reverse* is the only significant effect: the measurable leakage is to the
@@ -223,10 +223,19 @@ is a coherent mechanism, and it is a better result for the thesis than the one
 we lost, but we did not predict it and we are not going to present it as though
 we had.
 
-We are not treating the crossing-zero marginals as evidence of no effect. n=200
-over 101 items leaves half-widths around 5 points, and a real effect of 3 points
-would not be detected here. "Not distinguishable from zero at this n" is the
-claim; "no leakage to partially-knowledgeable students" is not.
+We are not treating the crossing-zero marginals as evidence of no effect. Over
+101 items the half-widths run around 5 points, and a real effect of 3 points
+would not be detected here. **"Crosses zero at n=101 items" is the claim; "no
+leakage to partially-knowledgeable students" is not** - the partial and
+adversarial arms are underpowered, not null, and we report all three rows with
+their intervals rather than the one that reached significance.
+
+The pattern across the three - narrowing helping most where the student has
+least, and mattering less once they have narrowed the field themselves - is the
+sentence we would lead with, because it is a hint behaving the way a hint
+should. But it rests on a corrected eval one day old, and only the
+zero-knowledge interval is tight enough to carry a claim on its own. We would
+want it reproduced on a second chapter before leaning on it.
 
 **The effective candidate set is smaller than the policy floor.** `candidate_floor`
 is derived from `max_guess_probability = 0.2`, so the ladder lights five nodes at
@@ -243,25 +252,68 @@ plausibility, which is the same construct caveat that applies to the
 partial-knowledge student above. It is not conditional on anything about the
 model, and it is a property of the narrowing schedule rather than of any item.
 
-**61% of the item bank is generator fixture.** 159 of 260 items are mcq, and
-those 159 carry **three** distinct (key, distractors) tuples: `generate_items.py`
-cycles a three-element `MOCK_MECHANISMS` list with `k % 3` under `BUILD_LLM=mock`,
-which is the default because `build.RealLLM` is unimplemented. The same key is
-therefore the correct answer for 52 different concepts, which cannot be true of
-any of them. The key is the longest option in 159/159 items against a chance rate
-of 25%, so pick-the-longest scores the entire mcq bank with no domain knowledge.
+**Mastery is measured through a single modality, and that modality is the thing
+under test.** Every scored item is now a node click or an edge click. MCQ was the
+only scored type that was not a graph interaction, and we demoted it (below), so
+θ is estimated entirely from what the student does on the graph.
+
+This is a confound between **concept knowledge and interface fluency**. A student
+who reads the layout well looks knowledgeable; a student who understands TCP
+congestion control but has not built a mental model of *our particular picture of
+it* looks weak, and the adaptive path will route them backwards through
+prerequisites they already know. Worse for our purposes, the same channel carries
+both the measurement and the intervention: §9.1 asks how much the narrowing gives
+away, and mastery is estimated from performance on narrowed items. The two are
+not independent, so a narrowing that helps a student answer also raises their
+measured mastery, and we cannot fully separate "learned the concept" from "read
+the hint".
+
+We accepted it for one reason: the alternative was worse. The MCQ bank is
+generator fixture (below), so keeping it scored would mean estimating θ partly
+from items whose keys each answer 52 different concepts. **Narrow but honest
+beats broad but corrupt**, and a confound we can name and bound is preferable to
+a corruption we cannot see. A demo whose mastery numbers are wrong in a
+*known* direction is still demonstrable; one whose numbers are wrong in an
+unknown direction is not.
+
+The honest scope of the claim, then: our mastery estimates describe *performance
+on graph-mediated items*, and we do not claim they are a modality-independent
+measure of concept knowledge. Restoring a second modality is a flag flip — the
+MCQ items remain in the bank at `scorable: false` — so this is a property of the
+current bank rather than of the architecture.
+
+We would want two things before treating θ as a real ability estimate: a scored
+item type that does not route through the graph, and a check that the two types
+rank students similarly. Neither is in scope in four weeks, and we would rather
+state the confound than let a reviewer with an assessment background find it.
+
+**61% of the item bank is generator fixture, and it is now unscored.** 159 of 260
+items are mcq, and those 159 carry **three** distinct (key, distractors) tuples:
+`generate_items.py` cycles a three-element `MOCK_MECHANISMS` list with `k % 3`
+under `BUILD_LLM=mock`, which is the default because `build.RealLLM` is
+unimplemented. The same key is therefore the correct answer for 52 different
+concepts, which cannot be true of any of them. The key is the longest option in
+159/159 items against a chance rate of 25%, so pick-the-longest scores the entire
+mcq bank with no domain knowledge.
 
 §9.1 is unaffected: `visually_answerable` is exactly the 101 click items, whose
 answers are node ids derived from the graph, and the mcq items are excluded from
-the leakage subset by construction. **Mastery is affected.** §1.4 scores mcq, so
-these items feed θ, the mastery map, next-node selection and backtracking.
+the leakage subset by construction. Mastery **was** affected — §1.4 scores mcq —
+which is why those items now carry `scorable: false` and contribute nothing to θ,
+next-node selection or backtracking. They still appear in dialogue and still
+teach; they move no number.
+
+They are flagged, not deleted, so that a real bank is a flag flip rather than a
+reconstruction of a third of the item bank under time pressure. `build/validate.py`
+keeps the check at full strength and keys only its *severity* on consequence: a
+non-distinct bank that feeds θ is an error, the same bank marked unscored is a
+warning that prints on every build. Setting `scorable: true` restores the error
+without anything in the validator being edited.
 
 Nothing flagged this for four days. The ids were unique, the schema validated,
 the counts were right and the DAG was clean — no check asked whether the items
-were *different from each other*. `build/validate.py` now errors on non-distinct
-mcq option sets and on a key that answers more than one node, which means `main`
-currently fails strict validation, and that is the correct state for a bank in
-this condition.
+were *different from each other*. See `eval-harness-failures.md`; it is the same
+failure class as the two recorded there.
 
 **Latency figures come from a mock.** The two-call timing profile the interface
 is built around was reproduced from configured delays, not measured against a
