@@ -1,10 +1,12 @@
 """CLAUDE.md §1.5 — Call 2 must never receive the answer or its aliases.
 
-THIS TEST IS EXPECTED TO FAIL RIGHT NOW. It is committed failing, on purpose,
-because the breach is real and the fix changes a frozen contract (§5), which is
-a decision for the human rather than something to route around (§0).
+RESOLVED. This file was committed failing (xfail strict) while the contract
+question was open; the fidelity ceiling in server/turn.py closed it and the
+marker is gone. The measurements below are kept as the record of what the
+breach was, because the numbers are the argument for why the contract is
+expressed as a fidelity ceiling rather than a field whitelist.
 
-THE BREACH
+THE BREACH, AS IT WAS
 
   §1.5  "Call 2 never receives the answer. Not the answer string, not the
          answer aliases, not the source chunk during `ask` or `hint_*`."
@@ -107,18 +109,31 @@ def _answer_aliases(store, item_id):
     node_ids = {n.id for n in store.graph.nodes}
     if item.answer in node_ids:
         aliases.add(store.label(item.answer).casefold())
+    elif "->" in item.answer:
+        # Edge answers carry NO aliases (they were deleted as unusable in an
+        # earlier pass), which would make edge items look trivially safe here.
+        #
+        # ONLY THE *FROM* ENDPOINT IS THE ANSWER SURFACE. For all 49 edge items
+        # node_id == the TO endpoint, so the unknown the student must find is
+        # which prerequisite links INTO it. Naming the TO endpoint is the anchor
+        # the question is built on - the item's own prompt names it in 49/49
+        # cases - and withholding it leaves Call 2 asking "which link?" about an
+        # unspecified edge, which measured as 32 of 36 edge ask turns with no
+        # anchor at all.
+        #
+        # This is a REFINEMENT of the rule, not a relaxation of the assertion:
+        # the FROM endpoint is still absolutely forbidden, and so is naming both.
+        source = item.answer.split("->")[0].strip()
+        if source in node_ids:
+            aliases.add(store.label(source).casefold())
     return aliases
 
 
-@pytest.mark.xfail(
-    strict=True,
-    reason="§1.5 vs §5 contradiction: for node-answer items the focus label IS "
-           "an answer alias. Fix changes the frozen Call 2 contract - awaiting "
-           "a decision on which of the three options in the writeup to take.",
-)
 def test_call2_never_receives_an_answer_alias(store):
-    """The rule as §1.5 states it. Flip to passing by changing what Call 2 is
-    handed on ask/hint_* - not by relaxing this assertion."""
+    """The rule as §1.5 states it, now enforced by CALL2_FIDELITY.
+
+    If this fails, something restored identity-bearing labels to an ask/hint_*
+    turn. Fix the contract, never this assertion."""
     breaches = []
     for call in _drive(store):
         if call["action"] not in NON_LEAKING_ACTIONS:
@@ -134,10 +149,12 @@ def test_call2_never_receives_an_answer_alias(store):
     )
 
 
-def test_exposure_is_measured_and_has_not_grown(store):
-    """Until the contract question is settled, PIN the breach rate so it cannot
-    quietly get worse. This test passing is not good news - it is a tripwire on
-    a known defect.
+def test_exposure_is_zero_not_merely_low(store):
+    """Was a tripwire pinning a known defect at <=90%; now asserts the floor.
+
+    Zero, not "low": a rate that drifts up from 0 means a representation of the
+    answer found a new way through, which is exactly the failure class this
+    contract exists to close.
     """
     calls = [c for c in _drive(store) if c["action"] in NON_LEAKING_ACTIONS]
     exposed = [
@@ -146,9 +163,32 @@ def test_exposure_is_measured_and_has_not_grown(store):
                for l in c["labels"])
     ]
     rate = len(exposed) / len(calls) if calls else 0.0
-    assert rate <= 0.90, (
-        f"answer-alias exposure on ask/hint_* rose to {rate:.0%} of turns"
+    assert rate == 0.0, (
+        f"answer-alias exposure on ask/hint_* is {rate:.0%} of turns "
+        f"({len(exposed)}/{len(calls)}); it must be zero"
     )
+
+
+def test_edge_items_never_receive_both_endpoints(store):
+    """The refinement's own guard rail. One endpoint is an anchor; two is the
+    answer. If a future change starts passing the full lit set again, this
+    catches it even though each label individually looks permissible."""
+    node_ids = {n.id for n in store.graph.nodes}
+    for call in _drive(store):
+        if call["action"] not in NON_LEAKING_ACTIONS or not call["item_id"]:
+            continue
+        item = store.item(call["item_id"])
+        if "->" not in item.answer:
+            continue
+        endpoints = {
+            store.label(e.strip()).casefold()
+            for e in item.answer.split("->") if e.strip() in node_ids
+        }
+        given = {l.casefold() for l in call["labels"]}
+        assert len(endpoints & given) <= 1, (
+            f"{item.id}: Call 2 got both endpoints {endpoints & given} - "
+            f"that is the edge, i.e. the answer"
+        )
 
 
 def test_reveal_turns_are_exempt_by_design(store):

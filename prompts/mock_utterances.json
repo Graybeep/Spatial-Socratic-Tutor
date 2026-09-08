@@ -12,7 +12,8 @@
     "text/visual mismatch this project exists to avoid, and it would show up on",
     "the demo projector.",
     "RULE FOR EDITING: hint_visual must never name the answer. It points at the",
-    "screen; that is the whole thesis."
+    "screen; that is the whole thesis.",
+    "BACKTRACK CARRIES NO NAME. Under CALL2_FIDELITY (server/turn.py) backtrack gets a lit COUNT and no identities, because start_item() has already moved to the target - so {first} would render the NEW item's answer. The graph moves the student; the text must not name where."
   ],
   "ask": [
     "Have a look at the map. Which node fits?",
@@ -36,8 +37,8 @@
     "Correct. Let's keep going."
   ],
   "backtrack": [
-    "Let's back up to {first} first - this one leans on it.",
-    "Before we continue, we should shore up {first}."
+    "This one leans on something earlier. Let's go back and shore that up first.",
+    "Before we continue, there's a step underneath this that needs to be solid."
   ],
   "explain": [
     "Here's {first} in short - read it, then we'll come back to the question.",

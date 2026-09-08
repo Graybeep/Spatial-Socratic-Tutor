@@ -1,16 +1,17 @@
-# What our evaluation harness could not see
+# What our guards could not see
 
-*This section is not about tutoring. It is about the tests, and it is here
-because we hit the same class of failure twice in five days on a system we were
-actively looking at. Two independent instances in one small project is not bad
-luck; it is a property of how these systems get tested.*
+*This section is not about tutoring. It is about the guards - the tests and the
+contracts - and it is here because we hit the same class of failure three times
+in six days on a system we were actively looking at. Three independent instances
+in one small project is not bad luck; it is a property of how systems with a
+non-verbal channel get checked.*
 
 ---
 
 ## The pattern
 
-Both defects were invisible to a full, passing test suite. Neither was subtle in
-retrospect. Both had the same structure:
+All three defects were invisible to a full, passing test suite. None was subtle
+in retrospect. All three had the same structure:
 
 > **The test asserted on the shape of a value. The defect was in a property the
 > shape does not carry.**
@@ -71,6 +72,127 @@ the interval would have come back tight, symmetric, entirely plausible, and
 completely fictitious. **The naive version of the fix would have concealed the
 bug more thoroughly than having no interval at all.**
 
+## Instance 3 — representation, not field name
+
+`ItemPublic` was fixed. The eval was fixed. Then Layer 1 — the answer monitor —
+started firing on nearly every turn during an eval run, and the reason was that
+**Call 2 was being handed the answer**, by a third route.
+
+Two rules of the spec collide:
+
+> **§1.5** Call 2 never receives the answer. Not the answer string, not the
+> answer aliases, not the source chunk during `ask` or `hint_*`.
+>
+> **§5** Call 2 receives `action`, `hint_level`, focus node **labels**, last 2
+> turns.
+
+For a `node_click` item the answer *is* a node, so the node's label is an answer
+alias — literally, appearing verbatim in `answer_aliases` in 52 of 52 such items.
+Narrowing exists to leave the answer lit, so the answer's node is normally *in*
+`focus_nodes`. §5 therefore instructs the implementation to pass a string that
+§1.5 forbids. **The two rules cannot both be satisfied as written.**
+
+Measured exposure, over 25 items driven to the turn budget:
+
+| action | turns | carrying the answer label |
+|---|---|---|
+| `ask` | 125 | 80% |
+| `hint_visual` | 65 | 78% |
+| `hint_verbal` | 15 | 100% |
+| `backtrack` | 64 | 100% |
+| `advance` | 10 | 100% (legitimate, §5) |
+| forced reveal | 3 | 0% (legitimate, §6 layer 3) |
+
+The monitor caught 15.5% of turns. That number was the trap: **the guard screens
+the output, but the breach was in the input.** 15.5% measured how often the
+mock's canned lines happened to use a label they were handed. A live model told
+to hint about a concept, and given that concept's name, would say it far more
+often. The reassuring number and the dangerous quantity were different things.
+
+## The unifying claim
+
+Three instances, and the pattern is sharper than "test more carefully":
+
+| | the guard compared | the defect lived in |
+|---|---|---|
+| `ItemPublic.node_id` | strings | **identity** — two fields, one referent |
+| §9.1 one-item sample | shapes | **coverage** — what was sampled |
+| Call 2 answer label | field names | **representation** — one answer, many forms |
+
+> **In a system with a non-verbal channel, the same information has multiple
+> representations, and every guard written against one representation is blind
+> to the others.**
+
+Here the answer has at least four representations, in decreasing fidelity:
+
+    node id  →  node label  →  position in a lit set  →  size of a lit set
+
+A field whitelist can only ever name the first. `ItemPublic` excluded `answer`
+and admitted `node_id`; §5 excluded the answer string and admitted the label.
+Both whitelists were correct about the field they named and silent about the
+representation that carried the same information.
+
+**The contract has to be a fidelity ceiling per action, not a field whitelist.**
+That is what we implemented (`CALL2_FIDELITY` in `server/turn.py`):
+
+| action | ceiling | Call 2 receives |
+|---|---|---|
+| `ask` | safe label | a label only if it cannot be the answer |
+| `hint_visual` | count | cardinality, no identities |
+| `hint_verbal` | count | cardinality plus the answer's *category* |
+| `backtrack` | count | cardinality only |
+| `advance`, `explain` | labels | full identities, legitimately |
+| forced reveal | labels | full identities, §6 layer 3 |
+
+Answer-alias exposure on `ask`/`hint_*` went from 78–100% to **zero**, and the
+monitor's hit rate on those actions from 15.5% to 0%.
+
+## Why this is worth more than the leak it closed
+
+The fidelity ceiling makes the project's thesis **true by construction rather
+than by measurement**.
+
+"The tutor helps by showing less" was, before this, a claim about behaviour that
+the architecture did not enforce — Call 2 *could* express the answer in words
+during a hint, and we were measuring how often it did. After it, Call 2 has no
+representation of the answer available during a hint at all. It is handed an
+action, a hint level and a number. The claim is now a property of the wiring,
+and every leakage figure reported afterwards describes a system that *cannot*
+name the answer while hinting, rather than one that was observed not to.
+
+It also cleans up the monitor. Because Call 2 sees no answer label on
+`ask`/`hint_*`, a Layer 1 hit on those actions is now unambiguously **parametric
+reconstruction** — the model producing the answer from its own weights, given
+only a count. That is a genuinely interesting number and it is now measurable in
+isolation. Hits on `advance`/`explain` are reported separately and are not
+reconstruction at all; they are the monitor observing an action doing its job.
+Pooling the two, as the old statistic did, produced a figure that meant nothing.
+
+We report the reconstruction rate as **not yet measured**: it is 0% against the
+mock, but a mock has no weights to reconstruct from, so that figure is a
+property of the fixture and not of any model.
+
+## One deviation, recorded
+
+The per-action ceiling above did not initially distinguish the *arity* of the
+answer, and applied strictly it made 49 of the 101 scored items unaskable. For a
+node answer the label is the whole answer, so withholding it costs only phrasing.
+For an edge answer the answer is a *pair*, and the question — "which prerequisite
+links into X?" — cannot be posed without naming X. Under the strict rule, 32 of
+36 edge `ask` turns received no anchor at all, leaving Call 2 to ask "which one
+is it?" about an unspecified edge.
+
+So `ask` on an edge item may name **one** endpoint, never both. In all 49 edge
+items `node_id` is the *to* endpoint, so the unknown is which prerequisite links
+into it; naming the *to* end is strictly lower fidelity than the answer and is
+the anchor the item was authored around — its own prompt names it in 49 of 49
+cases. Naming the *from* endpoint remains forbidden, and a dedicated test asserts
+that both endpoints never arrive together, which no per-label check would catch
+since each one alone looks permissible.
+
+We record this as a deviation rather than folding it into the rule, because it is
+the kind of exception that widens if it is not written down.
+
 ## Why this class is worse here than elsewhere
 
 Three properties of LLM-tutor evaluation make it unusually exposed:
@@ -129,15 +251,15 @@ referent*, whatever that field is named.
 
 ## What we are not claiming
 
-We did not run a study of evaluation harnesses. This is two defects in one
+We did not run a study of evaluation harnesses. This is three defects in one
 four-week project, found by the people who wrote the code, and there is an
 obvious selection effect in which bugs get noticed and written up.
 
-What we can say is narrower and we think still worth stating: both defects
-survived a test suite that a reviewer would have called adequate; both were
-found by accident while doing something else; and in both cases the intuitive
-fix (compare more strings; bootstrap the loop variable) would have hidden the
-problem rather than surfaced it. If that generalises even weakly, published
+What we can say is narrower and we think still worth stating: all three defects
+survived a test suite that a reviewer would have called adequate; all three were
+found by accident while doing something else; and in every case the intuitive
+fix would have hidden the problem rather than surfaced it - compare more
+strings, bootstrap the loop variable, carve labels out of §1.5. If that generalises even weakly, published
 leakage and learning-gain figures from systems of this shape deserve a question
 that is rarely asked of them: **not "what is the number" but "what was it
 computed over, and how would you know."**

@@ -80,6 +80,26 @@ _WORD = re.compile(r"[a-z0-9]+")
 STATS = {"checks": 0, "hits": 0, "regenerated": 0, "fell_back": 0,
          "retrieval_refusals": 0}
 
+#: Leak hits split by action, because after the CALL2_FIDELITY change they no
+#: longer mean the same thing (server/turn.py).
+#:
+#:   ask / hint_*   Call 2 was given NO identity-bearing label for the answer.
+#:                  A hit here is unambiguous PARAMETRIC RECONSTRUCTION: the
+#:                  model produced the answer from its own weights, having been
+#:                  told only an action, a hint level and a count. This is the
+#:                  number §6 says is "free and genuinely interesting".
+#:
+#:   advance /      Call 2 was legitimately given labels and, on explain, a
+#:   explain        chunk. A hit is the monitor observing the model doing what
+#:                  the action asked. NOT reconstruction, and reporting it in
+#:                  the same total would inflate the interesting number with
+#:                  turns that are working correctly.
+#:
+#: Before the fidelity change every action was in the first category by name and
+#: the second in substance, which is why the old pooled rate meant nothing.
+STATS_BY_ACTION: dict = {}
+RECONSTRUCTION_ACTIONS = frozenset({"ask", "hint_visual", "hint_verbal", "backtrack"})
+
 
 def tokenize(text: str) -> list[str]:
     return _WORD.findall(text.lower())
@@ -292,6 +312,7 @@ def screen_utterance(
     regenerate,
     fallback: str,
     context_phrases: Iterable[str] = (),
+    action: Optional[str] = None,
 ) -> tuple[str, Optional[str]]:
     """Run the monitor; on a hit regenerate once, then fall back (§6).
 
@@ -303,9 +324,14 @@ def screen_utterance(
     is supposed to name the answer (layer 3 awards zero mastery in exchange), so
     screening it would trip on the system working correctly.
     """
+    bucket = STATS_BY_ACTION.setdefault(
+        action or "unknown", {"checks": 0, "hits": 0, "fell_back": 0})
+    bucket["checks"] += 1
+
     first = check_answer_leak(utterance, answer, aliases, context_phrases)
     if not first:
         return utterance, None
+    bucket["hits"] += 1
 
     log.warning("layer 1: %s — regenerating", first.reason)
     STATS["regenerated"] += 1
@@ -387,4 +413,25 @@ def mask_spans(text: str, spans: Iterable[tuple[int, int]]) -> str:
 
 def stats_snapshot() -> dict:
     checks = max(STATS["checks"], 1)
-    return {**STATS, "leak_hit_rate": round(STATS["hits"] / checks, 4)}
+
+    def rate(d):
+        return round(d["hits"] / max(d["checks"], 1), 4)
+
+    recon = {"checks": 0, "hits": 0}
+    legit = {"checks": 0, "hits": 0}
+    for act, d in STATS_BY_ACTION.items():
+        target = recon if act in RECONSTRUCTION_ACTIONS else legit
+        target["checks"] += d["checks"]
+        target["hits"] += d["hits"]
+
+    return {
+        **STATS,
+        "leak_hit_rate": round(STATS["hits"] / checks, 4),
+        "by_action": {a: {**d, "rate": rate(d)} for a, d in STATS_BY_ACTION.items()},
+        # THE NUMBER TO REPORT. Call 2 saw no answer label on these turns, so a
+        # hit can only have come from the model's own weights.
+        "parametric_reconstruction": {**recon, "rate": rate(recon)},
+        # Reported separately. Not reconstruction - these actions are MEANT to
+        # name the answer, and pooling them would inflate the figure above.
+        "authorised_naming": {**legit, "rate": rate(legit)},
+    }

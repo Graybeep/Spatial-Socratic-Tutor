@@ -112,6 +112,153 @@ class Phase1:
 # selection helpers
 # ---------------------------------------------------------------------------
 
+#: What Call 2 may know about the answer, per action. CLAUDE.md §1.5 says Call 2
+#: never receives the answer or its aliases; §5 says it receives focus node
+#: labels. For a node-answer item those are the same string, so the contract has
+#: to be expressed as a FIDELITY CEILING rather than a field whitelist.
+#:
+#: The same answer has four representations, decreasing in fidelity:
+#:
+#:     node id  ->  node label  ->  position in a lit set  ->  size of a lit set
+#:
+#: A guard written against any one of them is blind to the others - which is how
+#: this breach, ItemPublic.node_id, and the eval-coverage bug all happened. The
+#: ceiling below says how much fidelity each action may carry, and _call2_context
+#: enforces it. See docs/writeup/eval-harness-failures.md.
+#:
+#: "labels" = full identities. "count" = cardinality only, no identities.
+CALL2_FIDELITY = {
+    "ask": "safe_label",      # a label, but never one that IS the answer
+    "hint_visual": "count",   # the graph points; the text must not name
+    "hint_verbal": "count",   # count + answer category, still no identities
+    "backtrack": "count",
+    "advance": "labels",      # legitimately explains - §5
+    "explain": "labels",
+    "resolved_with_support": "labels",  # forced reveal, §6 layer 3
+}
+
+
+def _answer_surface(store: GraphStore, item) -> set:
+    """Every string that would name the answer at label fidelity.
+
+    Not just the aliases. For an edge answer "a->b", naming either ENDPOINT
+    hands over half the edge, so both endpoint labels are on the surface even
+    though neither is an alias (edge aliases were deleted as unusable in an
+    earlier pass, which would otherwise make edge items look safe here).
+    """
+    if item is None:
+        return set()
+    surface = {a.casefold() for a in item.answer_aliases}
+    node_ids = {n.id for n in store.graph.nodes}
+
+    if item.answer in node_ids:
+        surface.add(store.label(item.answer).casefold())
+    elif "->" in item.answer:
+        for endpoint in item.answer.split("->"):
+            endpoint = endpoint.strip()
+            if endpoint in node_ids:
+                surface.add(store.label(endpoint).casefold())
+    return surface
+
+
+def _answer_category(item) -> str:
+    """The KIND of thing being asked for, carrying no identity.
+
+    "a concept" / "a relationship" tells Call 2 enough to phrase a hint without
+    telling it which one. This is the most fidelity hint_verbal may carry.
+    """
+    if item is None:
+        return "an answer"
+    return {
+        "node_click": "a concept on the map",
+        "edge_click": "a relationship between two concepts",
+        "mcq": "one of the options",
+    }.get(item.type, "an answer")
+
+
+def _call2_context(store: GraphStore, state: SessionState, phase1) -> tuple:
+    """(labels, n_lit, category) that Call 2 is allowed to see for this action.
+
+    THE FIX FOR THE §1.5 BREACH. Previously this was:
+
+        labels = store.labels(focus_nodes) or [store.label(state.current_node)]
+
+    which had two defects. The main clause handed over every lit label, and the
+    answer is normally lit - narrowing exists to leave it lit - so ask/hint_*
+    carried an answer alias on 78-100% of turns. The `or` clause was worse and
+    was a plain ordering bug: on backtrack, focus_nodes is empty and
+    start_item() has ALREADY moved current_node to the backtrack target, so
+    Call 2 received the new item's answer as its entire context, 100% of the
+    time.
+
+    Now: hint_* and backtrack get cardinality only. `ask` gets a label only if
+    that label is not on the answer surface, falling back to a prerequisite and
+    then to nothing.
+    """
+    item = phase1.item
+    action = "advance" if phase1.session_complete else phase1.action
+    fidelity = CALL2_FIDELITY.get(action, "count")
+
+    focus = phase1.graph_state.focus_nodes
+    n_lit = len(focus) or len(store.node_ids)
+    category = _answer_category(item)
+
+    if fidelity == "labels":
+        return store.labels(focus) or (
+            [store.label(state.current_node)] if state.current_node else []
+        ), n_lit, category
+
+    if fidelity == "count":
+        # No identities at all. The graph has already said which nodes; saying
+        # them again in words is the leak the whole architecture exists to
+        # avoid, and it is what made "helps by showing less" a claim we asserted
+        # rather than a property we enforced.
+        return [], n_lit, category
+
+    # "safe_label": ask. Usually the question is about a mechanism, not about
+    # the node's name, so a label is only offered when it cannot be the answer.
+    surface = _answer_surface(store, item)
+
+    # EDGE ITEMS: ONE ENDPOINT, NEVER BOTH. Flagged for sign-off - this is a
+    # deviation from the per-action table, which did not distinguish answer
+    # arity, and it should be reverted rather than widened if not wanted.
+    #
+    # For a NODE answer the label is the entire answer, so withholding it costs
+    # nothing but phrasing. For an EDGE answer the answer is a PAIR, and the
+    # question ("which prerequisite of X?") cannot be posed without naming one
+    # end. Measured under the strict rule: 32 of 36 edge_click ask turns got no
+    # anchor at all, which makes 49 of the 101 scored items unaskable - Call 2
+    # can only produce "which one is it?" about an unspecified edge.
+    #
+    # Naming ONE endpoint is a strictly lower fidelity than the answer: the
+    # student still has to pick which of that node's prereqs is the link, and
+    # the narrowing still does real work. Naming both would be the answer, so
+    # only item.node_id is offered and the opposite endpoint stays on the
+    # surface. The item's own prompt already names this endpoint in 49/49 cases,
+    # so it is an anchor the item was authored around.
+    if item is not None and "->" in item.answer:
+        anchor = item.node_id
+        other = [e.strip() for e in item.answer.split("->") if e.strip() != anchor]
+        if anchor and all(store.label(anchor).casefold()
+                          != store.label(o).casefold() for o in other):
+            return [store.label(anchor)], n_lit, category
+
+    def safe(node_id):
+        return node_id and store.label(node_id).casefold() not in surface
+
+    if state.current_node and safe(state.current_node):
+        return [store.label(state.current_node)], n_lit, category
+
+    # The node IS the answer. Reach for a prerequisite instead: it situates the
+    # question without naming the target.
+    if item is not None:
+        for prereq in store.prereqs(item.node_id):
+            if safe(prereq):
+                return [store.label(prereq)], n_lit, category
+
+    return [], n_lit, category
+
+
 def _is_scorable(item) -> bool:
     """CLAUDE.md §1.4 plus the item's own flag.
 
@@ -438,10 +585,7 @@ def complete_turn(store: GraphStore, db: Store, phase1: Phase1) -> TurnResponse:
     state = phase1.state
     action = "advance" if phase1.session_complete else phase1.action
 
-    labels = store.labels(phase1.graph_state.focus_nodes) or (
-        [store.label(state.current_node)] if state.current_node else []
-    )
-    n_lit = len(phase1.graph_state.focus_nodes) or len(store.node_ids)
+    labels, n_lit, answer_category = _call2_context(store, state, phase1)
 
     if phase1.resolved_with_support:
         # The budget forced a reveal, which is SUPPOSED to name the answer
@@ -460,6 +604,7 @@ def complete_turn(store: GraphStore, db: Store, phase1: Phase1) -> TurnResponse:
                 regenerate=lambda: _call2(
                     state, action, phase1.hint_level, labels, n_lit),
                 fallback=mock_tutor.fallback_utterance(action),
+                action=action,
                 # Every other concept name on the map. Without these, a hint
                 # naming the lit node "Flow Control" would be recorded as
                 # leaking the answer "Flow" - both are nodes here.
