@@ -47,6 +47,13 @@ class BuildConfig:
         ))).split(",") if u.strip()
     ))
 
+    #: An edge item names one endpoint (the `to`), so a student who knows only
+    #: that is choosing among the anchor's IN-edges. Below this many, the item
+    #: is a coin flip or a giveaway and its difficulty is fiction.
+    min_edge_item_candidates: int = field(
+        default_factory=lambda: _int("MIN_EDGE_ITEM_CANDIDATES", 3)
+    )
+
     # --- outputs (frozen data, §1.2) -----------------------------------------
     graph_path: object = field(default_factory=lambda: _path("GRAPH_PATH", "data/graph.json"))
     items_path: object = field(default_factory=lambda: _path("ITEMS_PATH", "data/items.json"))

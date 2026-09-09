@@ -228,6 +228,119 @@ def check_answer_identity(graph: Graph, bank: ItemBank, rep: Report) -> None:
             )
 
 
+def check_edge_item_anchors(graph: Graph, bank: ItemBank, rep: Report) -> None:
+    """How much of an edge item is left once its anchor is named.
+
+    # Why this check exists
+
+    Call 2's fidelity ceiling lets an `ask` turn on an edge item name ONE
+    endpoint, the `to`. The justification given for that was "the item's own
+    prompt already names it in 49/49 cases, so exposing it costs nothing" —
+    which is true, and is the argument for why the ITEM is broken rather than
+    why the exposure is safe. A student told the `to` endpoint is not searching
+    73 edges. They are searching the edges that END there.
+
+    So the real candidate count for an edge item is the IN-DEGREE of its anchor,
+    and that follows from what is exposed, not from how the prompt is phrased.
+    At in-degree 1 the anchor IS the answer and no reasoning happens at all; at
+    2 it is a coin flip. Either way `difficulty` is fiction, and difficulty
+    feeds `d_eff` in mastery.update() — so a miscalibrated edge item does not
+    merely mis-score itself, it moves theta the wrong distance on every
+    observation (§7).
+
+    This matters more since mcq was demoted to unscored: edge items are now 49
+    of the 101 items that can move mastery at all.
+
+    Nothing here is an ERROR. A hand-authored graph with one prereq per concept
+    is a legitimate graph; it is the item TEMPLATE that cannot ask a question
+    about it. Flagging is the fix, re-authoring is the human pass.
+    """
+    edges = [e for e in graph.edges if e.type == "prereq"]
+    in_edges: dict = {}
+    for e in edges:
+        in_edges.setdefault(e.to, []).append(e.from_)
+
+    edge_items = [i for i in bank.items if i.type == "edge_click"]
+    if not edge_items:
+        return
+
+    floor = BUILD.min_edge_item_candidates
+    thin: list = []
+    determined: list = []
+    collisions: list = []
+
+    for item in edge_items:
+        anchor = item.node_id
+        sources = in_edges.get(anchor, [])
+        n = len(sources)
+
+        # The exposed endpoint is only the `to` when the answer actually ends at
+        # node_id. If a future item anchors the other way the candidate set is
+        # the out-edges, and silently reporting the wrong one is worse than
+        # saying so.
+        if "->" in item.answer and item.answer.split("->")[1] != anchor:
+            rep.warn(
+                f"{item.id}: answer {item.answer!r} does not end at node_id "
+                f"{anchor!r}; the anchor rule assumes the `to` endpoint, so this "
+                f"item's exposure is not covered by that analysis"
+            )
+            continue
+
+        if n <= 1:
+            determined.append((item.id, anchor, item.difficulty))
+        elif n < floor:
+            thin.append((item.id, anchor, n, item.difficulty))
+
+        # A distractor equal to the true `from` endpoint is not a distractor.
+        if "->" in item.answer and item.answer.split("->")[0] in (item.distractors or []):
+            collisions.append(item.id)
+
+    if determined:
+        worst = sorted(determined, key=lambda t: -t[2])[:5]
+        listed = ", ".join(f"{i} ({a}, difficulty {d})" for i, a, d in worst)
+        rep.warn(
+            f"[edge anchor] {len(determined)}/{len(edge_items)} edge items are "
+            f"DETERMINED by their anchor: the named `to` endpoint has exactly one "
+            f"prereq, so naming it names the answer and the stated difficulty is "
+            f"unreachable. Worst by claimed difficulty: {listed}"
+            + ("" if len(determined) <= 5 else f", +{len(determined) - 5} more")
+        )
+
+    if thin:
+        listed = ", ".join(f"{i} ({a}, {n} candidates)" for i, a, n, _ in thin[:5])
+        rep.warn(
+            f"[edge anchor] {len(thin)}/{len(edge_items)} edge items leave fewer "
+            f"than {floor} candidates once the anchor is named (a coin flip at 2). "
+            f"{listed}" + ("" if len(thin) <= 5 else f", +{len(thin) - 5} more")
+        )
+
+    if determined or thin:
+        affected = len(determined) + len(thin)
+        rep.warn(
+            f"[edge anchor] {affected}/{len(edge_items)} edge items need either "
+            f"re-authoring or a corrected difficulty before their theta updates "
+            f"mean anything (§7). Guess rate is 1/candidates, which no difficulty "
+            f"value can represent once candidates is 1."
+        )
+
+    if collisions:
+        rep.warn(
+            f"[edge anchor] {len(collisions)} edge item(s) list the answer's own "
+            f"`from` endpoint among their distractors, so one distractor is the "
+            f"key: {', '.join(collisions[:6])}"
+            + ("" if len(collisions) <= 6 else f", +{len(collisions) - 6} more")
+        )
+
+    # The distribution, always, so a clean bank is visibly clean rather than
+    # silently unchecked.
+    counts = [len(in_edges.get(i.node_id, [])) for i in edge_items]
+    hist = {n: counts.count(n) for n in sorted(set(counts))}
+    rep.note(
+        f"edge-item candidate counts (in-degree of the named anchor): {hist}. "
+        f"Median {sorted(counts)[len(counts) // 2]}."
+    )
+
+
 def check_item_distinctness(bank: ItemBank, rep: Report, fixture: bool) -> None:
     """Catch a generator fixture reaching data/ as though it were content.
 
@@ -452,6 +565,7 @@ def validate(graph_path: Path, items_path: Path, fixture: bool) -> Report:
 
     check_answer_identity(graph, bank, rep)
     check_alias_collisions(graph, bank, rep)
+    check_edge_item_anchors(graph, bank, rep)
 
     if not fixture:
         for node_id in sorted(covered):
