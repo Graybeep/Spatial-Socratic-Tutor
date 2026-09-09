@@ -34,10 +34,28 @@ quality BEFORE correction: a filter that improves precision at some cost in
 recall is exactly what makes that number honest rather than flattering.
 
 MEASURED, against the hand-authored graph on the real chapter: the filter's
-recall CEILING is 59% at window 2 (39 of 66 true prerequisite edges survive to
-be asked about) and 63% at window 3. No extraction run can beat that ceiling,
-whatever the model does, so it is an upper bound on §9.3's recall and belongs in
-the writeup beside the number rather than being discovered afterwards.
+recall CEILING is **45.5% at window 2** (30 of 66 true prerequisite edges survive
+to be asked about) and 48.5% at window 3. No extraction run can beat that
+ceiling, whatever the model does, so it is an upper bound on §9.3's recall and
+belongs in the writeup beside the number rather than being discovered afterwards.
+
+Run it with `python -m eval.graph_quality`, which sweeps the window and is the
+reproducible source for those figures.
+
+This paragraph used to claim 59% and 63%, from a local run made before
+data/chunks.json was committed — a different corpus, and one nobody can
+reproduce. The numbers above come from the committed one. A figure in a
+docstring that does not reproduce from committed state is the same failure this
+project keeps finding in its evals, one layer down; see
+docs/writeup/numbers-that-looked-fine.md.
+
+THE WALL, WHICH THE WINDOW DOES NOT MOVE. Of the 36 true edges the filter drops
+at window 2, 19 are too far apart — a knob — but **17 are ordered the other way
+round in the text**: the chapter names the dependent concept before its
+prerequisite, usually because a section heading announces the topic and the body
+introduces its parts afterwards. `duplicate_ack -> fast_retransmit` is the shape.
+No window recovers those, so an infinite window still ceilings at 74.2%, and the
+precedence assumption in §4 costs a quarter of the graph on this chapter.
 
 It was 21% until the ordering was fixed. Comparing SECTIONS alone discarded
 every same-section pair, and 34 of the 66 true edges connect concepts that a
