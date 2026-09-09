@@ -1,17 +1,22 @@
 # What our guards could not see
 
 *This section is not about tutoring. It is about the guards - the tests and the
-contracts - and it is here because we hit the same class of failure three times
-in six days on a system we were actively looking at. Three independent instances
+contracts - and it is here because we hit the same class of failure five times
+in six days on a system we were actively looking at. Five independent instances
 in one small project is not bad luck; it is a property of how systems with a
 non-verbal channel get checked.*
+
+*Instances 4 and 5 were found after this section was first drafted, by someone
+reading the argument in it and asking what else it implied. That is the strongest
+evidence we have that the pattern is real rather than three stories told
+together.*
 
 ---
 
 ## The pattern
 
-All three defects were invisible to a full, passing test suite. None was subtle
-in retrospect. All three had the same structure:
+All five defects were invisible to a full, passing test suite. None was subtle
+in retrospect. All five had the same structure:
 
 > **The test asserted on the shape of a value. The defect was in a property the
 > shape does not carry.**
@@ -109,15 +114,73 @@ mock's canned lines happened to use a label they were handed. A live model told
 to hint about a concept, and given that concept's name, would say it far more
 often. The reassuring number and the dangerous quantity were different things.
 
+## Instance 4 — a population half of which could not register a result
+
+§9.1's simulated student chooses among the lit nodes and we compare its choice to
+the item's answer. For a `node_click` item the answer is a node id. For an
+`edge_click` item the answer is a **pair**, serialised `"from->to"`.
+
+A node id can never equal `"from->to"`. So every edge item scored zero, on every
+arm, at every rung, for every student condition — **49 of the 101-item
+population, structurally incapable of being solved**, silently halving the
+measured rate.
+
+Correcting it moved terminal zero-knowledge leakage on the product arm from
+**8.9% to 16.8%**.
+
+This is instance 1's failure — one referent, several representations — reappearing
+on the *measuring* side rather than the leaking side. The student could reason
+about the graph perfectly well; it simply had no way to *express* an edge. Every
+provenance check passed, because coverage counted items **probed**, not items
+**answerable**: all 101 were sampled, and 49 of them were being asked a question
+in a language they could not answer in.
+
+> Coverage asks whether you looked at the whole population. It does not ask
+> whether the instrument can register a result on every member of it.
+
+## Instance 5 — a threshold calibrated against nothing
+
+Guard layer 4 refuses to answer when retrieval finds no chunk above
+`RETRIEVAL_SCORE_FLOOR`. That floor was `0.35`.
+
+It was chosen while `data/chunks.json` did not exist. With no corpus,
+`search()` returned `None` for every query and the tutor refused everything —
+which is the correct behaviour for an empty corpus, is documented at length in
+`server/retrieval.py` as such, and is indistinguishable from the failure that
+was waiting underneath it.
+
+When the real chapter landed, in-domain queries scored 0.12–0.37 against
+section-level chunks of 2,000–17,000 characters. The gate refused **100% of
+them**. The *ranking* had been correct the whole time: "slow start congestion
+window cold start" ranked section 6.3.2, Slow Start, first. The threshold threw
+the correct answer away and the tutor said the chapter did not cover it.
+
+Recalibrated against the corpus that now exists:
+
+| population | n | score |
+|---|---|---|
+| in-chapter, node label + definition | 52 | min **0.1185**, median 0.2094 |
+| adjacent networking (DNS, BGP, Ethernet, TLS) | 8 | max **0.0786** |
+| far out-of-domain | 4 | max 0.0625 |
+
+At `0.10`, 52 of 52 in-chapter queries retrieve and 0 of 12 negatives do.
+
+The general form: **a threshold is a claim about a distribution, and a threshold
+set before the distribution exists is a guess wearing a decimal point.** Nothing
+in the codebase distinguished the two, and the surrounding comment was unusually
+thorough — which made it read as more considered than it was.
+
 ## The unifying claim
 
-Three instances, and the pattern is sharper than "test more carefully":
+Five instances, and the pattern is sharper than "test more carefully":
 
 | | the guard compared | the defect lived in |
 |---|---|---|
 | `ItemPublic.node_id` | strings | **identity** — two fields, one referent |
 | §9.1 one-item sample | shapes | **coverage** — what was sampled |
 | Call 2 answer label | field names | **representation** — one answer, many forms |
+| edge items unsolvable | items probed | **expressibility** — what the instrument can register |
+| retrieval floor 0.35 | a number's presence | **calibration** — the distribution it was set against |
 
 > **In a system with a non-verbal channel, the same information has multiple
 > representations, and every guard written against one representation is blind
@@ -193,6 +256,58 @@ since each one alone looks permissible.
 We record this as a deviation rather than folding it into the rule, because it is
 the kind of exception that widens if it is not written down.
 
+### The justification was backwards, and the correction is a finding
+
+"Its own prompt names the *to* endpoint in 49 of 49 cases" was offered as the
+reason the exposure is free. It is that. It is *also* the reason the **item** is
+broken, and stating it only in the first sense hid the second.
+
+A student told the *to* endpoint is not choosing among 73 edges. They are
+choosing among the prerequisite edges that **end there**. So we measured that,
+per item, and put the check in `build/validate.py`:
+
+| candidates once the anchor is named | items |
+|---|---|
+| 1 — the anchor *is* the answer | **32 / 49** |
+| 2 — a coin flip | 17 / 49 |
+| 3 or more | 0 / 49 |
+
+Median candidate count: **1**. Claimed difficulties on determined items run as
+high as 0.85. Since MCQ was demoted to unscored, these 49 items are half of
+everything that can move mastery at all, and `difficulty` feeds `d_eff` directly
+in §7's update — so a miscalibrated edge item does not merely mis-score itself,
+it moves θ the wrong distance on every observation.
+
+One consequence has no calibration fix. At one candidate the guess rate is 1.0,
+and §7's logistic reaches p = 1 only as `d_eff → -∞`; there is no difficulty
+value that represents "free". Those 32 items need re-authoring or exclusion.
+Only the 17 at two candidates are a difficulty problem.
+
+**The deviation stands.** An unaskable item is worse than an anchored one, and
+the `from`/`to` asymmetry with a paired test is a clean way to hold the line.
+What changes is that the anchor is no longer offered as *costless*: it is
+costless *against a bank whose edge items were already giving it away*, and the
+bank is what we now say needs fixing.
+
+This also separated a number that had been pooling two questions. In §9.1, at
+the terminal rung:
+
+| condition | `edge_click` | `node_click` |
+|---|---|---|
+| zero-knowledge | 16% | 17% |
+| partial-knowledge | **84%** | **30%** |
+| adversarial | 82% | 25% |
+
+The 84% is the *item* leaking, not the interface. The control that settles it:
+in the `verbal_only` arm nothing dims — the lit set stays at all 52 nodes — and
+edge items still solve at 82%. **A rate that does not move when the narrowing is
+removed was never measuring the narrowing.** `node_click` does move across arms
+(17% / 6% / 4% at zero knowledge) and is what §9.1 now reports as its headline.
+
+Pooled, the partial-knowledge figure sat at 52–56% in all three arms, making
+them look indistinguishable. That was the edge items washing the arm differences
+out of a comparison the whole evaluation exists to make.
+
 ## Why this class is worse here than elsewhere
 
 Three properties of LLM-tutor evaluation make it unusually exposed:
@@ -251,15 +366,18 @@ referent*, whatever that field is named.
 
 ## What we are not claiming
 
-We did not run a study of evaluation harnesses. This is three defects in one
+We did not run a study of evaluation harnesses. This is five defects in one
 four-week project, found by the people who wrote the code, and there is an
 obvious selection effect in which bugs get noticed and written up.
 
-What we can say is narrower and we think still worth stating: all three defects
-survived a test suite that a reviewer would have called adequate; all three were
-found by accident while doing something else; and in every case the intuitive
-fix would have hidden the problem rather than surfaced it - compare more
-strings, bootstrap the loop variable, carve labels out of §1.5. If that generalises even weakly, published
+What we can say is narrower and we think still worth stating: all five defects
+survived a test suite that a reviewer would have called adequate; four of the
+five were found by accident while doing something else, and the fifth was found
+by taking this section's own argument seriously and asking where else it
+applied; and in every case the intuitive fix would have hidden the problem
+rather than surfaced it - compare more strings, bootstrap the loop variable,
+carve labels out of §1.5, widen the student's answer set, nudge the threshold
+down until something passes. If that generalises even weakly, published
 leakage and learning-gain figures from systems of this shape deserve a question
 that is rarely asked of them: **not "what is the number" but "what was it
 computed over, and how would you know."**

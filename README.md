@@ -19,6 +19,17 @@ for why it is hand-authored and why `gold_graph.json` was frozen *before* any
 extractor exists. The two-call tutor loop still runs against the mock; `MOCK_MODE`
 is still the default.
 
+**The chapter itself has now landed too.** `python -m build.fetch_chapter &&
+python -m build.chunk --html` produces `data/chunks.json` — 15 section-aligned
+chunks, sections 6.1–6.4 — and retrieval runs over it with no key and no model
+call, so `advance` and `explain` cite the chapter even in `MOCK_MODE`.
+
+**Deadline on the key: 2026-09-22 (day 19).** If there is no API key by then,
+`MOCK_MODE` ships and §9.3 and §9.5 are cut. See
+`docs/writeup/no-key-plan.md`, which is the version of the report that needs no
+key — written early on purpose, so a key arriving late adds two sections rather
+than forcing a rewrite.
+
 ## Run the mock
 
 ```bash
@@ -100,6 +111,8 @@ NARROW_SCHEDULE=0,25,18,12,8 python -m server.main
 | `data/SOURCE.md` | attribution, and why the gold graph was frozen first |
 | `eval/adversarial.py` | §9.1 effective leakage — `python -m eval.adversarial` |
 | `docs/writeup/` | draft report sections — identity leakage, limitations |
+| `docs/writeup/no-key-plan.md` | **the report that stands without a key**, and the day-19 decision |
+| `build/fetch_chapter.py` | downloads the chapter into a gitignored dir; URLs in `build/config.py` |
 | `client/src/types.ts` | reconciled against `/schemas`; supersedes `templates/` |
 | `client/src/Graph.tsx` | the frozen-layout SVG and the two dimming channels |
 | `client/src/Chat.tsx` | the rail — transcript, composer, turn budget, node panel |
