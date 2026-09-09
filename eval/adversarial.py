@@ -431,6 +431,53 @@ def scored_bank(store: GraphStore, population: str = "scored") -> list:
     return [i for i in items if i.scorable]
 
 
+def check_strata_answerable(store: GraphStore, items: list, rng_seed: int = 0) -> dict:
+    """Every stratum of the population must be able to register a result.
+
+    THE SECOND LINE OF THE PROVENANCE RULE. `provenance.check` asks what was
+    sampled; it cannot ask whether the instrument can score what it sampled.
+    Edge items were probed on every run and were unsolvable by construction -
+    a node id can never equal "from->to" - so 49 of 101 items returned exactly
+    0.000 and the pooled rate was diluted by a stratum that was unplugged.
+
+    A rate of exactly zero over a whole stratum is not a finding. It is the
+    signature of an instrument that cannot read that stratum, and it looks
+    identical to a real zero in every output we produce.
+
+    So: for each item type, the student's own choice space must CONTAIN the
+    answer for at least one item. This is a property of the harness, not of the
+    tutor, and it is checked against the widest pool (no narrowing) so that a
+    legitimate 0% under heavy narrowing never trips it.
+    """
+    by_type: dict = defaultdict(list)
+    for item in items:
+        by_type[item.type].append(item)
+
+    unreachable = {}
+    for itype, group in sorted(by_type.items()):
+        student = Student(condition="partial", rng=random.Random(rng_seed))
+        lit = list(store.node_ids)
+        reachable = False
+        for item in group:
+            pool = (student.edge_candidates(store, item, lit)
+                    if item.type == "edge_click"
+                    else student.candidates(store, item, lit))
+            if item.answer in pool:
+                reachable = True
+                break
+        if not reachable:
+            unreachable[itype] = len(group)
+
+    if unreachable:
+        raise AssertionError(
+            f"stratum unanswerable by construction: {unreachable}. Every probe "
+            f"on these items scores 0 regardless of the tutor, so any rate "
+            f"pooling them is diluted by a stratum the instrument cannot read. "
+            f"Fix the student's answer space before quoting a number."
+        )
+    return {t: len(g) for t, g in sorted(by_type.items())}
+
+
 def measure(store: GraphStore, arm_label: str, mode: str, condition: str, n: int,
             population: str = "scored") -> dict:
     by_level = defaultdict(list)
@@ -446,7 +493,9 @@ def measure(store: GraphStore, arm_label: str, mode: str, condition: str, n: int
     # dialogues are spread across it rather than spent re-rolling one item.
     # With n < len(bank) this is a sample of items; with n > len(bank) each item
     # is probed round-robin.
-    bank = [i.id for i in scored_bank(store, population)]
+    items = scored_bank(store, population)
+    check_strata_answerable(store, items)
+    bank = [i.id for i in items]
     with _config(ladder_mode=mode):
         for i in range(n):
             student = Student(condition=condition, rng=random.Random(f"{arm_label}:{condition}:{i}"))

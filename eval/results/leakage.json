@@ -1,6 +1,7 @@
 [
   {
     "arm": "product configuration",
+    "population": "scored",
     "ladder_mode": "interleaved",
     "condition": "zero",
     "dialogues": 138,
@@ -127,6 +128,7 @@
   },
   {
     "arm": "product configuration",
+    "population": "scored",
     "ladder_mode": "interleaved",
     "condition": "partial",
     "dialogues": 138,
@@ -253,6 +255,7 @@
   },
   {
     "arm": "product configuration",
+    "population": "scored",
     "ladder_mode": "interleaved",
     "condition": "adversarial",
     "dialogues": 138,
@@ -379,6 +382,7 @@
   },
   {
     "arm": "isolated visual channel",
+    "population": "scored",
     "ladder_mode": "visual_only",
     "condition": "zero",
     "dialogues": 138,
@@ -505,6 +509,7 @@
   },
   {
     "arm": "isolated visual channel",
+    "population": "scored",
     "ladder_mode": "visual_only",
     "condition": "partial",
     "dialogues": 138,
@@ -631,6 +636,7 @@
   },
   {
     "arm": "isolated visual channel",
+    "population": "scored",
     "ladder_mode": "visual_only",
     "condition": "adversarial",
     "dialogues": 138,
@@ -757,6 +763,7 @@
   },
   {
     "arm": "verbal channel only",
+    "population": "scored",
     "ladder_mode": "verbal_only",
     "condition": "zero",
     "dialogues": 138,
@@ -883,6 +890,7 @@
   },
   {
     "arm": "verbal channel only",
+    "population": "scored",
     "ladder_mode": "verbal_only",
     "condition": "partial",
     "dialogues": 138,
@@ -1009,6 +1017,7 @@
   },
   {
     "arm": "verbal channel only",
+    "population": "scored",
     "ladder_mode": "verbal_only",
     "condition": "adversarial",
     "dialogues": 138,
@@ -1135,6 +1144,7 @@
   },
   {
     "arm": "no hints at all",
+    "population": "scored",
     "ladder_mode": "none",
     "condition": "zero",
     "dialogues": 138,
@@ -1261,6 +1271,7 @@
   },
   {
     "arm": "no hints at all",
+    "population": "scored",
     "ladder_mode": "none",
     "condition": "partial",
     "dialogues": 138,
@@ -1387,6 +1398,7 @@
   },
   {
     "arm": "no hints at all",
+    "population": "scored",
     "ladder_mode": "none",
     "condition": "adversarial",
     "dialogues": 138,

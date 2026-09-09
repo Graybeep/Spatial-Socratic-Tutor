@@ -24,7 +24,7 @@ this is not a fallback to be built. It is a decision to stop waiting.
 - the frozen 52-node graph, its layout, and the narrowing ladder
 - retrieval over the real chapter — TF-IDF, no model call, working today
 - §9.1 effective leakage, §9.4 the distractor screen
-- every finding in `eval-harness-failures.md`
+- every finding in `representation-blindness.md` and `numbers-that-looked-fine.md`
 - the fidelity-ceiling contract
 - a demo that runs from a clean clone with no key and no network
 

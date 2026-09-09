@@ -14,6 +14,7 @@ import pytest
 from eval.adversarial import (
     Student, run_dialogue, measure, bootstrap_ci, marginal_ci, _config, scored_bank,
 )
+from eval import adversarial as adversarial_mod
 from eval import distractor_screen, provenance
 from server.config import CONFIG
 from server.graph_store import GraphStore
@@ -216,3 +217,37 @@ def test_every_eval_result_carries_provenance(store):
         assert "provenance" in out, f"eval output has no provenance: {sorted(out)[:6]}"
         for key in ("population", "distinct", "observations", "unit", "coverage"):
             assert key in out["provenance"]
+
+
+# ---------------------------------------------------------------------------
+# the second line of the provenance rule: strata must be scorable, not just sampled
+# ---------------------------------------------------------------------------
+
+def test_strata_check_passes_on_the_real_population(store):
+    strata = adversarial_mod.check_strata_answerable(store, scored_bank(store))
+    assert set(strata) == {"node_click", "edge_click"}
+    assert all(v > 0 for v in strata.values())
+
+
+def test_strata_check_catches_an_unanswerable_stratum(store, monkeypatch):
+    """The regression itself. Force the student back to node-only answers and
+    the edge stratum must be reported as unreadable, not silently score 0."""
+    def node_only(self, store_, item, lit):
+        return list(lit) or list(store_.node_ids)
+
+    monkeypatch.setattr(adversarial_mod.Student, "edge_candidates", node_only)
+
+    with pytest.raises(AssertionError, match="unanswerable by construction"):
+        adversarial_mod.check_strata_answerable(store, scored_bank(store))
+
+
+def test_measure_refuses_to_report_over_an_unreadable_stratum(store, monkeypatch):
+    """It is not enough to offer the check; measure() must run it, or the next
+    harness bug produces a number again."""
+    def node_only(self, store_, item, lit):
+        return list(lit) or list(store_.node_ids)
+
+    monkeypatch.setattr(adversarial_mod.Student, "edge_candidates", node_only)
+
+    with pytest.raises(AssertionError, match="unanswerable by construction"):
+        adversarial_mod.measure(store, "t", "interleaved", "partial", n=4)

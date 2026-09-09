@@ -42,7 +42,7 @@ concept, and handed that concept's name, will say it far more often than the
 mock does.
 
 This is the third instance of the failure class in
-docs/writeup/eval-harness-failures.md: two fields that are different things in
+docs/writeup/representation-blindness.md: two fields that are different things in
 the schema and the same thing in the domain.
 """
 from __future__ import annotations
