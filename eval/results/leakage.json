@@ -54,6 +54,76 @@
         "terminal_n": 34,
         "terminal_solve_rate": 0.23529411764705882,
         "distinct_items": 17,
+        "_by_item_terminal": {
+          "itm_0047": [
+            false,
+            true
+          ],
+          "itm_0057": [
+            false,
+            true
+          ],
+          "itm_0107": [
+            true,
+            false
+          ],
+          "itm_0122": [
+            false,
+            false
+          ],
+          "itm_0142": [
+            false,
+            false
+          ],
+          "itm_0147": [
+            false,
+            false
+          ],
+          "itm_0157": [
+            false,
+            false
+          ],
+          "itm_0172": [
+            true,
+            true
+          ],
+          "itm_0177": [
+            false,
+            false
+          ],
+          "itm_0192": [
+            false,
+            false
+          ],
+          "itm_0197": [
+            true,
+            true
+          ],
+          "itm_0207": [
+            false,
+            false
+          ],
+          "itm_0212": [
+            false,
+            false
+          ],
+          "itm_0232": [
+            false,
+            false
+          ],
+          "itm_0237": [
+            false,
+            false
+          ],
+          "itm_0247": [
+            false,
+            true
+          ],
+          "itm_0257": [
+            false,
+            false
+          ]
+        },
         "terminal_ci": {
           "lo": 0.0882,
           "hi": 0.4118,
@@ -95,6 +165,216 @@
         "terminal_n": 104,
         "terminal_solve_rate": 0.125,
         "distinct_items": 52,
+        "_by_item_terminal": {
+          "itm_0001": [
+            true,
+            false
+          ],
+          "itm_0006": [
+            true,
+            false
+          ],
+          "itm_0011": [
+            false,
+            false
+          ],
+          "itm_0016": [
+            false,
+            false
+          ],
+          "itm_0021": [
+            false,
+            false
+          ],
+          "itm_0026": [
+            false,
+            false
+          ],
+          "itm_0031": [
+            false,
+            true
+          ],
+          "itm_0036": [
+            false,
+            false
+          ],
+          "itm_0041": [
+            false,
+            false
+          ],
+          "itm_0046": [
+            true,
+            false
+          ],
+          "itm_0051": [
+            false,
+            false
+          ],
+          "itm_0056": [
+            false,
+            true
+          ],
+          "itm_0061": [
+            false,
+            false
+          ],
+          "itm_0066": [
+            false,
+            false
+          ],
+          "itm_0071": [
+            false,
+            true
+          ],
+          "itm_0076": [
+            false,
+            false
+          ],
+          "itm_0081": [
+            false,
+            false
+          ],
+          "itm_0086": [
+            false,
+            false
+          ],
+          "itm_0091": [
+            true,
+            false
+          ],
+          "itm_0096": [
+            true,
+            false
+          ],
+          "itm_0101": [
+            false,
+            false
+          ],
+          "itm_0106": [
+            false,
+            false
+          ],
+          "itm_0111": [
+            false,
+            false
+          ],
+          "itm_0116": [
+            true,
+            false
+          ],
+          "itm_0121": [
+            false,
+            false
+          ],
+          "itm_0126": [
+            false,
+            false
+          ],
+          "itm_0131": [
+            false,
+            false
+          ],
+          "itm_0136": [
+            false,
+            false
+          ],
+          "itm_0141": [
+            false,
+            false
+          ],
+          "itm_0146": [
+            false,
+            false
+          ],
+          "itm_0151": [
+            false,
+            false
+          ],
+          "itm_0156": [
+            false,
+            false
+          ],
+          "itm_0161": [
+            false,
+            false
+          ],
+          "itm_0166": [
+            true,
+            true
+          ],
+          "itm_0171": [
+            false,
+            false
+          ],
+          "itm_0176": [
+            false,
+            false
+          ],
+          "itm_0181": [
+            false,
+            false
+          ],
+          "itm_0186": [
+            false,
+            false
+          ],
+          "itm_0191": [
+            false,
+            false
+          ],
+          "itm_0196": [
+            false,
+            false
+          ],
+          "itm_0201": [
+            false,
+            true
+          ],
+          "itm_0206": [
+            false,
+            false
+          ],
+          "itm_0211": [
+            false,
+            false
+          ],
+          "itm_0216": [
+            false,
+            false
+          ],
+          "itm_0221": [
+            false,
+            false
+          ],
+          "itm_0226": [
+            false,
+            false
+          ],
+          "itm_0231": [
+            false,
+            false
+          ],
+          "itm_0236": [
+            false,
+            false
+          ],
+          "itm_0241": [
+            true,
+            false
+          ],
+          "itm_0246": [
+            false,
+            false
+          ],
+          "itm_0251": [
+            false,
+            false
+          ],
+          "itm_0256": [
+            false,
+            false
+          ]
+        },
         "terminal_ci": {
           "lo": 0.0673,
           "hi": 0.1923,
@@ -181,6 +461,76 @@
         "terminal_n": 34,
         "terminal_solve_rate": 0.5294117647058824,
         "distinct_items": 17,
+        "_by_item_terminal": {
+          "itm_0047": [
+            false,
+            true
+          ],
+          "itm_0057": [
+            true,
+            false
+          ],
+          "itm_0107": [
+            true,
+            true
+          ],
+          "itm_0122": [
+            false,
+            true
+          ],
+          "itm_0142": [
+            true,
+            true
+          ],
+          "itm_0147": [
+            false,
+            true
+          ],
+          "itm_0157": [
+            false,
+            false
+          ],
+          "itm_0172": [
+            true,
+            false
+          ],
+          "itm_0177": [
+            true,
+            false
+          ],
+          "itm_0192": [
+            false,
+            true
+          ],
+          "itm_0197": [
+            true,
+            false
+          ],
+          "itm_0207": [
+            true,
+            false
+          ],
+          "itm_0212": [
+            true,
+            false
+          ],
+          "itm_0232": [
+            true,
+            false
+          ],
+          "itm_0237": [
+            false,
+            true
+          ],
+          "itm_0247": [
+            true,
+            false
+          ],
+          "itm_0257": [
+            false,
+            true
+          ]
+        },
         "terminal_ci": {
           "lo": 0.4412,
           "hi": 0.6471,
@@ -222,6 +572,216 @@
         "terminal_n": 104,
         "terminal_solve_rate": 0.3076923076923077,
         "distinct_items": 52,
+        "_by_item_terminal": {
+          "itm_0001": [
+            false,
+            false
+          ],
+          "itm_0006": [
+            false,
+            false
+          ],
+          "itm_0011": [
+            false,
+            false
+          ],
+          "itm_0016": [
+            true,
+            false
+          ],
+          "itm_0021": [
+            false,
+            false
+          ],
+          "itm_0026": [
+            false,
+            false
+          ],
+          "itm_0031": [
+            true,
+            true
+          ],
+          "itm_0036": [
+            false,
+            false
+          ],
+          "itm_0041": [
+            false,
+            true
+          ],
+          "itm_0046": [
+            false,
+            false
+          ],
+          "itm_0051": [
+            false,
+            true
+          ],
+          "itm_0056": [
+            false,
+            true
+          ],
+          "itm_0061": [
+            true,
+            false
+          ],
+          "itm_0066": [
+            true,
+            false
+          ],
+          "itm_0071": [
+            true,
+            false
+          ],
+          "itm_0076": [
+            false,
+            false
+          ],
+          "itm_0081": [
+            false,
+            false
+          ],
+          "itm_0086": [
+            false,
+            false
+          ],
+          "itm_0091": [
+            false,
+            false
+          ],
+          "itm_0096": [
+            true,
+            false
+          ],
+          "itm_0101": [
+            false,
+            false
+          ],
+          "itm_0106": [
+            false,
+            false
+          ],
+          "itm_0111": [
+            false,
+            false
+          ],
+          "itm_0116": [
+            false,
+            true
+          ],
+          "itm_0121": [
+            false,
+            false
+          ],
+          "itm_0126": [
+            true,
+            true
+          ],
+          "itm_0131": [
+            true,
+            false
+          ],
+          "itm_0136": [
+            true,
+            true
+          ],
+          "itm_0141": [
+            false,
+            false
+          ],
+          "itm_0146": [
+            false,
+            true
+          ],
+          "itm_0151": [
+            false,
+            true
+          ],
+          "itm_0156": [
+            false,
+            false
+          ],
+          "itm_0161": [
+            false,
+            true
+          ],
+          "itm_0166": [
+            true,
+            false
+          ],
+          "itm_0171": [
+            false,
+            false
+          ],
+          "itm_0176": [
+            false,
+            true
+          ],
+          "itm_0181": [
+            false,
+            true
+          ],
+          "itm_0186": [
+            true,
+            false
+          ],
+          "itm_0191": [
+            false,
+            false
+          ],
+          "itm_0196": [
+            false,
+            false
+          ],
+          "itm_0201": [
+            false,
+            true
+          ],
+          "itm_0206": [
+            true,
+            false
+          ],
+          "itm_0211": [
+            false,
+            false
+          ],
+          "itm_0216": [
+            true,
+            false
+          ],
+          "itm_0221": [
+            false,
+            false
+          ],
+          "itm_0226": [
+            true,
+            true
+          ],
+          "itm_0231": [
+            false,
+            false
+          ],
+          "itm_0236": [
+            false,
+            false
+          ],
+          "itm_0241": [
+            false,
+            true
+          ],
+          "itm_0246": [
+            false,
+            false
+          ],
+          "itm_0251": [
+            true,
+            true
+          ],
+          "itm_0256": [
+            false,
+            true
+          ]
+        },
         "terminal_ci": {
           "lo": 0.2212,
           "hi": 0.4038,
@@ -308,6 +868,76 @@
         "terminal_n": 34,
         "terminal_solve_rate": 0.4411764705882353,
         "distinct_items": 17,
+        "_by_item_terminal": {
+          "itm_0047": [
+            true,
+            false
+          ],
+          "itm_0057": [
+            false,
+            false
+          ],
+          "itm_0107": [
+            true,
+            false
+          ],
+          "itm_0122": [
+            true,
+            true
+          ],
+          "itm_0142": [
+            false,
+            false
+          ],
+          "itm_0147": [
+            true,
+            true
+          ],
+          "itm_0157": [
+            true,
+            false
+          ],
+          "itm_0172": [
+            true,
+            false
+          ],
+          "itm_0177": [
+            false,
+            false
+          ],
+          "itm_0192": [
+            false,
+            false
+          ],
+          "itm_0197": [
+            false,
+            false
+          ],
+          "itm_0207": [
+            false,
+            true
+          ],
+          "itm_0212": [
+            true,
+            true
+          ],
+          "itm_0232": [
+            true,
+            false
+          ],
+          "itm_0237": [
+            true,
+            false
+          ],
+          "itm_0247": [
+            false,
+            true
+          ],
+          "itm_0257": [
+            true,
+            false
+          ]
+        },
         "terminal_ci": {
           "lo": 0.2941,
           "hi": 0.6176,
@@ -349,6 +979,216 @@
         "terminal_n": 104,
         "terminal_solve_rate": 0.28846153846153844,
         "distinct_items": 52,
+        "_by_item_terminal": {
+          "itm_0001": [
+            false,
+            false
+          ],
+          "itm_0006": [
+            false,
+            true
+          ],
+          "itm_0011": [
+            false,
+            true
+          ],
+          "itm_0016": [
+            false,
+            false
+          ],
+          "itm_0021": [
+            false,
+            false
+          ],
+          "itm_0026": [
+            false,
+            false
+          ],
+          "itm_0031": [
+            false,
+            true
+          ],
+          "itm_0036": [
+            false,
+            false
+          ],
+          "itm_0041": [
+            false,
+            false
+          ],
+          "itm_0046": [
+            false,
+            false
+          ],
+          "itm_0051": [
+            true,
+            false
+          ],
+          "itm_0056": [
+            false,
+            false
+          ],
+          "itm_0061": [
+            true,
+            false
+          ],
+          "itm_0066": [
+            false,
+            false
+          ],
+          "itm_0071": [
+            false,
+            false
+          ],
+          "itm_0076": [
+            false,
+            true
+          ],
+          "itm_0081": [
+            false,
+            false
+          ],
+          "itm_0086": [
+            true,
+            false
+          ],
+          "itm_0091": [
+            false,
+            false
+          ],
+          "itm_0096": [
+            true,
+            false
+          ],
+          "itm_0101": [
+            true,
+            false
+          ],
+          "itm_0106": [
+            true,
+            true
+          ],
+          "itm_0111": [
+            true,
+            true
+          ],
+          "itm_0116": [
+            true,
+            true
+          ],
+          "itm_0121": [
+            true,
+            false
+          ],
+          "itm_0126": [
+            false,
+            false
+          ],
+          "itm_0131": [
+            true,
+            true
+          ],
+          "itm_0136": [
+            false,
+            false
+          ],
+          "itm_0141": [
+            false,
+            false
+          ],
+          "itm_0146": [
+            false,
+            true
+          ],
+          "itm_0151": [
+            true,
+            true
+          ],
+          "itm_0156": [
+            false,
+            false
+          ],
+          "itm_0161": [
+            false,
+            true
+          ],
+          "itm_0166": [
+            false,
+            false
+          ],
+          "itm_0171": [
+            true,
+            false
+          ],
+          "itm_0176": [
+            false,
+            false
+          ],
+          "itm_0181": [
+            false,
+            false
+          ],
+          "itm_0186": [
+            false,
+            false
+          ],
+          "itm_0191": [
+            false,
+            true
+          ],
+          "itm_0196": [
+            false,
+            false
+          ],
+          "itm_0201": [
+            false,
+            true
+          ],
+          "itm_0206": [
+            false,
+            false
+          ],
+          "itm_0211": [
+            false,
+            false
+          ],
+          "itm_0216": [
+            false,
+            true
+          ],
+          "itm_0221": [
+            false,
+            true
+          ],
+          "itm_0226": [
+            false,
+            false
+          ],
+          "itm_0231": [
+            false,
+            false
+          ],
+          "itm_0236": [
+            false,
+            false
+          ],
+          "itm_0241": [
+            false,
+            false
+          ],
+          "itm_0246": [
+            true,
+            false
+          ],
+          "itm_0251": [
+            false,
+            true
+          ],
+          "itm_0256": [
+            false,
+            true
+          ]
+        },
         "terminal_ci": {
           "lo": 0.2019,
           "hi": 0.3846,
@@ -435,6 +1275,76 @@
         "terminal_n": 34,
         "terminal_solve_rate": 0.2647058823529412,
         "distinct_items": 17,
+        "_by_item_terminal": {
+          "itm_0047": [
+            true,
+            true
+          ],
+          "itm_0057": [
+            false,
+            false
+          ],
+          "itm_0107": [
+            true,
+            false
+          ],
+          "itm_0122": [
+            false,
+            true
+          ],
+          "itm_0142": [
+            false,
+            true
+          ],
+          "itm_0147": [
+            true,
+            false
+          ],
+          "itm_0157": [
+            false,
+            false
+          ],
+          "itm_0172": [
+            false,
+            false
+          ],
+          "itm_0177": [
+            false,
+            false
+          ],
+          "itm_0192": [
+            false,
+            false
+          ],
+          "itm_0197": [
+            false,
+            true
+          ],
+          "itm_0207": [
+            false,
+            false
+          ],
+          "itm_0212": [
+            false,
+            false
+          ],
+          "itm_0232": [
+            false,
+            false
+          ],
+          "itm_0237": [
+            false,
+            false
+          ],
+          "itm_0247": [
+            false,
+            true
+          ],
+          "itm_0257": [
+            true,
+            false
+          ]
+        },
         "terminal_ci": {
           "lo": 0.1176,
           "hi": 0.4118,
@@ -476,6 +1386,216 @@
         "terminal_n": 104,
         "terminal_solve_rate": 0.038461538461538464,
         "distinct_items": 52,
+        "_by_item_terminal": {
+          "itm_0001": [
+            false,
+            false
+          ],
+          "itm_0006": [
+            false,
+            false
+          ],
+          "itm_0011": [
+            false,
+            false
+          ],
+          "itm_0016": [
+            false,
+            false
+          ],
+          "itm_0021": [
+            false,
+            false
+          ],
+          "itm_0026": [
+            false,
+            false
+          ],
+          "itm_0031": [
+            false,
+            false
+          ],
+          "itm_0036": [
+            false,
+            false
+          ],
+          "itm_0041": [
+            false,
+            true
+          ],
+          "itm_0046": [
+            false,
+            false
+          ],
+          "itm_0051": [
+            false,
+            false
+          ],
+          "itm_0056": [
+            false,
+            false
+          ],
+          "itm_0061": [
+            false,
+            false
+          ],
+          "itm_0066": [
+            false,
+            false
+          ],
+          "itm_0071": [
+            false,
+            false
+          ],
+          "itm_0076": [
+            false,
+            false
+          ],
+          "itm_0081": [
+            false,
+            false
+          ],
+          "itm_0086": [
+            false,
+            false
+          ],
+          "itm_0091": [
+            false,
+            false
+          ],
+          "itm_0096": [
+            false,
+            false
+          ],
+          "itm_0101": [
+            false,
+            false
+          ],
+          "itm_0106": [
+            false,
+            false
+          ],
+          "itm_0111": [
+            true,
+            false
+          ],
+          "itm_0116": [
+            false,
+            false
+          ],
+          "itm_0121": [
+            false,
+            false
+          ],
+          "itm_0126": [
+            false,
+            false
+          ],
+          "itm_0131": [
+            true,
+            false
+          ],
+          "itm_0136": [
+            false,
+            false
+          ],
+          "itm_0141": [
+            false,
+            false
+          ],
+          "itm_0146": [
+            false,
+            false
+          ],
+          "itm_0151": [
+            false,
+            false
+          ],
+          "itm_0156": [
+            false,
+            false
+          ],
+          "itm_0161": [
+            false,
+            false
+          ],
+          "itm_0166": [
+            false,
+            false
+          ],
+          "itm_0171": [
+            false,
+            false
+          ],
+          "itm_0176": [
+            false,
+            false
+          ],
+          "itm_0181": [
+            false,
+            false
+          ],
+          "itm_0186": [
+            false,
+            false
+          ],
+          "itm_0191": [
+            false,
+            false
+          ],
+          "itm_0196": [
+            false,
+            false
+          ],
+          "itm_0201": [
+            false,
+            false
+          ],
+          "itm_0206": [
+            false,
+            false
+          ],
+          "itm_0211": [
+            false,
+            false
+          ],
+          "itm_0216": [
+            false,
+            false
+          ],
+          "itm_0221": [
+            false,
+            false
+          ],
+          "itm_0226": [
+            false,
+            false
+          ],
+          "itm_0231": [
+            false,
+            true
+          ],
+          "itm_0236": [
+            false,
+            false
+          ],
+          "itm_0241": [
+            false,
+            false
+          ],
+          "itm_0246": [
+            false,
+            false
+          ],
+          "itm_0251": [
+            false,
+            false
+          ],
+          "itm_0256": [
+            false,
+            false
+          ]
+        },
         "terminal_ci": {
           "lo": 0.0096,
           "hi": 0.0769,
@@ -562,6 +1682,76 @@
         "terminal_n": 34,
         "terminal_solve_rate": 0.5294117647058824,
         "distinct_items": 17,
+        "_by_item_terminal": {
+          "itm_0047": [
+            true,
+            true
+          ],
+          "itm_0057": [
+            false,
+            true
+          ],
+          "itm_0107": [
+            true,
+            false
+          ],
+          "itm_0122": [
+            true,
+            false
+          ],
+          "itm_0142": [
+            false,
+            false
+          ],
+          "itm_0147": [
+            false,
+            false
+          ],
+          "itm_0157": [
+            true,
+            true
+          ],
+          "itm_0172": [
+            false,
+            false
+          ],
+          "itm_0177": [
+            true,
+            false
+          ],
+          "itm_0192": [
+            true,
+            true
+          ],
+          "itm_0197": [
+            false,
+            false
+          ],
+          "itm_0207": [
+            false,
+            false
+          ],
+          "itm_0212": [
+            true,
+            true
+          ],
+          "itm_0232": [
+            false,
+            true
+          ],
+          "itm_0237": [
+            true,
+            true
+          ],
+          "itm_0247": [
+            false,
+            true
+          ],
+          "itm_0257": [
+            true,
+            true
+          ]
+        },
         "terminal_ci": {
           "lo": 0.3235,
           "hi": 0.7059,
@@ -603,6 +1793,216 @@
         "terminal_n": 104,
         "terminal_solve_rate": 0.16346153846153846,
         "distinct_items": 52,
+        "_by_item_terminal": {
+          "itm_0001": [
+            false,
+            false
+          ],
+          "itm_0006": [
+            false,
+            false
+          ],
+          "itm_0011": [
+            false,
+            false
+          ],
+          "itm_0016": [
+            true,
+            false
+          ],
+          "itm_0021": [
+            false,
+            false
+          ],
+          "itm_0026": [
+            false,
+            false
+          ],
+          "itm_0031": [
+            false,
+            false
+          ],
+          "itm_0036": [
+            false,
+            false
+          ],
+          "itm_0041": [
+            false,
+            false
+          ],
+          "itm_0046": [
+            false,
+            false
+          ],
+          "itm_0051": [
+            true,
+            false
+          ],
+          "itm_0056": [
+            false,
+            true
+          ],
+          "itm_0061": [
+            true,
+            true
+          ],
+          "itm_0066": [
+            false,
+            true
+          ],
+          "itm_0071": [
+            false,
+            false
+          ],
+          "itm_0076": [
+            false,
+            false
+          ],
+          "itm_0081": [
+            false,
+            false
+          ],
+          "itm_0086": [
+            false,
+            false
+          ],
+          "itm_0091": [
+            true,
+            false
+          ],
+          "itm_0096": [
+            false,
+            false
+          ],
+          "itm_0101": [
+            false,
+            false
+          ],
+          "itm_0106": [
+            false,
+            false
+          ],
+          "itm_0111": [
+            false,
+            false
+          ],
+          "itm_0116": [
+            false,
+            false
+          ],
+          "itm_0121": [
+            false,
+            false
+          ],
+          "itm_0126": [
+            false,
+            false
+          ],
+          "itm_0131": [
+            true,
+            true
+          ],
+          "itm_0136": [
+            false,
+            true
+          ],
+          "itm_0141": [
+            false,
+            false
+          ],
+          "itm_0146": [
+            false,
+            false
+          ],
+          "itm_0151": [
+            false,
+            false
+          ],
+          "itm_0156": [
+            false,
+            false
+          ],
+          "itm_0161": [
+            false,
+            false
+          ],
+          "itm_0166": [
+            false,
+            false
+          ],
+          "itm_0171": [
+            false,
+            false
+          ],
+          "itm_0176": [
+            false,
+            false
+          ],
+          "itm_0181": [
+            false,
+            false
+          ],
+          "itm_0186": [
+            true,
+            false
+          ],
+          "itm_0191": [
+            false,
+            false
+          ],
+          "itm_0196": [
+            true,
+            false
+          ],
+          "itm_0201": [
+            false,
+            false
+          ],
+          "itm_0206": [
+            false,
+            false
+          ],
+          "itm_0211": [
+            false,
+            false
+          ],
+          "itm_0216": [
+            false,
+            false
+          ],
+          "itm_0221": [
+            false,
+            false
+          ],
+          "itm_0226": [
+            true,
+            false
+          ],
+          "itm_0231": [
+            false,
+            false
+          ],
+          "itm_0236": [
+            true,
+            false
+          ],
+          "itm_0241": [
+            false,
+            true
+          ],
+          "itm_0246": [
+            false,
+            true
+          ],
+          "itm_0251": [
+            false,
+            true
+          ],
+          "itm_0256": [
+            false,
+            false
+          ]
+        },
         "terminal_ci": {
           "lo": 0.0962,
           "hi": 0.2404,
@@ -689,6 +2089,76 @@
         "terminal_n": 34,
         "terminal_solve_rate": 0.6176470588235294,
         "distinct_items": 17,
+        "_by_item_terminal": {
+          "itm_0047": [
+            true,
+            false
+          ],
+          "itm_0057": [
+            true,
+            false
+          ],
+          "itm_0107": [
+            false,
+            true
+          ],
+          "itm_0122": [
+            true,
+            true
+          ],
+          "itm_0142": [
+            false,
+            true
+          ],
+          "itm_0147": [
+            true,
+            true
+          ],
+          "itm_0157": [
+            true,
+            true
+          ],
+          "itm_0172": [
+            false,
+            true
+          ],
+          "itm_0177": [
+            false,
+            true
+          ],
+          "itm_0192": [
+            true,
+            true
+          ],
+          "itm_0197": [
+            false,
+            false
+          ],
+          "itm_0207": [
+            false,
+            true
+          ],
+          "itm_0212": [
+            true,
+            true
+          ],
+          "itm_0232": [
+            true,
+            false
+          ],
+          "itm_0237": [
+            true,
+            true
+          ],
+          "itm_0247": [
+            false,
+            true
+          ],
+          "itm_0257": [
+            false,
+            false
+          ]
+        },
         "terminal_ci": {
           "lo": 0.4706,
           "hi": 0.7647,
@@ -730,6 +2200,216 @@
         "terminal_n": 104,
         "terminal_solve_rate": 0.28846153846153844,
         "distinct_items": 52,
+        "_by_item_terminal": {
+          "itm_0001": [
+            false,
+            false
+          ],
+          "itm_0006": [
+            true,
+            false
+          ],
+          "itm_0011": [
+            false,
+            false
+          ],
+          "itm_0016": [
+            false,
+            true
+          ],
+          "itm_0021": [
+            true,
+            false
+          ],
+          "itm_0026": [
+            false,
+            false
+          ],
+          "itm_0031": [
+            false,
+            true
+          ],
+          "itm_0036": [
+            false,
+            false
+          ],
+          "itm_0041": [
+            false,
+            false
+          ],
+          "itm_0046": [
+            false,
+            false
+          ],
+          "itm_0051": [
+            true,
+            false
+          ],
+          "itm_0056": [
+            false,
+            false
+          ],
+          "itm_0061": [
+            false,
+            true
+          ],
+          "itm_0066": [
+            true,
+            false
+          ],
+          "itm_0071": [
+            false,
+            false
+          ],
+          "itm_0076": [
+            false,
+            false
+          ],
+          "itm_0081": [
+            false,
+            true
+          ],
+          "itm_0086": [
+            true,
+            false
+          ],
+          "itm_0091": [
+            false,
+            false
+          ],
+          "itm_0096": [
+            true,
+            true
+          ],
+          "itm_0101": [
+            false,
+            false
+          ],
+          "itm_0106": [
+            false,
+            false
+          ],
+          "itm_0111": [
+            false,
+            true
+          ],
+          "itm_0116": [
+            true,
+            true
+          ],
+          "itm_0121": [
+            false,
+            false
+          ],
+          "itm_0126": [
+            false,
+            true
+          ],
+          "itm_0131": [
+            true,
+            false
+          ],
+          "itm_0136": [
+            false,
+            false
+          ],
+          "itm_0141": [
+            false,
+            false
+          ],
+          "itm_0146": [
+            false,
+            false
+          ],
+          "itm_0151": [
+            false,
+            false
+          ],
+          "itm_0156": [
+            true,
+            false
+          ],
+          "itm_0161": [
+            true,
+            true
+          ],
+          "itm_0166": [
+            false,
+            false
+          ],
+          "itm_0171": [
+            true,
+            false
+          ],
+          "itm_0176": [
+            true,
+            true
+          ],
+          "itm_0181": [
+            false,
+            true
+          ],
+          "itm_0186": [
+            false,
+            false
+          ],
+          "itm_0191": [
+            false,
+            false
+          ],
+          "itm_0196": [
+            false,
+            true
+          ],
+          "itm_0201": [
+            false,
+            false
+          ],
+          "itm_0206": [
+            false,
+            false
+          ],
+          "itm_0211": [
+            false,
+            false
+          ],
+          "itm_0216": [
+            false,
+            true
+          ],
+          "itm_0221": [
+            false,
+            false
+          ],
+          "itm_0226": [
+            true,
+            true
+          ],
+          "itm_0231": [
+            true,
+            false
+          ],
+          "itm_0236": [
+            false,
+            false
+          ],
+          "itm_0241": [
+            false,
+            false
+          ],
+          "itm_0246": [
+            false,
+            true
+          ],
+          "itm_0251": [
+            false,
+            false
+          ],
+          "itm_0256": [
+            false,
+            true
+          ]
+        },
         "terminal_ci": {
           "lo": 0.1923,
           "hi": 0.3846,
@@ -816,6 +2496,76 @@
         "terminal_n": 34,
         "terminal_solve_rate": 0.0,
         "distinct_items": 17,
+        "_by_item_terminal": {
+          "itm_0047": [
+            false,
+            false
+          ],
+          "itm_0057": [
+            false,
+            false
+          ],
+          "itm_0107": [
+            false,
+            false
+          ],
+          "itm_0122": [
+            false,
+            false
+          ],
+          "itm_0142": [
+            false,
+            false
+          ],
+          "itm_0147": [
+            false,
+            false
+          ],
+          "itm_0157": [
+            false,
+            false
+          ],
+          "itm_0172": [
+            false,
+            false
+          ],
+          "itm_0177": [
+            false,
+            false
+          ],
+          "itm_0192": [
+            false,
+            false
+          ],
+          "itm_0197": [
+            false,
+            false
+          ],
+          "itm_0207": [
+            false,
+            false
+          ],
+          "itm_0212": [
+            false,
+            false
+          ],
+          "itm_0232": [
+            false,
+            false
+          ],
+          "itm_0237": [
+            false,
+            false
+          ],
+          "itm_0247": [
+            false,
+            false
+          ],
+          "itm_0257": [
+            false,
+            false
+          ]
+        },
         "terminal_ci": {
           "lo": 0.0,
           "hi": 0.0,
@@ -857,6 +2607,216 @@
         "terminal_n": 104,
         "terminal_solve_rate": 0.009615384615384616,
         "distinct_items": 52,
+        "_by_item_terminal": {
+          "itm_0001": [
+            false,
+            false
+          ],
+          "itm_0006": [
+            false,
+            false
+          ],
+          "itm_0011": [
+            false,
+            false
+          ],
+          "itm_0016": [
+            false,
+            false
+          ],
+          "itm_0021": [
+            false,
+            false
+          ],
+          "itm_0026": [
+            false,
+            false
+          ],
+          "itm_0031": [
+            false,
+            false
+          ],
+          "itm_0036": [
+            false,
+            false
+          ],
+          "itm_0041": [
+            false,
+            false
+          ],
+          "itm_0046": [
+            false,
+            false
+          ],
+          "itm_0051": [
+            false,
+            false
+          ],
+          "itm_0056": [
+            false,
+            false
+          ],
+          "itm_0061": [
+            false,
+            false
+          ],
+          "itm_0066": [
+            false,
+            false
+          ],
+          "itm_0071": [
+            false,
+            false
+          ],
+          "itm_0076": [
+            false,
+            false
+          ],
+          "itm_0081": [
+            false,
+            false
+          ],
+          "itm_0086": [
+            false,
+            false
+          ],
+          "itm_0091": [
+            false,
+            false
+          ],
+          "itm_0096": [
+            false,
+            false
+          ],
+          "itm_0101": [
+            false,
+            false
+          ],
+          "itm_0106": [
+            false,
+            false
+          ],
+          "itm_0111": [
+            false,
+            false
+          ],
+          "itm_0116": [
+            false,
+            false
+          ],
+          "itm_0121": [
+            false,
+            false
+          ],
+          "itm_0126": [
+            false,
+            false
+          ],
+          "itm_0131": [
+            false,
+            false
+          ],
+          "itm_0136": [
+            false,
+            false
+          ],
+          "itm_0141": [
+            false,
+            false
+          ],
+          "itm_0146": [
+            false,
+            false
+          ],
+          "itm_0151": [
+            false,
+            false
+          ],
+          "itm_0156": [
+            false,
+            false
+          ],
+          "itm_0161": [
+            false,
+            false
+          ],
+          "itm_0166": [
+            false,
+            false
+          ],
+          "itm_0171": [
+            false,
+            false
+          ],
+          "itm_0176": [
+            false,
+            false
+          ],
+          "itm_0181": [
+            false,
+            false
+          ],
+          "itm_0186": [
+            false,
+            false
+          ],
+          "itm_0191": [
+            false,
+            false
+          ],
+          "itm_0196": [
+            false,
+            false
+          ],
+          "itm_0201": [
+            false,
+            false
+          ],
+          "itm_0206": [
+            false,
+            false
+          ],
+          "itm_0211": [
+            false,
+            false
+          ],
+          "itm_0216": [
+            false,
+            false
+          ],
+          "itm_0221": [
+            false,
+            false
+          ],
+          "itm_0226": [
+            true,
+            false
+          ],
+          "itm_0231": [
+            false,
+            false
+          ],
+          "itm_0236": [
+            false,
+            false
+          ],
+          "itm_0241": [
+            false,
+            false
+          ],
+          "itm_0246": [
+            false,
+            false
+          ],
+          "itm_0251": [
+            false,
+            false
+          ],
+          "itm_0256": [
+            false,
+            false
+          ]
+        },
         "terminal_ci": {
           "lo": 0.0,
           "hi": 0.0288,
@@ -943,6 +2903,76 @@
         "terminal_n": 34,
         "terminal_solve_rate": 0.38235294117647056,
         "distinct_items": 17,
+        "_by_item_terminal": {
+          "itm_0047": [
+            true,
+            true
+          ],
+          "itm_0057": [
+            true,
+            false
+          ],
+          "itm_0107": [
+            true,
+            true
+          ],
+          "itm_0122": [
+            false,
+            true
+          ],
+          "itm_0142": [
+            false,
+            false
+          ],
+          "itm_0147": [
+            true,
+            false
+          ],
+          "itm_0157": [
+            false,
+            false
+          ],
+          "itm_0172": [
+            false,
+            false
+          ],
+          "itm_0177": [
+            false,
+            false
+          ],
+          "itm_0192": [
+            true,
+            true
+          ],
+          "itm_0197": [
+            true,
+            false
+          ],
+          "itm_0207": [
+            true,
+            false
+          ],
+          "itm_0212": [
+            false,
+            true
+          ],
+          "itm_0232": [
+            false,
+            false
+          ],
+          "itm_0237": [
+            false,
+            false
+          ],
+          "itm_0247": [
+            false,
+            false
+          ],
+          "itm_0257": [
+            false,
+            true
+          ]
+        },
         "terminal_ci": {
           "lo": 0.2059,
           "hi": 0.5588,
@@ -984,6 +3014,216 @@
         "terminal_n": 104,
         "terminal_solve_rate": 0.20192307692307693,
         "distinct_items": 52,
+        "_by_item_terminal": {
+          "itm_0001": [
+            false,
+            false
+          ],
+          "itm_0006": [
+            false,
+            false
+          ],
+          "itm_0011": [
+            false,
+            false
+          ],
+          "itm_0016": [
+            false,
+            false
+          ],
+          "itm_0021": [
+            false,
+            false
+          ],
+          "itm_0026": [
+            false,
+            true
+          ],
+          "itm_0031": [
+            true,
+            false
+          ],
+          "itm_0036": [
+            false,
+            true
+          ],
+          "itm_0041": [
+            false,
+            false
+          ],
+          "itm_0046": [
+            true,
+            true
+          ],
+          "itm_0051": [
+            false,
+            false
+          ],
+          "itm_0056": [
+            false,
+            false
+          ],
+          "itm_0061": [
+            false,
+            false
+          ],
+          "itm_0066": [
+            true,
+            false
+          ],
+          "itm_0071": [
+            false,
+            false
+          ],
+          "itm_0076": [
+            false,
+            false
+          ],
+          "itm_0081": [
+            false,
+            false
+          ],
+          "itm_0086": [
+            true,
+            false
+          ],
+          "itm_0091": [
+            true,
+            true
+          ],
+          "itm_0096": [
+            false,
+            true
+          ],
+          "itm_0101": [
+            false,
+            false
+          ],
+          "itm_0106": [
+            false,
+            false
+          ],
+          "itm_0111": [
+            false,
+            false
+          ],
+          "itm_0116": [
+            false,
+            true
+          ],
+          "itm_0121": [
+            false,
+            false
+          ],
+          "itm_0126": [
+            false,
+            false
+          ],
+          "itm_0131": [
+            false,
+            true
+          ],
+          "itm_0136": [
+            false,
+            false
+          ],
+          "itm_0141": [
+            false,
+            false
+          ],
+          "itm_0146": [
+            false,
+            true
+          ],
+          "itm_0151": [
+            false,
+            false
+          ],
+          "itm_0156": [
+            false,
+            false
+          ],
+          "itm_0161": [
+            false,
+            true
+          ],
+          "itm_0166": [
+            false,
+            false
+          ],
+          "itm_0171": [
+            true,
+            true
+          ],
+          "itm_0176": [
+            false,
+            false
+          ],
+          "itm_0181": [
+            false,
+            false
+          ],
+          "itm_0186": [
+            false,
+            false
+          ],
+          "itm_0191": [
+            false,
+            false
+          ],
+          "itm_0196": [
+            true,
+            true
+          ],
+          "itm_0201": [
+            false,
+            false
+          ],
+          "itm_0206": [
+            false,
+            false
+          ],
+          "itm_0211": [
+            false,
+            false
+          ],
+          "itm_0216": [
+            false,
+            false
+          ],
+          "itm_0221": [
+            false,
+            false
+          ],
+          "itm_0226": [
+            true,
+            false
+          ],
+          "itm_0231": [
+            false,
+            true
+          ],
+          "itm_0236": [
+            false,
+            false
+          ],
+          "itm_0241": [
+            false,
+            false
+          ],
+          "itm_0246": [
+            false,
+            false
+          ],
+          "itm_0251": [
+            false,
+            true
+          ],
+          "itm_0256": [
+            false,
+            false
+          ]
+        },
         "terminal_ci": {
           "lo": 0.1154,
           "hi": 0.2885,
@@ -1070,6 +3310,76 @@
         "terminal_n": 34,
         "terminal_solve_rate": 0.4117647058823529,
         "distinct_items": 17,
+        "_by_item_terminal": {
+          "itm_0047": [
+            true,
+            false
+          ],
+          "itm_0057": [
+            false,
+            false
+          ],
+          "itm_0107": [
+            false,
+            false
+          ],
+          "itm_0122": [
+            false,
+            true
+          ],
+          "itm_0142": [
+            true,
+            false
+          ],
+          "itm_0147": [
+            false,
+            true
+          ],
+          "itm_0157": [
+            false,
+            false
+          ],
+          "itm_0172": [
+            true,
+            false
+          ],
+          "itm_0177": [
+            true,
+            false
+          ],
+          "itm_0192": [
+            false,
+            true
+          ],
+          "itm_0197": [
+            true,
+            false
+          ],
+          "itm_0207": [
+            true,
+            true
+          ],
+          "itm_0212": [
+            true,
+            true
+          ],
+          "itm_0232": [
+            true,
+            false
+          ],
+          "itm_0237": [
+            false,
+            true
+          ],
+          "itm_0247": [
+            false,
+            false
+          ],
+          "itm_0257": [
+            false,
+            false
+          ]
+        },
         "terminal_ci": {
           "lo": 0.2647,
           "hi": 0.5588,
@@ -1111,6 +3421,216 @@
         "terminal_n": 104,
         "terminal_solve_rate": 0.18269230769230768,
         "distinct_items": 52,
+        "_by_item_terminal": {
+          "itm_0001": [
+            true,
+            false
+          ],
+          "itm_0006": [
+            true,
+            false
+          ],
+          "itm_0011": [
+            false,
+            false
+          ],
+          "itm_0016": [
+            false,
+            false
+          ],
+          "itm_0021": [
+            false,
+            true
+          ],
+          "itm_0026": [
+            true,
+            false
+          ],
+          "itm_0031": [
+            false,
+            false
+          ],
+          "itm_0036": [
+            false,
+            false
+          ],
+          "itm_0041": [
+            false,
+            false
+          ],
+          "itm_0046": [
+            true,
+            true
+          ],
+          "itm_0051": [
+            true,
+            false
+          ],
+          "itm_0056": [
+            false,
+            false
+          ],
+          "itm_0061": [
+            false,
+            false
+          ],
+          "itm_0066": [
+            false,
+            false
+          ],
+          "itm_0071": [
+            false,
+            false
+          ],
+          "itm_0076": [
+            false,
+            true
+          ],
+          "itm_0081": [
+            false,
+            false
+          ],
+          "itm_0086": [
+            false,
+            false
+          ],
+          "itm_0091": [
+            true,
+            false
+          ],
+          "itm_0096": [
+            false,
+            false
+          ],
+          "itm_0101": [
+            false,
+            false
+          ],
+          "itm_0106": [
+            false,
+            true
+          ],
+          "itm_0111": [
+            false,
+            false
+          ],
+          "itm_0116": [
+            false,
+            false
+          ],
+          "itm_0121": [
+            false,
+            false
+          ],
+          "itm_0126": [
+            true,
+            false
+          ],
+          "itm_0131": [
+            true,
+            true
+          ],
+          "itm_0136": [
+            false,
+            true
+          ],
+          "itm_0141": [
+            false,
+            false
+          ],
+          "itm_0146": [
+            false,
+            false
+          ],
+          "itm_0151": [
+            false,
+            true
+          ],
+          "itm_0156": [
+            false,
+            false
+          ],
+          "itm_0161": [
+            false,
+            false
+          ],
+          "itm_0166": [
+            false,
+            false
+          ],
+          "itm_0171": [
+            false,
+            false
+          ],
+          "itm_0176": [
+            true,
+            false
+          ],
+          "itm_0181": [
+            false,
+            false
+          ],
+          "itm_0186": [
+            false,
+            false
+          ],
+          "itm_0191": [
+            true,
+            false
+          ],
+          "itm_0196": [
+            false,
+            false
+          ],
+          "itm_0201": [
+            false,
+            false
+          ],
+          "itm_0206": [
+            false,
+            false
+          ],
+          "itm_0211": [
+            false,
+            true
+          ],
+          "itm_0216": [
+            false,
+            false
+          ],
+          "itm_0221": [
+            false,
+            true
+          ],
+          "itm_0226": [
+            false,
+            false
+          ],
+          "itm_0231": [
+            false,
+            false
+          ],
+          "itm_0236": [
+            false,
+            false
+          ],
+          "itm_0241": [
+            false,
+            false
+          ],
+          "itm_0246": [
+            false,
+            false
+          ],
+          "itm_0251": [
+            false,
+            false
+          ],
+          "itm_0256": [
+            false,
+            false
+          ]
+        },
         "terminal_ci": {
           "lo": 0.1154,
           "hi": 0.2596,
@@ -1197,6 +3717,76 @@
         "terminal_n": 34,
         "terminal_solve_rate": 0.0,
         "distinct_items": 17,
+        "_by_item_terminal": {
+          "itm_0047": [
+            false,
+            false
+          ],
+          "itm_0057": [
+            false,
+            false
+          ],
+          "itm_0107": [
+            false,
+            false
+          ],
+          "itm_0122": [
+            false,
+            false
+          ],
+          "itm_0142": [
+            false,
+            false
+          ],
+          "itm_0147": [
+            false,
+            false
+          ],
+          "itm_0157": [
+            false,
+            false
+          ],
+          "itm_0172": [
+            false,
+            false
+          ],
+          "itm_0177": [
+            false,
+            false
+          ],
+          "itm_0192": [
+            false,
+            false
+          ],
+          "itm_0197": [
+            false,
+            false
+          ],
+          "itm_0207": [
+            false,
+            false
+          ],
+          "itm_0212": [
+            false,
+            false
+          ],
+          "itm_0232": [
+            false,
+            false
+          ],
+          "itm_0237": [
+            false,
+            false
+          ],
+          "itm_0247": [
+            false,
+            false
+          ],
+          "itm_0257": [
+            false,
+            false
+          ]
+        },
         "terminal_ci": {
           "lo": 0.0,
           "hi": 0.0,
@@ -1238,6 +3828,216 @@
         "terminal_n": 104,
         "terminal_solve_rate": 0.038461538461538464,
         "distinct_items": 52,
+        "_by_item_terminal": {
+          "itm_0001": [
+            false,
+            false
+          ],
+          "itm_0006": [
+            false,
+            false
+          ],
+          "itm_0011": [
+            false,
+            true
+          ],
+          "itm_0016": [
+            false,
+            false
+          ],
+          "itm_0021": [
+            false,
+            false
+          ],
+          "itm_0026": [
+            false,
+            false
+          ],
+          "itm_0031": [
+            true,
+            false
+          ],
+          "itm_0036": [
+            false,
+            false
+          ],
+          "itm_0041": [
+            false,
+            false
+          ],
+          "itm_0046": [
+            false,
+            false
+          ],
+          "itm_0051": [
+            false,
+            false
+          ],
+          "itm_0056": [
+            false,
+            false
+          ],
+          "itm_0061": [
+            false,
+            false
+          ],
+          "itm_0066": [
+            false,
+            false
+          ],
+          "itm_0071": [
+            false,
+            false
+          ],
+          "itm_0076": [
+            false,
+            false
+          ],
+          "itm_0081": [
+            false,
+            false
+          ],
+          "itm_0086": [
+            false,
+            false
+          ],
+          "itm_0091": [
+            false,
+            false
+          ],
+          "itm_0096": [
+            false,
+            false
+          ],
+          "itm_0101": [
+            false,
+            false
+          ],
+          "itm_0106": [
+            false,
+            false
+          ],
+          "itm_0111": [
+            false,
+            false
+          ],
+          "itm_0116": [
+            false,
+            false
+          ],
+          "itm_0121": [
+            false,
+            false
+          ],
+          "itm_0126": [
+            false,
+            false
+          ],
+          "itm_0131": [
+            false,
+            false
+          ],
+          "itm_0136": [
+            false,
+            false
+          ],
+          "itm_0141": [
+            false,
+            false
+          ],
+          "itm_0146": [
+            false,
+            false
+          ],
+          "itm_0151": [
+            false,
+            false
+          ],
+          "itm_0156": [
+            false,
+            false
+          ],
+          "itm_0161": [
+            false,
+            false
+          ],
+          "itm_0166": [
+            false,
+            false
+          ],
+          "itm_0171": [
+            false,
+            false
+          ],
+          "itm_0176": [
+            false,
+            false
+          ],
+          "itm_0181": [
+            false,
+            false
+          ],
+          "itm_0186": [
+            false,
+            false
+          ],
+          "itm_0191": [
+            false,
+            false
+          ],
+          "itm_0196": [
+            false,
+            true
+          ],
+          "itm_0201": [
+            false,
+            false
+          ],
+          "itm_0206": [
+            false,
+            false
+          ],
+          "itm_0211": [
+            false,
+            false
+          ],
+          "itm_0216": [
+            false,
+            false
+          ],
+          "itm_0221": [
+            false,
+            true
+          ],
+          "itm_0226": [
+            false,
+            false
+          ],
+          "itm_0231": [
+            false,
+            false
+          ],
+          "itm_0236": [
+            false,
+            false
+          ],
+          "itm_0241": [
+            false,
+            false
+          ],
+          "itm_0246": [
+            false,
+            false
+          ],
+          "itm_0251": [
+            false,
+            false
+          ],
+          "itm_0256": [
+            false,
+            false
+          ]
+        },
         "terminal_ci": {
           "lo": 0.0096,
           "hi": 0.0769,
@@ -1324,6 +4124,76 @@
         "terminal_n": 34,
         "terminal_solve_rate": 0.2647058823529412,
         "distinct_items": 17,
+        "_by_item_terminal": {
+          "itm_0047": [
+            false,
+            false
+          ],
+          "itm_0057": [
+            false,
+            false
+          ],
+          "itm_0107": [
+            true,
+            false
+          ],
+          "itm_0122": [
+            true,
+            false
+          ],
+          "itm_0142": [
+            false,
+            true
+          ],
+          "itm_0147": [
+            false,
+            false
+          ],
+          "itm_0157": [
+            false,
+            true
+          ],
+          "itm_0172": [
+            false,
+            true
+          ],
+          "itm_0177": [
+            true,
+            false
+          ],
+          "itm_0192": [
+            false,
+            false
+          ],
+          "itm_0197": [
+            true,
+            true
+          ],
+          "itm_0207": [
+            false,
+            false
+          ],
+          "itm_0212": [
+            false,
+            false
+          ],
+          "itm_0232": [
+            false,
+            false
+          ],
+          "itm_0237": [
+            false,
+            false
+          ],
+          "itm_0247": [
+            false,
+            false
+          ],
+          "itm_0257": [
+            true,
+            false
+          ]
+        },
         "terminal_ci": {
           "lo": 0.1176,
           "hi": 0.4118,
@@ -1365,6 +4235,216 @@
         "terminal_n": 104,
         "terminal_solve_rate": 0.25961538461538464,
         "distinct_items": 52,
+        "_by_item_terminal": {
+          "itm_0001": [
+            false,
+            true
+          ],
+          "itm_0006": [
+            true,
+            true
+          ],
+          "itm_0011": [
+            false,
+            false
+          ],
+          "itm_0016": [
+            false,
+            false
+          ],
+          "itm_0021": [
+            false,
+            false
+          ],
+          "itm_0026": [
+            false,
+            false
+          ],
+          "itm_0031": [
+            false,
+            false
+          ],
+          "itm_0036": [
+            false,
+            false
+          ],
+          "itm_0041": [
+            false,
+            true
+          ],
+          "itm_0046": [
+            false,
+            false
+          ],
+          "itm_0051": [
+            true,
+            true
+          ],
+          "itm_0056": [
+            false,
+            false
+          ],
+          "itm_0061": [
+            true,
+            false
+          ],
+          "itm_0066": [
+            false,
+            true
+          ],
+          "itm_0071": [
+            true,
+            false
+          ],
+          "itm_0076": [
+            true,
+            false
+          ],
+          "itm_0081": [
+            true,
+            false
+          ],
+          "itm_0086": [
+            true,
+            false
+          ],
+          "itm_0091": [
+            false,
+            false
+          ],
+          "itm_0096": [
+            false,
+            false
+          ],
+          "itm_0101": [
+            false,
+            false
+          ],
+          "itm_0106": [
+            false,
+            false
+          ],
+          "itm_0111": [
+            false,
+            false
+          ],
+          "itm_0116": [
+            false,
+            false
+          ],
+          "itm_0121": [
+            false,
+            false
+          ],
+          "itm_0126": [
+            true,
+            false
+          ],
+          "itm_0131": [
+            false,
+            true
+          ],
+          "itm_0136": [
+            false,
+            false
+          ],
+          "itm_0141": [
+            false,
+            false
+          ],
+          "itm_0146": [
+            false,
+            false
+          ],
+          "itm_0151": [
+            false,
+            false
+          ],
+          "itm_0156": [
+            false,
+            false
+          ],
+          "itm_0161": [
+            false,
+            false
+          ],
+          "itm_0166": [
+            false,
+            false
+          ],
+          "itm_0171": [
+            false,
+            false
+          ],
+          "itm_0176": [
+            false,
+            false
+          ],
+          "itm_0181": [
+            false,
+            false
+          ],
+          "itm_0186": [
+            true,
+            false
+          ],
+          "itm_0191": [
+            false,
+            true
+          ],
+          "itm_0196": [
+            false,
+            false
+          ],
+          "itm_0201": [
+            true,
+            false
+          ],
+          "itm_0206": [
+            false,
+            false
+          ],
+          "itm_0211": [
+            false,
+            false
+          ],
+          "itm_0216": [
+            false,
+            true
+          ],
+          "itm_0221": [
+            true,
+            true
+          ],
+          "itm_0226": [
+            true,
+            true
+          ],
+          "itm_0231": [
+            true,
+            false
+          ],
+          "itm_0236": [
+            false,
+            true
+          ],
+          "itm_0241": [
+            false,
+            true
+          ],
+          "itm_0246": [
+            false,
+            false
+          ],
+          "itm_0251": [
+            true,
+            false
+          ],
+          "itm_0256": [
+            false,
+            true
+          ]
+        },
         "terminal_ci": {
           "lo": 0.1827,
           "hi": 0.3558,
@@ -1451,6 +4531,76 @@
         "terminal_n": 34,
         "terminal_solve_rate": 0.38235294117647056,
         "distinct_items": 17,
+        "_by_item_terminal": {
+          "itm_0047": [
+            false,
+            true
+          ],
+          "itm_0057": [
+            false,
+            true
+          ],
+          "itm_0107": [
+            false,
+            false
+          ],
+          "itm_0122": [
+            false,
+            false
+          ],
+          "itm_0142": [
+            false,
+            false
+          ],
+          "itm_0147": [
+            false,
+            true
+          ],
+          "itm_0157": [
+            true,
+            true
+          ],
+          "itm_0172": [
+            true,
+            false
+          ],
+          "itm_0177": [
+            false,
+            false
+          ],
+          "itm_0192": [
+            false,
+            true
+          ],
+          "itm_0197": [
+            true,
+            true
+          ],
+          "itm_0207": [
+            true,
+            false
+          ],
+          "itm_0212": [
+            false,
+            true
+          ],
+          "itm_0232": [
+            false,
+            false
+          ],
+          "itm_0237": [
+            false,
+            false
+          ],
+          "itm_0247": [
+            true,
+            false
+          ],
+          "itm_0257": [
+            false,
+            true
+          ]
+        },
         "terminal_ci": {
           "lo": 0.2353,
           "hi": 0.5294,
@@ -1492,6 +4642,216 @@
         "terminal_n": 104,
         "terminal_solve_rate": 0.2403846153846154,
         "distinct_items": 52,
+        "_by_item_terminal": {
+          "itm_0001": [
+            false,
+            true
+          ],
+          "itm_0006": [
+            false,
+            false
+          ],
+          "itm_0011": [
+            false,
+            true
+          ],
+          "itm_0016": [
+            false,
+            false
+          ],
+          "itm_0021": [
+            false,
+            false
+          ],
+          "itm_0026": [
+            false,
+            true
+          ],
+          "itm_0031": [
+            false,
+            true
+          ],
+          "itm_0036": [
+            false,
+            true
+          ],
+          "itm_0041": [
+            false,
+            false
+          ],
+          "itm_0046": [
+            false,
+            false
+          ],
+          "itm_0051": [
+            false,
+            false
+          ],
+          "itm_0056": [
+            false,
+            false
+          ],
+          "itm_0061": [
+            false,
+            false
+          ],
+          "itm_0066": [
+            false,
+            true
+          ],
+          "itm_0071": [
+            false,
+            false
+          ],
+          "itm_0076": [
+            false,
+            false
+          ],
+          "itm_0081": [
+            false,
+            false
+          ],
+          "itm_0086": [
+            false,
+            false
+          ],
+          "itm_0091": [
+            false,
+            false
+          ],
+          "itm_0096": [
+            false,
+            false
+          ],
+          "itm_0101": [
+            true,
+            false
+          ],
+          "itm_0106": [
+            true,
+            true
+          ],
+          "itm_0111": [
+            true,
+            false
+          ],
+          "itm_0116": [
+            false,
+            false
+          ],
+          "itm_0121": [
+            false,
+            false
+          ],
+          "itm_0126": [
+            false,
+            false
+          ],
+          "itm_0131": [
+            false,
+            false
+          ],
+          "itm_0136": [
+            false,
+            false
+          ],
+          "itm_0141": [
+            false,
+            false
+          ],
+          "itm_0146": [
+            false,
+            true
+          ],
+          "itm_0151": [
+            true,
+            false
+          ],
+          "itm_0156": [
+            false,
+            false
+          ],
+          "itm_0161": [
+            false,
+            true
+          ],
+          "itm_0166": [
+            true,
+            false
+          ],
+          "itm_0171": [
+            true,
+            false
+          ],
+          "itm_0176": [
+            false,
+            false
+          ],
+          "itm_0181": [
+            false,
+            false
+          ],
+          "itm_0186": [
+            true,
+            true
+          ],
+          "itm_0191": [
+            true,
+            false
+          ],
+          "itm_0196": [
+            false,
+            true
+          ],
+          "itm_0201": [
+            false,
+            false
+          ],
+          "itm_0206": [
+            false,
+            false
+          ],
+          "itm_0211": [
+            false,
+            false
+          ],
+          "itm_0216": [
+            false,
+            false
+          ],
+          "itm_0221": [
+            true,
+            false
+          ],
+          "itm_0226": [
+            true,
+            false
+          ],
+          "itm_0231": [
+            false,
+            false
+          ],
+          "itm_0236": [
+            false,
+            false
+          ],
+          "itm_0241": [
+            true,
+            true
+          ],
+          "itm_0246": [
+            true,
+            false
+          ],
+          "itm_0251": [
+            true,
+            false
+          ],
+          "itm_0256": [
+            false,
+            false
+          ]
+        },
         "terminal_ci": {
           "lo": 0.1635,
           "hi": 0.3269,

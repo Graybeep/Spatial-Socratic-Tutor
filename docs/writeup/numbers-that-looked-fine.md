@@ -99,25 +99,28 @@ and 80%. In the last arm there are no hints at all.
 the narrowing.** It was measuring the `to` endpoint each item's own prompt gives
 away, which is a property of the item bank and identical in every arm.
 
-The `node_click` column does move, and monotonically with how much each arm
-narrows. At zero knowledge, where the student uses only what the interface
-handed over:
+The `node_click` column, on the same run, does move — 17% / 6% / 4% / 2% across
+those four arms at zero knowledge. **That contrast is the whole argument here,
+and it is all this table is offered for.** One column is flat because it is
+reading the item bank; the other varies with the arm because it is reading the
+interface.
 
-| arm | `node_click`, zero knowledge |
-|---|---|
-| product configuration | 17% |
-| isolated visual channel | 6% |
-| verbal channel only | 4% |
-| no hints at all | 2% |
+It is not §9.1's result, and it should not be quoted as one. This run includes
+the 32 edge items whose anchor determines their own answer, so it exists to
+demonstrate the defect, not to support a claim about the tutor. Reproduce it
+with `python -m eval.adversarial --population answerable`.
 
-That is §9.1's result. Pooled with the edge items, the partial-knowledge figure
-sat at 52–56% **in every arm**, making the four arms look indistinguishable —
-the comparison the whole evaluation exists to make, washed out by items that
-were answering a different question.
+**On the scored bank of 69 the same column reads 12.5% / 3.8% / 1.0% / 3.8%**,
+and the tidy ordering above does not survive: the isolated visual channel lands
+exactly on the no-hint baseline. Only the interleaved product arm separates from
+baseline, at +8.6 points [+1.9, +16.4]. Those are the numbers §9.1 reports, they
+are in [limitations.md](limitations.md) with their intervals, and they are less
+flattering than this table looks.
 
-Reproduce the demonstration with `python -m eval.adversarial --population
-answerable`; the default `scored` population excludes the 32 determined edge
-items and is what any mastery claim is quoted from.
+The pooling did real damage in the meantime. With the edge items mixed in, the
+partial-knowledge figure sat at 52–56% **in every arm**, making the four arms
+look indistinguishable — the comparison the whole evaluation exists to make,
+washed out by items answering a different question.
 
 ## A third, adjacent: a constant calibrated against nothing
 

@@ -3,7 +3,8 @@
 An LLM tutor that helps by **showing less** instead of saying more: it narrows a
 frozen concept graph visually rather than explaining the answer.
 
-4 weeks, 2 people, one chapter, a local demo and three eval numbers.
+4 weeks, one person working both layers, one chapter, a local demo and three
+eval numbers.
 
 **Read `CLAUDE.md` before writing any code.** It is the settled spec — hard rules,
 frozen schemas, the two-call architecture, guardrails, mastery maths, evals and the
@@ -78,6 +79,31 @@ over one item has the same shape as a rate over a hundred. See
 Never report `1/N` as leakage. It is a lower bound that assumes uniform choice;
 the measured partial-knowledge rate runs well above it. `MAX_GUESS_PROBABILITY`
 is a policy knob for the narrowing floor, not a result.
+
+### What the numbers show, and what they do not
+
+Quote these from the **scored** bank: 69 items (52 `node_click` + 17
+`edge_click`), not the 101 visually-answerable ones and not the 260-item bank.
+
+**They do not show that the visual channel beat the verbal one.** On the
+`node_click` stratum, exactly one marginal over the no-hint baseline is
+distinguishable from zero — the shipped interleaved configuration, at zero
+knowledge, **+8.6 points [+1.9, +16.4]**. The isolated visual channel lands on
+the baseline (.038 against .038). Every other cell crosses zero, in both
+directions. At 52 items the half-widths are 6–7 points, so these arms are
+underpowered rather than null — but that cuts both ways and here it cuts against
+us.
+
+The demo's claim does not depend on winning that comparison, and should not be
+pitched as though it does. What holds regardless:
+
+- **the tutor cannot name the answer while hinting** — a property of Call 2's
+  argument list, not an observed behaviour (`docs/writeup/representation-blindness.md`)
+- **narrowing performs reductions that cannot be expressed in one utterance** —
+  a property of what fits in a turn; you cannot name 38 excluded nodes and the
+  graph does it in one frame
+- **the evaluation-blindness findings**, which are about system design and hold
+  whatever generates the text (`docs/writeup/numbers-that-looked-fine.md`)
 
 Useful knobs while building (see `docs/API.md`):
 
