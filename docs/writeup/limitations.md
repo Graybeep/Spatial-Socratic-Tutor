@@ -312,7 +312,7 @@ without anything in the validator being edited.
 
 Nothing flagged this for four days. The ids were unique, the schema validated,
 the counts were right and the DAG was clean — no check asked whether the items
-were *different from each other*. See `eval-harness-failures.md`; it is the same
+were *different from each other*. See `numbers-that-looked-fine.md`; it is the same
 failure class as the two recorded there.
 
 **Latency figures come from a mock.** The two-call timing profile the interface

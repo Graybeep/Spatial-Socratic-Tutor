@@ -125,7 +125,7 @@ class Phase1:
 #: A guard written against any one of them is blind to the others - which is how
 #: this breach, ItemPublic.node_id, and the eval-coverage bug all happened. The
 #: ceiling below says how much fidelity each action may carry, and _call2_context
-#: enforces it. See docs/writeup/eval-harness-failures.md.
+#: enforces it. See docs/writeup/representation-blindness.md.
 #:
 #: "labels" = full identities. "count" = cardinality only, no identities.
 CALL2_FIDELITY = {

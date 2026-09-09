@@ -73,7 +73,7 @@ Every eval output carries a `provenance` block saying what it sampled
 (`population`, `distinct`, `coverage`). Check it before quoting a number: §9.1
 was measured over ONE item for four days and every test passed, because a rate
 over one item has the same shape as a rate over a hundred. See
-`docs/writeup/eval-harness-failures.md`.
+`docs/writeup/numbers-that-looked-fine.md`.
 
 Never report `1/N` as leakage. It is a lower bound that assumes uniform choice;
 the measured partial-knowledge rate runs well above it. `MAX_GUESS_PROBABILITY`
@@ -110,7 +110,9 @@ NARROW_SCHEDULE=0,25,18,12,8 python -m server.main
 | `build/llm.py` | the build-side LLM seam — mock by default, `BUILD_LLM=real` |
 | `data/SOURCE.md` | attribution, and why the gold graph was frozen first |
 | `eval/adversarial.py` | §9.1 effective leakage — `python -m eval.adversarial` |
-| `docs/writeup/` | draft report sections — identity leakage, limitations |
+| `docs/writeup/representation-blindness.md` | the design contribution: fidelity ceiling, not field whitelist |
+| `docs/writeup/numbers-that-looked-fine.md` | evals that produced well-formed numbers over nothing |
+| `docs/writeup/` | other draft report sections — identity leakage, limitations |
 | `docs/writeup/no-key-plan.md` | **the report that stands without a key**, and the day-19 decision |
 | `build/fetch_chapter.py` | downloads the chapter into a gitignored dir; URLs in `build/config.py` |
 | `client/src/types.ts` | reconciled against `/schemas`; supersedes `templates/` |
