@@ -125,7 +125,7 @@
       "difficulty": 0.25,
       "visually_answerable": true,
       "answer_spans": [],
-      "scorable": true
+      "scorable": false
     },
     {
       "id": "itm_0008",
@@ -213,7 +213,7 @@
       "difficulty": 0.3,
       "visually_answerable": true,
       "answer_spans": [],
-      "scorable": true
+      "scorable": false
     },
     {
       "id": "itm_0013",
@@ -301,7 +301,7 @@
       "difficulty": 0.45,
       "visually_answerable": true,
       "answer_spans": [],
-      "scorable": true
+      "scorable": false
     },
     {
       "id": "itm_0018",
@@ -389,7 +389,7 @@
       "difficulty": 0.25,
       "visually_answerable": true,
       "answer_spans": [],
-      "scorable": true
+      "scorable": false
     },
     {
       "id": "itm_0023",
@@ -477,7 +477,7 @@
       "difficulty": 0.3,
       "visually_answerable": true,
       "answer_spans": [],
-      "scorable": true
+      "scorable": false
     },
     {
       "id": "itm_0028",
@@ -565,7 +565,7 @@
       "difficulty": 0.35,
       "visually_answerable": true,
       "answer_spans": [],
-      "scorable": true
+      "scorable": false
     },
     {
       "id": "itm_0033",
@@ -915,7 +915,7 @@
       "difficulty": 0.5,
       "visually_answerable": true,
       "answer_spans": [],
-      "scorable": true
+      "scorable": false
     },
     {
       "id": "itm_0053",
@@ -1091,7 +1091,7 @@
       "difficulty": 0.55,
       "visually_answerable": true,
       "answer_spans": [],
-      "scorable": true
+      "scorable": false
     },
     {
       "id": "itm_0063",
@@ -1178,7 +1178,7 @@
       "difficulty": 0.4,
       "visually_answerable": true,
       "answer_spans": [],
-      "scorable": true
+      "scorable": false
     },
     {
       "id": "itm_0068",
@@ -1265,7 +1265,7 @@
       "difficulty": 0.4,
       "visually_answerable": true,
       "answer_spans": [],
-      "scorable": true
+      "scorable": false
     },
     {
       "id": "itm_0073",
@@ -1352,7 +1352,7 @@
       "difficulty": 0.45,
       "visually_answerable": true,
       "answer_spans": [],
-      "scorable": true
+      "scorable": false
     },
     {
       "id": "itm_0078",
@@ -1439,7 +1439,7 @@
       "difficulty": 0.45,
       "visually_answerable": true,
       "answer_spans": [],
-      "scorable": true
+      "scorable": false
     },
     {
       "id": "itm_0083",
@@ -1527,7 +1527,7 @@
       "difficulty": 0.5,
       "visually_answerable": true,
       "answer_spans": [],
-      "scorable": true
+      "scorable": false
     },
     {
       "id": "itm_0088",
@@ -1615,7 +1615,7 @@
       "difficulty": 0.5,
       "visually_answerable": true,
       "answer_spans": [],
-      "scorable": true
+      "scorable": false
     },
     {
       "id": "itm_0093",
@@ -1703,7 +1703,7 @@
       "difficulty": 0.45,
       "visually_answerable": true,
       "answer_spans": [],
-      "scorable": true
+      "scorable": false
     },
     {
       "id": "itm_0098",
@@ -1791,7 +1791,7 @@
       "difficulty": 0.45,
       "visually_answerable": true,
       "answer_spans": [],
-      "scorable": true
+      "scorable": false
     },
     {
       "id": "itm_0103",
@@ -1967,7 +1967,7 @@
       "difficulty": 0.3,
       "visually_answerable": true,
       "answer_spans": [],
-      "scorable": true
+      "scorable": false
     },
     {
       "id": "itm_0113",
@@ -2055,7 +2055,7 @@
       "difficulty": 0.4,
       "visually_answerable": true,
       "answer_spans": [],
-      "scorable": true
+      "scorable": false
     },
     {
       "id": "itm_0118",
@@ -2231,7 +2231,7 @@
       "difficulty": 0.65,
       "visually_answerable": true,
       "answer_spans": [],
-      "scorable": true
+      "scorable": false
     },
     {
       "id": "itm_0128",
@@ -2319,7 +2319,7 @@
       "difficulty": 0.75,
       "visually_answerable": true,
       "answer_spans": [],
-      "scorable": true
+      "scorable": false
     },
     {
       "id": "itm_0133",
@@ -2407,7 +2407,7 @@
       "difficulty": 0.65,
       "visually_answerable": true,
       "answer_spans": [],
-      "scorable": true
+      "scorable": false
     },
     {
       "id": "itm_0138",
@@ -2671,7 +2671,7 @@
       "difficulty": 0.45,
       "visually_answerable": true,
       "answer_spans": [],
-      "scorable": true
+      "scorable": false
     },
     {
       "id": "itm_0153",
@@ -2846,7 +2846,7 @@
       "difficulty": 0.55,
       "visually_answerable": true,
       "answer_spans": [],
-      "scorable": true
+      "scorable": false
     },
     {
       "id": "itm_0163",
@@ -2933,7 +2933,7 @@
       "difficulty": 0.6,
       "visually_answerable": true,
       "answer_spans": [],
-      "scorable": true
+      "scorable": false
     },
     {
       "id": "itm_0168",
@@ -3197,7 +3197,7 @@
       "difficulty": 0.55,
       "visually_answerable": true,
       "answer_spans": [],
-      "scorable": true
+      "scorable": false
     },
     {
       "id": "itm_0183",
@@ -3285,7 +3285,7 @@
       "difficulty": 0.5,
       "visually_answerable": true,
       "answer_spans": [],
-      "scorable": true
+      "scorable": false
     },
     {
       "id": "itm_0188",
@@ -3549,7 +3549,7 @@
       "difficulty": 0.8,
       "visually_answerable": true,
       "answer_spans": [],
-      "scorable": true
+      "scorable": false
     },
     {
       "id": "itm_0203",
@@ -3812,7 +3812,7 @@
       "difficulty": 0.7,
       "visually_answerable": true,
       "answer_spans": [],
-      "scorable": true
+      "scorable": false
     },
     {
       "id": "itm_0218",
@@ -3900,7 +3900,7 @@
       "difficulty": 0.7,
       "visually_answerable": true,
       "answer_spans": [],
-      "scorable": true
+      "scorable": false
     },
     {
       "id": "itm_0223",
@@ -3988,7 +3988,7 @@
       "difficulty": 0.75,
       "visually_answerable": true,
       "answer_spans": [],
-      "scorable": true
+      "scorable": false
     },
     {
       "id": "itm_0228",
@@ -4252,7 +4252,7 @@
       "difficulty": 0.75,
       "visually_answerable": true,
       "answer_spans": [],
-      "scorable": true
+      "scorable": false
     },
     {
       "id": "itm_0243",
@@ -4427,7 +4427,7 @@
       "difficulty": 0.85,
       "visually_answerable": true,
       "answer_spans": [],
-      "scorable": true
+      "scorable": false
     },
     {
       "id": "itm_0253",

@@ -263,6 +263,7 @@ def check_edge_item_anchors(graph: Graph, bank: ItemBank, rep: Report) -> None:
     edge_items = [i for i in bank.items if i.type == "edge_click"]
     if not edge_items:
         return
+    scorable_ids = {i.id: i.scorable for i in edge_items}
 
     floor = BUILD.min_edge_item_candidates
     thin: list = []
@@ -298,12 +299,23 @@ def check_edge_item_anchors(graph: Graph, bank: ItemBank, rep: Report) -> None:
     if determined:
         worst = sorted(determined, key=lambda t: -t[2])[:5]
         listed = ", ".join(f"{i} ({a}, difficulty {d})" for i, a, d in worst)
-        rep.warn(
-            f"[edge anchor] {len(determined)}/{len(edge_items)} edge items are "
-            f"DETERMINED by their anchor: the named `to` endpoint has exactly one "
-            f"prereq, so naming it names the answer and the stated difficulty is "
-            f"unreachable. Worst by claimed difficulty: {listed}"
+        # ERROR only if any of them still counts toward mastery. A determined
+        # item is harmless as long as it cannot move theta - same mechanism and
+        # the same reversibility as the mcq demotion above. Re-authoring 32
+        # items buys a slightly larger bank for a day of week 3 and a fresh
+        # chance to introduce the item-quality defect this check exists to find.
+        still_scored = [i for i, _a, _d in determined if scorable_ids.get(i)]
+        say = rep.error if still_scored else rep.warn
+        scope = "SCORED" if still_scored else "unscored (scorable=false)"
+        say(
+            f"[edge anchor] [{scope}] {len(determined)}/{len(edge_items)} edge items "
+            f"are DETERMINED by their anchor: the named `to` endpoint has exactly "
+            f"one prereq, so naming it names the answer and the stated difficulty "
+            f"is unreachable. Worst by claimed difficulty: {listed}"
             + ("" if len(determined) <= 5 else f", +{len(determined) - 5} more")
+            + (f". STILL SCORED: {', '.join(still_scored[:6])} - set scorable=false "
+               f"or re-author; guess rate 1.0 cannot be expressed as a difficulty."
+               if still_scored else "")
         )
 
     if thin:
@@ -314,14 +326,21 @@ def check_edge_item_anchors(graph: Graph, bank: ItemBank, rep: Report) -> None:
             f"{listed}" + ("" if len(thin) <= 5 else f", +{len(thin) - 5} more")
         )
 
-    if determined or thin:
-        affected = len(determined) + len(thin)
+    if thin:
+        scored_thin = [i for i, _a, _n, _d in thin if scorable_ids.get(i)]
         rep.warn(
-            f"[edge anchor] {affected}/{len(edge_items)} edge items need either "
-            f"re-authoring or a corrected difficulty before their theta updates "
-            f"mean anything (§7). Guess rate is 1/candidates, which no difficulty "
-            f"value can represent once candidates is 1."
+            f"[edge anchor] {len(scored_thin)} SCORED edge items remain at 2 "
+            f"candidates: a bounded difficulty-calibration problem, not a "
+            f"giveaway. Guess rate 0.5 against a claimed difficulty; §7's d_eff "
+            f"is where that discrepancy lands."
         )
+
+    scored_edges = [i for i in edge_items if i.scorable]
+    rep.note(
+        f"scored edge items: {len(scored_edges)}/{len(edge_items)}. The scored "
+        f"click bank is what 9.1 and 9.4 generalise to - quote that n, not the "
+        f"whole bank."
+    )
 
     if collisions:
         rep.warn(

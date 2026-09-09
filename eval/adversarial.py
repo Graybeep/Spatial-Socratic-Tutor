@@ -402,7 +402,37 @@ def marginal_ci(treat_by_item: dict, base_by_item: dict, resamples: int,
     }
 
 
-def measure(store: GraphStore, arm_label: str, mode: str, condition: str, n: int) -> dict:
+#: Which items 9.1 draws from. "scored" is the population every mastery claim
+#: is about. "answerable" is the wider set INCLUDING the 32 determined edge
+#: items, kept runnable on purpose: it reproduces the 82% figure the writeup
+#: uses to show the metric was measuring nothing, so a reader can check that
+#: inference with one flag instead of trusting an archived file.
+POPULATIONS = ("scored", "answerable")
+
+
+def scored_bank(store: GraphStore, population: str = "scored") -> list:
+    """The items 9.1 generalises to: visually answerable AND scored.
+
+    NOT the whole visually-answerable set. 32 of the 49 edge items are
+    `scorable=false` because the `to` endpoint their prompt names has exactly
+    one prereq, so naming it names the answer (build.validate's edge-anchor
+    check). They are still shown to a student; they cannot move theta, so they
+    are not part of the population any mastery claim is about.
+
+    52 node_click + 17 edge_click = 69. Quote that n and its interval.
+
+    `population="answerable"` drops the scorable filter and returns all 101.
+    That run is not a mastery claim and must not be quoted as one; it exists to
+    demonstrate the defect.
+    """
+    items = [i for i in store.bank.items if i.visually_answerable]
+    if population == "answerable":
+        return items
+    return [i for i in items if i.scorable]
+
+
+def measure(store: GraphStore, arm_label: str, mode: str, condition: str, n: int,
+            population: str = "scored") -> dict:
     by_level = defaultdict(list)
     lit_at_level = defaultdict(list)
     #: attempt -> item_id -> outcomes. Kept so the rate at each rung can be
@@ -411,11 +441,12 @@ def measure(store: GraphStore, arm_label: str, mode: str, condition: str, n: int
     #: item_type -> attempt -> outcomes, for the split below.
     by_type = defaultdict(lambda: defaultdict(list))
     by_type_item = defaultdict(lambda: defaultdict(lambda: defaultdict(list)))
-    # SWEEP THE ITEM BANK. 9.1 runs on the visually-answerable subset (3), so
-    # that subset is the population, and n dialogues are spread across it rather
-    # than spent re-rolling one item. With n < len(bank) this is a sample of
-    # items; with n > len(bank) each item is probed round-robin.
-    bank = [i.id for i in store.bank.items if i.visually_answerable]
+    # SWEEP THE ITEM BANK. 9.1 runs on the visually-answerable AND SCORED
+    # subset (see scored_bank), so that subset is the population, and n
+    # dialogues are spread across it rather than spent re-rolling one item.
+    # With n < len(bank) this is a sample of items; with n > len(bank) each item
+    # is probed round-robin.
+    bank = [i.id for i in scored_bank(store, population)]
     with _config(ladder_mode=mode):
         for i in range(n):
             student = Student(condition=condition, rng=random.Random(f"{arm_label}:{condition}:{i}"))
@@ -445,6 +476,7 @@ def measure(store: GraphStore, arm_label: str, mode: str, condition: str, n: int
     terminal = max(eligible) if eligible else (max(levels) if levels else None)
     return {
         "arm": arm_label,
+        "population": population,
         "ladder_mode": mode,
         "condition": condition,
         "dialogues": n,
@@ -493,20 +525,20 @@ def measure(store: GraphStore, arm_label: str, mode: str, condition: str, n: int
     }
 
 
-def _default_n(n: Optional[int]) -> int:
-    """Two dialogues per visually-answerable item, unless told otherwise."""
+def _default_n(n: Optional[int], population: str = "scored") -> int:
+    """Two dialogues per item in the chosen population, unless told otherwise."""
     if n is not None:
         return n
-    bank = [i for i in GraphStore.load().bank.items if i.visually_answerable]
+    bank = scored_bank(GraphStore.load(), population)
     return max(2 * len(bank), 60)
 
 
-def run_all(n: int, arms: Optional[dict] = None) -> list:
+def run_all(n: int, arms: Optional[dict] = None, population: str = "scored") -> list:
     store = GraphStore.load()
     results = []
     for label, mode in (arms or ARMS).items():
         for condition in CONDITIONS:
-            results.append(measure(store, label, mode, condition, n))
+            results.append(measure(store, label, mode, condition, n, population))
     return results
 
 
@@ -560,9 +592,18 @@ def render(results: list) -> str:
             counts = rows[0].get("by_item_type", {})
             lines.append("    items         " + "".join(
                 f"{(counts.get(t) or {}).get('distinct_items', 0):>13d} " for t in types))
+            pop = rows[0].get("population", "scored")
             lines.append("    node_click measures the NARROWING. edge_click is dominated by the")
-            lines.append("    `to` endpoint the item's own prompt names - median 1 candidate")
-            lines.append("    remains (build.validate). Quote node_click as 9.1's headline.")
+            lines.append("    `to` endpoint the item's own prompt names, so it moves with the")
+            lines.append("    item bank rather than with the arm.")
+            if pop == "answerable":
+                lines.append("    POPULATION=answerable: includes the 32 determined edge items")
+                lines.append("    (guess rate 1.0). NOT a mastery claim - this run exists to show")
+                lines.append("    that edge_click barely moves across arms.")
+            else:
+                lines.append("    Scored population: the 32 determined edge items are excluded,")
+                lines.append("    so edge_click here is the 17 two-candidate items (~0.5 floor).")
+            lines.append("    Quote node_click as 9.1's headline.")
         lines.append("")
 
     lines.append("  MARGINAL LEAKAGE - what the NARROWING actually contributed")
@@ -627,9 +668,14 @@ def main() -> int:
     parser.add_argument("--n", type=int, default=None,
                         help="dialogues per arm per condition (CLAUDE.md 9.1 wants 60)")
     parser.add_argument("--json", type=str, default=None, help="also write raw results here")
+    parser.add_argument("--population", choices=POPULATIONS, default="scored",
+                        help="scored = the 69 items mastery is computed from "
+                             "(default). answerable = all 101, including the 32 "
+                             "determined edge items; reproduces the 82% figure "
+                             "and is NOT a mastery claim.")
     args = parser.parse_args()
 
-    results = run_all(_default_n(args.n))
+    results = run_all(_default_n(args.n, args.population), population=args.population)
     print(render(results))
     if args.json:
         with open(args.json, "w", encoding="utf-8") as fh:
