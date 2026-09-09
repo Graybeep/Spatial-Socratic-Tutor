@@ -256,6 +256,11 @@ LADDER_MODE=interleaved         # interleaved | visual_only | verbal_only
 The floor is set by **guess probability**, not node count: `floor = ceil(1/p)`.
 Narrowing to 2 is a coin flip. Schedule entries below the floor clamp up to it.
 
+It is a **policy bound, not a measured optimum**, and in `interleaved` it is not
+reached: alternating rungs plus the 8-turn budget bottom a real dialogue out at
+9 lit. Only `visual_only` lights 5. See the note on `max_guess_probability` in
+`server/config.py`.
+
 **`MAX_GUESS_PROBABILITY` is a policy knob. `1/N` is not a leakage number and
 must never be reported as one.** It is a lower bound that assumes uniform choice,
 and students do not choose uniformly — they choose among the lit nodes that are

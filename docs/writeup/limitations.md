@@ -261,7 +261,10 @@ want it reproduced on a second chapter before leaning on it.
 
 **The effective candidate set is smaller than the policy floor.** `candidate_floor`
 is derived from `max_guess_probability = 0.2`, so the ladder lights five nodes at
-the terminal rung and the interface presents a nominal 1-in-5 guess. Measured
+its terminal rung and the interface presents a nominal 1-in-5 guess. (That floor
+is a policy bound set before the corrected eval, and the shipped `interleaved`
+ladder does not reach it — only the `visual_only` arm lights 5. The screen below
+measures the arm that does.) Measured
 through the partial-knowledge student's region filter, only 3.45 of those five
 survive as plausible: the remainder is the hash-ordered filler `candidate_order`
 appends after the answer, its distractors and its graph neighbours. Effective

@@ -99,23 +99,31 @@ and 80%. In the last arm there are no hints at all.
 the narrowing.** It was measuring the `to` endpoint each item's own prompt gives
 away, which is a property of the item bank and identical in every arm.
 
-The `node_click` column, on the same run, does move — 17% / 6% / 4% / 2% across
-those four arms at zero knowledge. **That contrast is the whole argument here,
-and it is all this table is offered for.** One column is flat because it is
-reading the item bank; the other varies with the arm because it is reading the
-interface.
+The `node_click` column does move. **The figures to carry away are the scored
+ones** — 69 items, the population every §9.1 claim generalises to:
 
-It is not §9.1's result, and it should not be quoted as one. This run includes
-the 32 edge items whose anchor determines their own answer, so it exists to
-demonstrate the defect, not to support a claim about the tutor. Reproduce it
-with `python -m eval.adversarial --population answerable`.
+| arm | `node_click`, zero knowledge, scored bank |
+|---|---|
+| product configuration | **12.5%** |
+| isolated visual channel | 3.8% |
+| verbal channel only | 1.0% |
+| no hints at all | 3.8% |
 
-**On the scored bank of 69 the same column reads 12.5% / 3.8% / 1.0% / 3.8%**,
-and the tidy ordering above does not survive: the isolated visual channel lands
-exactly on the no-hint baseline. Only the interleaved product arm separates from
-baseline, at +8.6 points [+1.9, +16.4]. Those are the numbers §9.1 reports, they
-are in [limitations.md](limitations.md) with their intervals, and they are less
-flattering than this table looks.
+The isolated visual channel lands **exactly on the no-hint baseline**. Only the
+interleaved product arm separates from it, at +8.6 points [+1.9, +16.4], and
+that is the single marginal in the whole grid distinguishable from zero. Full
+intervals in [limitations.md](limitations.md).
+
+On the demonstration run above — all 101 items, including the 32 determined ones
+— the same column reads 17% / 6% / 4% / 2%. **That is a tidier ordering than the
+truth, and we are stating it second on purpose.** It is not §9.1's result and
+must not be quoted as one; it exists only to complete the contrast this section
+is making. Reproduce it with `python -m eval.adversarial --population
+answerable`.
+
+The contrast is what both versions agree on, and it is all this section needs:
+one column is flat because it is reading the item bank, the other varies with
+the arm because it is reading the interface.
 
 The pooling did real damage in the meantime. With the edge items mixed in, the
 partial-knowledge figure sat at 52–56% **in every arm**, making the four arms
