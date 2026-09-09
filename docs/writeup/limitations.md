@@ -175,29 +175,45 @@ a more informative lit region than a real one, was **not a graph-shape effect at
 all**: it was two different single items. That explanation is withdrawn. And the
 headline inverted once the bank was actually sampled — see below.
 
-**Corrected §9.1, over the visually-answerable bank (101 items, n=200
-dialogues, 95% percentile cluster bootstrap over items, 2000 resamples):**
+**Corrected §9.1**, over the **scored** bank — 69 items, of which the 52
+`node_click` items are the stratum reported here (n=138 dialogues, 95%
+percentile cluster bootstrap over items, 2000 resamples).
+
+Two things changed since the version of this table that stood a day ago, and
+both moved the numbers against us. It pooled `node_click` with `edge_click` at a
+time when edge items were unsolvable by construction and scored a guaranteed
+zero, so every cell was diluted; and it drew on 101 items including the 32 whose
+anchor determines their own answer, which are now excluded from mastery. The
+superseded figures are not reproduced — they were measured over a population we
+no longer claim.
 
 | arm | zero | partial | adversarial |
 |---|---|---|---|
-| product configuration | .090 [.055, .131] | .150 [.100, .207] | .130 [.085, .179] |
-| isolated visual channel | .030 [.010, .055] | .130 [.084, .183] | .165 [.105, .228] |
-| verbal channel only | .020 [.005, .040] | .125 [.079, .176] | .080 [.040, .126] |
-| no hints at all | .010 [.000, .025] | .110 [.065, .160] | .095 [.055, .144] |
+| product configuration | .125 [.067, .192] | .308 [.221, .404] | .288 [.202, .385] |
+| isolated visual channel | .038 [.010, .077] | .163 [.096, .240] | .288 [.192, .385] |
+| verbal channel only | .010 [.000, .029] | .202 [.115, .288] | .183 [.115, .260] |
+| no hints at all | .038 [.010, .077] | .260 [.183, .356] | .240 [.164, .327] |
 
 Marginal over the no-hints baseline, paired on item:
 
 | arm | condition | marginal | 95% CI |
 |---|---|---|---|
-| product configuration | zero | **+.080** | [+.040, +.124] |
-| product configuration | partial | +.040 | [−.010, +.090] |
-| product configuration | adversarial | +.035 | [−.020, +.090] |
-| isolated visual channel | adversarial | **+.070** | [+.010, +.130] |
-| isolated visual channel | zero | +.020 | [−.005, +.050] |
-| isolated visual channel | partial | +.020 | [−.040, +.080] |
-| verbal channel only | zero | +.010 | [−.015, +.035] |
-| verbal channel only | partial | +.015 | [−.040, +.065] |
-| verbal channel only | adversarial | −.015 | [−.070, +.041] |
+| product configuration | zero | **+.086** | [+.019, +.164] |
+| product configuration | partial | +.048 | [−.067, +.173] |
+| product configuration | adversarial | +.048 | [−.058, +.164] |
+| isolated visual channel | zero | +.000 | [−.058, +.058] |
+| isolated visual channel | partial | −.096 | [−.192, +.000] |
+| isolated visual channel | adversarial | +.048 | [−.086, +.183] |
+| verbal channel only | zero | −.029 | [−.067, +.010] |
+| verbal channel only | partial | −.058 | [−.192, +.077] |
+| verbal channel only | adversarial | −.058 | [−.173, +.067] |
+
+**A claim we bolded a day ago does not survive this.** The isolated visual
+channel's adversarial marginal was reported as **+.070 [+.010, +.130]** —
+significant, and the one cell that let the visual channel look like it beat the
+verbal one on its own. On the scored `node_click` stratum it is +.048
+[−.086, +.183] and crosses zero. **We are not claiming the visual arm won.**
+It did not, on this bank, at this n.
 
 The interval is a **cluster** bootstrap: it resamples items, not dialogues, and
 pools all of a drawn item's probes. Resampling dialogues would treat repeated
@@ -207,10 +223,16 @@ drawn and both arms take that item's probes — so item difficulty cancels withi
 each resample as it does in the point estimate.
 
 **What survives, and it is less than we claimed.** Exactly one marginal in the
-shipped configuration is distinguishable from zero: the narrowing hands a
-**zero-knowledge** student +8.0 points over no hints at all, CI [+4.0, +12.4].
-The partial-knowledge marginal is +4.0 points with an interval crossing zero,
-and so is the adversarial one.
+entire grid is distinguishable from zero: the shipped configuration hands a
+**zero-knowledge** student +8.6 points over no hints at all, CI [+1.9, +16.4].
+The partial-knowledge marginal is +4.8 points with an interval crossing zero, and
+so is the adversarial one. Every cell in the isolated-visual and verbal-only arms
+crosses zero, in both directions.
+
+The isolated visual channel at zero knowledge is +.000 — .038 against a .038
+baseline. **The visual channel alone, with no verbal hint beside it, contributed
+nothing measurable here.** Only the interleaved product configuration, which
+uses both channels, separates from baseline at all.
 
 This inverts the earlier story, and we hold the new framing more loosely than the old one deserved to be held. We previously reported that partial knowledge
 extracts substantially more from a narrowing than zero knowledge does, and
@@ -224,11 +246,11 @@ we lost, but we did not predict it and we are not going to present it as though
 we had.
 
 We are not treating the crossing-zero marginals as evidence of no effect. Over
-101 items the half-widths run around 5 points, and a real effect of 3 points
-would not be detected here. **"Crosses zero at n=101 items" is the claim; "no
-leakage to partially-knowledgeable students" is not** - the partial and
-adversarial arms are underpowered, not null, and we report all three rows with
-their intervals rather than the one that reached significance.
+52 node items the half-widths run around 6-7 points, and a real effect of 5
+points would not be detected here. **"Crosses zero at n=52 items" is the claim;
+"the visual channel does nothing" is not** - these arms are underpowered, not
+null, and we report every row with its interval rather than the one that reached
+significance. That cuts both ways, and this is the direction it cuts against us.
 
 The pattern across the three - narrowing helping most where the student has
 least, and mattering less once they have narrowed the field themselves - is the

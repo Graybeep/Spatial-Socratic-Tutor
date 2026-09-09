@@ -552,6 +552,11 @@ def measure(store: GraphStore, arm_label: str, mode: str, condition: str, n: int
                     if terminal in rows and rows[terminal] else None
                 ),
                 "distinct_items": len(by_type_item[itype].get(terminal, {})),
+                # Retained for the same reason as the pooled `_by_item_terminal`
+                # below: marginal_ci pairs arms on the same items, and a
+                # node_click-only marginal needs the node_click-only map.
+                "_by_item_terminal": {k: list(v) for k, v
+                                      in by_type_item[itype].get(terminal, {}).items()},
                 "terminal_ci": bootstrap_ci(
                     by_type_item[itype].get(terminal, {}), CONFIG.bootstrap_resamples,
                     CONFIG.bootstrap_confidence, CONFIG.bootstrap_seed
