@@ -1,0 +1,1766 @@
+[
+  {
+    "arm": "product configuration",
+    "population": "answerable",
+    "ladder_mode": "interleaved",
+    "condition": "zero",
+    "dialogues": 202,
+    "levels": {
+      "1": {
+        "n": 202,
+        "solve_rate": 0.16831683168316833,
+        "mean_lit": 12
+      },
+      "2": {
+        "n": 70,
+        "solve_rate": 0.1,
+        "mean_lit": 12
+      },
+      "3": {
+        "n": 70,
+        "solve_rate": 0.34285714285714286,
+        "mean_lit": 9
+      },
+      "4": {
+        "n": 70,
+        "solve_rate": 0.15714285714285714,
+        "mean_lit": 9
+      },
+      "5": {
+        "n": 70,
+        "solve_rate": 0.15714285714285714,
+        "mean_lit": 9
+      },
+      "6": {
+        "n": 70,
+        "solve_rate": 0.3142857142857143,
+        "mean_lit": 9
+      }
+    },
+    "terminal_attempt": 6,
+    "terminal_n": 70,
+    "min_n_for_terminal": 67,
+    "terminal_solve_rate": 0.3142857142857143,
+    "terminal_mean_lit": 9,
+    "by_item_type": {
+      "edge_click": {
+        "levels": {
+          "1": {
+            "n": 98,
+            "solve_rate": 0.16326530612244897
+          },
+          "2": {
+            "n": 64,
+            "solve_rate": 0.109375
+          },
+          "3": {
+            "n": 64,
+            "solve_rate": 0.34375
+          },
+          "4": {
+            "n": 64,
+            "solve_rate": 0.171875
+          },
+          "5": {
+            "n": 64,
+            "solve_rate": 0.171875
+          },
+          "6": {
+            "n": 64,
+            "solve_rate": 0.34375
+          }
+        },
+        "terminal_attempt": 6,
+        "terminal_n": 64,
+        "terminal_solve_rate": 0.34375,
+        "distinct_items": 32,
+        "terminal_ci": {
+          "lo": 0.2344,
+          "hi": 0.4531,
+          "point": 0.3438,
+          "half_width": 0.1094,
+          "resamples": 2000,
+          "items": 32,
+          "confidence": 0.95
+        }
+      },
+      "node_click": {
+        "levels": {
+          "1": {
+            "n": 104,
+            "solve_rate": 0.17307692307692307
+          },
+          "2": {
+            "n": 6,
+            "solve_rate": 0.0
+          },
+          "3": {
+            "n": 6,
+            "solve_rate": 0.3333333333333333
+          },
+          "4": {
+            "n": 6,
+            "solve_rate": 0.0
+          },
+          "5": {
+            "n": 6,
+            "solve_rate": 0.0
+          },
+          "6": {
+            "n": 6,
+            "solve_rate": 0.0
+          }
+        },
+        "terminal_attempt": 6,
+        "terminal_n": 6,
+        "terminal_solve_rate": 0.0,
+        "distinct_items": 3,
+        "terminal_ci": {
+          "lo": 0.0,
+          "hi": 0.0,
+          "point": 0.0,
+          "half_width": 0.0,
+          "resamples": 2000,
+          "items": 3,
+          "confidence": 0.95
+        }
+      }
+    },
+    "provenance": {
+      "population": 101,
+      "distinct": 35,
+      "observations": 70,
+      "unit": "items",
+      "expect_full": true,
+      "coverage": 0.3465,
+      "complete": false
+    },
+    "terminal_ci": {
+      "lo": 0.2143,
+      "hi": 0.4143,
+      "point": 0.3143,
+      "half_width": 0.1,
+      "resamples": 2000,
+      "items": 35,
+      "confidence": 0.95
+    },
+    "distinct_items": 35
+  },
+  {
+    "arm": "product configuration",
+    "population": "answerable",
+    "ladder_mode": "interleaved",
+    "condition": "partial",
+    "dialogues": 202,
+    "levels": {
+      "1": {
+        "n": 202,
+        "solve_rate": 0.5594059405940595,
+        "mean_lit": 12
+      },
+      "2": {
+        "n": 70,
+        "solve_rate": 0.9285714285714286,
+        "mean_lit": 12
+      },
+      "3": {
+        "n": 70,
+        "solve_rate": 0.9571428571428572,
+        "mean_lit": 9
+      },
+      "4": {
+        "n": 70,
+        "solve_rate": 0.9428571428571428,
+        "mean_lit": 9
+      },
+      "5": {
+        "n": 70,
+        "solve_rate": 0.9428571428571428,
+        "mean_lit": 9
+      },
+      "6": {
+        "n": 70,
+        "solve_rate": 0.9285714285714286,
+        "mean_lit": 9
+      }
+    },
+    "terminal_attempt": 6,
+    "terminal_n": 70,
+    "min_n_for_terminal": 67,
+    "terminal_solve_rate": 0.9285714285714286,
+    "terminal_mean_lit": 9,
+    "by_item_type": {
+      "edge_click": {
+        "levels": {
+          "1": {
+            "n": 98,
+            "solve_rate": 0.8367346938775511
+          },
+          "2": {
+            "n": 64,
+            "solve_rate": 1.0
+          },
+          "3": {
+            "n": 64,
+            "solve_rate": 1.0
+          },
+          "4": {
+            "n": 64,
+            "solve_rate": 1.0
+          },
+          "5": {
+            "n": 64,
+            "solve_rate": 1.0
+          },
+          "6": {
+            "n": 64,
+            "solve_rate": 1.0
+          }
+        },
+        "terminal_attempt": 6,
+        "terminal_n": 64,
+        "terminal_solve_rate": 1.0,
+        "distinct_items": 32,
+        "terminal_ci": {
+          "lo": 1.0,
+          "hi": 1.0,
+          "point": 1.0,
+          "half_width": 0.0,
+          "resamples": 2000,
+          "items": 32,
+          "confidence": 0.95
+        }
+      },
+      "node_click": {
+        "levels": {
+          "1": {
+            "n": 104,
+            "solve_rate": 0.2980769230769231
+          },
+          "2": {
+            "n": 6,
+            "solve_rate": 0.16666666666666666
+          },
+          "3": {
+            "n": 6,
+            "solve_rate": 0.5
+          },
+          "4": {
+            "n": 6,
+            "solve_rate": 0.3333333333333333
+          },
+          "5": {
+            "n": 6,
+            "solve_rate": 0.3333333333333333
+          },
+          "6": {
+            "n": 6,
+            "solve_rate": 0.16666666666666666
+          }
+        },
+        "terminal_attempt": 6,
+        "terminal_n": 6,
+        "terminal_solve_rate": 0.16666666666666666,
+        "distinct_items": 3,
+        "terminal_ci": {
+          "lo": 0.0,
+          "hi": 0.5,
+          "point": 0.1667,
+          "half_width": 0.25,
+          "resamples": 2000,
+          "items": 3,
+          "confidence": 0.95
+        }
+      }
+    },
+    "provenance": {
+      "population": 101,
+      "distinct": 35,
+      "observations": 70,
+      "unit": "items",
+      "expect_full": true,
+      "coverage": 0.3465,
+      "complete": false
+    },
+    "terminal_ci": {
+      "lo": 0.8429,
+      "hi": 1.0,
+      "point": 0.9286,
+      "half_width": 0.0786,
+      "resamples": 2000,
+      "items": 35,
+      "confidence": 0.95
+    },
+    "distinct_items": 35
+  },
+  {
+    "arm": "product configuration",
+    "population": "answerable",
+    "ladder_mode": "interleaved",
+    "condition": "adversarial",
+    "dialogues": 202,
+    "levels": {
+      "1": {
+        "n": 202,
+        "solve_rate": 0.5247524752475248,
+        "mean_lit": 12
+      },
+      "2": {
+        "n": 70,
+        "solve_rate": 0.9142857142857143,
+        "mean_lit": 12
+      },
+      "3": {
+        "n": 70,
+        "solve_rate": 0.9285714285714286,
+        "mean_lit": 9
+      },
+      "4": {
+        "n": 70,
+        "solve_rate": 0.9428571428571428,
+        "mean_lit": 9
+      },
+      "5": {
+        "n": 70,
+        "solve_rate": 0.9142857142857143,
+        "mean_lit": 9
+      },
+      "6": {
+        "n": 70,
+        "solve_rate": 0.9714285714285714,
+        "mean_lit": 9
+      }
+    },
+    "terminal_attempt": 6,
+    "terminal_n": 70,
+    "min_n_for_terminal": 67,
+    "terminal_solve_rate": 0.9714285714285714,
+    "terminal_mean_lit": 9,
+    "by_item_type": {
+      "edge_click": {
+        "levels": {
+          "1": {
+            "n": 98,
+            "solve_rate": 0.8163265306122449
+          },
+          "2": {
+            "n": 64,
+            "solve_rate": 1.0
+          },
+          "3": {
+            "n": 64,
+            "solve_rate": 1.0
+          },
+          "4": {
+            "n": 64,
+            "solve_rate": 1.0
+          },
+          "5": {
+            "n": 64,
+            "solve_rate": 1.0
+          },
+          "6": {
+            "n": 64,
+            "solve_rate": 1.0
+          }
+        },
+        "terminal_attempt": 6,
+        "terminal_n": 64,
+        "terminal_solve_rate": 1.0,
+        "distinct_items": 32,
+        "terminal_ci": {
+          "lo": 1.0,
+          "hi": 1.0,
+          "point": 1.0,
+          "half_width": 0.0,
+          "resamples": 2000,
+          "items": 32,
+          "confidence": 0.95
+        }
+      },
+      "node_click": {
+        "levels": {
+          "1": {
+            "n": 104,
+            "solve_rate": 0.25
+          },
+          "2": {
+            "n": 6,
+            "solve_rate": 0.0
+          },
+          "3": {
+            "n": 6,
+            "solve_rate": 0.16666666666666666
+          },
+          "4": {
+            "n": 6,
+            "solve_rate": 0.3333333333333333
+          },
+          "5": {
+            "n": 6,
+            "solve_rate": 0.0
+          },
+          "6": {
+            "n": 6,
+            "solve_rate": 0.6666666666666666
+          }
+        },
+        "terminal_attempt": 6,
+        "terminal_n": 6,
+        "terminal_solve_rate": 0.6666666666666666,
+        "distinct_items": 3,
+        "terminal_ci": {
+          "lo": 0.5,
+          "hi": 1.0,
+          "point": 0.6667,
+          "half_width": 0.25,
+          "resamples": 2000,
+          "items": 3,
+          "confidence": 0.95
+        }
+      }
+    },
+    "provenance": {
+      "population": 101,
+      "distinct": 35,
+      "observations": 70,
+      "unit": "items",
+      "expect_full": true,
+      "coverage": 0.3465,
+      "complete": false
+    },
+    "terminal_ci": {
+      "lo": 0.9286,
+      "hi": 1.0,
+      "point": 0.9714,
+      "half_width": 0.0357,
+      "resamples": 2000,
+      "items": 35,
+      "confidence": 0.95
+    },
+    "distinct_items": 35
+  },
+  {
+    "arm": "isolated visual channel",
+    "population": "answerable",
+    "ladder_mode": "visual_only",
+    "condition": "zero",
+    "dialogues": 202,
+    "levels": {
+      "1": {
+        "n": 202,
+        "solve_rate": 0.13366336633663367,
+        "mean_lit": 12
+      },
+      "2": {
+        "n": 70,
+        "solve_rate": 0.18571428571428572,
+        "mean_lit": 9
+      },
+      "3": {
+        "n": 70,
+        "solve_rate": 0.3142857142857143,
+        "mean_lit": 7
+      },
+      "4": {
+        "n": 70,
+        "solve_rate": 0.3,
+        "mean_lit": 5
+      },
+      "5": {
+        "n": 70,
+        "solve_rate": 0.3142857142857143,
+        "mean_lit": 5
+      },
+      "6": {
+        "n": 70,
+        "solve_rate": 0.2857142857142857,
+        "mean_lit": 5
+      }
+    },
+    "terminal_attempt": 6,
+    "terminal_n": 70,
+    "min_n_for_terminal": 67,
+    "terminal_solve_rate": 0.2857142857142857,
+    "terminal_mean_lit": 5,
+    "by_item_type": {
+      "edge_click": {
+        "levels": {
+          "1": {
+            "n": 98,
+            "solve_rate": 0.21428571428571427
+          },
+          "2": {
+            "n": 64,
+            "solve_rate": 0.203125
+          },
+          "3": {
+            "n": 64,
+            "solve_rate": 0.34375
+          },
+          "4": {
+            "n": 64,
+            "solve_rate": 0.328125
+          },
+          "5": {
+            "n": 64,
+            "solve_rate": 0.3125
+          },
+          "6": {
+            "n": 64,
+            "solve_rate": 0.265625
+          }
+        },
+        "terminal_attempt": 6,
+        "terminal_n": 64,
+        "terminal_solve_rate": 0.265625,
+        "distinct_items": 32,
+        "terminal_ci": {
+          "lo": 0.1562,
+          "hi": 0.375,
+          "point": 0.2656,
+          "half_width": 0.1094,
+          "resamples": 2000,
+          "items": 32,
+          "confidence": 0.95
+        }
+      },
+      "node_click": {
+        "levels": {
+          "1": {
+            "n": 104,
+            "solve_rate": 0.057692307692307696
+          },
+          "2": {
+            "n": 6,
+            "solve_rate": 0.0
+          },
+          "3": {
+            "n": 6,
+            "solve_rate": 0.0
+          },
+          "4": {
+            "n": 6,
+            "solve_rate": 0.0
+          },
+          "5": {
+            "n": 6,
+            "solve_rate": 0.3333333333333333
+          },
+          "6": {
+            "n": 6,
+            "solve_rate": 0.5
+          }
+        },
+        "terminal_attempt": 6,
+        "terminal_n": 6,
+        "terminal_solve_rate": 0.5,
+        "distinct_items": 3,
+        "terminal_ci": {
+          "lo": 0.5,
+          "hi": 0.5,
+          "point": 0.5,
+          "half_width": 0.0,
+          "resamples": 2000,
+          "items": 3,
+          "confidence": 0.95
+        }
+      }
+    },
+    "provenance": {
+      "population": 101,
+      "distinct": 35,
+      "observations": 70,
+      "unit": "items",
+      "expect_full": true,
+      "coverage": 0.3465,
+      "complete": false
+    },
+    "terminal_ci": {
+      "lo": 0.1857,
+      "hi": 0.3857,
+      "point": 0.2857,
+      "half_width": 0.1,
+      "resamples": 2000,
+      "items": 35,
+      "confidence": 0.95
+    },
+    "distinct_items": 35
+  },
+  {
+    "arm": "isolated visual channel",
+    "population": "answerable",
+    "ladder_mode": "visual_only",
+    "condition": "partial",
+    "dialogues": 202,
+    "levels": {
+      "1": {
+        "n": 202,
+        "solve_rate": 0.5247524752475248,
+        "mean_lit": 12
+      },
+      "2": {
+        "n": 70,
+        "solve_rate": 0.9571428571428572,
+        "mean_lit": 9
+      },
+      "3": {
+        "n": 70,
+        "solve_rate": 0.9142857142857143,
+        "mean_lit": 7
+      },
+      "4": {
+        "n": 70,
+        "solve_rate": 0.9142857142857143,
+        "mean_lit": 5
+      },
+      "5": {
+        "n": 70,
+        "solve_rate": 0.9428571428571428,
+        "mean_lit": 5
+      },
+      "6": {
+        "n": 70,
+        "solve_rate": 0.9571428571428572,
+        "mean_lit": 5
+      }
+    },
+    "terminal_attempt": 6,
+    "terminal_n": 70,
+    "min_n_for_terminal": 67,
+    "terminal_solve_rate": 0.9571428571428572,
+    "terminal_mean_lit": 5,
+    "by_item_type": {
+      "edge_click": {
+        "levels": {
+          "1": {
+            "n": 98,
+            "solve_rate": 0.8163265306122449
+          },
+          "2": {
+            "n": 64,
+            "solve_rate": 1.0
+          },
+          "3": {
+            "n": 64,
+            "solve_rate": 1.0
+          },
+          "4": {
+            "n": 64,
+            "solve_rate": 1.0
+          },
+          "5": {
+            "n": 64,
+            "solve_rate": 1.0
+          },
+          "6": {
+            "n": 64,
+            "solve_rate": 1.0
+          }
+        },
+        "terminal_attempt": 6,
+        "terminal_n": 64,
+        "terminal_solve_rate": 1.0,
+        "distinct_items": 32,
+        "terminal_ci": {
+          "lo": 1.0,
+          "hi": 1.0,
+          "point": 1.0,
+          "half_width": 0.0,
+          "resamples": 2000,
+          "items": 32,
+          "confidence": 0.95
+        }
+      },
+      "node_click": {
+        "levels": {
+          "1": {
+            "n": 104,
+            "solve_rate": 0.25
+          },
+          "2": {
+            "n": 6,
+            "solve_rate": 0.5
+          },
+          "3": {
+            "n": 6,
+            "solve_rate": 0.0
+          },
+          "4": {
+            "n": 6,
+            "solve_rate": 0.0
+          },
+          "5": {
+            "n": 6,
+            "solve_rate": 0.3333333333333333
+          },
+          "6": {
+            "n": 6,
+            "solve_rate": 0.5
+          }
+        },
+        "terminal_attempt": 6,
+        "terminal_n": 6,
+        "terminal_solve_rate": 0.5,
+        "distinct_items": 3,
+        "terminal_ci": {
+          "lo": 0.5,
+          "hi": 0.5,
+          "point": 0.5,
+          "half_width": 0.0,
+          "resamples": 2000,
+          "items": 3,
+          "confidence": 0.95
+        }
+      }
+    },
+    "provenance": {
+      "population": 101,
+      "distinct": 35,
+      "observations": 70,
+      "unit": "items",
+      "expect_full": true,
+      "coverage": 0.3465,
+      "complete": false
+    },
+    "terminal_ci": {
+      "lo": 0.9,
+      "hi": 1.0,
+      "point": 0.9571,
+      "half_width": 0.05,
+      "resamples": 2000,
+      "items": 35,
+      "confidence": 0.95
+    },
+    "distinct_items": 35
+  },
+  {
+    "arm": "isolated visual channel",
+    "population": "answerable",
+    "ladder_mode": "visual_only",
+    "condition": "adversarial",
+    "dialogues": 202,
+    "levels": {
+      "1": {
+        "n": 202,
+        "solve_rate": 0.5544554455445545,
+        "mean_lit": 12
+      },
+      "2": {
+        "n": 70,
+        "solve_rate": 0.9142857142857143,
+        "mean_lit": 9
+      },
+      "3": {
+        "n": 70,
+        "solve_rate": 0.9142857142857143,
+        "mean_lit": 7
+      },
+      "4": {
+        "n": 70,
+        "solve_rate": 0.9571428571428572,
+        "mean_lit": 5
+      },
+      "5": {
+        "n": 70,
+        "solve_rate": 0.9428571428571428,
+        "mean_lit": 5
+      },
+      "6": {
+        "n": 70,
+        "solve_rate": 0.9285714285714286,
+        "mean_lit": 5
+      }
+    },
+    "terminal_attempt": 6,
+    "terminal_n": 70,
+    "min_n_for_terminal": 67,
+    "terminal_solve_rate": 0.9285714285714286,
+    "terminal_mean_lit": 5,
+    "by_item_type": {
+      "edge_click": {
+        "levels": {
+          "1": {
+            "n": 98,
+            "solve_rate": 0.7959183673469388
+          },
+          "2": {
+            "n": 64,
+            "solve_rate": 1.0
+          },
+          "3": {
+            "n": 64,
+            "solve_rate": 1.0
+          },
+          "4": {
+            "n": 64,
+            "solve_rate": 1.0
+          },
+          "5": {
+            "n": 64,
+            "solve_rate": 1.0
+          },
+          "6": {
+            "n": 64,
+            "solve_rate": 1.0
+          }
+        },
+        "terminal_attempt": 6,
+        "terminal_n": 64,
+        "terminal_solve_rate": 1.0,
+        "distinct_items": 32,
+        "terminal_ci": {
+          "lo": 1.0,
+          "hi": 1.0,
+          "point": 1.0,
+          "half_width": 0.0,
+          "resamples": 2000,
+          "items": 32,
+          "confidence": 0.95
+        }
+      },
+      "node_click": {
+        "levels": {
+          "1": {
+            "n": 104,
+            "solve_rate": 0.3269230769230769
+          },
+          "2": {
+            "n": 6,
+            "solve_rate": 0.0
+          },
+          "3": {
+            "n": 6,
+            "solve_rate": 0.0
+          },
+          "4": {
+            "n": 6,
+            "solve_rate": 0.5
+          },
+          "5": {
+            "n": 6,
+            "solve_rate": 0.3333333333333333
+          },
+          "6": {
+            "n": 6,
+            "solve_rate": 0.16666666666666666
+          }
+        },
+        "terminal_attempt": 6,
+        "terminal_n": 6,
+        "terminal_solve_rate": 0.16666666666666666,
+        "distinct_items": 3,
+        "terminal_ci": {
+          "lo": 0.0,
+          "hi": 0.5,
+          "point": 0.1667,
+          "half_width": 0.25,
+          "resamples": 2000,
+          "items": 3,
+          "confidence": 0.95
+        }
+      }
+    },
+    "provenance": {
+      "population": 101,
+      "distinct": 35,
+      "observations": 70,
+      "unit": "items",
+      "expect_full": true,
+      "coverage": 0.3465,
+      "complete": false
+    },
+    "terminal_ci": {
+      "lo": 0.8286,
+      "hi": 1.0,
+      "point": 0.9286,
+      "half_width": 0.0857,
+      "resamples": 2000,
+      "items": 35,
+      "confidence": 0.95
+    },
+    "distinct_items": 35
+  },
+  {
+    "arm": "verbal channel only",
+    "population": "answerable",
+    "ladder_mode": "verbal_only",
+    "condition": "zero",
+    "dialogues": 202,
+    "levels": {
+      "1": {
+        "n": 202,
+        "solve_rate": 0.019801980198019802,
+        "mean_lit": 52
+      },
+      "2": {
+        "n": 70,
+        "solve_rate": 0.014285714285714285,
+        "mean_lit": 52
+      },
+      "3": {
+        "n": 70,
+        "solve_rate": 0.02857142857142857,
+        "mean_lit": 52
+      },
+      "4": {
+        "n": 70,
+        "solve_rate": 0.0,
+        "mean_lit": 52
+      },
+      "5": {
+        "n": 70,
+        "solve_rate": 0.04285714285714286,
+        "mean_lit": 52
+      },
+      "6": {
+        "n": 70,
+        "solve_rate": 0.014285714285714285,
+        "mean_lit": 52
+      }
+    },
+    "terminal_attempt": 6,
+    "terminal_n": 70,
+    "min_n_for_terminal": 67,
+    "terminal_solve_rate": 0.014285714285714285,
+    "terminal_mean_lit": 52,
+    "by_item_type": {
+      "edge_click": {
+        "levels": {
+          "1": {
+            "n": 98,
+            "solve_rate": 0.0
+          },
+          "2": {
+            "n": 64,
+            "solve_rate": 0.015625
+          },
+          "3": {
+            "n": 64,
+            "solve_rate": 0.03125
+          },
+          "4": {
+            "n": 64,
+            "solve_rate": 0.0
+          },
+          "5": {
+            "n": 64,
+            "solve_rate": 0.046875
+          },
+          "6": {
+            "n": 64,
+            "solve_rate": 0.015625
+          }
+        },
+        "terminal_attempt": 6,
+        "terminal_n": 64,
+        "terminal_solve_rate": 0.015625,
+        "distinct_items": 32,
+        "terminal_ci": {
+          "lo": 0.0,
+          "hi": 0.0469,
+          "point": 0.0156,
+          "half_width": 0.0234,
+          "resamples": 2000,
+          "items": 32,
+          "confidence": 0.95
+        }
+      },
+      "node_click": {
+        "levels": {
+          "1": {
+            "n": 104,
+            "solve_rate": 0.038461538461538464
+          },
+          "2": {
+            "n": 6,
+            "solve_rate": 0.0
+          },
+          "3": {
+            "n": 6,
+            "solve_rate": 0.0
+          },
+          "4": {
+            "n": 6,
+            "solve_rate": 0.0
+          },
+          "5": {
+            "n": 6,
+            "solve_rate": 0.0
+          },
+          "6": {
+            "n": 6,
+            "solve_rate": 0.0
+          }
+        },
+        "terminal_attempt": 6,
+        "terminal_n": 6,
+        "terminal_solve_rate": 0.0,
+        "distinct_items": 3,
+        "terminal_ci": {
+          "lo": 0.0,
+          "hi": 0.0,
+          "point": 0.0,
+          "half_width": 0.0,
+          "resamples": 2000,
+          "items": 3,
+          "confidence": 0.95
+        }
+      }
+    },
+    "provenance": {
+      "population": 101,
+      "distinct": 35,
+      "observations": 70,
+      "unit": "items",
+      "expect_full": true,
+      "coverage": 0.3465,
+      "complete": false
+    },
+    "terminal_ci": {
+      "lo": 0.0,
+      "hi": 0.0429,
+      "point": 0.0143,
+      "half_width": 0.0214,
+      "resamples": 2000,
+      "items": 35,
+      "confidence": 0.95
+    },
+    "distinct_items": 35
+  },
+  {
+    "arm": "verbal channel only",
+    "population": "answerable",
+    "ladder_mode": "verbal_only",
+    "condition": "partial",
+    "dialogues": 202,
+    "levels": {
+      "1": {
+        "n": 202,
+        "solve_rate": 0.5247524752475248,
+        "mean_lit": 52
+      },
+      "2": {
+        "n": 70,
+        "solve_rate": 0.9714285714285714,
+        "mean_lit": 52
+      },
+      "3": {
+        "n": 70,
+        "solve_rate": 0.9142857142857143,
+        "mean_lit": 52
+      },
+      "4": {
+        "n": 70,
+        "solve_rate": 0.9428571428571428,
+        "mean_lit": 52
+      },
+      "5": {
+        "n": 70,
+        "solve_rate": 0.9285714285714286,
+        "mean_lit": 52
+      },
+      "6": {
+        "n": 70,
+        "solve_rate": 0.9142857142857143,
+        "mean_lit": 52
+      }
+    },
+    "terminal_attempt": 6,
+    "terminal_n": 70,
+    "min_n_for_terminal": 67,
+    "terminal_solve_rate": 0.9142857142857143,
+    "terminal_mean_lit": 52,
+    "by_item_type": {
+      "edge_click": {
+        "levels": {
+          "1": {
+            "n": 98,
+            "solve_rate": 0.8163265306122449
+          },
+          "2": {
+            "n": 64,
+            "solve_rate": 1.0
+          },
+          "3": {
+            "n": 64,
+            "solve_rate": 1.0
+          },
+          "4": {
+            "n": 64,
+            "solve_rate": 1.0
+          },
+          "5": {
+            "n": 64,
+            "solve_rate": 1.0
+          },
+          "6": {
+            "n": 64,
+            "solve_rate": 1.0
+          }
+        },
+        "terminal_attempt": 6,
+        "terminal_n": 64,
+        "terminal_solve_rate": 1.0,
+        "distinct_items": 32,
+        "terminal_ci": {
+          "lo": 1.0,
+          "hi": 1.0,
+          "point": 1.0,
+          "half_width": 0.0,
+          "resamples": 2000,
+          "items": 32,
+          "confidence": 0.95
+        }
+      },
+      "node_click": {
+        "levels": {
+          "1": {
+            "n": 104,
+            "solve_rate": 0.25
+          },
+          "2": {
+            "n": 6,
+            "solve_rate": 0.6666666666666666
+          },
+          "3": {
+            "n": 6,
+            "solve_rate": 0.0
+          },
+          "4": {
+            "n": 6,
+            "solve_rate": 0.3333333333333333
+          },
+          "5": {
+            "n": 6,
+            "solve_rate": 0.16666666666666666
+          },
+          "6": {
+            "n": 6,
+            "solve_rate": 0.0
+          }
+        },
+        "terminal_attempt": 6,
+        "terminal_n": 6,
+        "terminal_solve_rate": 0.0,
+        "distinct_items": 3,
+        "terminal_ci": {
+          "lo": 0.0,
+          "hi": 0.0,
+          "point": 0.0,
+          "half_width": 0.0,
+          "resamples": 2000,
+          "items": 3,
+          "confidence": 0.95
+        }
+      }
+    },
+    "provenance": {
+      "population": 101,
+      "distinct": 35,
+      "observations": 70,
+      "unit": "items",
+      "expect_full": true,
+      "coverage": 0.3465,
+      "complete": false
+    },
+    "terminal_ci": {
+      "lo": 0.8,
+      "hi": 1.0,
+      "point": 0.9143,
+      "half_width": 0.1,
+      "resamples": 2000,
+      "items": 35,
+      "confidence": 0.95
+    },
+    "distinct_items": 35
+  },
+  {
+    "arm": "verbal channel only",
+    "population": "answerable",
+    "ladder_mode": "verbal_only",
+    "condition": "adversarial",
+    "dialogues": 202,
+    "levels": {
+      "1": {
+        "n": 202,
+        "solve_rate": 0.4900990099009901,
+        "mean_lit": 52
+      },
+      "2": {
+        "n": 70,
+        "solve_rate": 0.9285714285714286,
+        "mean_lit": 52
+      },
+      "3": {
+        "n": 70,
+        "solve_rate": 0.9285714285714286,
+        "mean_lit": 52
+      },
+      "4": {
+        "n": 70,
+        "solve_rate": 0.9142857142857143,
+        "mean_lit": 52
+      },
+      "5": {
+        "n": 70,
+        "solve_rate": 0.9428571428571428,
+        "mean_lit": 52
+      },
+      "6": {
+        "n": 70,
+        "solve_rate": 0.9428571428571428,
+        "mean_lit": 52
+      }
+    },
+    "terminal_attempt": 6,
+    "terminal_n": 70,
+    "min_n_for_terminal": 67,
+    "terminal_solve_rate": 0.9428571428571428,
+    "terminal_mean_lit": 52,
+    "by_item_type": {
+      "edge_click": {
+        "levels": {
+          "1": {
+            "n": 98,
+            "solve_rate": 0.8469387755102041
+          },
+          "2": {
+            "n": 64,
+            "solve_rate": 1.0
+          },
+          "3": {
+            "n": 64,
+            "solve_rate": 1.0
+          },
+          "4": {
+            "n": 64,
+            "solve_rate": 1.0
+          },
+          "5": {
+            "n": 64,
+            "solve_rate": 1.0
+          },
+          "6": {
+            "n": 64,
+            "solve_rate": 1.0
+          }
+        },
+        "terminal_attempt": 6,
+        "terminal_n": 64,
+        "terminal_solve_rate": 1.0,
+        "distinct_items": 32,
+        "terminal_ci": {
+          "lo": 1.0,
+          "hi": 1.0,
+          "point": 1.0,
+          "half_width": 0.0,
+          "resamples": 2000,
+          "items": 32,
+          "confidence": 0.95
+        }
+      },
+      "node_click": {
+        "levels": {
+          "1": {
+            "n": 104,
+            "solve_rate": 0.15384615384615385
+          },
+          "2": {
+            "n": 6,
+            "solve_rate": 0.16666666666666666
+          },
+          "3": {
+            "n": 6,
+            "solve_rate": 0.16666666666666666
+          },
+          "4": {
+            "n": 6,
+            "solve_rate": 0.0
+          },
+          "5": {
+            "n": 6,
+            "solve_rate": 0.3333333333333333
+          },
+          "6": {
+            "n": 6,
+            "solve_rate": 0.3333333333333333
+          }
+        },
+        "terminal_attempt": 6,
+        "terminal_n": 6,
+        "terminal_solve_rate": 0.3333333333333333,
+        "distinct_items": 3,
+        "terminal_ci": {
+          "lo": 0.0,
+          "hi": 1.0,
+          "point": 0.3333,
+          "half_width": 0.5,
+          "resamples": 2000,
+          "items": 3,
+          "confidence": 0.95
+        }
+      }
+    },
+    "provenance": {
+      "population": 101,
+      "distinct": 35,
+      "observations": 70,
+      "unit": "items",
+      "expect_full": true,
+      "coverage": 0.3465,
+      "complete": false
+    },
+    "terminal_ci": {
+      "lo": 0.8571,
+      "hi": 1.0,
+      "point": 0.9429,
+      "half_width": 0.0714,
+      "resamples": 2000,
+      "items": 35,
+      "confidence": 0.95
+    },
+    "distinct_items": 35
+  },
+  {
+    "arm": "no hints at all",
+    "population": "answerable",
+    "ladder_mode": "none",
+    "condition": "zero",
+    "dialogues": 202,
+    "levels": {
+      "1": {
+        "n": 202,
+        "solve_rate": 0.009900990099009901,
+        "mean_lit": 52
+      },
+      "2": {
+        "n": 70,
+        "solve_rate": 0.0,
+        "mean_lit": 52
+      },
+      "3": {
+        "n": 70,
+        "solve_rate": 0.02857142857142857,
+        "mean_lit": 52
+      },
+      "4": {
+        "n": 70,
+        "solve_rate": 0.02857142857142857,
+        "mean_lit": 52
+      },
+      "5": {
+        "n": 70,
+        "solve_rate": 0.014285714285714285,
+        "mean_lit": 52
+      },
+      "6": {
+        "n": 70,
+        "solve_rate": 0.0,
+        "mean_lit": 52
+      }
+    },
+    "terminal_attempt": 6,
+    "terminal_n": 70,
+    "min_n_for_terminal": 67,
+    "terminal_solve_rate": 0.0,
+    "terminal_mean_lit": 52,
+    "by_item_type": {
+      "edge_click": {
+        "levels": {
+          "1": {
+            "n": 98,
+            "solve_rate": 0.0
+          },
+          "2": {
+            "n": 64,
+            "solve_rate": 0.0
+          },
+          "3": {
+            "n": 64,
+            "solve_rate": 0.03125
+          },
+          "4": {
+            "n": 64,
+            "solve_rate": 0.03125
+          },
+          "5": {
+            "n": 64,
+            "solve_rate": 0.015625
+          },
+          "6": {
+            "n": 64,
+            "solve_rate": 0.0
+          }
+        },
+        "terminal_attempt": 6,
+        "terminal_n": 64,
+        "terminal_solve_rate": 0.0,
+        "distinct_items": 32,
+        "terminal_ci": {
+          "lo": 0.0,
+          "hi": 0.0,
+          "point": 0.0,
+          "half_width": 0.0,
+          "resamples": 2000,
+          "items": 32,
+          "confidence": 0.95
+        }
+      },
+      "node_click": {
+        "levels": {
+          "1": {
+            "n": 104,
+            "solve_rate": 0.019230769230769232
+          },
+          "2": {
+            "n": 6,
+            "solve_rate": 0.0
+          },
+          "3": {
+            "n": 6,
+            "solve_rate": 0.0
+          },
+          "4": {
+            "n": 6,
+            "solve_rate": 0.0
+          },
+          "5": {
+            "n": 6,
+            "solve_rate": 0.0
+          },
+          "6": {
+            "n": 6,
+            "solve_rate": 0.0
+          }
+        },
+        "terminal_attempt": 6,
+        "terminal_n": 6,
+        "terminal_solve_rate": 0.0,
+        "distinct_items": 3,
+        "terminal_ci": {
+          "lo": 0.0,
+          "hi": 0.0,
+          "point": 0.0,
+          "half_width": 0.0,
+          "resamples": 2000,
+          "items": 3,
+          "confidence": 0.95
+        }
+      }
+    },
+    "provenance": {
+      "population": 101,
+      "distinct": 35,
+      "observations": 70,
+      "unit": "items",
+      "expect_full": true,
+      "coverage": 0.3465,
+      "complete": false
+    },
+    "terminal_ci": {
+      "lo": 0.0,
+      "hi": 0.0,
+      "point": 0.0,
+      "half_width": 0.0,
+      "resamples": 2000,
+      "items": 35,
+      "confidence": 0.95
+    },
+    "distinct_items": 35
+  },
+  {
+    "arm": "no hints at all",
+    "population": "answerable",
+    "ladder_mode": "none",
+    "condition": "partial",
+    "dialogues": 202,
+    "levels": {
+      "1": {
+        "n": 202,
+        "solve_rate": 0.49504950495049505,
+        "mean_lit": 52
+      },
+      "2": {
+        "n": 70,
+        "solve_rate": 0.9285714285714286,
+        "mean_lit": 52
+      },
+      "3": {
+        "n": 70,
+        "solve_rate": 0.9142857142857143,
+        "mean_lit": 52
+      },
+      "4": {
+        "n": 70,
+        "solve_rate": 0.9428571428571428,
+        "mean_lit": 52
+      },
+      "5": {
+        "n": 70,
+        "solve_rate": 0.9571428571428572,
+        "mean_lit": 52
+      },
+      "6": {
+        "n": 70,
+        "solve_rate": 0.9142857142857143,
+        "mean_lit": 52
+      }
+    },
+    "terminal_attempt": 6,
+    "terminal_n": 70,
+    "min_n_for_terminal": 67,
+    "terminal_solve_rate": 0.9142857142857143,
+    "terminal_mean_lit": 52,
+    "by_item_type": {
+      "edge_click": {
+        "levels": {
+          "1": {
+            "n": 98,
+            "solve_rate": 0.7959183673469388
+          },
+          "2": {
+            "n": 64,
+            "solve_rate": 1.0
+          },
+          "3": {
+            "n": 64,
+            "solve_rate": 1.0
+          },
+          "4": {
+            "n": 64,
+            "solve_rate": 1.0
+          },
+          "5": {
+            "n": 64,
+            "solve_rate": 1.0
+          },
+          "6": {
+            "n": 64,
+            "solve_rate": 1.0
+          }
+        },
+        "terminal_attempt": 6,
+        "terminal_n": 64,
+        "terminal_solve_rate": 1.0,
+        "distinct_items": 32,
+        "terminal_ci": {
+          "lo": 1.0,
+          "hi": 1.0,
+          "point": 1.0,
+          "half_width": 0.0,
+          "resamples": 2000,
+          "items": 32,
+          "confidence": 0.95
+        }
+      },
+      "node_click": {
+        "levels": {
+          "1": {
+            "n": 104,
+            "solve_rate": 0.21153846153846154
+          },
+          "2": {
+            "n": 6,
+            "solve_rate": 0.16666666666666666
+          },
+          "3": {
+            "n": 6,
+            "solve_rate": 0.0
+          },
+          "4": {
+            "n": 6,
+            "solve_rate": 0.3333333333333333
+          },
+          "5": {
+            "n": 6,
+            "solve_rate": 0.5
+          },
+          "6": {
+            "n": 6,
+            "solve_rate": 0.0
+          }
+        },
+        "terminal_attempt": 6,
+        "terminal_n": 6,
+        "terminal_solve_rate": 0.0,
+        "distinct_items": 3,
+        "terminal_ci": {
+          "lo": 0.0,
+          "hi": 0.0,
+          "point": 0.0,
+          "half_width": 0.0,
+          "resamples": 2000,
+          "items": 3,
+          "confidence": 0.95
+        }
+      }
+    },
+    "provenance": {
+      "population": 101,
+      "distinct": 35,
+      "observations": 70,
+      "unit": "items",
+      "expect_full": true,
+      "coverage": 0.3465,
+      "complete": false
+    },
+    "terminal_ci": {
+      "lo": 0.8,
+      "hi": 1.0,
+      "point": 0.9143,
+      "half_width": 0.1,
+      "resamples": 2000,
+      "items": 35,
+      "confidence": 0.95
+    },
+    "distinct_items": 35
+  },
+  {
+    "arm": "no hints at all",
+    "population": "answerable",
+    "ladder_mode": "none",
+    "condition": "adversarial",
+    "dialogues": 202,
+    "levels": {
+      "1": {
+        "n": 202,
+        "solve_rate": 0.49504950495049505,
+        "mean_lit": 52
+      },
+      "2": {
+        "n": 70,
+        "solve_rate": 0.9142857142857143,
+        "mean_lit": 52
+      },
+      "3": {
+        "n": 70,
+        "solve_rate": 0.9285714285714286,
+        "mean_lit": 52
+      },
+      "4": {
+        "n": 70,
+        "solve_rate": 0.9285714285714286,
+        "mean_lit": 52
+      },
+      "5": {
+        "n": 70,
+        "solve_rate": 0.9428571428571428,
+        "mean_lit": 52
+      },
+      "6": {
+        "n": 70,
+        "solve_rate": 0.9285714285714286,
+        "mean_lit": 52
+      }
+    },
+    "terminal_attempt": 6,
+    "terminal_n": 70,
+    "min_n_for_terminal": 67,
+    "terminal_solve_rate": 0.9285714285714286,
+    "terminal_mean_lit": 52,
+    "by_item_type": {
+      "edge_click": {
+        "levels": {
+          "1": {
+            "n": 98,
+            "solve_rate": 0.8163265306122449
+          },
+          "2": {
+            "n": 64,
+            "solve_rate": 1.0
+          },
+          "3": {
+            "n": 64,
+            "solve_rate": 1.0
+          },
+          "4": {
+            "n": 64,
+            "solve_rate": 1.0
+          },
+          "5": {
+            "n": 64,
+            "solve_rate": 1.0
+          },
+          "6": {
+            "n": 64,
+            "solve_rate": 1.0
+          }
+        },
+        "terminal_attempt": 6,
+        "terminal_n": 64,
+        "terminal_solve_rate": 1.0,
+        "distinct_items": 32,
+        "terminal_ci": {
+          "lo": 1.0,
+          "hi": 1.0,
+          "point": 1.0,
+          "half_width": 0.0,
+          "resamples": 2000,
+          "items": 32,
+          "confidence": 0.95
+        }
+      },
+      "node_click": {
+        "levels": {
+          "1": {
+            "n": 104,
+            "solve_rate": 0.19230769230769232
+          },
+          "2": {
+            "n": 6,
+            "solve_rate": 0.0
+          },
+          "3": {
+            "n": 6,
+            "solve_rate": 0.16666666666666666
+          },
+          "4": {
+            "n": 6,
+            "solve_rate": 0.16666666666666666
+          },
+          "5": {
+            "n": 6,
+            "solve_rate": 0.3333333333333333
+          },
+          "6": {
+            "n": 6,
+            "solve_rate": 0.16666666666666666
+          }
+        },
+        "terminal_attempt": 6,
+        "terminal_n": 6,
+        "terminal_solve_rate": 0.16666666666666666,
+        "distinct_items": 3,
+        "terminal_ci": {
+          "lo": 0.0,
+          "hi": 0.5,
+          "point": 0.1667,
+          "half_width": 0.25,
+          "resamples": 2000,
+          "items": 3,
+          "confidence": 0.95
+        }
+      }
+    },
+    "provenance": {
+      "population": 101,
+      "distinct": 35,
+      "observations": 70,
+      "unit": "items",
+      "expect_full": true,
+      "coverage": 0.3465,
+      "complete": false
+    },
+    "terminal_ci": {
+      "lo": 0.8429,
+      "hi": 1.0,
+      "point": 0.9286,
+      "half_width": 0.0786,
+      "resamples": 2000,
+      "items": 35,
+      "confidence": 0.95
+    },
+    "distinct_items": 35
+  }
+]

@@ -34,12 +34,13 @@ def _bank(items):
     return ItemBank.model_validate({"version": "1.0", "domain": "test", "items": items})
 
 
-def _edge_item(iid, node_id, answer, distractors=(), difficulty=0.5):
+def _edge_item(iid, node_id, answer, distractors=(), difficulty=0.5, scorable=True):
     return {
         "id": iid, "node_id": node_id, "type": "edge_click",
         "prompt": "Click the link.", "answer": answer,
         "answer_aliases": [], "distractors": list(distractors),
         "difficulty": difficulty, "visually_answerable": True, "answer_spans": [],
+        "scorable": scorable,
     }
 
 
@@ -49,17 +50,31 @@ def _run(graph, bank):
     return rep
 
 
-def test_in_degree_one_is_reported_as_determined():
-    """One prereq into the anchor means naming the anchor names the answer."""
+def test_a_determined_item_that_is_still_scored_is_an_ERROR():
+    """The whole point of the demotion. A determined item cannot move theta
+    honestly, so leaving it scorable must fail the build, not warn."""
     graph = _graph([("n0", "n1", "prereq")])
-    bank = _bank([_edge_item("itm_1", "n1", "n0->n1", difficulty=0.8)])
+    bank = _bank([_edge_item("itm_1", "n1", "n0->n1", difficulty=0.8, scorable=True)])
 
     rep = _run(graph, bank)
 
-    determined = [w for w in rep.warnings if "DETERMINED" in w]
+    assert not [w for w in rep.warnings if "DETERMINED" in w]
+    determined = [e for e in rep.errors if "DETERMINED" in e]
     assert len(determined) == 1
-    assert "1/1" in determined[0]
+    assert "1/1" in determined[0] and "SCORED" in determined[0]
     assert "itm_1" in determined[0] and "0.8" in determined[0]
+
+
+def test_a_determined_item_that_is_demoted_is_only_a_WARN():
+    """Excluded, not re-authored: harmless once it cannot reach mastery."""
+    graph = _graph([("n0", "n1", "prereq")])
+    bank = _bank([_edge_item("itm_1", "n1", "n0->n1", difficulty=0.8, scorable=False)])
+
+    rep = _run(graph, bank)
+
+    assert not rep.errors
+    determined = [w for w in rep.warnings if "DETERMINED" in w]
+    assert len(determined) == 1 and "scorable=false" in determined[0]
 
 
 def test_in_degree_two_is_a_coin_flip_not_a_giveaway():
@@ -93,8 +108,9 @@ def test_related_edges_are_not_candidates():
 
     rep = _run(graph, bank)
 
-    assert [w for w in rep.warnings if "DETERMINED" in w], \
-        "a related in-edge was counted as a candidate and hid a determined item"
+    flagged = [m for m in rep.warnings + rep.errors if "DETERMINED" in m]
+    assert flagged, (
+        "a related in-edge was counted as a candidate and hid a determined item")
 
 
 def test_distractor_equal_to_the_true_from_endpoint_is_flagged():
@@ -134,14 +150,21 @@ def test_the_floor_comes_from_config_not_a_literal():
         object.__setattr__(BUILD, "min_edge_item_candidates", original)
 
 
-def test_the_real_bank_is_measured_and_the_number_is_the_finding():
-    """Not a regression guard — a record. If re-authoring moves this, the
-    assertion should be updated in the same commit that does the work."""
+def test_the_real_bank_has_its_determined_items_demoted_not_scored():
+    """A record of the decision, and the guard that keeps it. 32 determined
+    items are excluded from mastery; the 17 at two candidates stay scored and
+    are a bounded calibration problem."""
     graph = Graph.model_validate_json(BUILD.graph_path.read_text(encoding="utf-8"))
     bank = ItemBank.model_validate_json(BUILD.items_path.read_text(encoding="utf-8"))
 
     rep = _run(graph, bank)
-    summary = [w for w in rep.warnings if "need either" in w]
 
-    assert summary, "the real bank should still be flagged until it is re-authored"
-    assert "49/49" in summary[0]
+    assert not rep.errors, f"a determined item is still scored: {rep.errors}"
+    determined = [w for w in rep.warnings if "DETERMINED" in w]
+    assert determined and "32/49" in determined[0]
+    assert "scorable=false" in determined[0]
+
+    scored = [i for i in bank.items if i.type == "edge_click" and i.scorable]
+    assert len(scored) == 17
+    assert all(len([e for e in graph.edges
+                    if e.type == "prereq" and e.to == i.node_id]) == 2 for i in scored)

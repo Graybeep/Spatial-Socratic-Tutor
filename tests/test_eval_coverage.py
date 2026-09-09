@@ -12,7 +12,7 @@ import random
 import pytest
 
 from eval.adversarial import (
-    Student, run_dialogue, measure, bootstrap_ci, marginal_ci, _config,
+    Student, run_dialogue, measure, bootstrap_ci, marginal_ci, _config, scored_bank,
 )
 from eval import distractor_screen, provenance
 from server.config import CONFIG
@@ -180,7 +180,10 @@ def test_deliberate_subsample_is_not_an_error():
 def test_leakage_arms_declare_sound_sampling(store, condition):
     """THE REGRESSION, in its generalized form. Runs the real measurement and
     asserts on its declared provenance rather than on its shape."""
-    bank = [i for i in store.bank.items if i.visually_answerable]
+    # The SCORED bank, not every visually-answerable item: 32 determined edge
+    # items are scorable=false and are not part of the population any mastery
+    # claim generalises to (eval.adversarial.scored_bank).
+    bank = scored_bank(store)
     result = measure(store, "product configuration", "interleaved",
                      condition, n=2 * len(bank))
     prov = provenance.Provenance(**{k: v for k, v in result["provenance"].items()
