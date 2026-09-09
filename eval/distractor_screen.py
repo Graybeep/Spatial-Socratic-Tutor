@@ -75,19 +75,26 @@ STRONG_CONDITION = "partial"
 DUPLICATE_ITEM = "duplicate_item"
 KEY_NOT_SPECIFIC = "key_not_node_specific"
 COIN_FLIP = "coin_flip"
+#: One option survives. Strictly worse than a coin flip and a different repair:
+#: no distractor edit fixes it, because there is nothing to distract from.
+SINGLE_OPTION = "single_option"
 LENGTH_TELL = "length_tell"
 DEAD_WEIGHT = "dead_weight"
 
 #: Ordered worst-first. A row can trip more than one rule; this decides which
 #: one leads in the report.
-SEVERITY = [DUPLICATE_ITEM, KEY_NOT_SPECIFIC, COIN_FLIP, LENGTH_TELL, DEAD_WEIGHT]
+SEVERITY = [DUPLICATE_ITEM, KEY_NOT_SPECIFIC, SINGLE_OPTION, COIN_FLIP, LENGTH_TELL, DEAD_WEIGHT]
 
 #: A per-item flag is only worth a human's attention if a human can act on it.
 #: Rules that fire on nearly every item are reported ONCE, as a bank-level
 #: finding with a rate, and suppressed from the per-item list. Two of the rules
 #: below are like that by nature: a systematic length tell is one defect in the
 #: generator, not 159 defects in 159 items.
-BANK_LEVEL = {DUPLICATE_ITEM, KEY_NOT_SPECIFIC, LENGTH_TELL}
+#: Rules that fire across a large fraction of the bank. They are reported once,
+#: with a count, rather than as one row per item - "a flag on 92 of 101 items is
+#: not a worklist, it is a distribution". The ids stay in flagged_item_ids, so
+#: the worklist is still recoverable for whoever does the re-authoring.
+BANK_LEVEL = {DUPLICATE_ITEM, KEY_NOT_SPECIFIC, LENGTH_TELL, SINGLE_OPTION}
 
 
 @dataclass
@@ -139,13 +146,42 @@ def behavioural_screen(store: GraphStore, trials: int, seed: int) -> tuple[list,
 
         student = Student(condition=STRONG_CONDITION,
                           rng=random.Random(f"{seed}:{item.id}"))
+
+        # THE UNIVERSE IS THE ANSWER'S OWN TYPE. An edge item's student answers
+        # "from->to", so scoring its picks against the lit NODES gives every
+        # node a rate of 0, an empty survivor set, and a 1/0 on the line below.
+        # The screen wants "how many of the options the student is left with are
+        # live", and for an edge item the options are edges.
+        universe = (student.edge_candidates(store, item, lit)
+                    if item.type == "edge_click" else list(lit))
+        if len(universe) < 2:
+            # Reported, NOT skipped. Skipping dropped 44 of 101 items and the
+            # provenance block correctly called the run unsound - and these are
+            # the worst items in the bank, not the ones to look away from. No
+            # distractor edit repairs this; build.validate says which need
+            # re-authoring.
+            findings.append(Finding(
+                item_id=item.id, node_id=item.node_id, item_type=item.type,
+                rule=SINGLE_OPTION,
+                detail=(f"exactly {len(universe)} option survives at the terminal "
+                        f"rung ({', '.join(universe) or 'none'}); guess probability "
+                        f"1.00 against a {CONFIG.max_guess_probability:.2f} policy "
+                        f"ceiling. For an edge item this is the anchor its own "
+                        f"prompt names, not the narrowing."),
+                rates={u: 1.0 for u in universe},
+            ))
+            live_counts.append(len(universe))
+            lit_counts.append(len(universe))
+            screened_ids.append(item.id)
+            continue
+
         picks = Counter(student.choose(store, item, lit, []) for _ in range(trials))
-        rates = {n: picks[n] / trials for n in lit}
+        rates = {n: picks[n] / trials for n in universe}
 
         live = [n for n, r in rates.items() if r > CONFIG.distractor_dead_rate]
         dead = [n for n, r in rates.items() if r <= CONFIG.distractor_dead_rate]
         live_counts.append(len(live))
-        lit_counts.append(len(lit))
+        lit_counts.append(len(universe))
         screened_ids.append(item.id)
 
         # Per-item flag ONLY where narrowing has gone past the policy floor into
@@ -157,7 +193,8 @@ def behavioural_screen(store: GraphStore, trials: int, seed: int) -> tuple[list,
                 rule=COIN_FLIP,
                 detail=(f"{len(lit)} candidates lit but only {len(live)} survive a "
                         f"partial-knowledge region filter ({', '.join(sorted(live))}) "
-                        f"- effective guess probability {1 / len(live):.2f} against a "
+                        f"- effective guess probability "
+                        f"{(1 / len(live)) if live else 1.0:.2f} against a "
                         f"{CONFIG.max_guess_probability:.2f} policy ceiling; "
                         f"dead: {', '.join(sorted(dead))}"),
                 rates=rates,
@@ -277,6 +314,17 @@ def render(findings: list, behav: dict, struct: dict) -> str:
     L.append("")
     L.append("BANK-LEVEL FINDINGS")
     L.append("-" * 76)
+
+    single = by_rule.get(SINGLE_OPTION, 0)
+    if single:
+        click = behav["items"]
+        L.append(f"  [{SINGLE_OPTION}] {single}/{click} click items leave exactly ONE")
+        L.append("      option at the terminal rung: guess probability 1.00.")
+        L.append("      Mostly edge items, where the `to` endpoint the prompt names")
+        L.append("      has a single prereq. This is not a distractor defect and no")
+        L.append("      distractor edit repairs it - see build.validate's edge-anchor")
+        L.append("      check for the per-item worklist.")
+        L.append("")
 
     if struct["distinct_option_sets"] < struct["items"]:
         L.append(f"  [{DUPLICATE_ITEM}] {struct['items']} mcq items carry only "

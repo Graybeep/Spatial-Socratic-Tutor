@@ -4,28 +4,162 @@
       "item_id": "itm_0007",
       "node_id": "best_effort",
       "item_type": "edge_click",
-      "rule": "coin_flip",
-      "detail": "5 candidates lit but only 2 survive a partial-knowledge region filter (best_effort, resource_allocation) - effective guess probability 0.50 against a 0.20 policy ceiling; dead: flow, reservation_based, window_based",
+      "rule": "single_option",
+      "detail": "exactly 1 option survives at the terminal rung (resource_allocation->best_effort); guess probability 1.00 against a 0.20 policy ceiling. For an edge item this is the anchor its own prompt names, not the narrowing.",
       "rates": {
-        "best_effort": 0.5125,
-        "resource_allocation": 0.4875,
-        "flow": 0.0,
-        "reservation_based": 0.0,
-        "window_based": 0.0
+        "resource_allocation->best_effort": 1.0
+      }
+    },
+    {
+      "item_id": "itm_0012",
+      "node_id": "bottleneck_router",
+      "item_type": "edge_click",
+      "rule": "single_option",
+      "detail": "exactly 1 option survives at the terminal rung (flow->bottleneck_router); guess probability 1.00 against a 0.20 policy ceiling. For an edge item this is the anchor its own prompt names, not the narrowing.",
+      "rates": {
+        "flow->bottleneck_router": 1.0
+      }
+    },
+    {
+      "item_id": "itm_0017",
+      "node_id": "soft_state",
+      "item_type": "edge_click",
+      "rule": "single_option",
+      "detail": "exactly 1 option survives at the terminal rung (flow->soft_state); guess probability 1.00 against a 0.20 policy ceiling. For an edge item this is the anchor its own prompt names, not the narrowing.",
+      "rates": {
+        "flow->soft_state": 1.0
+      }
+    },
+    {
+      "item_id": "itm_0022",
+      "node_id": "resource_allocation",
+      "item_type": "edge_click",
+      "rule": "single_option",
+      "detail": "exactly 1 option survives at the terminal rung (flow->resource_allocation); guess probability 1.00 against a 0.20 policy ceiling. For an edge item this is the anchor its own prompt names, not the narrowing.",
+      "rates": {
+        "flow->resource_allocation": 1.0
+      }
+    },
+    {
+      "item_id": "itm_0027",
+      "node_id": "congestion_control",
+      "item_type": "edge_click",
+      "rule": "single_option",
+      "detail": "exactly 1 option survives at the terminal rung (resource_allocation->congestion_control); guess probability 1.00 against a 0.20 policy ceiling. For an edge item this is the anchor its own prompt names, not the narrowing.",
+      "rates": {
+        "resource_allocation->congestion_control": 1.0
+      }
+    },
+    {
+      "item_id": "itm_0032",
+      "node_id": "flow_control",
+      "item_type": "edge_click",
+      "rule": "single_option",
+      "detail": "exactly 1 option survives at the terminal rung (congestion_control->flow_control); guess probability 1.00 against a 0.20 policy ceiling. For an edge item this is the anchor its own prompt names, not the narrowing.",
+      "rates": {
+        "congestion_control->flow_control": 1.0
+      }
+    },
+    {
+      "item_id": "itm_0047",
+      "node_id": "power_metric",
+      "item_type": "edge_click",
+      "rule": "coin_flip",
+      "detail": "5 candidates lit but only 2 survive a partial-knowledge region filter (queuing_delay->power_metric, throughput->power_metric) - effective guess probability 0.50 against a 0.20 policy ceiling; dead: ",
+      "rates": {
+        "throughput->power_metric": 0.5125,
+        "queuing_delay->power_metric": 0.4875
+      }
+    },
+    {
+      "item_id": "itm_0052",
+      "node_id": "congestion_collapse",
+      "item_type": "edge_click",
+      "rule": "single_option",
+      "detail": "exactly 1 option survives at the terminal rung (throughput->congestion_collapse); guess probability 1.00 against a 0.20 policy ceiling. For an edge item this is the anchor its own prompt names, not the narrowing.",
+      "rates": {
+        "throughput->congestion_collapse": 1.0
+      }
+    },
+    {
+      "item_id": "itm_0057",
+      "node_id": "stability",
+      "item_type": "edge_click",
+      "rule": "coin_flip",
+      "detail": "5 candidates lit but only 2 survive a partial-knowledge region filter (congestion_collapse->stability, congestion_control->stability) - effective guess probability 0.50 against a 0.20 policy ceiling; dead: ",
+      "rates": {
+        "congestion_control->stability": 0.4625,
+        "congestion_collapse->stability": 0.5375
+      }
+    },
+    {
+      "item_id": "itm_0062",
+      "node_id": "fairness_index",
+      "item_type": "edge_click",
+      "rule": "single_option",
+      "detail": "exactly 1 option survives at the terminal rung (throughput->fairness_index); guess probability 1.00 against a 0.20 policy ceiling. For an edge item this is the anchor its own prompt names, not the narrowing.",
+      "rates": {
+        "throughput->fairness_index": 1.0
       }
     },
     {
       "item_id": "itm_0067",
       "node_id": "router_centric",
       "item_type": "edge_click",
-      "rule": "coin_flip",
-      "detail": "5 candidates lit but only 2 survive a partial-knowledge region filter (congestion_control, router_centric) - effective guess probability 0.50 against a 0.20 policy ceiling; dead: bottleneck_router, fair_queuing, resource_allocation",
+      "rule": "single_option",
+      "detail": "exactly 1 option survives at the terminal rung (congestion_control->router_centric); guess probability 1.00 against a 0.20 policy ceiling. For an edge item this is the anchor its own prompt names, not the narrowing.",
       "rates": {
-        "router_centric": 0.49,
-        "fair_queuing": 0.0,
-        "bottleneck_router": 0.0,
-        "resource_allocation": 0.0,
-        "congestion_control": 0.51
+        "congestion_control->router_centric": 1.0
+      }
+    },
+    {
+      "item_id": "itm_0072",
+      "node_id": "host_centric",
+      "item_type": "edge_click",
+      "rule": "single_option",
+      "detail": "exactly 1 option survives at the terminal rung (congestion_control->host_centric); guess probability 1.00 against a 0.20 policy ceiling. For an edge item this is the anchor its own prompt names, not the narrowing.",
+      "rates": {
+        "congestion_control->host_centric": 1.0
+      }
+    },
+    {
+      "item_id": "itm_0077",
+      "node_id": "reservation_based",
+      "item_type": "edge_click",
+      "rule": "single_option",
+      "detail": "exactly 1 option survives at the terminal rung (congestion_control->reservation_based); guess probability 1.00 against a 0.20 policy ceiling. For an edge item this is the anchor its own prompt names, not the narrowing.",
+      "rates": {
+        "congestion_control->reservation_based": 1.0
+      }
+    },
+    {
+      "item_id": "itm_0082",
+      "node_id": "feedback_based",
+      "item_type": "edge_click",
+      "rule": "single_option",
+      "detail": "exactly 1 option survives at the terminal rung (congestion_control->feedback_based); guess probability 1.00 against a 0.20 policy ceiling. For an edge item this is the anchor its own prompt names, not the narrowing.",
+      "rates": {
+        "congestion_control->feedback_based": 1.0
+      }
+    },
+    {
+      "item_id": "itm_0087",
+      "node_id": "explicit_feedback",
+      "item_type": "edge_click",
+      "rule": "single_option",
+      "detail": "exactly 1 option survives at the terminal rung (feedback_based->explicit_feedback); guess probability 1.00 against a 0.20 policy ceiling. For an edge item this is the anchor its own prompt names, not the narrowing.",
+      "rates": {
+        "feedback_based->explicit_feedback": 1.0
+      }
+    },
+    {
+      "item_id": "itm_0092",
+      "node_id": "implicit_feedback",
+      "item_type": "edge_click",
+      "rule": "single_option",
+      "detail": "exactly 1 option survives at the terminal rung (feedback_based->implicit_feedback); guess probability 1.00 against a 0.20 policy ceiling. For an edge item this is the anchor its own prompt names, not the narrowing.",
+      "rates": {
+        "feedback_based->implicit_feedback": 1.0
       }
     },
     {
@@ -43,17 +177,74 @@
       }
     },
     {
+      "item_id": "itm_0097",
+      "node_id": "window_based",
+      "item_type": "edge_click",
+      "rule": "single_option",
+      "detail": "exactly 1 option survives at the terminal rung (feedback_based->window_based); guess probability 1.00 against a 0.20 policy ceiling. For an edge item this is the anchor its own prompt names, not the narrowing.",
+      "rates": {
+        "feedback_based->window_based": 1.0
+      }
+    },
+    {
+      "item_id": "itm_0102",
+      "node_id": "rate_based",
+      "item_type": "edge_click",
+      "rule": "single_option",
+      "detail": "exactly 1 option survives at the terminal rung (feedback_based->rate_based); guess probability 1.00 against a 0.20 policy ceiling. For an edge item this is the anchor its own prompt names, not the narrowing.",
+      "rates": {
+        "feedback_based->rate_based": 1.0
+      }
+    },
+    {
+      "item_id": "itm_0107",
+      "node_id": "fifo",
+      "item_type": "edge_click",
+      "rule": "coin_flip",
+      "detail": "5 candidates lit but only 2 survive a partial-knowledge region filter (bottleneck_router->fifo, router_centric->fifo) - effective guess probability 0.50 against a 0.20 policy ceiling; dead: ",
+      "rates": {
+        "bottleneck_router->fifo": 0.4775,
+        "router_centric->fifo": 0.5225
+      }
+    },
+    {
+      "item_id": "itm_0112",
+      "node_id": "tail_drop",
+      "item_type": "edge_click",
+      "rule": "single_option",
+      "detail": "exactly 1 option survives at the terminal rung (fifo->tail_drop); guess probability 1.00 against a 0.20 policy ceiling. For an edge item this is the anchor its own prompt names, not the narrowing.",
+      "rates": {
+        "fifo->tail_drop": 1.0
+      }
+    },
+    {
       "item_id": "itm_0117",
       "node_id": "priority_queuing",
       "item_type": "edge_click",
-      "rule": "coin_flip",
-      "detail": "5 candidates lit but only 2 survive a partial-knowledge region filter (fifo, priority_queuing) - effective guess probability 0.50 against a 0.20 policy ceiling; dead: bottleneck_router, congestion_window, weighted_fair_queuing",
+      "rule": "single_option",
+      "detail": "exactly 1 option survives at the terminal rung (fifo->priority_queuing); guess probability 1.00 against a 0.20 policy ceiling. For an edge item this is the anchor its own prompt names, not the narrowing.",
       "rates": {
-        "priority_queuing": 0.5175,
-        "bottleneck_router": 0.0,
-        "fifo": 0.4825,
-        "weighted_fair_queuing": 0.0,
-        "congestion_window": 0.0
+        "fifo->priority_queuing": 1.0
+      }
+    },
+    {
+      "item_id": "itm_0122",
+      "node_id": "fair_queuing",
+      "item_type": "edge_click",
+      "rule": "single_option",
+      "detail": "exactly 1 option survives at the terminal rung (flow->fair_queuing); guess probability 1.00 against a 0.20 policy ceiling. For an edge item this is the anchor its own prompt names, not the narrowing.",
+      "rates": {
+        "flow->fair_queuing": 1.0
+      }
+    },
+    {
+      "item_id": "itm_0127",
+      "node_id": "bit_round_robin",
+      "item_type": "edge_click",
+      "rule": "single_option",
+      "detail": "exactly 1 option survives at the terminal rung (fair_queuing->bit_round_robin); guess probability 1.00 against a 0.20 policy ceiling. For an edge item this is the anchor its own prompt names, not the narrowing.",
+      "rates": {
+        "fair_queuing->bit_round_robin": 1.0
       }
     },
     {
@@ -74,28 +265,192 @@
       "item_id": "itm_0132",
       "node_id": "finish_time",
       "item_type": "edge_click",
-      "rule": "coin_flip",
-      "detail": "5 candidates lit but only 2 survive a partial-knowledge region filter (bit_round_robin, finish_time) - effective guess probability 0.50 against a 0.20 policy ceiling; dead: duplicate_ack, queuing_delay, slow_start",
+      "rule": "single_option",
+      "detail": "exactly 1 option survives at the terminal rung (bit_round_robin->finish_time); guess probability 1.00 against a 0.20 policy ceiling. For an edge item this is the anchor its own prompt names, not the narrowing.",
       "rates": {
-        "finish_time": 0.5125,
-        "duplicate_ack": 0.0,
-        "queuing_delay": 0.0,
-        "slow_start": 0.0,
-        "bit_round_robin": 0.4875
+        "bit_round_robin->finish_time": 1.0
+      }
+    },
+    {
+      "item_id": "itm_0137",
+      "node_id": "weighted_fair_queuing",
+      "item_type": "edge_click",
+      "rule": "single_option",
+      "detail": "exactly 1 option survives at the terminal rung (fair_queuing->weighted_fair_queuing); guess probability 1.00 against a 0.20 policy ceiling. For an edge item this is the anchor its own prompt names, not the narrowing.",
+      "rates": {
+        "fair_queuing->weighted_fair_queuing": 1.0
+      }
+    },
+    {
+      "item_id": "itm_0142",
+      "node_id": "congestion_window",
+      "item_type": "edge_click",
+      "rule": "single_option",
+      "detail": "exactly 1 option survives at the terminal rung (window_based->congestion_window); guess probability 1.00 against a 0.20 policy ceiling. For an edge item this is the anchor its own prompt names, not the narrowing.",
+      "rates": {
+        "window_based->congestion_window": 1.0
+      }
+    },
+    {
+      "item_id": "itm_0147",
+      "node_id": "effective_window",
+      "item_type": "edge_click",
+      "rule": "coin_flip",
+      "detail": "5 candidates lit but only 2 survive a partial-knowledge region filter (congestion_window->effective_window, flow_control->effective_window) - effective guess probability 0.50 against a 0.20 policy ceiling; dead: ",
+      "rates": {
+        "flow_control->effective_window": 0.515,
+        "congestion_window->effective_window": 0.485
+      }
+    },
+    {
+      "item_id": "itm_0152",
+      "node_id": "loss_as_signal",
+      "item_type": "edge_click",
+      "rule": "single_option",
+      "detail": "exactly 1 option survives at the terminal rung (implicit_feedback->loss_as_signal); guess probability 1.00 against a 0.20 policy ceiling. For an edge item this is the anchor its own prompt names, not the narrowing.",
+      "rates": {
+        "implicit_feedback->loss_as_signal": 1.0
+      }
+    },
+    {
+      "item_id": "itm_0157",
+      "node_id": "aimd",
+      "item_type": "edge_click",
+      "rule": "single_option",
+      "detail": "exactly 1 option survives at the terminal rung (congestion_window->aimd); guess probability 1.00 against a 0.20 policy ceiling. For an edge item this is the anchor its own prompt names, not the narrowing.",
+      "rates": {
+        "congestion_window->aimd": 1.0
+      }
+    },
+    {
+      "item_id": "itm_0162",
+      "node_id": "sawtooth",
+      "item_type": "edge_click",
+      "rule": "single_option",
+      "detail": "exactly 1 option survives at the terminal rung (aimd->sawtooth); guess probability 1.00 against a 0.20 policy ceiling. For an edge item this is the anchor its own prompt names, not the narrowing.",
+      "rates": {
+        "aimd->sawtooth": 1.0
+      }
+    },
+    {
+      "item_id": "itm_0167",
+      "node_id": "self_clocking",
+      "item_type": "edge_click",
+      "rule": "single_option",
+      "detail": "exactly 1 option survives at the terminal rung (congestion_window->self_clocking); guess probability 1.00 against a 0.20 policy ceiling. For an edge item this is the anchor its own prompt names, not the narrowing.",
+      "rates": {
+        "congestion_window->self_clocking": 1.0
+      }
+    },
+    {
+      "item_id": "itm_0172",
+      "node_id": "slow_start",
+      "item_type": "edge_click",
+      "rule": "single_option",
+      "detail": "exactly 1 option survives at the terminal rung (self_clocking->slow_start); guess probability 1.00 against a 0.20 policy ceiling. For an edge item this is the anchor its own prompt names, not the narrowing.",
+      "rates": {
+        "self_clocking->slow_start": 1.0
+      }
+    },
+    {
+      "item_id": "itm_0177",
+      "node_id": "congestion_threshold",
+      "item_type": "edge_click",
+      "rule": "single_option",
+      "detail": "exactly 1 option survives at the terminal rung (slow_start->congestion_threshold); guess probability 1.00 against a 0.20 policy ceiling. For an edge item this is the anchor its own prompt names, not the narrowing.",
+      "rates": {
+        "slow_start->congestion_threshold": 1.0
+      }
+    },
+    {
+      "item_id": "itm_0182",
+      "node_id": "coarse_timeout",
+      "item_type": "edge_click",
+      "rule": "single_option",
+      "detail": "exactly 1 option survives at the terminal rung (loss_as_signal->coarse_timeout); guess probability 1.00 against a 0.20 policy ceiling. For an edge item this is the anchor its own prompt names, not the narrowing.",
+      "rates": {
+        "loss_as_signal->coarse_timeout": 1.0
+      }
+    },
+    {
+      "item_id": "itm_0187",
+      "node_id": "duplicate_ack",
+      "item_type": "edge_click",
+      "rule": "single_option",
+      "detail": "exactly 1 option survives at the terminal rung (loss_as_signal->duplicate_ack); guess probability 1.00 against a 0.20 policy ceiling. For an edge item this is the anchor its own prompt names, not the narrowing.",
+      "rates": {
+        "loss_as_signal->duplicate_ack": 1.0
+      }
+    },
+    {
+      "item_id": "itm_0192",
+      "node_id": "fast_retransmit",
+      "item_type": "edge_click",
+      "rule": "single_option",
+      "detail": "exactly 1 option survives at the terminal rung (coarse_timeout->fast_retransmit); guess probability 1.00 against a 0.20 policy ceiling. For an edge item this is the anchor its own prompt names, not the narrowing.",
+      "rates": {
+        "coarse_timeout->fast_retransmit": 1.0
+      }
+    },
+    {
+      "item_id": "itm_0197",
+      "node_id": "fast_recovery",
+      "item_type": "edge_click",
+      "rule": "coin_flip",
+      "detail": "5 candidates lit but only 2 survive a partial-knowledge region filter (fast_retransmit->fast_recovery, slow_start->fast_recovery) - effective guess probability 0.50 against a 0.20 policy ceiling; dead: ",
+      "rates": {
+        "fast_retransmit->fast_recovery": 0.4625,
+        "slow_start->fast_recovery": 0.5375
+      }
+    },
+    {
+      "item_id": "itm_0202",
+      "node_id": "tcp_cubic",
+      "item_type": "edge_click",
+      "rule": "single_option",
+      "detail": "exactly 1 option survives at the terminal rung (aimd->tcp_cubic); guess probability 1.00 against a 0.20 policy ceiling. For an edge item this is the anchor its own prompt names, not the narrowing.",
+      "rates": {
+        "aimd->tcp_cubic": 1.0
+      }
+    },
+    {
+      "item_id": "itm_0207",
+      "node_id": "decbit",
+      "item_type": "edge_click",
+      "rule": "single_option",
+      "detail": "exactly 1 option survives at the terminal rung (explicit_feedback->decbit); guess probability 1.00 against a 0.20 policy ceiling. For an edge item this is the anchor its own prompt names, not the narrowing.",
+      "rates": {
+        "explicit_feedback->decbit": 1.0
       }
     },
     {
       "item_id": "itm_0212",
       "node_id": "red",
       "item_type": "edge_click",
-      "rule": "coin_flip",
-      "detail": "5 candidates lit but only 2 survive a partial-knowledge region filter (red, tail_drop) - effective guess probability 0.50 against a 0.20 policy ceiling; dead: dctcp, decbit, drop_probability",
+      "rule": "single_option",
+      "detail": "exactly 1 option survives at the terminal rung (tail_drop->red); guess probability 1.00 against a 0.20 policy ceiling. For an edge item this is the anchor its own prompt names, not the narrowing.",
       "rates": {
-        "red": 0.52,
-        "drop_probability": 0.0,
-        "decbit": 0.0,
-        "dctcp": 0.0,
-        "tail_drop": 0.48
+        "tail_drop->red": 1.0
+      }
+    },
+    {
+      "item_id": "itm_0217",
+      "node_id": "avg_queue_length",
+      "item_type": "edge_click",
+      "rule": "single_option",
+      "detail": "exactly 1 option survives at the terminal rung (fifo->avg_queue_length); guess probability 1.00 against a 0.20 policy ceiling. For an edge item this is the anchor its own prompt names, not the narrowing.",
+      "rates": {
+        "fifo->avg_queue_length": 1.0
+      }
+    },
+    {
+      "item_id": "itm_0222",
+      "node_id": "red_thresholds",
+      "item_type": "edge_click",
+      "rule": "single_option",
+      "detail": "exactly 1 option survives at the terminal rung (red->red_thresholds); guess probability 1.00 against a 0.20 policy ceiling. For an edge item this is the anchor its own prompt names, not the narrowing.",
+      "rates": {
+        "red->red_thresholds": 1.0
       }
     },
     {
@@ -116,28 +471,50 @@
       "item_id": "itm_0227",
       "node_id": "drop_probability",
       "item_type": "edge_click",
-      "rule": "coin_flip",
-      "detail": "5 candidates lit but only 2 survive a partial-knowledge region filter (drop_probability, red_thresholds) - effective guess probability 0.50 against a 0.20 policy ceiling; dead: congestion_window, decbit, red",
+      "rule": "single_option",
+      "detail": "exactly 1 option survives at the terminal rung (red_thresholds->drop_probability); guess probability 1.00 against a 0.20 policy ceiling. For an edge item this is the anchor its own prompt names, not the narrowing.",
       "rates": {
-        "drop_probability": 0.525,
-        "congestion_window": 0.0,
-        "decbit": 0.0,
-        "red": 0.0,
-        "red_thresholds": 0.475
+        "red_thresholds->drop_probability": 1.0
+      }
+    },
+    {
+      "item_id": "itm_0232",
+      "node_id": "ecn",
+      "item_type": "edge_click",
+      "rule": "single_option",
+      "detail": "exactly 1 option survives at the terminal rung (decbit->ecn); guess probability 1.00 against a 0.20 policy ceiling. For an edge item this is the anchor its own prompt names, not the narrowing.",
+      "rates": {
+        "decbit->ecn": 1.0
+      }
+    },
+    {
+      "item_id": "itm_0237",
+      "node_id": "vegas_expected_rate",
+      "item_type": "edge_click",
+      "rule": "single_option",
+      "detail": "exactly 1 option survives at the terminal rung (congestion_window->vegas_expected_rate); guess probability 1.00 against a 0.20 policy ceiling. For an edge item this is the anchor its own prompt names, not the narrowing.",
+      "rates": {
+        "congestion_window->vegas_expected_rate": 1.0
+      }
+    },
+    {
+      "item_id": "itm_0242",
+      "node_id": "vegas_actual_rate",
+      "item_type": "edge_click",
+      "rule": "single_option",
+      "detail": "exactly 1 option survives at the terminal rung (queuing_delay->vegas_actual_rate); guess probability 1.00 against a 0.20 policy ceiling. For an edge item this is the anchor its own prompt names, not the narrowing.",
+      "rates": {
+        "queuing_delay->vegas_actual_rate": 1.0
       }
     },
     {
       "item_id": "itm_0247",
       "node_id": "vegas",
       "item_type": "edge_click",
-      "rule": "coin_flip",
-      "detail": "5 candidates lit but only 2 survive a partial-knowledge region filter (vegas, vegas_expected_rate) - effective guess probability 0.50 against a 0.20 policy ceiling; dead: power_metric, rate_based, throughput",
+      "rule": "single_option",
+      "detail": "exactly 1 option survives at the terminal rung (vegas_expected_rate->vegas); guess probability 1.00 against a 0.20 policy ceiling. For an edge item this is the anchor its own prompt names, not the narrowing.",
       "rates": {
-        "vegas": 0.535,
-        "rate_based": 0.0,
-        "throughput": 0.0,
-        "power_metric": 0.0,
-        "vegas_expected_rate": 0.465
+        "vegas_expected_rate->vegas": 1.0
       }
     },
     {
@@ -158,14 +535,20 @@
       "item_id": "itm_0252",
       "node_id": "bbr",
       "item_type": "edge_click",
-      "rule": "coin_flip",
-      "detail": "5 candidates lit but only 2 survive a partial-knowledge region filter (bbr, vegas) - effective guess probability 0.50 against a 0.20 policy ceiling; dead: feedback_based, power_metric, vegas_expected_rate",
+      "rule": "single_option",
+      "detail": "exactly 1 option survives at the terminal rung (vegas->bbr); guess probability 1.00 against a 0.20 policy ceiling. For an edge item this is the anchor its own prompt names, not the narrowing.",
       "rates": {
-        "bbr": 0.49,
-        "power_metric": 0.0,
-        "feedback_based": 0.0,
-        "vegas_expected_rate": 0.0,
-        "vegas": 0.51
+        "vegas->bbr": 1.0
+      }
+    },
+    {
+      "item_id": "itm_0257",
+      "node_id": "dctcp",
+      "item_type": "edge_click",
+      "rule": "single_option",
+      "detail": "exactly 1 option survives at the terminal rung (ecn->dctcp); guess probability 1.00 against a 0.20 policy ceiling. For an edge item this is the anchor its own prompt names, not the narrowing.",
+      "rates": {
+        "ecn->dctcp": 1.0
       }
     },
     {
@@ -3143,16 +3526,17 @@
     },
     "terminal_level": 4,
     "trials": 400,
-    "mean_lit": 5.0,
-    "mean_live": 3.45,
+    "mean_lit": 3.11,
+    "mean_live": 2.37,
     "live_distribution": {
-      "2": 12,
-      "3": 41,
-      "4": 39,
-      "5": 9
+      "1": 44,
+      "2": 9,
+      "3": 19,
+      "4": 25,
+      "5": 4
     },
-    "nominal_guess_probability": 0.2,
-    "effective_guess_probability": 0.309,
+    "nominal_guess_probability": 0.322,
+    "effective_guess_probability": 0.613,
     "policy_ceiling": 0.2
   },
   "structural": {
@@ -3182,18 +3566,23 @@
     "itm_0008",
     "itm_0009",
     "itm_0010",
+    "itm_0012",
     "itm_0013",
     "itm_0014",
     "itm_0015",
+    "itm_0017",
     "itm_0018",
     "itm_0019",
     "itm_0020",
+    "itm_0022",
     "itm_0023",
     "itm_0024",
     "itm_0025",
+    "itm_0027",
     "itm_0028",
     "itm_0029",
     "itm_0030",
+    "itm_0032",
     "itm_0033",
     "itm_0034",
     "itm_0035",
@@ -3205,15 +3594,19 @@
     "itm_0043",
     "itm_0044",
     "itm_0045",
+    "itm_0047",
     "itm_0048",
     "itm_0049",
     "itm_0050",
+    "itm_0052",
     "itm_0053",
     "itm_0054",
     "itm_0055",
+    "itm_0057",
     "itm_0058",
     "itm_0059",
     "itm_0060",
+    "itm_0062",
     "itm_0063",
     "itm_0064",
     "itm_0065",
@@ -3221,31 +3614,40 @@
     "itm_0068",
     "itm_0069",
     "itm_0070",
+    "itm_0072",
     "itm_0073",
     "itm_0074",
     "itm_0075",
+    "itm_0077",
     "itm_0078",
     "itm_0079",
     "itm_0080",
+    "itm_0082",
     "itm_0083",
     "itm_0084",
     "itm_0085",
+    "itm_0087",
     "itm_0088",
     "itm_0089",
     "itm_0090",
+    "itm_0092",
     "itm_0093",
     "itm_0094",
     "itm_0095",
     "itm_0096",
+    "itm_0097",
     "itm_0098",
     "itm_0099",
     "itm_0100",
+    "itm_0102",
     "itm_0103",
     "itm_0104",
     "itm_0105",
+    "itm_0107",
     "itm_0108",
     "itm_0109",
     "itm_0110",
+    "itm_0112",
     "itm_0113",
     "itm_0114",
     "itm_0115",
@@ -3253,9 +3655,11 @@
     "itm_0118",
     "itm_0119",
     "itm_0120",
+    "itm_0122",
     "itm_0123",
     "itm_0124",
     "itm_0125",
+    "itm_0127",
     "itm_0128",
     "itm_0129",
     "itm_0130",
@@ -3264,48 +3668,63 @@
     "itm_0133",
     "itm_0134",
     "itm_0135",
+    "itm_0137",
     "itm_0138",
     "itm_0139",
     "itm_0140",
+    "itm_0142",
     "itm_0143",
     "itm_0144",
     "itm_0145",
+    "itm_0147",
     "itm_0148",
     "itm_0149",
     "itm_0150",
+    "itm_0152",
     "itm_0153",
     "itm_0154",
     "itm_0155",
+    "itm_0157",
     "itm_0158",
     "itm_0159",
     "itm_0160",
+    "itm_0162",
     "itm_0163",
     "itm_0164",
     "itm_0165",
+    "itm_0167",
     "itm_0168",
     "itm_0169",
     "itm_0170",
+    "itm_0172",
     "itm_0173",
     "itm_0174",
     "itm_0175",
+    "itm_0177",
     "itm_0178",
     "itm_0179",
     "itm_0180",
+    "itm_0182",
     "itm_0183",
     "itm_0184",
     "itm_0185",
+    "itm_0187",
     "itm_0188",
     "itm_0189",
     "itm_0190",
+    "itm_0192",
     "itm_0193",
     "itm_0194",
     "itm_0195",
+    "itm_0197",
     "itm_0198",
     "itm_0199",
     "itm_0200",
+    "itm_0202",
     "itm_0203",
     "itm_0204",
     "itm_0205",
+    "itm_0207",
     "itm_0208",
     "itm_0209",
     "itm_0210",
@@ -3313,9 +3732,11 @@
     "itm_0213",
     "itm_0214",
     "itm_0215",
+    "itm_0217",
     "itm_0218",
     "itm_0219",
     "itm_0220",
+    "itm_0222",
     "itm_0223",
     "itm_0224",
     "itm_0225",
@@ -3324,12 +3745,15 @@
     "itm_0228",
     "itm_0229",
     "itm_0230",
+    "itm_0232",
     "itm_0233",
     "itm_0234",
     "itm_0235",
+    "itm_0237",
     "itm_0238",
     "itm_0239",
     "itm_0240",
+    "itm_0242",
     "itm_0243",
     "itm_0244",
     "itm_0245",
@@ -3342,6 +3766,7 @@
     "itm_0253",
     "itm_0254",
     "itm_0255",
+    "itm_0257",
     "itm_0258",
     "itm_0259",
     "itm_0260"

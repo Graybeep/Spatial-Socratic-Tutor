@@ -142,6 +142,33 @@ class Student:
         plausible = [n for n in pool if n in region]
         return plausible or pool
 
+    def edge_candidates(self, store: GraphStore, item, lit: list) -> list:
+        """The edges this student would choose among, as "from->to" strings.
+
+        SEPARATE FROM `candidates` ON PURPOSE, and the two conditions differ in
+        a way that is the whole point of splitting 9.1's rows.
+
+        `zero` uses the narrowing and nothing else: every prereq edge whose
+        endpoints are both lit. That is what the INTERFACE handed over.
+
+        `partial`/`adversarial` also read the item prompt, which names the `to`
+        endpoint - so their pool is that node's prereq in-edges. That is what
+        the ITEM handed over, and on this bank it is a pool of 1 or 2
+        (build.validate's edge-anchor check). Crediting narrowing for that would
+        be measuring the item bank's leak and calling it the interface's.
+        """
+        lit_set = set(lit)
+        prereq = [e for e in store.graph.edges if e.type == "prereq"]
+
+        if self.condition == "zero":
+            pool = [f"{e.from_}->{e.to}" for e in prereq
+                    if not lit_set or (e.from_ in lit_set and e.to in lit_set)]
+            return pool or [f"{e.from_}->{e.to}" for e in prereq]
+
+        anchored = [f"{p}->{item.node_id}" for p in store.prereqs(item.node_id)]
+        narrowed = [a for a in anchored if not lit_set or a.split("->")[0] in lit_set]
+        return narrowed or anchored or [f"{e.from_}->{e.to}" for e in prereq]
+
     def choose(self, store: GraphStore, item, lit: list, options: Optional[list]) -> str:
         if options:
             pool = [o for o in options if o in set(lit)] if lit else list(options)
@@ -150,6 +177,11 @@ class Student:
                 narrowed = self.candidates(store, item, pool)
                 pool = narrowed or pool
             return self.rng.choice(pool)
+        # An edge answer is "from->to". A node id can never equal one, so
+        # before this branch existed every edge item scored 0 by construction -
+        # 49 of the 101-item population, silently halving the measured rate.
+        if item.type == "edge_click":
+            return self.rng.choice(self.edge_candidates(store, item, lit))
         return self.rng.choice(self.candidates(store, item, lit))
 
 
@@ -172,6 +204,11 @@ class Probe:
     #: so repeated draws on one item are not independent evidence about the
     #: bank. Bootstrapping dialogues would understate every interval.
     item_id: str = ""
+    #: node_click or edge_click. NOT a breakdown for interest's sake: the two
+    #: measure different things. A node item's solve rate is what the narrowing
+    #: leaked; an edge item's is dominated by the anchor its own prompt names,
+    #: and the pooled number is neither quantity.
+    item_type: str = ""
 
 
 @dataclass
@@ -234,6 +271,7 @@ def run_dialogue(store: GraphStore, student: Student, seed: int,
             out.probes.append(Probe(
                 attempt=attempt,
                 item_id=item.id,
+                item_type=item.type,
                 hint_level=phase1.hint_level,
                 lit=len(lit) or len(store.node_ids),
                 solved=pick == item.answer,
@@ -370,6 +408,9 @@ def measure(store: GraphStore, arm_label: str, mode: str, condition: str, n: int
     #: attempt -> item_id -> outcomes. Kept so the rate at each rung can be
     #: bootstrapped over its true resampling unit; see bootstrap_ci.
     by_item = defaultdict(lambda: defaultdict(list))
+    #: item_type -> attempt -> outcomes, for the split below.
+    by_type = defaultdict(lambda: defaultdict(list))
+    by_type_item = defaultdict(lambda: defaultdict(lambda: defaultdict(list)))
     # SWEEP THE ITEM BANK. 9.1 runs on the visually-answerable subset (3), so
     # that subset is the population, and n dialogues are spread across it rather
     # than spent re-rolling one item. With n < len(bank) this is a sample of
@@ -384,6 +425,8 @@ def measure(store: GraphStore, arm_label: str, mode: str, condition: str, n: int
                 by_level[p.attempt].append(p.solved)
                 lit_at_level[p.attempt].append(p.lit)
                 by_item[p.attempt][p.item_id].append(p.solved)
+                by_type[p.item_type][p.attempt].append(p.solved)
+                by_type_item[p.item_type][p.attempt][p.item_id].append(p.solved)
 
     levels = {}
     for level in sorted(by_level):
@@ -411,6 +454,30 @@ def measure(store: GraphStore, arm_label: str, mode: str, condition: str, n: int
         "min_n_for_terminal": min_n,
         "terminal_solve_rate": levels[terminal]["solve_rate"] if terminal else None,
         "terminal_mean_lit": levels[terminal]["mean_lit"] if terminal else None,
+        # SPLIT BY ITEM TYPE. The pooled figure above answers no question:
+        # node items measure the narrowing, edge items measure an anchor the
+        # item prompt gives away for free (see build.validate's edge-anchor
+        # check - median 1 candidate). Quote the rows, not the pool.
+        "by_item_type": {
+            itype: {
+                "levels": {
+                    lv: {"n": len(v), "solve_rate": sum(v) / len(v)}
+                    for lv, v in sorted(rows.items())
+                },
+                "terminal_attempt": terminal,
+                "terminal_n": len(rows.get(terminal, [])),
+                "terminal_solve_rate": (
+                    sum(rows[terminal]) / len(rows[terminal])
+                    if terminal in rows and rows[terminal] else None
+                ),
+                "distinct_items": len(by_type_item[itype].get(terminal, {})),
+                "terminal_ci": bootstrap_ci(
+                    by_type_item[itype].get(terminal, {}), CONFIG.bootstrap_resamples,
+                    CONFIG.bootstrap_confidence, CONFIG.bootstrap_seed
+                ) if terminal in rows and rows[terminal] else None,
+            }
+            for itype, rows in sorted(by_type.items())
+        },
         "provenance": provenance.over(
             population=bank,
             sampled=by_item[terminal] if terminal else [],
@@ -475,6 +542,27 @@ def render(results: list) -> str:
             f"  {lit[lv]['n']:>6d}" if lv in lit else "       -" for lv in levels))
         lines.append(f"    terminal = deepest attempt with n >= {rows[0]['min_n_for_terminal']} "
                      f"(attempt {rows[0]['terminal_attempt']}, n={rows[0]['terminal_n']})")
+
+        # THE SPLIT. Pooling these answers no question - see Probe.item_type.
+        types = sorted({t for r in rows for t in r.get("by_item_type", {})})
+        if len(types) > 1:
+            lines.append("")
+            lines.append("    terminal rate BY ITEM TYPE (the pooled row above is neither number)")
+            head = "    condition     " + "".join(f"{t:>14}" for t in types)
+            lines.append(head)
+            for r in rows:
+                cells = ""
+                for t in types:
+                    v = r.get("by_item_type", {}).get(t) or {}
+                    rate = v.get("terminal_solve_rate")
+                    cells += f"{rate:>13.0%} " if rate is not None else "            - "
+                lines.append(f"    {r['condition']:<14}{cells}")
+            counts = rows[0].get("by_item_type", {})
+            lines.append("    items         " + "".join(
+                f"{(counts.get(t) or {}).get('distinct_items', 0):>13d} " for t in types))
+            lines.append("    node_click measures the NARROWING. edge_click is dominated by the")
+            lines.append("    `to` endpoint the item's own prompt names - median 1 candidate")
+            lines.append("    remains (build.validate). Quote node_click as 9.1's headline.")
         lines.append("")
 
     lines.append("  MARGINAL LEAKAGE - what the NARROWING actually contributed")
