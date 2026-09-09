@@ -23,8 +23,9 @@ this is not a fallback to be built. It is a decision to stop waiting.
 - the two-call pipeline, with the retrieval gate enforced in both directions
 - the frozen 52-node graph, its layout, and the narrowing ladder
 - retrieval over the real chapter — TF-IDF, no model call, working today
-- §9.1 effective leakage, §9.4 the distractor screen
-- every finding in `representation-blindness.md` and `numbers-that-looked-fine.md`
+- §9.1 effective leakage over the 69-item scored bank, §9.4 the distractor screen
+- every finding in [representation-blindness.md](representation-blindness.md)
+  and [numbers-that-looked-fine.md](numbers-that-looked-fine.md)
 - the fidelity-ceiling contract
 - a demo that runs from a clean clone with no key and no network
 
@@ -50,27 +51,51 @@ them. It would not evidence them.
 
 ### 1. The answer has more representations than any whitelist can name
 
+Full section: **[representation-blindness.md](representation-blindness.md)**.
+Three instances, one mechanism.
+
 `ItemPublic` excluded `answer` and shipped `node_id`. For a `node_click` item
 those are the same referent. §5 excluded the answer string and admitted the
-label. Same defect, one layer in.
+label. Same defect, one layer in. And the fidelity ceiling permitted an edge
+item's `to` endpoint as *strictly lower fidelity* than the answer — on a graph
+where 32 of 49 anchors have exactly one prereq, so it **is** the answer.
 
     node id  →  node label  →  position in a lit set  →  size of a lit set
 
-A field whitelist names the first. The information travels in all four. The fix
-is a **fidelity ceiling per action**, not a field list — and that is a claim
-about contracts between components, which is true or false independently of what
-generates the text.
+A field whitelist names the first. The information travels in all four, and the
+third instance adds the sharper form: **fidelity is a property of the
+representation *given the data*, so it has to be measured against the data
+rather than argued from the schema.**
+
+The fix is a **fidelity ceiling per action**, not a field list — a claim about
+contracts between components, true or false independently of what generates the
+text.
 
 ### 2. An evaluation can be healthy in every observable way and measure nothing
 
-Five instances in six days: one-item sampling, an unanswerable half of the
-population, a threshold calibrated against no distribution, a degenerate item
-bank, and an item template that gave its own answer away. All five passed a full
-test suite. All five produced numbers of the right type in the right range.
+Full section: **[numbers-that-looked-fine.md](numbers-that-looked-fine.md)**.
+Two instances sharing one property — valid output shape, and no test asserting
+on the sampling underneath it or the score distribution it was aggregating —
+plus one adjacent case of the same shape in a guard constant.
 
-The generalisation — *every eval output carries the size and identity of what it
-sampled, and coverage is asserted, not assumed* — is one line per eval and would
-have caught two of the five on day one.
+- **the sample was one item.** 360 probes over 1 of 101 items, reported as
+  n=200. A rate over one item has the same shape as a rate over a hundred.
+- **half the population could not register a result.** A node-id answer can
+  never equal an edge's `"from->to"`, so 49 of 101 items scored exactly 0.000 on
+  every run, diluting every pooled rate.
+- *adjacent:* `RETRIEVAL_SCORE_FLOOR` at 0.35, set before any corpus existed,
+  refused 100% of in-domain queries while the ranking underneath was correct.
+
+The generalisation has two lines, and both are asserted in code rather than
+recommended:
+
+1. *every eval output carries the size and identity of what it sampled, and
+   coverage is asserted, not assumed* (`eval/provenance.py`) — would have caught
+   the first on day one.
+2. *every stratum of the population must be able to register a result*
+   (`check_strata_answerable`, run by `measure()` before it reports) — catches
+   the second, which provenance structurally cannot, because provenance records
+   what was sampled and this was a failure of what could be scored.
 
 ### 3. "Helps by showing less" can be a property of the wiring rather than a claim about behaviour
 
@@ -97,16 +122,77 @@ All deterministic. All regenerable from a clean clone with no key.
 
 | | source | status |
 |---|---|---|
-| §9.1 effective leakage, split by item type | `eval/adversarial.py` | measured, n=202, full coverage |
+| §9.1 effective leakage, split by item type | `eval/adversarial.py` | measured, **69 items**, n=138, coverage 1.0 |
 | §9.4 distractor screen | `eval/distractor_screen.py` | measured, 101 click + 159 mcq |
-| edge-item candidate counts | `build/validate.py` | measured, 49/49 flagged |
+| edge-item candidate counts | `build/validate.py` | measured, 32 determined + 17 coin-flip |
 | retrieval gate separation | `server/config.py` | measured, 52 in / 12 out |
 | item-bank degeneracy | `build/validate.py` | measured, 159/159 mcq |
 
-The honest framing for §9.1 is the one the split forces: **`node_click`
-zero-knowledge leakage at the terminal rung, by arm** — 17% product, 6%
-visual-only, 4% verbal-only. Those move with the narrowing, which is what §9.1
-was built to measure.
+### The population is 69, not 101
+
+Every §9.1 number generalises to the **scored** bank: 52 `node_click` + 17
+`edge_click`. The other 32 edge items are `scorable: false` — their anchor has
+exactly one prereq, so the guess rate is 1.0 and §7's logistic reaches p = 1
+only as `d_eff → -∞`; there is no difficulty value that represents "free". They
+are excluded from mastery, by the same mechanism and with the same reversibility
+as the MCQ demotion, and `build/validate.py` **errors** if one is ever scored
+again.
+
+Quote 69 and its interval. Not 101, and not the 260-item bank.
+
+### §9.1's headline
+
+`node_click`, zero-knowledge, terminal rung (attempt 1, n=104 probes over 52
+items), with cluster-bootstrap 95% intervals over items:
+
+| arm | rate | 95% CI |
+|---|---|---|
+| product configuration | **12.5%** | [6.7, 19.2] |
+| isolated visual channel | 3.8% | [1.0, 7.7] |
+| verbal channel only | 1.0% | [0.0, 2.9] |
+| no hints at all (baseline) | 3.8% | [1.0, 7.7] |
+
+**Report this straight, including the part that does not flatter the thesis.**
+Marginal over the no-hint baseline, `node_click` only:
+
+| arm | zero | partial | adversarial |
+|---|---|---|---|
+| product configuration | **+8.7** | +4.8 | +4.8 |
+| isolated visual channel | +0.0 | −9.6 | +4.8 |
+| verbal channel only | −2.9 | −5.8 | −5.8 |
+
+Only the product arm separates from baseline, and only clearly at zero
+knowledge. **The visual channel alone contributed nothing measurable here**: 3.8%
+against a 3.8% baseline. At 52 items the intervals are ±6–7 points, so
+differences under about 10 points are not resolvable — which §9.1 anticipated
+("below ~15 percentage points, differences at n=30 are noise") and which the
+scored bank makes concrete rather than hypothetical.
+
+This does not weaken claims 3 and 4, and that is the point of having written
+them as architectural rather than empirical. "The tutor cannot name the answer
+while hinting" is a property of Call 2's argument list. "Narrowing performs
+reductions that cannot be expressed in one utterance" is a property of what fits
+in a turn. Neither needs the visual channel to win a leakage race, and we should
+not imply it did.
+
+### The demonstration worth putting on a slide
+
+The single clearest result is not a leakage rate. It is the evidence that a
+metric was measuring nothing — `edge_click` solve rate, partial-knowledge, at
+the attempt-1 rung, across all four arms:
+
+| arm | lit nodes | `edge_click` |
+|---|---|---|
+| product configuration | 12.0 | 84% |
+| isolated visual channel | 12.0 | 82% |
+| verbal channel only | 52.0 | 82% |
+| no hints at all | 52.0 | **80%** |
+
+Nothing is narrowed in the last two rows, and no hint is given at all in the
+last. A reader checks the inference in one line: **a rate that does not move
+when the narrowing is removed was never measuring the narrowing.** Reproduce
+with `python -m eval.adversarial --population answerable`, which is kept
+runnable for exactly this and is not a mastery claim.
 
 ---
 
