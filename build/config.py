@@ -28,6 +28,24 @@ class BuildConfig:
     source_pdf: object = field(default_factory=lambda: _path("SOURCE_PDF", "data/chapter.pdf"))
     #: Extracted text + heading path, so extraction is re-runnable without PyMuPDF.
     chunks_path: object = field(default_factory=lambda: _path("CHUNKS_PATH", "data/chunks.json"))
+    #: Where `build.fetch_chapter` puts the rendered chapter. Gitignored: this is
+    #: the source material, and only our derived chunks are committed.
+    chapter_html_dir: object = field(
+        default_factory=lambda: _path("CHAPTER_HTML_DIR", "data/chapter_html")
+    )
+    #: The chapter, in reading order. Order matters: `extract_edges` derives a
+    #: section -> position map from it and the whole precedence filter (§4) is
+    #: downstream of that, so this is a pipeline input, not a download list.
+    #:
+    #: 6.5 (Quality of Service) is deliberately absent - see data/SOURCE.md.
+    chapter_urls: tuple = field(default_factory=lambda: tuple(
+        u.strip() for u in _str("CHAPTER_URLS", ",".join((
+            "https://book.systemsapproach.org/congestion/issues.html",
+            "https://book.systemsapproach.org/congestion/queuing.html",
+            "https://book.systemsapproach.org/congestion/tcpcc.html",
+            "https://book.systemsapproach.org/congestion/avoidance.html",
+        ))).split(",") if u.strip()
+    ))
 
     # --- outputs (frozen data, §1.2) -----------------------------------------
     graph_path: object = field(default_factory=lambda: _path("GRAPH_PATH", "data/graph.json"))

@@ -1,5 +1,6 @@
 """Chapter -> section-level chunks. The swappable seam (CLAUDE.md §4).
 
+    python -m build.fetch_chapter && python -m build.chunk --html
     python -m build.chunk --pdf data/chapter.pdf
     python -m build.chunk --text data/chapter.txt
 
@@ -39,7 +40,8 @@ from __future__ import annotations
 import argparse
 import json
 import re
-from dataclasses import asdict, dataclass
+from dataclasses import asdict, dataclass, field
+from html.parser import HTMLParser
 from pathlib import Path
 from typing import Iterable, Protocol
 
@@ -172,6 +174,102 @@ class TextChunker:
         return _sections(self.path.read_text(encoding="utf-8").splitlines())
 
 
+#: Tags whose text is furniture, never chapter prose.
+_HTML_DROP = frozenset({"script", "style", "nav", "header", "footer", "aside"})
+#: Tags that end a line. Headings must land on a line of their own or HEADING
+#: never matches them and the whole chapter becomes one section.
+_HTML_BLOCK = frozenset({
+    "p", "h1", "h2", "h3", "h4", "h5", "h6", "li", "pre", "div", "section",
+    "tr", "blockquote", "figcaption", "dt", "dd",
+})
+
+
+class _HtmlLines(HTMLParser):
+    """HTML -> one line per block element, main content only.
+
+    Scoped to <article> / role=main on purpose. The book's rendered pages carry
+    the chapter's own heading three times - page title, sidebar nav, then the
+    real one - and `_sections` merges repeats rather than letting a duplicate
+    section overwrite its reading position. Dropping the chrome here means that
+    safety net is never asked to do the work.
+    """
+
+    def __init__(self) -> None:
+        super().__init__(convert_charrefs=True)
+        self.lines: list[str] = []
+        self._buf: list[str] = []
+        self._depth = 0
+        self._in_main = False
+        self._main_depth: int | None = None
+        self._skip_depth: int | None = None
+
+    def handle_starttag(self, tag, attrs) -> None:
+        a = dict(attrs)
+        self._depth += 1
+        if self._skip_depth is None and tag in _HTML_DROP:
+            self._skip_depth = self._depth
+            return
+        if not self._in_main and (tag == "article" or a.get("role") == "main"):
+            self._in_main, self._main_depth = True, self._depth
+        # The anchor-link icon after every heading. Its glyph is private-use and
+        # would otherwise ride into the heading text; _JUNK strips it later, but
+        # not before HEADING has already failed to match the line.
+        if tag == "a" and "headerlink" in (a.get("class") or ""):
+            self._skip_depth = self._depth
+            return
+        if tag in _HTML_BLOCK:
+            self._flush()
+
+    def handle_endtag(self, tag) -> None:
+        if self._skip_depth is not None and self._depth <= self._skip_depth:
+            self._skip_depth = None
+        if tag in _HTML_BLOCK:
+            self._flush()
+        if self._in_main and self._main_depth is not None and self._depth <= self._main_depth:
+            self._in_main = False
+        self._depth -= 1
+
+    def handle_data(self, data) -> None:
+        if self._skip_depth is None and self._in_main:
+            self._buf.append(data)
+
+    def _flush(self) -> None:
+        text = re.sub(r"\s+", " ", "".join(self._buf)).strip()
+        self._buf = []
+        if text:
+            self.lines.append(text)
+
+
+def html_lines(markup: str) -> list[str]:
+    p = _HtmlLines()
+    p.feed(markup)
+    p._flush()
+    return p.lines
+
+
+@dataclass
+class HtmlChunker:
+    """The book's rendered HTML. This is what the chapter actually is.
+
+    The source is published as a Sphinx site under CC BY 4.0, not as a PDF
+    (data/SOURCE.md), so this - not `PdfChunker` - is the implementation the
+    real chapter goes through. It gets the two things `PdfChunker` was written
+    to fight *for free*: there is no column order to recover and no running head
+    to strip, because the renderer already put the prose in reading order and
+    the furniture in tags this drops by name.
+
+    `paths` is ordered and stays ordered. See build/config.py chapter_urls.
+    """
+
+    paths: list = field(default_factory=list)
+
+    def chunks(self) -> list[Chunk]:
+        lines: list[str] = []
+        for path in self.paths:
+            lines.extend(html_lines(Path(path).read_text(encoding="utf-8")))
+        return _sections(lines)
+
+
 @dataclass
 class PdfChunker:
     """PyMuPDF. Untested — there is no chapter PDF in the repo yet.
@@ -216,11 +314,26 @@ def main(argv=None) -> int:
     src = ap.add_mutually_exclusive_group()
     src.add_argument("--pdf", type=Path, default=None)
     src.add_argument("--text", type=Path, default=None)
+    src.add_argument(
+        "--html", type=Path, nargs="*", default=None,
+        help="rendered chapter pages, in reading order. No paths = whatever "
+             "build.fetch_chapter left in BUILD.chapter_html_dir.",
+    )
     ap.add_argument("--out", type=Path, default=BUILD.chunks_path)
     args = ap.parse_args(argv)
 
     if args.text:
         chunker: Chunker = TextChunker(args.text)
+    elif args.html is not None:
+        # sorted(), because fetch_chapter order-prefixes the filenames. Reading
+        # order is a pipeline input (§4's precedence filter), not cosmetic.
+        paths = list(args.html) or sorted(Path(BUILD.chapter_html_dir).glob("*.html"))
+        if not paths:
+            raise SystemExit(
+                f"no chapter HTML in {BUILD.chapter_html_dir}. Run "
+                f"`python -m build.fetch_chapter` first."
+            )
+        chunker = HtmlChunker(paths)
     elif args.pdf:
         chunker = PdfChunker(args.pdf)
     elif BUILD.source_pdf.exists():

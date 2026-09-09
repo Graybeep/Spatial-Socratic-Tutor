@@ -39,3 +39,6 @@ client/.env
 
 # spec, kept local
 CLAUDE.md
+
+# source material (licensing) - chapter fetched by build.fetch_chapter
+data/chapter_html/

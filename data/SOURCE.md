@@ -8,7 +8,31 @@ The concept graph in `graph.json` covers **Chapter 6, Congestion Control** of:
 Released under [Creative Commons Attribution 4.0 International (CC BY
 4.0)](https://creativecommons.org/licenses/by/4.0). Licensing is therefore
 clear, and §13.2's "gitignore the source if licensing is unclear" does not
-apply — though we commit no copy of the chapter itself, only our own graph of it.
+apply.
+
+## What of the chapter is committed, and what is not
+
+This changed once, deliberately, and the earlier wording is left here rather
+than edited away: it used to read *"we commit no copy of the chapter itself,
+only our own graph of it"*, which was true while `data/chunks.json` did not
+exist.
+
+It now does, and it holds roughly 99,000 characters of the chapter's prose in
+15 section-aligned chunks. That is a redistribution of the source, and CC BY 4.0
+permits it with attribution — which is this file. The reason to accept it rather
+than keep the repo purely derivative: retrieval is TF-IDF over those chunks, so
+without them a fresh clone runs a tutor that refuses every `advance` and
+`explain` on the grounds that the chapter does not cover it. `main` must run
+(§13.2), and a `main` whose retrieval is inert is not running.
+
+| | committed? | why |
+|---|---|---|
+| `data/chapter_html/` — the rendered pages | **no**, gitignored | reproduce with `python -m build.fetch_chapter` |
+| `data/chunks.json` — our sectioning of them | **yes** | retrieval's corpus; the demo is inert without it |
+| `graph.json`, `items.json` | yes | our own work, not the source |
+
+Reversing this is one line in `.gitignore` and costs only the retrieval half of
+the demo.
 
 Sections covered: 6.1 (Issues in Resource Allocation), 6.2 (Queuing
 Disciplines), 6.3 (TCP Congestion Control), 6.4 (Advanced Congestion Control).

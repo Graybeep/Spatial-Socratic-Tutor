@@ -313,3 +313,85 @@ def test_source_sections_locate_a_concept_the_prose_never_names():
         [{"id": "fi", "label": "Jain's Fairness Index", "source_sections": ["6.1.3"]}],
         chunks)
     assert "fi" in pos
+
+
+# ---------------------------------------------------------------------------
+# HtmlChunker — the implementation the real chapter actually goes through
+# ---------------------------------------------------------------------------
+
+_PAGE = """<!doctype html>
+<html><head><title>6.3 TCP Congestion Control &mdash; Computer Networks</title>
+<style>.x{{color:red}}</style></head>
+<body>
+<nav class="bd-links"><p>6.3 TCP Congestion Control</p><p>Previous</p></nav>
+<article role="main">
+  <h1>{h1}<a class="headerlink" href="#tcp" title="Link to this heading">\uf0c1</a></h1>
+  <p>{body1}</p>
+  <h2>{h2}<a class="headerlink" href="#ss">\uf0c1</a></h2>
+  <p>{body2}</p>
+</article>
+<footer><p>Copyright</p></footer>
+</body></html>
+"""
+
+
+def _page(h1, body1, h2, body2):
+    return _PAGE.format(h1=h1, body1=body1, h2=h2, body2=body2)
+
+
+def _write(tmp_path, name, markup):
+    p = tmp_path / name
+    p.write_text(markup, encoding="utf-8")
+    return p
+
+
+def test_html_chunker_sections_a_rendered_page(tmp_path):
+    prose = "Congestion control is about the sender learning the capacity. " * 6
+    more = "Slow start ramps the window up from a cold start exponentially. " * 6
+    path = _write(tmp_path, "00_tcpcc.html", _page(
+        "6.3 TCP Congestion Control", prose, "6.3.1 Slow Start", more))
+
+    chunks = chunk_mod.HtmlChunker([path]).chunks()
+
+    assert [c.section for c in chunks] == ["6.3", "6.3.1"]
+    assert chunks[0].heading_path == "TCP Congestion Control"
+    assert "Congestion control is about" in chunks[0].text
+
+
+def test_html_chunker_drops_nav_and_footer_furniture():
+    """The nav repeats the chapter heading. If it survives, `_sections` sees
+    section 6.3 twice and extract_edges gets the wrong reading position."""
+    prose = "The sender determines how much capacity is available. " * 8
+    lines = chunk_mod.html_lines(_page(
+        "6.3 TCP Congestion Control", prose, "6.3.1 Slow Start", prose))
+
+    assert "Previous" not in lines
+    assert "Copyright" not in lines
+    # exactly one copy of the heading — the one inside <article>
+    assert sum(l.startswith("6.3 TCP") for l in lines) == 1
+
+
+def test_html_chunker_strips_the_headerlink_glyph():
+    """A private-use glyph riding into the heading makes HEADING fail to match,
+    and the whole page collapses into one section."""
+    prose = "Queuing disciplines decide which packet leaves next. " * 8
+    lines = chunk_mod.html_lines(_page(
+        "6.2 Queuing Disciplines", prose, "6.2.1 FIFO", prose))
+    heading = next(l for l in lines if l.startswith("6.2 "))
+    assert heading == "6.2 Queuing Disciplines"
+    assert "\uf0c1" not in heading
+
+
+def test_html_chunker_preserves_file_order(tmp_path):
+    """Reading order is a pipeline input: §4's precedence filter derives
+    section -> position from it."""
+    a = "Resource allocation meets competing demands for bandwidth. " * 8
+    b = "TCP congestion control was introduced in the late 1980s. " * 8
+    p1 = _write(tmp_path, "00_issues.html", _page("6.1 Issues", a, "6.1.1 Network Model", a))
+    p2 = _write(tmp_path, "01_tcpcc.html", _page("6.3 TCP", b, "6.3.1 Slow Start", b))
+
+    forward = [c.section for c in chunk_mod.HtmlChunker([p1, p2]).chunks()]
+    reverse = [c.section for c in chunk_mod.HtmlChunker([p2, p1]).chunks()]
+
+    assert forward == ["6.1", "6.1.1", "6.3", "6.3.1"]
+    assert reverse == ["6.3", "6.3.1", "6.1", "6.1.1"]
