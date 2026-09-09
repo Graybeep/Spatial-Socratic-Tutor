@@ -65,6 +65,13 @@ Measure leakage (§9.1) — three student conditions, arms labelled:
 python -m eval.adversarial       # n defaults to 2 per item
 ```
 
+Score extraction against the hand annotation (§9.3) - no key needed for the
+**ceiling**, which is the half that bounds the other:
+
+```bash
+python -m eval.graph_quality
+```
+
 Screen the item bank (§9.4) - no key, no chapter, no network:
 
 ```bash
@@ -147,6 +154,7 @@ NARROW_SCHEDULE=0,25,18,12,8 python -m server.main
 | `build/llm.py` | the build-side LLM seam — mock by default, `BUILD_LLM=real` |
 | `data/SOURCE.md` | attribution, and why the gold graph was frozen first |
 | `eval/adversarial.py` | §9.1 effective leakage — `python -m eval.adversarial` |
+| `eval/graph_quality.py` | §9.3 extraction recall ceiling; deterministic, no key |
 | `docs/writeup/representation-blindness.md` | the design contribution: fidelity ceiling, not field whitelist |
 | `docs/writeup/numbers-that-looked-fine.md` | evals that produced well-formed numbers over nothing |
 | `docs/writeup/` | other draft report sections — identity leakage, limitations |

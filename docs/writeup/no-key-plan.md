@@ -33,7 +33,7 @@ this is not a fallback to be built. It is a decision to stop waiting.
 
 | | why |
 |---|---|
-| §9.3 graph precision/recall | needs an extractor run, which needs a model |
+| §9.3 **classifier** precision/recall | needs an extractor run, which needs a model. The **ceiling half of §9.3 reports today** — see below |
 | §9.5 diagnosis read-through | needs 30 real Call 1 `diagnosis` fields |
 | "the utterances are model-generated" | they are templates; say so plainly |
 | parametric-reconstruction rate | a mock has no weights to reconstruct from |
@@ -124,6 +124,7 @@ All deterministic. All regenerable from a clean clone with no key.
 |---|---|---|
 | §9.1 effective leakage, split by item type | `eval/adversarial.py` | measured, **69 items**, n=138, coverage 1.0 |
 | §9.4 distractor screen | `eval/distractor_screen.py` | measured, 101 click + 159 mcq |
+| §9.3 extraction **recall ceiling** | `eval/graph_quality.py` | measured, 66 gold edges, window swept |
 | edge-item candidate counts | `build/validate.py` | measured, 32 determined + 17 coin-flip |
 | retrieval gate separation | `server/config.py` | measured, 52 in / 12 out |
 | item-bank degeneracy | `build/validate.py` | measured, 159/159 mcq |
@@ -175,6 +176,43 @@ reductions that cannot be expressed in one utterance" is a property of what fits
 in a turn. Neither needs the visual channel to win a leakage race, and we should
 not imply it did.
 
+### §9.3 is half-reportable without a key, and it is the bounding half
+
+The extraction pipeline is two stages and only one needs a model:
+
+    chunks + concepts  --(precedence + co-occurrence)-->  candidates   deterministic
+    candidates         --(LLM: prereq | related | none)->  edges        needs a key
+
+The classifier cannot be measured under the mock — it calls everything within
+one section `prereq`, which is a property of the fixture. But candidate
+generation is deterministic, and its **recall ceiling bounds any extraction run**:
+a classifier never shown an edge cannot recover it.
+
+| window | candidates | of pair space | recall ceiling | precision if perfect |
+|---|---|---|---|---|
+| 1 | 281 | 10.6% | 34.8% | 8.2% |
+| **2 (shipped)** | **405** | **15.3%** | **45.5%** | **7.4%** |
+| 3 | 530 | 20.0% | 48.5% | 6.0% |
+| 4 | 610 | 23.0% | 53.0% | 5.7% |
+
+**30 of 66 hand-annotated prerequisite edges reach the classifier at all.** Of
+the 36 that do not, 19 are too far apart — a knob — and **17 are ordered the
+other way round in the text**. The chapter names the dependent concept before
+its prerequisite, because a section heading announces the topic and the body
+introduces its parts afterwards; `duplicate_ack -> fast_retransmit` is the shape.
+No window recovers those. An infinite window still ceilings at **74.2%**.
+
+So §4's precedence assumption — "textbooks are written in dependency order" —
+**costs a quarter of the graph on this chapter**, and that is a finding about
+automated concept-graph extraction, not about our implementation of it. It also
+retrospectively justifies §4's hand-authoring fallback on evidence rather than
+on convenience: an extractor over this chapter could not have recovered more
+than three-quarters of the graph however good its classifier.
+
+Report any future recall figure *beside* the ceiling. Recall 0.45 against a
+ceiling of 0.455 is a near-perfect classifier; against a ceiling of 1.0 it is a
+poor one, and the two are indistinguishable without this table.
+
 ### The demonstration worth putting on a slide
 
 The single clearest result is not a leakage rate. It is the evidence that a
@@ -200,10 +238,14 @@ runnable for exactly this and is not a mastery claim.
 
 Written as *additions*, so nothing above depends on them.
 
-**§9.3 — extraction precision/recall.** `build/extract_edges.py` runs, its output
-is scored against `gold_graph.json`, and the number is reported *before* human
-correction. The precedence filter's recall ceiling is already measured at 59% on
-the real chapter, so the section has a skeleton and is missing one run.
+**§9.3 — the classifier's precision/recall.** `build/extract_edges.py` runs with
+`BUILD_LLM=real`, its output is scored against `gold_graph.json`, and the number
+is reported *before* human correction.
+
+Only the classifier is missing. **The other half of §9.3 reports now**, with no
+key, and it is the half that bounds the first: `python -m eval.graph_quality`
+scores candidate generation, which is deterministic. See "the numbers we will
+actually have" above.
 
 **§9.5 — diagnosis read-through.** Thirty logged `diagnosis` fields, hand-read.
 No metric above would catch a tutor whose model of the student is unrelated to
