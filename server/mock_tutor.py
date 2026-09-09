@@ -272,18 +272,55 @@ def mock_call1(
 # Call 2 stand-in
 # ---------------------------------------------------------------------------
 
-def mock_call2(action: str, hint_level: int, focus_labels: list, n_lit: int) -> Call2Utterance:
-    """Receives only what the real Call 2 receives: action, hint_level and focus
-    node LABELS (CLAUDE.md §5). No item, no answer, no chunk - the signature is
-    the guarantee."""
+#: How much of a chunk the mock quotes. A demo sentence, not a lecture.
+MOCK_CITATION_CHARS = 240
+
+
+def _first_sentences(chunk: str, limit: int = MOCK_CITATION_CHARS) -> str:
+    """The opening of a delimited chunk, trimmed at a sentence boundary.
+
+    The chunk arrives wrapped in the layer-6 delimiters and with answer spans
+    already masked, so the markers are stripped here rather than shown to a
+    student. Nothing is unmasked: this only ever quotes what it was handed.
+    """
+    body = []
+    for line in chunk.splitlines():
+        stripped = line.strip()
+        if not stripped or stripped.startswith("<<<") or stripped.endswith(">>>"):
+            continue
+        if stripped.startswith("SOURCE EXTRACT"):
+            continue
+        body.append(stripped)
+    text = " ".join(body).strip()
+    if len(text) <= limit:
+        return text
+    cut = text[:limit]
+    stop = max(cut.rfind(". "), cut.rfind("? "), cut.rfind("! "))
+    return (cut[:stop + 1] if stop > 60 else cut.rstrip() + "...").strip()
+
+
+def mock_call2(action: str, hint_level: int, focus_labels: list, n_lit: int,
+               chunk: str = None) -> Call2Utterance:
+    """Receives only what the real Call 2 receives: action, hint_level, focus
+    node LABELS, and - on advance/explain only - a masked chunk (CLAUDE.md §5).
+    No item and no answer; the signature is the guarantee.
+
+    `chunk` exists so the no-key demo shows retrieval doing something. Without
+    it MOCK_MODE renders a canned line on `explain` and the fact that the tutor
+    is citing the chapter is invisible, which makes a working half of the
+    pipeline look unbuilt.
+    """
     templates = _templates().get(action) or []
     if not templates:
         return Call2Utterance(utterance=fallback_utterance(action))
     text = templates[min(hint_level, len(templates) - 1)]
-    return Call2Utterance(
-        utterance=text.format(
-            labels=", ".join(focus_labels),
-            first=focus_labels[0] if focus_labels else "this idea",
-            n=n_lit,
-        )
+    utterance = text.format(
+        labels=", ".join(focus_labels),
+        first=focus_labels[0] if focus_labels else "this idea",
+        n=n_lit,
     )
+    if chunk and action in {"advance", "explain"}:
+        quoted = _first_sentences(chunk)
+        if quoted:
+            utterance = f"{utterance} From the chapter: {quoted}"
+    return Call2Utterance(utterance=utterance)

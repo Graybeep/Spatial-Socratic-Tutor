@@ -36,9 +36,9 @@ def call2_spy(monkeypatch):
     seen: list[tuple] = []
     original = mock_tutor.mock_call2
 
-    def spy(action, hint_level, focus_labels, n_lit):
-        seen.append((action, hint_level, list(focus_labels), n_lit))
-        return original(action, hint_level, focus_labels, n_lit)
+    def spy(action, hint_level, focus_labels, n_lit, chunk=None):
+        seen.append((action, hint_level, list(focus_labels), n_lit, chunk))
+        return original(action, hint_level, focus_labels, n_lit, chunk)
 
     monkeypatch.setattr(turn_mod.mock_tutor, "mock_call2", spy)
     return seen
@@ -55,7 +55,7 @@ def test_no_node_id_ever_reaches_call_2(client, session, store, call2_spy):
 
     assert call2_spy, "Call 2 was never invoked; the spy is not attached"
 
-    for action, hint_level, labels, n_lit in call2_spy:
+    for action, hint_level, labels, n_lit, chunk in call2_spy:
         for label in labels:
             assert label not in ids, (
                 f"Call 2 was handed the node id {label!r} as a label on a "
@@ -63,21 +63,44 @@ def test_no_node_id_ever_reaches_call_2(client, session, store, call2_spy):
                 f"click item the node IS the answer (CLAUDE.md §5)."
             )
         assert not (ids & {str(action), str(hint_level), str(n_lit)})
+        # The chunk is prose from the chapter, so it may legitimately contain a
+        # concept's WORDS. What it must never contain is an id, which would mean
+        # the pipeline had written an identity into the source text.
+        if chunk:
+            assert not any(i in chunk for i in ids), (
+                f"a node id appeared in the chunk handed to Call 2 on a "
+                f"{action!r} turn"
+            )
 
 
-def test_call_2_receives_only_the_four_documented_arguments():
+def test_call_2_receives_only_the_documented_arguments():
     """The signature is the guarantee, so pin the signature.
 
-    Widening it is how the chunk, the item or the answer would arrive - each of
-    them one plausible-looking keyword argument away.
+    Widening it is how the item or the answer would arrive - each of them one
+    plausible-looking keyword argument away.
+
+    `chunk` was added deliberately, and this assertion was updated in the same
+    commit rather than relaxed: §5's gate table has a POSITIVE half (advance and
+    explain DO receive source, with answer spans masked) and turn.py had never
+    wired it. The mock mirrors `llm.call2`, which already took the parameter and
+    asserts the gate on it. The next parameter should trip this test too.
     """
     import inspect
 
     params = list(inspect.signature(mock_tutor.mock_call2).parameters)
-    assert params == ["action", "hint_level", "focus_labels", "n_lit"], (
+    assert params == ["action", "hint_level", "focus_labels", "n_lit", "chunk"], (
         "Call 2's signature changed. §5 fixes what it may see; adding a "
         "parameter is how the answer gets in."
     )
+
+
+def test_no_chunk_reaches_the_mock_on_a_hinting_turn(client, session, call2_spy):
+    """The gate, checked at the mock's own door rather than only at llm.call2's
+    assertion - MOCK_MODE is the default, so this is the path the demo takes."""
+    turn(client, session)
+    for action, _hint, _labels, _n, chunk in call2_spy:
+        if action in {"ask", "hint_visual", "hint_verbal", "backtrack"}:
+            assert chunk is None, f"{action} received source text"
 
 
 def test_the_spy_would_actually_catch_an_id(client, session, store, monkeypatch):
@@ -85,11 +108,11 @@ def test_the_spy_would_actually_catch_an_id(client, session, store, monkeypatch)
     leaked: list = []
     original = mock_tutor.mock_call2
 
-    def leaky(action, hint_level, focus_labels, n_lit):
+    def leaky(action, hint_level, focus_labels, n_lit, chunk=None):
         # Deliberately pass ids where labels belong.
         bad = store.node_ids[:2]
         leaked.append(bad)
-        return original(action, hint_level, bad, n_lit)
+        return original(action, hint_level, bad, n_lit, chunk)
 
     monkeypatch.setattr(turn_mod.mock_tutor, "mock_call2", leaky)
     turn(client, session)

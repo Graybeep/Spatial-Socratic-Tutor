@@ -46,6 +46,7 @@ from server import guards
 from server import llm as llm_mod
 from server import mastery as mastery_mod
 from server import mock_tutor
+from server import retrieval
 from server.config import CONFIG
 from server.graph_store import GraphStore
 from server.schemas import (
@@ -385,19 +386,51 @@ def _call1(store, state, item, response, graded) -> Call1Decision:
         return mock_tutor.mock_call1(store, state, item, response, graded)
 
 
-def _call2(state, action: str, hint_level: int, labels: list, n_lit: int) -> str:
+#: §5's gate table, positive half. Only these two actions may receive source
+#: text; `backtrack` gets the prereq node's chunk, which is a different query
+#: and is not wired here.
+CHUNK_ACTIONS = frozenset({"advance", "explain"})
+
+
+def _chunk_for(store: GraphStore, state, action: str, item) -> Optional[str]:
+    """The masked, delimited chunk for this turn, or None.
+
+    §5's table has two halves and only the restrictive one was built: llm.call2
+    asserts that no chunk reaches `ask`/`hint_*`, and nothing ever passed one on
+    `advance`/`explain` either, so the tutor could not cite the chapter at all.
+
+    The query is the node's label plus its definition, which is what
+    RETRIEVAL_SCORE_FLOOR was calibrated against - a label alone scores about
+    half as much and falls under the floor on the weaker nodes.
+
+    Answer spans are masked before delimiting, and both happen inside
+    retrieval.chunk_for_call2 in that order (offsets refer to the unprefixed
+    text). Guard layer 4 turns a miss into None, and the caller must then say
+    the chapter does not cover it rather than answering anyway.
+    """
+    if action not in CHUNK_ACTIONS or item is None:
+        return None
+    node = store.node(item.node_id)
+    return retrieval.chunk_for_call2(
+        f"{node.label} {node.definition}", item.answer_spans)
+
+
+def _call2(state, action: str, hint_level: int, labels: list, n_lit: int,
+           chunk: Optional[str] = None) -> str:
     if CONFIG.mock_mode:
-        return mock_tutor.mock_call2(action, hint_level, labels, n_lit).utterance
+        return mock_tutor.mock_call2(action, hint_level, labels, n_lit, chunk).utterance
 
     try:
-        # No item, no answer, no aliases, no chunk. The argument list IS the
-        # retrieval gate for `ask` and `hint_*` (§5).
+        # No item, no answer, no aliases. `chunk` is None on every action but
+        # advance and explain, and llm.call2 asserts that rather than trusting
+        # this caller (§5).
         return llm_mod.call2(
             action=action,
             hint_level=hint_level,
             focus_labels=labels,
             n_lit=n_lit,
             recent=state.history[-2:],
+            chunk=chunk,
         ).utterance
     except llm_mod.LLMError as exc:
         _log_event("call2_fallback", {"action": action, "error": str(exc)[:400]})
@@ -594,7 +627,8 @@ def complete_turn(store: GraphStore, db: Store, phase1: Phase1) -> TurnResponse:
         utterance = _call2(state, "resolved_with_support", 0, labels, n_lit)
         leak_note = None
     else:
-        utterance = _call2(state, action, phase1.hint_level, labels, n_lit)
+        chunk = _chunk_for(store, state, action, phase1.item)
+        utterance = _call2(state, action, phase1.hint_level, labels, n_lit, chunk)
         leak_note = None
         if phase1.item is not None:
             utterance, leak_note = guards.screen_utterance(
@@ -602,7 +636,7 @@ def complete_turn(store: GraphStore, db: Store, phase1: Phase1) -> TurnResponse:
                 phase1.item.answer,
                 phase1.item.answer_aliases,
                 regenerate=lambda: _call2(
-                    state, action, phase1.hint_level, labels, n_lit),
+                    state, action, phase1.hint_level, labels, n_lit, chunk),
                 fallback=mock_tutor.fallback_utterance(action),
                 action=action,
                 # Every other concept name on the map. Without these, a hint

@@ -68,13 +68,14 @@ def _drive(store, limit=25):
     captured = []
     original = turn_mod._call2
 
-    def spy(state, action, hint_level, labels, n_lit):
+    def spy(state, action, hint_level, labels, n_lit, chunk=None):
         captured.append({
             "action": action,
             "labels": tuple(labels),
             "item_id": state.current_item_id,
+            "chunk": chunk,
         })
-        return original(state, action, hint_level, labels, n_lit)
+        return original(state, action, hint_level, labels, n_lit, chunk)
 
     turn_mod._call2 = spy
     try:
@@ -199,3 +200,55 @@ def test_reveal_turns_are_exempt_by_design(store):
     if not calls:
         pytest.skip("no forced reveal in this walk")
     assert all(c["action"] == "resolved_with_support" for c in calls)
+
+
+# ---------------------------------------------------------------------------
+# §5's retrieval gate, POSITIVE half
+# ---------------------------------------------------------------------------
+
+def test_no_chunk_reaches_call2_on_ask_or_hint_turns(store):
+    """The restrictive half. llm.call2 asserts this too; this pins that turn.py
+    never gets far enough to trip that assertion in the first place."""
+    captured = _drive(store, limit=40)
+
+    hinting = [c for c in captured if c["action"] in ("ask", "hint_visual", "hint_verbal")]
+    assert hinting, "no ask/hint turns were exercised"
+    assert all(c["chunk"] is None for c in hinting)
+
+
+def test_advance_and_explain_receive_a_masked_chunk(store):
+    """The permissive half, which was never wired: llm.call2 accepted a chunk
+    and turn.py never passed one, so the tutor could not cite the chapter."""
+    from server import retrieval
+    assert retrieval.corpus_size() > 0, "no corpus; this test cannot mean anything"
+
+    captured = _drive(store, limit=40)
+    citing = [c for c in captured if c["action"] in ("advance", "explain")]
+
+    assert citing, "no advance/explain turns were exercised"
+    assert any(c["chunk"] for c in citing), "every citing turn still got None"
+
+
+def test_a_delivered_chunk_is_delimited_as_untrusted(store):
+    """§6 layer 6. The source is an injection surface."""
+    captured = _drive(store, limit=40)
+    chunks = [c["chunk"] for c in captured if c["chunk"]]
+
+    assert chunks
+    for chunk in chunks:
+        assert "CHUNK" in chunk
+
+
+def test_a_delivered_chunk_never_contains_the_answer_verbatim(store):
+    """Masking happens before delimiting, so spans still line up. If this ever
+    fails, §5's whole justification for letting advance/explain see source is
+    gone."""
+    captured = _drive(store, limit=40)
+
+    for c in captured:
+        if not c["chunk"] or not c["item_id"]:
+            continue
+        item = store.item(c["item_id"])
+        if not item.answer_spans:
+            continue
+        assert item.answer.lower() not in c["chunk"].lower()
