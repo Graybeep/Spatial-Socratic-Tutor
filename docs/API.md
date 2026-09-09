@@ -261,6 +261,15 @@ reached: alternating rungs plus the 8-turn budget bottom a real dialogue out at
 9 lit. Only `visual_only` lights 5. See the note on `max_guess_probability` in
 `server/config.py`.
 
+That matters for §8's projector test, which was going to be run at the floor.
+`client/contrast-check.html` renders the frozen layout at 12 / **9** / 7 / 5 lit
+using the real token values and lit sets taken from the server — open it
+full-screen on the demo hardware. The dimming channels themselves are
+count-independent and strong (a dimmed node's outline drops from 17.2:1 to
+1.5:1 against paper, its label to 1.1:1). What 9 changes is coverage: the lit
+set spans 52% of the canvas rather than 23%, so the question for the projector
+is whether it still reads as one place to look.
+
 **`MAX_GUESS_PROBABILITY` is a policy knob. `1/N` is not a leakage number and
 must never be reported as one.** It is a lower bound that assumes uniform choice,
 and students do not choose uniformly — they choose among the lit nodes that are

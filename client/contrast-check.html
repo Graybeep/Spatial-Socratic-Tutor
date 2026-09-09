@@ -1,0 +1,125 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>Dimming contrast check</title>
+<style>
+:root {
+    --ground: #f2f3f1;
+    --ink: #16181a;
+    --rule: #b9bec0;
+    --paper: #fbfbfa;
+    --m-000: #c9cfcd;
+    --m-050: #7fa8a3;
+    --m-100: #0f6b63;
+    --lit-stroke: 3px;
+    --dim-stroke: 1px;
+    --dim-shape-opacity: 0.20;
+    --dim-label-opacity: 0.06;
+    --dim-edge-opacity: 0.15;
+    --dim-saturate: 0.12;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--ground); color: var(--ink);
+       font: 14px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif; }
+header { padding: 18px 24px 6px; }
+h1 { font-size: 17px; margin: 0 0 4px; }
+p.sub { margin: 0; max-width: 78ch; color: #4a4f52; }
+.grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; padding: 16px 24px 32px; }
+@media (max-width: 1100px) { .grid { grid-template-columns: 1fr; } }
+figure { margin: 0; background: var(--paper); border: 1px solid var(--rule); border-radius: 6px; overflow: hidden; }
+figcaption { padding: 8px 12px; border-bottom: 1px solid var(--rule); font-weight: 600; }
+figcaption span { font-weight: 400; color: #4a4f52; }
+figcaption em { font-style: normal; color: #a33a1f; font-weight: 600; }
+svg { display: block; width: 100%; height: auto; background: var(--paper); }
+.solo { padding: 0 24px 40px; }
+.solo figure { max-width: none; }
+kbd { font: inherit; background: #e8e9e7; border: 1px solid var(--rule); border-radius: 3px; padding: 0 4px; }
+</style>
+<header>
+  <h1>Dimming contrast check &mdash; the shipped ladder stops at 9 lit, not 5</h1>
+  <p class="sub">Real layout, real token values, real lit sets taken from the server.
+  <strong>9 is what a student actually sees</strong>: <code>interleaved</code> alternates
+  narrowing and verbal rungs, so with an 8-turn budget a dialogue bottoms out there.
+  7 and 5 are only reachable in the <code>visual_only</code> eval arm.
+  Open this full-screen on the demo projector and stand where the back row will
+  (CLAUDE.md &sect;8, week 3). What to judge: can you find the lit set without hunting,
+  and does it read as <em>one place to look</em>?</p>
+</header>
+<div class="solo"><figure id="solo"></figure></div>
+<div class="grid" id="grid"></div>
+<script>
+const NODES = [{"id": "flow", "label": "Packet Flow", "x": 620, "y": 80}, {"id": "best_effort", "label": "Best-Effort Service", "x": 710, "y": 360}, {"id": "bottleneck_router", "label": "Bottleneck Router", "x": 800, "y": 220}, {"id": "soft_state", "label": "Soft State", "x": 260, "y": 220}, {"id": "resource_allocation", "label": "Resource Allocation", "x": 440, "y": 220}, {"id": "congestion_control", "label": "Congestion Control", "x": 890, "y": 360}, {"id": "flow_control", "label": "Flow Control", "x": 1250, "y": 500}, {"id": "throughput", "label": "Throughput", "x": 800, "y": 80}, {"id": "queuing_delay", "label": "Queuing Delay", "x": 980, "y": 80}, {"id": "power_metric", "label": "Power", "x": 980, "y": 220}, {"id": "congestion_collapse", "label": "Congestion Collapse", "x": 1160, "y": 220}, {"id": "stability", "label": "Stability", "x": 1070, "y": 500}, {"id": "fairness_index", "label": "Jain's Fairness Index", "x": 620, "y": 220}, {"id": "router_centric", "label": "Router-Centric", "x": 710, "y": 500}, {"id": "host_centric", "label": "Host-Centric", "x": 890, "y": 500}, {"id": "reservation_based", "label": "Reservation-Based", "x": 350, "y": 500}, {"id": "feedback_based", "label": "Feedback-Based", "x": 530, "y": 500}, {"id": "explicit_feedback", "label": "Explicit Feedback", "x": 620, "y": 640}, {"id": "implicit_feedback", "label": "Implicit Feedback", "x": 440, "y": 640}, {"id": "window_based", "label": "Window-Based Control", "x": 980, "y": 640}, {"id": "rate_based", "label": "Rate-Based Control", "x": 800, "y": 640}, {"id": "fifo", "label": "FIFO Queuing", "x": 1160, "y": 640}, {"id": "tail_drop", "label": "Tail Drop", "x": 1340, "y": 780}, {"id": "priority_queuing", "label": "Priority Queuing", "x": 800, "y": 780}, {"id": "fair_queuing", "label": "Fair Queuing", "x": 620, "y": 780}, {"id": "bit_round_robin", "label": "Bit-by-Bit Round Robin", "x": 440, "y": 920}, {"id": "finish_time", "label": "Finish Time", "x": 350, "y": 1060}, {"id": "weighted_fair_queuing", "label": "Weighted Fair Queuing", "x": 620, "y": 920}, {"id": "congestion_window", "label": "Congestion Window", "x": 980, "y": 780}, {"id": "effective_window", "label": "Effective Window", "x": 1340, "y": 920}, {"id": "loss_as_signal", "label": "Loss as a Congestion Signal", "x": 260, "y": 780}, {"id": "aimd", "label": "AIMD", "x": 800, "y": 920}, {"id": "sawtooth", "label": "Sawtooth Pattern", "x": 890, "y": 1060}, {"id": "self_clocking", "label": "Self-Clocking", "x": 980, "y": 920}, {"id": "slow_start", "label": "Slow Start", "x": 530, "y": 1060}, {"id": "congestion_threshold", "label": "Congestion Threshold", "x": 620, "y": 1200}, {"id": "coarse_timeout", "label": "Coarse-Grained Timeout", "x": 80, "y": 920}, {"id": "duplicate_ack", "label": "Duplicate ACK", "x": 260, "y": 920}, {"id": "fast_retransmit", "label": "Fast Retransmit", "x": 170, "y": 1060}, {"id": "fast_recovery", "label": "Fast Recovery", "x": 440, "y": 1200}, {"id": "tcp_cubic", "label": "TCP CUBIC", "x": 1070, "y": 1060}, {"id": "decbit", "label": "DECbit", "x": 440, "y": 780}, {"id": "red", "label": "Random Early Detection", "x": 1520, "y": 920}, {"id": "avg_queue_length", "label": "Average Queue Length", "x": 1160, "y": 780}, {"id": "red_thresholds", "label": "RED Thresholds", "x": 1430, "y": 1060}, {"id": "drop_probability", "label": "Drop Probability", "x": 1160, "y": 1200}, {"id": "ecn", "label": "Explicit Congestion Notification", "x": 710, "y": 1060}, {"id": "vegas_expected_rate", "label": "Expected Rate", "x": 1160, "y": 920}, {"id": "vegas_actual_rate", "label": "Actual Rate", "x": 1340, "y": 220}, {"id": "vegas", "label": "TCP Vegas", "x": 1250, "y": 1060}, {"id": "bbr", "label": "BBR", "x": 980, "y": 1200}, {"id": "dctcp", "label": "DCTCP", "x": 800, "y": 1200}];
+const EDGES = [{"f": "flow", "t": "resource_allocation", "type": "prereq"}, {"f": "flow", "t": "bottleneck_router", "type": "prereq"}, {"f": "flow", "t": "soft_state", "type": "prereq"}, {"f": "flow", "t": "fair_queuing", "type": "prereq"}, {"f": "resource_allocation", "t": "congestion_control", "type": "prereq"}, {"f": "resource_allocation", "t": "best_effort", "type": "prereq"}, {"f": "congestion_control", "t": "flow_control", "type": "prereq"}, {"f": "congestion_control", "t": "router_centric", "type": "prereq"}, {"f": "congestion_control", "t": "host_centric", "type": "prereq"}, {"f": "congestion_control", "t": "reservation_based", "type": "prereq"}, {"f": "congestion_control", "t": "feedback_based", "type": "prereq"}, {"f": "congestion_control", "t": "stability", "type": "prereq"}, {"f": "throughput", "t": "power_metric", "type": "prereq"}, {"f": "queuing_delay", "t": "power_metric", "type": "prereq"}, {"f": "throughput", "t": "congestion_collapse", "type": "prereq"}, {"f": "throughput", "t": "fairness_index", "type": "prereq"}, {"f": "congestion_collapse", "t": "stability", "type": "prereq"}, {"f": "feedback_based", "t": "explicit_feedback", "type": "prereq"}, {"f": "feedback_based", "t": "implicit_feedback", "type": "prereq"}, {"f": "feedback_based", "t": "window_based", "type": "prereq"}, {"f": "feedback_based", "t": "rate_based", "type": "prereq"}, {"f": "bottleneck_router", "t": "fifo", "type": "prereq"}, {"f": "router_centric", "t": "fifo", "type": "prereq"}, {"f": "fifo", "t": "tail_drop", "type": "prereq"}, {"f": "fifo", "t": "priority_queuing", "type": "prereq"}, {"f": "fifo", "t": "fair_queuing", "type": "prereq"}, {"f": "fifo", "t": "avg_queue_length", "type": "prereq"}, {"f": "fair_queuing", "t": "bit_round_robin", "type": "prereq"}, {"f": "bit_round_robin", "t": "finish_time", "type": "prereq"}, {"f": "fair_queuing", "t": "weighted_fair_queuing", "type": "prereq"}, {"f": "window_based", "t": "congestion_window", "type": "prereq"}, {"f": "host_centric", "t": "congestion_window", "type": "prereq"}, {"f": "flow_control", "t": "effective_window", "type": "prereq"}, {"f": "congestion_window", "t": "effective_window", "type": "prereq"}, {"f": "implicit_feedback", "t": "loss_as_signal", "type": "prereq"}, {"f": "congestion_window", "t": "aimd", "type": "prereq"}, {"f": "loss_as_signal", "t": "aimd", "type": "prereq"}, {"f": "aimd", "t": "sawtooth", "type": "prereq"}, {"f": "congestion_window", "t": "self_clocking", "type": "prereq"}, {"f": "self_clocking", "t": "slow_start", "type": "prereq"}, {"f": "congestion_window", "t": "slow_start", "type": "prereq"}, {"f": "slow_start", "t": "congestion_threshold", "type": "prereq"}, {"f": "aimd", "t": "congestion_threshold", "type": "prereq"}, {"f": "loss_as_signal", "t": "coarse_timeout", "type": "prereq"}, {"f": "loss_as_signal", "t": "duplicate_ack", "type": "prereq"}, {"f": "coarse_timeout", "t": "fast_retransmit", "type": "prereq"}, {"f": "duplicate_ack", "t": "fast_retransmit", "type": "prereq"}, {"f": "fast_retransmit", "t": "fast_recovery", "type": "prereq"}, {"f": "slow_start", "t": "fast_recovery", "type": "prereq"}, {"f": "aimd", "t": "tcp_cubic", "type": "prereq"}, {"f": "explicit_feedback", "t": "decbit", "type": "prereq"}, {"f": "router_centric", "t": "decbit", "type": "prereq"}, {"f": "tail_drop", "t": "red", "type": "prereq"}, {"f": "avg_queue_length", "t": "red", "type": "prereq"}, {"f": "red", "t": "red_thresholds", "type": "prereq"}, {"f": "red_thresholds", "t": "drop_probability", "type": "prereq"}, {"f": "decbit", "t": "ecn", "type": "prereq"}, {"f": "red", "t": "ecn", "type": "prereq"}, {"f": "congestion_window", "t": "vegas_expected_rate", "type": "prereq"}, {"f": "queuing_delay", "t": "vegas_expected_rate", "type": "prereq"}, {"f": "queuing_delay", "t": "vegas_actual_rate", "type": "prereq"}, {"f": "vegas_expected_rate", "t": "vegas", "type": "prereq"}, {"f": "vegas_actual_rate", "t": "vegas", "type": "prereq"}, {"f": "vegas", "t": "bbr", "type": "prereq"}, {"f": "ecn", "t": "dctcp", "type": "prereq"}, {"f": "aimd", "t": "dctcp", "type": "prereq"}, {"f": "flow_control", "t": "congestion_window", "type": "related"}, {"f": "fair_queuing", "t": "fairness_index", "type": "related"}, {"f": "rate_based", "t": "bbr", "type": "related"}, {"f": "power_metric", "t": "vegas", "type": "related"}, {"f": "priority_queuing", "t": "weighted_fair_queuing", "type": "related"}, {"f": "sawtooth", "t": "tcp_cubic", "type": "related"}, {"f": "best_effort", "t": "reservation_based", "type": "related"}];
+const PANELS = [{"n": 12, "mode": "interleaved", "hint": 1, "lit": ["flow", "weighted_fair_queuing", "congestion_control", "bottleneck_router", "resource_allocation", "soft_state", "fair_queuing", "flow_control", "vegas_expected_rate", "stability", "best_effort", "fast_retransmit"]}, {"n": 9, "mode": "interleaved", "hint": 3, "lit": ["flow", "weighted_fair_queuing", "congestion_control", "bottleneck_router", "resource_allocation", "soft_state", "fair_queuing", "flow_control", "vegas_expected_rate"]}, {"n": 7, "mode": "visual_only", "hint": 3, "lit": ["flow", "weighted_fair_queuing", "congestion_control", "bottleneck_router", "resource_allocation", "soft_state", "fair_queuing"]}, {"n": 5, "mode": "visual_only", "hint": 4, "lit": ["flow", "weighted_fair_queuing", "congestion_control", "bottleneck_router", "resource_allocation"]}];
+const NS = "http://www.w3.org/2000/svg";
+const PAD = 60;
+const xs = NODES.map(n => n.x), ys = NODES.map(n => n.y);
+const X0 = Math.min(...xs) - PAD, Y0 = Math.min(...ys) - PAD;
+const W = Math.max(...xs) - Math.min(...xs) + PAD * 2;
+const H = Math.max(...ys) - Math.min(...ys) + PAD * 2;
+const BY = Object.fromEntries(NODES.map(n => [n.id, n]));
+
+// Same ramp as Graph.tsx masteryFill(). Every node sits at mastery 0.5, which
+// is where a fresh session starts (theta 0), so this is the worst realistic
+// fill contrast rather than a flattering one.
+const FILL = "var(--m-050)";
+
+function draw(lit) {
+  const litSet = new Set(lit);
+  const svg = document.createElementNS(NS, "svg");
+  svg.setAttribute("viewBox", `${X0} ${Y0} ${W} ${H}`);
+  for (const e of EDGES) {
+    const a = BY[e.f], b = BY[e.t];
+    if (!a || !b) continue;
+    const dim = !litSet.has(e.f) || !litSet.has(e.t);
+    const l = document.createElementNS(NS, "line");
+    l.setAttribute("x1", a.x); l.setAttribute("y1", a.y);
+    l.setAttribute("x2", b.x); l.setAttribute("y2", b.y);
+    l.setAttribute("stroke", "var(--rule)");
+    l.setAttribute("stroke-width", e.type === "prereq" ? 1.5 : 1);
+    if (e.type === "related") l.setAttribute("stroke-dasharray", "4 4");
+    l.setAttribute("opacity", dim ? "var(--dim-edge-opacity)" : 1);
+    svg.appendChild(l);
+  }
+  for (const n of NODES) {
+    const dim = litSet.size > 0 && !litSet.has(n.id);
+    const g = document.createElementNS(NS, "g");
+    if (dim) g.style.filter = "saturate(var(--dim-saturate))";
+    const r = document.createElementNS(NS, "rect");
+    r.setAttribute("x", n.x - 52); r.setAttribute("y", n.y - 17);
+    r.setAttribute("width", 104); r.setAttribute("height", 34);
+    r.setAttribute("rx", 5);
+    r.setAttribute("fill", FILL);
+    r.setAttribute("stroke", "var(--ink)");
+    r.setAttribute("stroke-width", dim ? "var(--dim-stroke)" : "var(--lit-stroke)");
+    r.setAttribute("opacity", dim ? "var(--dim-shape-opacity)" : 1);
+    g.appendChild(r);
+    const t = document.createElementNS(NS, "text");
+    t.setAttribute("x", n.x); t.setAttribute("y", n.y + 4);
+    t.setAttribute("text-anchor", "middle");
+    t.setAttribute("font-size", 11);
+    t.setAttribute("fill", "var(--ink)");
+    t.setAttribute("opacity", dim ? "var(--dim-label-opacity)" : 1);
+    t.textContent = n.label.length > 17 ? n.label.slice(0, 16) + "…" : n.label;
+    g.appendChild(t);
+    svg.appendChild(g);
+  }
+  return svg;
+}
+
+function figure(p, big) {
+  const f = big ? document.getElementById("solo") : document.createElement("figure");
+  const cap = document.createElement("figcaption");
+  const shipped = p.n === 9;
+  cap.innerHTML = `${p.n} of ${NODES.length} lit ` +
+    `<span>&mdash; ${p.mode}, hint ${p.hint}</span>` +
+    (shipped ? ` <em>&larr; what the demo actually reaches</em>` : "");
+  f.appendChild(cap);
+  f.appendChild(draw(p.lit));
+  return f;
+}
+
+const nine = PANELS.find(p => p.n === 9);
+figure(nine, true);
+const grid = document.getElementById("grid");
+for (const p of PANELS) if (p.n !== 9) grid.appendChild(figure(p, false));
+</script>

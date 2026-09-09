@@ -153,6 +153,7 @@ NARROW_SCHEDULE=0,25,18,12,8 python -m server.main
 | `build/fetch_chapter.py` | downloads the chapter into a gitignored dir; URLs in `build/config.py` |
 | `client/src/types.ts` | reconciled against `/schemas`; supersedes `templates/` |
 | `client/src/Graph.tsx` | the frozen-layout SVG and the two dimming channels |
+| `client/contrast-check.html` | §8 projector test, at the 9-lit rung the demo really reaches |
 | `client/src/Chat.tsx` | the rail — transcript, composer, turn budget, node panel |
 
 Full layout in `CLAUDE.md` §2.
