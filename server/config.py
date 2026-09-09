@@ -160,11 +160,29 @@ class Config:
     # client and throw the rest away.
     narrow_schedule_raw: str = field(default_factory=lambda: _str("NARROW_SCHEDULE", "0,12,9,7,5"))
 
-    # The floor is set by GUESS PROBABILITY, not by node count. A terminal set of
-    # k candidates hands a non-reasoning student a 1/k chance, which is effective
-    # leakage under §9.1's own definition. At 0.2 the floor is 5 candidates; at
-    # 0.5 it would be 2, which is a coin flip and would lose to the verbal
-    # baseline the project is trying to beat.
+    # The floor is set by GUESS PROBABILITY, not by node count: a terminal set of
+    # k candidates hands a non-reasoning student a 1/k chance. At 0.2 the floor
+    # is 5 candidates; at 0.5 it would be 2, which is a coin flip.
+    #
+    # WHAT THIS NUMBER IS NOT DERIVED FROM, since the old comment said otherwise.
+    # It used to end "...and would lose to the verbal baseline the project is
+    # trying to beat", which scoped a load-bearing constant to a visual-beats-
+    # verbal comparison we have since withdrawn: on the scored bank the isolated
+    # visual channel sits ON the no-hint baseline at zero knowledge (+.000), and
+    # the only marginal distinguishable from zero is the interleaved arm's.
+    # See docs/writeup/limitations.md.
+    #
+    # WHAT IT IS. A POLICY BOUND, set before any corrected eval existed, on how
+    # far the interface is willing to narrow. It still holds, and it is
+    # conservative in a way worth stating plainly: THE SHIPPED LADDER DOES NOT
+    # REACH IT. `interleaved` alternates narrowing and verbal rungs, so with
+    # NARROW_SCHEDULE=0,12,9,7,5 and an 8-turn budget a real dialogue bottoms
+    # out at 9 lit. Only the `visual_only` EVAL arm ever lights 5.
+    #
+    # So no measurement licenses moving it in either direction: the rungs where
+    # it would bind carry n=6 probes. Changing it is a policy decision about the
+    # interface, not an inference from a number, and anyone tightening it should
+    # re-run 9.1's sweep rather than cite this comment.
     max_guess_probability: float = field(default_factory=lambda: _float("MAX_GUESS_PROBABILITY", 0.2))
 
     # interleaved -> production: alternate visual and verbal, last rung verbal

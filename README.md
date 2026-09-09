@@ -77,8 +77,18 @@ over one item has the same shape as a rate over a hundred. See
 `docs/writeup/numbers-that-looked-fine.md`.
 
 Never report `1/N` as leakage. It is a lower bound that assumes uniform choice;
-the measured partial-knowledge rate runs well above it. `MAX_GUESS_PROBABILITY`
-is a policy knob for the narrowing floor, not a result.
+the measured partial-knowledge rate runs well above it.
+
+`MAX_GUESS_PROBABILITY` is a **policy bound on how far the interface will
+narrow**, not a result and not a derivation from one. Its earlier justification
+ended "would lose to the verbal baseline the project is trying to beat", which
+scoped it to a comparison we have since withdrawn — see below. It was set
+conservatively before the corrected eval existed and it still holds, but note
+what that means in practice: **the shipped ladder never reaches the floor.**
+`interleaved` alternates narrowing and verbal rungs, so with
+`NARROW_SCHEDULE=0,12,9,7,5` and an 8-turn budget a real dialogue bottoms out at
+9 lit. Only the `visual_only` eval arm ever lights 5. Moving the floor is an
+interface decision, not an inference — the rungs where it binds carry n=6.
 
 ### What the numbers show, and what they do not
 
