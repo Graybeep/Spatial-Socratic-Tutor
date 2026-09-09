@@ -126,7 +126,19 @@ class Config:
     answer_similarity_threshold: float = field(
         default_factory=lambda: _float("ANSWER_SIMILARITY_THRESHOLD", 0.55))
     short_answer_token_cutoff: int = field(default_factory=lambda: _int("SHORT_ANSWER_TOKEN_CUTOFF", 5))
-    retrieval_score_floor: float = field(default_factory=lambda: _float("RETRIEVAL_SCORE_FLOOR", 0.35))
+    # CALIBRATED, not chosen. 0.35 was a guess made when data/chunks.json did
+    # not exist, and against the real chapter it refused 100% of in-domain
+    # queries - the ranking was right the whole time and the gate threw it away.
+    # Measured over the 15 real chunks, query = node label + definition:
+    #
+    #     in-chapter (52 nodes)        min 0.1185   median 0.2094
+    #     adjacent networking (8 q)    max 0.0786   <- DNS, BGP, Ethernet, TLS
+    #     far out-of-domain (4 q)      max 0.0625
+    #
+    # 0.10 sits between the two populations. Re-measure it if the corpus or the
+    # chunk sizes change: cosine against a 10k-char chunk is length-sensitive,
+    # so this number is a property of THIS corpus, not a universal constant.
+    retrieval_score_floor: float = field(default_factory=lambda: _float("RETRIEVAL_SCORE_FLOOR", 0.10))
 
     # --- mastery (CLAUDE.md 7) ----------------------------------------------
     mastery_threshold: float = field(default_factory=lambda: _float("MASTERY_THRESHOLD", 0.6))
