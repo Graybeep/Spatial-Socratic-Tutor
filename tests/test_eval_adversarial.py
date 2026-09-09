@@ -125,3 +125,65 @@ def test_terminal_requires_an_adequate_sample():
     for r in results:
         if r["terminal_attempt"] is not None:
             assert r["min_n_for_terminal"] >= 20
+
+
+# ---------------------------------------------------------------------------
+# edge items were unsolvable by construction (§9.1)
+# ---------------------------------------------------------------------------
+
+def test_student_returns_an_edge_answer_for_an_edge_item():
+    """A node id can never equal "from->to". Before the edge branch existed,
+    every edge item scored 0 - 49 of the 101-item population."""
+    store = GraphStore.load()
+    item = next(i for i in store.bank.items if i.type == "edge_click")
+
+    for condition in ("zero", "partial", "adversarial"):
+        student = adversarial.Student(condition=condition, rng=random.Random(0))
+        pick = student.choose(store, item, list(store.node_ids), [])
+        assert "->" in pick, f"{condition} answered an edge item with a node id"
+
+
+def test_an_edge_item_is_actually_solvable_now():
+    store = GraphStore.load()
+    item = next(i for i in store.bank.items if i.type == "edge_click")
+    student = adversarial.Student(condition="partial", rng=random.Random(0))
+
+    picks = {student.choose(store, item, list(store.node_ids), []) for _ in range(40)}
+
+    assert item.answer in picks, "the true answer is not reachable by the student"
+
+
+def test_the_anchored_pool_is_the_prereqs_of_the_named_endpoint():
+    """The item prompt names the `to` endpoint, so a student who reads it is
+    choosing among that node's prereq in-edges - not among 73 edges."""
+    store = GraphStore.load()
+    item = next(i for i in store.bank.items if i.type == "edge_click")
+    student = adversarial.Student(condition="partial", rng=random.Random(0))
+
+    pool = set(student.edge_candidates(store, item, list(store.node_ids)))
+
+    assert pool == {f"{p}->{item.node_id}" for p in store.prereqs(item.node_id)}
+
+
+def test_the_zero_student_does_not_use_the_anchor():
+    """`zero` is the interface-only floor. If it read the prompt too, the
+    node/edge split would stop separating item leakage from narrowing leakage."""
+    store = GraphStore.load()
+    item = next(i for i in store.bank.items
+                if i.type == "edge_click" and len(store.prereqs(i.node_id)) == 1)
+    student = adversarial.Student(condition="zero", rng=random.Random(0))
+
+    pool = student.edge_candidates(store, item, list(store.node_ids))
+
+    assert len(pool) > 1, "the zero student collapsed onto the anchored pool"
+
+
+def test_measure_splits_the_terminal_rate_by_item_type():
+    store = GraphStore.load()
+    row = adversarial.measure(store, "t", "interleaved", "partial", n=8)
+
+    split = row["by_item_type"]
+    assert set(split) <= {"node_click", "edge_click", "mcq"}
+    for v in split.values():
+        assert v["terminal_solve_rate"] is None or 0.0 <= v["terminal_solve_rate"] <= 1.0
+        assert v["distinct_items"] >= 0
