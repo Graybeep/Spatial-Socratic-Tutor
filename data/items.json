@@ -107,7 +107,11 @@
       ],
       "difficulty": 0.15,
       "visually_answerable": true,
-      "answer_spans": [],
+      "answer_spans": [
+        [6860, 6879],
+        [6908, 6927],
+        [7461, 7480]
+      ],
       "scorable": true
     },
     {
@@ -124,7 +128,17 @@
       ],
       "difficulty": 0.25,
       "visually_answerable": true,
-      "answer_spans": [],
+      "answer_spans": [
+        [192, 211],
+        [249, 268],
+        [3321, 3340],
+        [4153, 4172],
+        [5062, 5081],
+        [6672, 6691],
+        [6860, 6879],
+        [6908, 6927],
+        [7461, 7480]
+      ],
       "scorable": false
     },
     {
@@ -195,7 +209,10 @@
       ],
       "difficulty": 0.2,
       "visually_answerable": true,
-      "answer_spans": [],
+      "answer_spans": [
+        [2184, 2201],
+        [3460, 3477]
+      ],
       "scorable": true
     },
     {
@@ -212,7 +229,10 @@
       ],
       "difficulty": 0.3,
       "visually_answerable": true,
-      "answer_spans": [],
+      "answer_spans": [
+        [2184, 2201],
+        [3460, 3477]
+      ],
       "scorable": false
     },
     {
@@ -283,7 +303,14 @@
       ],
       "difficulty": 0.35,
       "visually_answerable": true,
-      "answer_spans": [],
+      "answer_spans": [
+        [5166, 5176],
+        [5206, 5216],
+        [5240, 5250],
+        [5316, 5326],
+        [5584, 5594],
+        [5771, 5781]
+      ],
       "scorable": true
     },
     {
@@ -300,7 +327,14 @@
       ],
       "difficulty": 0.45,
       "visually_answerable": true,
-      "answer_spans": [],
+      "answer_spans": [
+        [5166, 5176],
+        [5206, 5216],
+        [5240, 5250],
+        [5316, 5326],
+        [5584, 5594],
+        [5771, 5781]
+      ],
       "scorable": false
     },
     {
@@ -371,7 +405,13 @@
       ],
       "difficulty": 0.15,
       "visually_answerable": true,
-      "answer_spans": [],
+      "answer_spans": [
+        [0, 19],
+        [305, 324],
+        [884, 903],
+        [1266, 1285],
+        [1983, 2002]
+      ],
       "scorable": true
     },
     {
@@ -388,7 +428,13 @@
       ],
       "difficulty": 0.25,
       "visually_answerable": true,
-      "answer_spans": [],
+      "answer_spans": [
+        [0, 19],
+        [305, 324],
+        [884, 903],
+        [1266, 1285],
+        [1983, 2002]
+      ],
       "scorable": false
     },
     {
@@ -459,7 +505,11 @@
       ],
       "difficulty": 0.2,
       "visually_answerable": true,
-      "answer_spans": [],
+      "answer_spans": [
+        [22, 40],
+        [734, 752],
+        [1237, 1255]
+      ],
       "scorable": true
     },
     {
@@ -476,7 +526,11 @@
       ],
       "difficulty": 0.3,
       "visually_answerable": true,
-      "answer_spans": [],
+      "answer_spans": [
+        [22, 40],
+        [734, 752],
+        [1237, 1255]
+      ],
       "scorable": false
     },
     {
@@ -547,7 +601,10 @@
       ],
       "difficulty": 0.25,
       "visually_answerable": true,
-      "answer_spans": [],
+      "answer_spans": [
+        [2078, 2090],
+        [2115, 2127]
+      ],
       "scorable": true
     },
     {
@@ -564,7 +621,14 @@
       ],
       "difficulty": 0.35,
       "visually_answerable": true,
-      "answer_spans": [],
+      "answer_spans": [
+        [24, 42],
+        [1350, 1368],
+        [2078, 2090],
+        [2095, 2113],
+        [2115, 2127],
+        [2193, 2211]
+      ],
       "scorable": false
     },
     {
@@ -634,7 +698,25 @@
       ],
       "difficulty": 0.1,
       "visually_answerable": true,
-      "answer_spans": [],
+      "answer_spans": [
+        [540, 550],
+        [587, 597],
+        [763, 773],
+        [997, 1007],
+        [1311, 1321],
+        [1482, 1492],
+        [2673, 2683],
+        [2749, 2759],
+        [2807, 2817],
+        [3019, 3029],
+        [3067, 3077],
+        [3636, 3646],
+        [5382, 5392],
+        [5739, 5749],
+        [5864, 5874],
+        [6229, 6239],
+        [6282, 6292]
+      ],
       "scorable": true
     },
     {
@@ -809,7 +891,16 @@
       ],
       "difficulty": 0.45,
       "visually_answerable": true,
-      "answer_spans": [],
+      "answer_spans": [
+        [1452, 1457],
+        [1474, 1479],
+        [1534, 1539],
+        [1640, 1645],
+        [1799, 1804],
+        [2035, 2040],
+        [2265, 2270],
+        [2705, 2710]
+      ],
       "scorable": true
     },
     {
@@ -826,7 +917,33 @@
       ],
       "difficulty": 0.55,
       "visually_answerable": true,
-      "answer_spans": [],
+      "answer_spans": [
+        [540, 550],
+        [587, 597],
+        [763, 773],
+        [997, 1007],
+        [1311, 1321],
+        [1452, 1457],
+        [1474, 1479],
+        [1482, 1492],
+        [1534, 1539],
+        [1640, 1645],
+        [1799, 1804],
+        [2035, 2040],
+        [2265, 2270],
+        [2673, 2683],
+        [2705, 2710],
+        [2749, 2759],
+        [2807, 2817],
+        [3019, 3029],
+        [3067, 3077],
+        [3636, 3646],
+        [5382, 5392],
+        [5739, 5749],
+        [5864, 5874],
+        [6229, 6239],
+        [6282, 6292]
+      ],
       "scorable": true
     },
     {
@@ -897,7 +1014,9 @@
       ],
       "difficulty": 0.4,
       "visually_answerable": true,
-      "answer_spans": [],
+      "answer_spans": [
+        [3912, 3931]
+      ],
       "scorable": true
     },
     {
@@ -914,7 +1033,26 @@
       ],
       "difficulty": 0.5,
       "visually_answerable": true,
-      "answer_spans": [],
+      "answer_spans": [
+        [540, 550],
+        [587, 597],
+        [763, 773],
+        [997, 1007],
+        [1311, 1321],
+        [1482, 1492],
+        [2673, 2683],
+        [2749, 2759],
+        [2807, 2817],
+        [3019, 3029],
+        [3067, 3077],
+        [3636, 3646],
+        [3912, 3931],
+        [5382, 5392],
+        [5739, 5749],
+        [5864, 5874],
+        [6229, 6239],
+        [6282, 6292]
+      ],
       "scorable": false
     },
     {
@@ -1090,7 +1228,25 @@
       ],
       "difficulty": 0.55,
       "visually_answerable": true,
-      "answer_spans": [],
+      "answer_spans": [
+        [540, 550],
+        [587, 597],
+        [763, 773],
+        [997, 1007],
+        [1311, 1321],
+        [1482, 1492],
+        [2673, 2683],
+        [2749, 2759],
+        [2807, 2817],
+        [3019, 3029],
+        [3067, 3077],
+        [3636, 3646],
+        [5382, 5392],
+        [5739, 5749],
+        [5864, 5874],
+        [6229, 6239],
+        [6282, 6292]
+      ],
       "scorable": false
     },
     {
@@ -1160,7 +1316,11 @@
       ],
       "difficulty": 0.3,
       "visually_answerable": true,
-      "answer_spans": [],
+      "answer_spans": [
+        [315, 329],
+        [832, 846],
+        [2823, 2837]
+      ],
       "scorable": true
     },
     {
@@ -1177,7 +1337,14 @@
       ],
       "difficulty": 0.4,
       "visually_answerable": true,
-      "answer_spans": [],
+      "answer_spans": [
+        [315, 329],
+        [832, 846],
+        [1553, 1571],
+        [2823, 2837],
+        [4130, 4148],
+        [6237, 6255]
+      ],
       "scorable": false
     },
     {
@@ -1247,7 +1414,11 @@
       ],
       "difficulty": 0.3,
       "visually_answerable": true,
-      "answer_spans": [],
+      "answer_spans": [
+        [337, 349],
+        [1098, 1110],
+        [3372, 3384]
+      ],
       "scorable": true
     },
     {
@@ -1264,7 +1435,14 @@
       ],
       "difficulty": 0.4,
       "visually_answerable": true,
-      "answer_spans": [],
+      "answer_spans": [
+        [337, 349],
+        [1098, 1110],
+        [1553, 1571],
+        [3372, 3384],
+        [4130, 4148],
+        [6237, 6255]
+      ],
       "scorable": false
     },
     {
@@ -1334,7 +1512,12 @@
       ],
       "difficulty": 0.35,
       "visually_answerable": true,
-      "answer_spans": [],
+      "answer_spans": [
+        [1684, 1701],
+        [1862, 1879],
+        [2781, 2798],
+        [5346, 5363]
+      ],
       "scorable": true
     },
     {
@@ -1351,7 +1534,15 @@
       ],
       "difficulty": 0.45,
       "visually_answerable": true,
-      "answer_spans": [],
+      "answer_spans": [
+        [1553, 1571],
+        [1684, 1701],
+        [1862, 1879],
+        [2781, 2798],
+        [4130, 4148],
+        [5346, 5363],
+        [6237, 6255]
+      ],
       "scorable": false
     },
     {
@@ -1421,7 +1612,11 @@
       ],
       "difficulty": 0.35,
       "visually_answerable": true,
-      "answer_spans": [],
+      "answer_spans": [
+        [1709, 1723],
+        [2343, 2357],
+        [3320, 3334]
+      ],
       "scorable": true
     },
     {
@@ -1438,7 +1633,14 @@
       ],
       "difficulty": 0.45,
       "visually_answerable": true,
-      "answer_spans": [],
+      "answer_spans": [
+        [1553, 1571],
+        [1709, 1723],
+        [2343, 2357],
+        [3320, 3334],
+        [4130, 4148],
+        [6237, 6255]
+      ],
       "scorable": false
     },
     {
@@ -1526,7 +1728,11 @@
       ],
       "difficulty": 0.5,
       "visually_answerable": true,
-      "answer_spans": [],
+      "answer_spans": [
+        [1709, 1723],
+        [2343, 2357],
+        [3320, 3334]
+      ],
       "scorable": false
     },
     {
@@ -1614,7 +1820,11 @@
       ],
       "difficulty": 0.5,
       "visually_answerable": true,
-      "answer_spans": [],
+      "answer_spans": [
+        [1709, 1723],
+        [2343, 2357],
+        [3320, 3334]
+      ],
       "scorable": false
     },
     {
@@ -1949,7 +2159,15 @@
       ],
       "difficulty": 0.2,
       "visually_answerable": true,
-      "answer_spans": [],
+      "answer_spans": [
+        [578, 587],
+        [690, 699],
+        [731, 740],
+        [865, 874],
+        [950, 959],
+        [1238, 1247],
+        [1505, 1514]
+      ],
       "scorable": true
     },
     {
@@ -1966,7 +2184,19 @@
       ],
       "difficulty": 0.3,
       "visually_answerable": true,
-      "answer_spans": [],
+      "answer_spans": [
+        [12, 24],
+        [578, 587],
+        [668, 680],
+        [690, 699],
+        [731, 740],
+        [865, 874],
+        [950, 959],
+        [1174, 1186],
+        [1238, 1247],
+        [1505, 1514],
+        [2017, 2029]
+      ],
       "scorable": false
     },
     {
@@ -2037,7 +2267,11 @@
       ],
       "difficulty": 0.3,
       "visually_answerable": true,
-      "answer_spans": [],
+      "answer_spans": [
+        [2033, 2049],
+        [2717, 2733],
+        [3568, 3584]
+      ],
       "scorable": true
     },
     {
@@ -2054,7 +2288,15 @@
       ],
       "difficulty": 0.4,
       "visually_answerable": true,
-      "answer_spans": [],
+      "answer_spans": [
+        [12, 24],
+        [668, 680],
+        [1174, 1186],
+        [2017, 2029],
+        [2033, 2049],
+        [2717, 2733],
+        [3568, 3584]
+      ],
       "scorable": false
     },
     {
@@ -2125,7 +2367,15 @@
       ],
       "difficulty": 0.45,
       "visually_answerable": true,
-      "answer_spans": [],
+      "answer_spans": [
+        [1247, 1259],
+        [6390, 6402],
+        [6570, 6582],
+        [7033, 7045],
+        [7139, 7151],
+        [8099, 8111],
+        [9002, 9014]
+      ],
       "scorable": true
     },
     {
@@ -2142,7 +2392,15 @@
       ],
       "difficulty": 0.55,
       "visually_answerable": true,
-      "answer_spans": [],
+      "answer_spans": [
+        [1247, 1259],
+        [6390, 6402],
+        [6570, 6582],
+        [7033, 7045],
+        [7139, 7151],
+        [8099, 8111],
+        [9002, 9014]
+      ],
       "scorable": true
     },
     {
@@ -2230,7 +2488,15 @@
       ],
       "difficulty": 0.65,
       "visually_answerable": true,
-      "answer_spans": [],
+      "answer_spans": [
+        [1247, 1259],
+        [6390, 6402],
+        [6570, 6582],
+        [7033, 7045],
+        [7139, 7151],
+        [8099, 8111],
+        [9002, 9014]
+      ],
       "scorable": false
     },
     {
@@ -2389,7 +2655,9 @@
       ],
       "difficulty": 0.55,
       "visually_answerable": true,
-      "answer_spans": [],
+      "answer_spans": [
+        [8993, 9014]
+      ],
       "scorable": true
     },
     {
@@ -2406,7 +2674,15 @@
       ],
       "difficulty": 0.65,
       "visually_answerable": true,
-      "answer_spans": [],
+      "answer_spans": [
+        [1247, 1259],
+        [6390, 6402],
+        [6570, 6582],
+        [7033, 7045],
+        [7139, 7151],
+        [8099, 8111],
+        [8993, 9014]
+      ],
       "scorable": false
     },
     {
@@ -2477,7 +2753,19 @@
       ],
       "difficulty": 0.3,
       "visually_answerable": true,
-      "answer_spans": [],
+      "answer_spans": [
+        [186, 203],
+        [388, 405],
+        [1280, 1297],
+        [1354, 1371],
+        [1697, 1714],
+        [3132, 3149],
+        [3662, 3679],
+        [3778, 3795],
+        [4277, 4294],
+        [4579, 4596],
+        [4654, 4671]
+      ],
       "scorable": true
     },
     {
@@ -2494,7 +2782,19 @@
       ],
       "difficulty": 0.4,
       "visually_answerable": true,
-      "answer_spans": [],
+      "answer_spans": [
+        [186, 203],
+        [388, 405],
+        [1280, 1297],
+        [1354, 1371],
+        [1697, 1714],
+        [3132, 3149],
+        [3662, 3679],
+        [3778, 3795],
+        [4277, 4294],
+        [4579, 4596],
+        [4654, 4671]
+      ],
       "scorable": true
     },
     {
@@ -2740,7 +3040,13 @@
       ],
       "difficulty": 0.5,
       "visually_answerable": true,
-      "answer_spans": [],
+      "answer_spans": [
+        [1504, 1508],
+        [2273, 2277],
+        [3252, 3256],
+        [4530, 4534],
+        [4880, 4884]
+      ],
       "scorable": true
     },
     {
@@ -2757,7 +3063,24 @@
       ],
       "difficulty": 0.6,
       "visually_answerable": true,
-      "answer_spans": [],
+      "answer_spans": [
+        [186, 203],
+        [388, 405],
+        [1280, 1297],
+        [1354, 1371],
+        [1504, 1508],
+        [1697, 1714],
+        [2273, 2277],
+        [3132, 3149],
+        [3252, 3256],
+        [3662, 3679],
+        [3778, 3795],
+        [4277, 4294],
+        [4530, 4534],
+        [4579, 4596],
+        [4654, 4671],
+        [4880, 4884]
+      ],
       "scorable": true
     },
     {
@@ -2828,7 +3151,10 @@
       ],
       "difficulty": 0.45,
       "visually_answerable": true,
-      "answer_spans": [],
+      "answer_spans": [
+        [4201, 4217],
+        [4440, 4456]
+      ],
       "scorable": true
     },
     {
@@ -2845,7 +3171,15 @@
       ],
       "difficulty": 0.55,
       "visually_answerable": true,
-      "answer_spans": [],
+      "answer_spans": [
+        [1504, 1508],
+        [2273, 2277],
+        [3252, 3256],
+        [4201, 4217],
+        [4440, 4456],
+        [4530, 4534],
+        [4880, 4884]
+      ],
       "scorable": false
     },
     {
@@ -2915,7 +3249,9 @@
       ],
       "difficulty": 0.5,
       "visually_answerable": true,
-      "answer_spans": [],
+      "answer_spans": [
+        [1396, 1409]
+      ],
       "scorable": true
     },
     {
@@ -2932,7 +3268,9 @@
       ],
       "difficulty": 0.6,
       "visually_answerable": true,
-      "answer_spans": [],
+      "answer_spans": [
+        [1396, 1409]
+      ],
       "scorable": false
     },
     {
@@ -3179,7 +3517,11 @@
       ],
       "difficulty": 0.45,
       "visually_answerable": true,
-      "answer_spans": [],
+      "answer_spans": [
+        [2982, 3004],
+        [3212, 3234],
+        [4394, 4416]
+      ],
       "scorable": true
     },
     {
@@ -3196,7 +3538,11 @@
       ],
       "difficulty": 0.55,
       "visually_answerable": true,
-      "answer_spans": [],
+      "answer_spans": [
+        [2982, 3004],
+        [3212, 3234],
+        [4394, 4416]
+      ],
       "scorable": false
     },
     {
@@ -3267,7 +3613,17 @@
       ],
       "difficulty": 0.4,
       "visually_answerable": true,
-      "answer_spans": [],
+      "answer_spans": [
+        [1076, 1089],
+        [1120, 1133],
+        [1402, 1415],
+        [1505, 1518],
+        [1591, 1604],
+        [1634, 1647],
+        [1806, 1819],
+        [2067, 2080],
+        [3337, 3350]
+      ],
       "scorable": true
     },
     {
@@ -3284,7 +3640,17 @@
       ],
       "difficulty": 0.5,
       "visually_answerable": true,
-      "answer_spans": [],
+      "answer_spans": [
+        [1076, 1089],
+        [1120, 1133],
+        [1402, 1415],
+        [1505, 1518],
+        [1591, 1604],
+        [1634, 1647],
+        [1806, 1819],
+        [2067, 2080],
+        [3337, 3350]
+      ],
       "scorable": false
     },
     {
@@ -3355,7 +3721,21 @@
       ],
       "difficulty": 0.5,
       "visually_answerable": true,
-      "answer_spans": [],
+      "answer_spans": [
+        [332, 347],
+        [366, 381],
+        [507, 522],
+        [612, 627],
+        [1566, 1581],
+        [1659, 1674],
+        [2386, 2401],
+        [2668, 2683],
+        [2772, 2787],
+        [3164, 3179],
+        [3556, 3571],
+        [3694, 3709],
+        [4035, 4050]
+      ],
       "scorable": true
     },
     {
@@ -3372,7 +3752,24 @@
       ],
       "difficulty": 0.6,
       "visually_answerable": true,
-      "answer_spans": [],
+      "answer_spans": [
+        [332, 347],
+        [366, 381],
+        [507, 522],
+        [612, 627],
+        [1566, 1581],
+        [1659, 1674],
+        [2386, 2401],
+        [2668, 2683],
+        [2772, 2787],
+        [2982, 3004],
+        [3164, 3179],
+        [3212, 3234],
+        [3556, 3571],
+        [3694, 3709],
+        [4035, 4050],
+        [4394, 4416]
+      ],
       "scorable": true
     },
     {
@@ -3443,7 +3840,10 @@
       ],
       "difficulty": 0.6,
       "visually_answerable": true,
-      "answer_spans": [],
+      "answer_spans": [
+        [3953, 3966],
+        [4116, 4129]
+      ],
       "scorable": true
     },
     {
@@ -3460,7 +3860,23 @@
       ],
       "difficulty": 0.7,
       "visually_answerable": true,
-      "answer_spans": [],
+      "answer_spans": [
+        [332, 347],
+        [366, 381],
+        [507, 522],
+        [612, 627],
+        [1566, 1581],
+        [1659, 1674],
+        [2386, 2401],
+        [2668, 2683],
+        [2772, 2787],
+        [3164, 3179],
+        [3556, 3571],
+        [3694, 3709],
+        [3953, 3966],
+        [4035, 4050],
+        [4116, 4129]
+      ],
       "scorable": true
     },
     {
@@ -3618,7 +4034,13 @@
       ],
       "difficulty": 0.45,
       "visually_answerable": true,
-      "answer_spans": [],
+      "answer_spans": [
+        [560, 566],
+        [1173, 1179],
+        [3325, 3331],
+        [3592, 3598],
+        [4634, 4640]
+      ],
       "scorable": true
     },
     {
@@ -3635,7 +4057,13 @@
       ],
       "difficulty": 0.55,
       "visually_answerable": true,
-      "answer_spans": [],
+      "answer_spans": [
+        [560, 566],
+        [1173, 1179],
+        [3325, 3331],
+        [3592, 3598],
+        [4634, 4640]
+      ],
       "scorable": true
     },
     {
@@ -3706,7 +4134,10 @@
       ],
       "difficulty": 0.55,
       "visually_answerable": true,
-      "answer_spans": [],
+      "answer_spans": [
+        [3227, 3249],
+        [3277, 3299]
+      ],
       "scorable": true
     },
     {
@@ -3723,7 +4154,14 @@
       ],
       "difficulty": 0.65,
       "visually_answerable": true,
-      "answer_spans": [],
+      "answer_spans": [
+        [3227, 3249],
+        [3277, 3299],
+        [4906, 4915],
+        [11146, 11155],
+        [11200, 11209],
+        [13579, 13588]
+      ],
       "scorable": true
     },
     {
@@ -3794,7 +4232,21 @@
       ],
       "difficulty": 0.6,
       "visually_answerable": true,
-      "answer_spans": [],
+      "answer_spans": [
+        [1552, 1572],
+        [1640, 1660],
+        [2018, 2038],
+        [2330, 2350],
+        [5583, 5603],
+        [6086, 6106],
+        [6885, 6905],
+        [7353, 7373],
+        [7442, 7462],
+        [7541, 7561],
+        [9825, 9845],
+        [13146, 13166],
+        [13337, 13357]
+      ],
       "scorable": true
     },
     {
@@ -3811,7 +4263,21 @@
       ],
       "difficulty": 0.7,
       "visually_answerable": true,
-      "answer_spans": [],
+      "answer_spans": [
+        [1552, 1572],
+        [1640, 1660],
+        [2018, 2038],
+        [2330, 2350],
+        [5583, 5603],
+        [6086, 6106],
+        [6885, 6905],
+        [7353, 7373],
+        [7442, 7462],
+        [7541, 7561],
+        [9825, 9845],
+        [13146, 13166],
+        [13337, 13357]
+      ],
       "scorable": false
     },
     {
@@ -3882,7 +4348,9 @@
       ],
       "difficulty": 0.6,
       "visually_answerable": true,
-      "answer_spans": [],
+      "answer_spans": [
+        [8330, 8344]
+      ],
       "scorable": true
     },
     {
@@ -3899,7 +4367,11 @@
       ],
       "difficulty": 0.7,
       "visually_answerable": true,
-      "answer_spans": [],
+      "answer_spans": [
+        [3227, 3249],
+        [3277, 3299],
+        [8330, 8344]
+      ],
       "scorable": false
     },
     {
@@ -3970,7 +4442,10 @@
       ],
       "difficulty": 0.65,
       "visually_answerable": true,
-      "answer_spans": [],
+      "answer_spans": [
+        [5004, 5020],
+        [8374, 8390]
+      ],
       "scorable": true
     },
     {
@@ -3987,7 +4462,11 @@
       ],
       "difficulty": 0.75,
       "visually_answerable": true,
-      "answer_spans": [],
+      "answer_spans": [
+        [5004, 5020],
+        [8330, 8344],
+        [8374, 8390]
+      ],
       "scorable": false
     },
     {
@@ -4058,7 +4537,10 @@
       ],
       "difficulty": 0.55,
       "visually_answerable": true,
-      "answer_spans": [],
+      "answer_spans": [
+        [15443, 15475],
+        [16207, 16239]
+      ],
       "scorable": true
     },
     {
@@ -4075,7 +4557,15 @@
       ],
       "difficulty": 0.65,
       "visually_answerable": true,
-      "answer_spans": [],
+      "answer_spans": [
+        [560, 566],
+        [1173, 1179],
+        [3325, 3331],
+        [3592, 3598],
+        [4634, 4640],
+        [15443, 15475],
+        [16207, 16239]
+      ],
       "scorable": true
     },
     {
@@ -4163,7 +4653,28 @@
       ],
       "difficulty": 0.75,
       "visually_answerable": true,
-      "answer_spans": [],
+      "answer_spans": [
+        [836, 853],
+        [1079, 1096],
+        [3039, 3056],
+        [3457, 3474],
+        [3822, 3839],
+        [3914, 3931],
+        [4317, 4334],
+        [5901, 5918],
+        [6927, 6944],
+        [7018, 7035],
+        [7087, 7104],
+        [7721, 7738],
+        [7959, 7976],
+        [8143, 8160],
+        [8733, 8750],
+        [8952, 8969],
+        [9800, 9817],
+        [10077, 10094],
+        [12640, 12657],
+        [14093, 14110]
+      ],
       "scorable": true
     },
     {
@@ -4322,7 +4833,25 @@
       ],
       "difficulty": 0.7,
       "visually_answerable": true,
-      "answer_spans": [],
+      "answer_spans": [
+        [2283, 2292],
+        [2725, 2734],
+        [4604, 4613],
+        [4875, 4884],
+        [5221, 5230],
+        [5515, 5524],
+        [6028, 6037],
+        [6486, 6495],
+        [6903, 6912],
+        [6994, 7003],
+        [7066, 7075],
+        [7674, 7683],
+        [7892, 7901],
+        [8709, 8718],
+        [8928, 8937],
+        [9776, 9785],
+        [9948, 9957]
+      ],
       "scorable": true
     },
     {
@@ -4339,7 +4868,25 @@
       ],
       "difficulty": 0.8,
       "visually_answerable": true,
-      "answer_spans": [],
+      "answer_spans": [
+        [2283, 2292],
+        [2725, 2734],
+        [4604, 4613],
+        [4875, 4884],
+        [5221, 5230],
+        [5515, 5524],
+        [6028, 6037],
+        [6486, 6495],
+        [6903, 6912],
+        [6994, 7003],
+        [7066, 7075],
+        [7674, 7683],
+        [7892, 7901],
+        [8709, 8718],
+        [8928, 8937],
+        [9776, 9785],
+        [9948, 9957]
+      ],
       "scorable": true
     },
     {
@@ -4409,7 +4956,19 @@
       ],
       "difficulty": 0.75,
       "visually_answerable": true,
-      "answer_spans": [],
+      "answer_spans": [
+        [10176, 10179],
+        [10180, 10183],
+        [10305, 10308],
+        [10418, 10421],
+        [10539, 10542],
+        [10833, 10836],
+        [10927, 10930],
+        [11105, 11108],
+        [11377, 11380],
+        [11551, 11554],
+        [11611, 11614]
+      ],
       "scorable": true
     },
     {
@@ -4426,7 +4985,36 @@
       ],
       "difficulty": 0.85,
       "visually_answerable": true,
-      "answer_spans": [],
+      "answer_spans": [
+        [2283, 2292],
+        [2725, 2734],
+        [4604, 4613],
+        [4875, 4884],
+        [5221, 5230],
+        [5515, 5524],
+        [6028, 6037],
+        [6486, 6495],
+        [6903, 6912],
+        [6994, 7003],
+        [7066, 7075],
+        [7674, 7683],
+        [7892, 7901],
+        [8709, 8718],
+        [8928, 8937],
+        [9776, 9785],
+        [9948, 9957],
+        [10176, 10179],
+        [10180, 10183],
+        [10305, 10308],
+        [10418, 10421],
+        [10539, 10542],
+        [10833, 10836],
+        [10927, 10930],
+        [11105, 11108],
+        [11377, 11380],
+        [11551, 11554],
+        [11611, 11614]
+      ],
       "scorable": false
     },
     {
