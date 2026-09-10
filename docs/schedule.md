@@ -75,10 +75,19 @@ tested-and-passed §8 look identical in a repo three weeks later.
 | 2026-09-14 | 11 | projector contrast test (§8) | **booked, above** |
 | 2026-09-22 | 19 | **API key cut.** No key → `MOCK_MODE` ships, §9.3 and §9.5 are cut | pending — see [no-key-plan.md](writeup/no-key-plan.md) |
 | 2026-09-18…24 | week 3 | diagnosis read-through, 30 logged `diagnosis` fields (§9.5) | blocked on a key |
+| — | — | §6.1 parametric-reconstruction rate | **instrument built, blocked on a key.** `python -m eval.leak_monitor` prints `NOT MEASURABLE` and says why; a mock has no weights to reconstruct from. Fills itself in on the day a key lands |
 | 2026-09-25 | 22 | **feature freeze.** Tag `feature-freeze` | pending |
 | 2026-09-29 | 26 | **video walkthrough recorded.** Tag `demo` | pending |
 
 Tags cut so far: `schemas-frozen`, `graph-frozen`, `loop-working`.
+
+### A note for whoever runs the projector test
+
+Run it against a server started **from current `main`**. Three things landed
+after 2026-09-10 that change what the demo does on screen — §5's answer masking
+went from inert to working, and `advance`/`explain` stopped being handed the open
+item's answer label. A long-running dev server from an earlier day is serving
+the old behaviour.
 
 ## Not on this list
 
