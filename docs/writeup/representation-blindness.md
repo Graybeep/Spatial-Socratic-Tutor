@@ -146,11 +146,59 @@ That is what we implemented (`CALL2_FIDELITY` in `server/turn.py`):
 | `hint_visual` | count | cardinality, no identities |
 | `hint_verbal` | count | cardinality plus the answer's *category* |
 | `backtrack` | count | cardinality only |
-| `advance`, `explain` | labels | full identities, legitimately |
+| `advance`, `explain` | safe label | a label only if it cannot be the open item's answer |
 | forced reveal | labels | full identities, §6 layer 3 |
 
 Answer-alias exposure on `ask`/`hint_*` went from 78–100% to **zero**, and the
 monitor's hit rate on those actions from 15.5% to 0%.
+
+## Instance 4 — an exemption keyed to a name, not to a state
+
+The row for `advance` and `explain` in that table originally read *labels — full
+identities, legitimately*. It was wrong, and it stayed wrong for a week behind
+287 passing tests, including a dedicated leak suite written specifically to
+close instances 1–3.
+
+The justification for the exemption was that those two actions have the item
+behind them, so naming the answer costs nothing. Neither one does.
+
+- **`advance`** — `_advance_to_next_node()` runs inside the same turn, before
+  Call 2 is called. `current_node` is therefore the **next** item's node by then,
+  and that item is open and about to be asked. Measured over a driven session:
+  **12 of 30 advance turns** handed Call 2 a label on the open item's answer
+  surface.
+- **`explain`** — explaining is what the tutor does *instead* of the student
+  answering, so the item is open by definition. And unlike §6 layer 3's forced
+  reveal, `explain` charges no mastery, so a name here is free credit rather
+  than a priced one.
+
+This is structurally the same ordering bug the fidelity ceiling had already
+fixed for `backtrack` — `store.labels(focus) or [label(current_node)]`, with
+`start_item()` having already moved `current_node`. The fix moved `backtrack`
+to `count` and did not ask whether the other two `labels` actions shared the
+premise. They did.
+
+**Why the leak suite missed it.** Every assertion in
+`tests/test_call2_answer_exposure.py` was scoped to
+`NON_LEAKING_ACTIONS = {ask, hint_visual, hint_verbal}`, and the file's own
+measurement table records `advance 10/10 100%` annotated *(legitimate, §5)*. The
+exposure was measured, seen, and classified as fine. Nothing was hidden; the
+category was wrong.
+
+> **An exemption keyed to an action NAME survives that action changing meaning.
+> An exemption keyed to the STATE — is an item open and unanswered right now? —
+> does not.**
+
+The suite now asserts over every action, with a single exemption
+(`resolved_with_support`) that is itself pinned by a test on the contract table,
+plus a test that `advance` actually occurs in the driven walk — a guard that
+never runs is not a guard.
+
+And, consistent with the section above: **under `MOCK_MODE` none of this was
+observable.** The mock's `advance` templates do not render a label, so the
+exposure never reached an utterance and layer 1 never fired. The leak was in
+what Call 2 was *handed*, not in what it said — which is the same distinction
+instance 2 turned on, and the reason exposure is measured on the input.
 
 ## Why this is worth more than the leak it closed
 
@@ -179,14 +227,20 @@ property of the fixture and not of any model.
 
 ## What we are not claiming
 
-Three defects in one four-week project, found by the people who wrote the code.
+Four defects in one four-week project, found by the people who wrote the code.
 There is an obvious selection effect in which bugs get noticed and written up,
 and we did not run a study of anything.
 
-What we can say is narrower: all three survived a test suite a reviewer would
+What we can say is narrower: all four survived a test suite a reviewer would
 have called adequate, and in every case the intuitive fix would have hidden the
 problem rather than surfaced it — compare more strings, carve labels out of
-§1.5, argue from the schema that one endpoint is half an answer.
+§1.5, argue from the schema that one endpoint is half an answer, exempt the
+actions that are "allowed" to explain.
+
+The fourth is the one we would flag to a reviewer, because it was found by the
+suite that exists to prevent it and then filed under *legitimate*. Instances 1–3
+were things nobody had looked at. Instance 4 was looked at, measured, and
+mislabelled.
 
 The companion section, *[Numbers that looked
 fine](numbers-that-looked-fine.md)*, covers a different failure class we hit

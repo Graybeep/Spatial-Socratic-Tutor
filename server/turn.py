@@ -128,13 +128,34 @@ class Phase1:
 #: enforces it. See docs/writeup/representation-blindness.md.
 #:
 #: "labels" = full identities. "count" = cardinality only, no identities.
+#: "safe_label" = identities, minus any that are on the OPEN item's answer
+#: surface.
+#:
+#: WHY `advance` AND `explain` ARE NOT "labels". They explain, so §5 gives them
+#: the (masked) chunk, and it is tempting to give them the identities too. Both
+#: leak if you do, for the same ordering reason `backtrack` did:
+#:
+#:   advance    _advance_to_next_node has ALREADY run, so current_node is the
+#:              NEXT item's node - and that item is open and about to be asked.
+#:              Measured over a 30-turn session: 12 of 30 advance turns handed
+#:              Call 2 a label that was on the open item's answer surface. The
+#:              mock's advance templates do not render a label, so nothing was
+#:              visible; a real Call 2 receives it in the prompt.
+#:
+#:   explain    the item is still open by definition - explaining is what you do
+#:              INSTEAD of answering - and the current node is its answer. Unlike
+#:              §6 layer 3's forced reveal, explain costs the student no mastery,
+#:              so a reveal here is free credit.
+#:
+#: `resolved_with_support` keeps full labels. It is the one action that is
+#: SUPPOSED to name the answer, and layer 3 takes the mastery in exchange.
 CALL2_FIDELITY = {
     "ask": "safe_label",      # a label, but never one that IS the answer
     "hint_visual": "count",   # the graph points; the text must not name
     "hint_verbal": "count",   # count + answer category, still no identities
     "backtrack": "count",
-    "advance": "labels",      # legitimately explains - §5
-    "explain": "labels",
+    "advance": "safe_label",  # explains from the chunk, never by naming
+    "explain": "safe_label",
     "resolved_with_support": "labels",  # forced reveal, §6 layer 3
 }
 
@@ -205,6 +226,11 @@ def _call2_context(store: GraphStore, state: SessionState, phase1) -> tuple:
     category = _answer_category(item)
 
     if fidelity == "labels":
+        # Only `resolved_with_support` reaches here now. The `or` fallback names
+        # current_node, which after start_item() is an OPEN item's answer - the
+        # ordering that made backtrack leak on 100% of turns and advance on 40%.
+        # A forced reveal is the one action licensed to do that, and §6 layer 3
+        # charges the student's mastery for it.
         return store.labels(focus) or (
             [store.label(state.current_node)] if state.current_node else []
         ), n_lit, category
@@ -216,8 +242,11 @@ def _call2_context(store: GraphStore, state: SessionState, phase1) -> tuple:
         # rather than a property we enforced.
         return [], n_lit, category
 
-    # "safe_label": ask. Usually the question is about a mechanism, not about
-    # the node's name, so a label is only offered when it cannot be the answer.
+    # "safe_label": ask, advance, explain. Usually the question is about a
+    # mechanism, not about the node's name, so a label is only offered when it
+    # cannot be the answer. The edge-item anchor below is `ask`-only: it exists
+    # because a question about an edge cannot be POSED without naming one end,
+    # which is not true of explaining or of moving on.
     surface = _answer_surface(store, item)
 
     # EDGE ITEMS: ONE ENDPOINT, NEVER BOTH. Flagged for sign-off - this is a
@@ -237,7 +266,7 @@ def _call2_context(store: GraphStore, state: SessionState, phase1) -> tuple:
     # only item.node_id is offered and the opposite endpoint stays on the
     # surface. The item's own prompt already names this endpoint in 49/49 cases,
     # so it is an anchor the item was authored around.
-    if item is not None and "->" in item.answer:
+    if action == "ask" and item is not None and "->" in item.answer:
         anchor = item.node_id
         other = [e.strip() for e in item.answer.split("->") if e.strip() != anchor]
         if anchor and all(store.label(anchor).casefold()
