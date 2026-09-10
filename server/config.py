@@ -104,6 +104,12 @@ class Config:
     items_path: Path = field(default_factory=lambda: _path("ITEMS_PATH", "data/items.json"))
     gold_graph_path: Path = field(default_factory=lambda: _path("GOLD_GRAPH_PATH", "data/gold_graph.json"))
     prompts_dir: Path = field(default_factory=lambda: _path("PROMPTS_DIR", "prompts"))
+    #: Which canned fallback to use when an action has no file of its own. The
+    #: fallback handler is the one path that must never raise, so an unknown
+    #: action degrades to this instead of to a FileNotFoundError. Every canned
+    #: line is answer-free, so degrading is always safe (§5, §13.1).
+    fallback_default_action: str = field(
+        default_factory=lambda: _str("FALLBACK_DEFAULT_ACTION", "ask"))
     state_db_path: Path = field(default_factory=lambda: _path("STATE_DB_PATH", "state.db"))
     log_dir: Path = field(default_factory=lambda: _path("LOG_DIR", "logs"))
 
