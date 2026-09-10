@@ -22,6 +22,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import logging
 import random
 from functools import lru_cache
 from typing import Optional
@@ -30,6 +31,8 @@ from server.config import CONFIG
 from server.graph_store import GraphStore
 from server.schemas import Call1Decision, Call2Utterance, Item, StudentResponse
 from server.state import SessionState
+
+log = logging.getLogger("tutor.mock")
 
 #: Every diagnosis this module produces starts with this. §9.5 hand-reads 30
 #: diagnosis fields; a mock line that slipped in unmarked would be read as the
@@ -45,9 +48,28 @@ def _templates() -> dict:
 
 @lru_cache(maxsize=None)
 def fallback_utterance(action: str) -> str:
-    """One of the six canned fallbacks required by CLAUDE.md §5, for a Call 2
-    timeout after the graph has already reacted."""
-    return (CONFIG.prompts_dir / f"fallback_{action}.txt").read_text(encoding="utf-8").strip()
+    """A canned fallback for a Call 2 timeout after the graph has already reacted.
+
+    §5 says "six canned fallback utterances, one per action". There are SEVEN
+    things that reach here: the six in the Action literal plus
+    `resolved_with_support`, which is not an Action but is passed to _call2 as
+    one on a §6 layer 3 forced reveal.
+
+    That seventh had no file, so a real-model timeout on a forced-reveal turn
+    raised FileNotFoundError out of the fallback handler - the one code path
+    whose entire job is to not fail. Unreachable under MOCK_MODE (mock_call2
+    never raises) and unreachable without a key, so it would have fired first on
+    the day the key landed, on the turn the student is most frustrated.
+
+    The `or` below is the general form of that bug: an unknown action must
+    degrade to something sayable, not to a stack trace. It never names an
+    answer, so degrading is always safe.
+    """
+    path = CONFIG.prompts_dir / f"fallback_{action}.txt"
+    if not path.exists():
+        log.error("no fallback utterance for action %r; using the generic one", action)
+        path = CONFIG.prompts_dir / f"fallback_{CONFIG.fallback_default_action}.txt"
+    return path.read_text(encoding="utf-8").strip()
 
 
 # ---------------------------------------------------------------------------
