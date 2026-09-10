@@ -101,18 +101,73 @@ not per session, so nothing stops a determined student reading all 50 definition
 first — against which the only real defence would be removing the panel, which
 would make the graph a diagram rather than a map.
 
-**`answer_spans` is empty for every item, so span masking is untested.** §3
-specifies character offsets of the answer inside the source chunk, and §5 masks
-those spans before a chunk is handed to Call 2 on `advance` and `explain`. The
-graph was hand-authored from the chapter rather than extracted from a stored
-copy of it, so there is no chunk file to offset into and no offsets to record.
+**`answer_spans` was empty for every item, and the mask was therefore inert.**
+This is closed, and the way it was found is worth more than the fix.
 
-The masking code path therefore has never run against a real span. We are not
-claiming it works; we are claiming the retrieval gate above it works, which is
-the coarser and more important of the two — Call 2 receives no chunk at all on
-`ask` and `hint_*`, which is where leakage would matter. Masking only ever
-mattered for the two actions that are *meant* to explain. If a chapter file
-lands, populating spans and testing the mask is a contained piece of work.
+§3 specifies character offsets of the answer inside the source chunk, and §5
+masks those spans before a chunk is handed to Call 2 on `advance` and `explain`.
+While the graph was hand-authored and no chapter file existed, there was nothing
+to offset into, every item carried `answer_spans: []`, and this section said so.
+Then `data/chunks.json` landed and retrieval started serving real prose — and
+the empty spans stopped being a documented absence and became a live leak. The
+positive half of §5's gate was wired, the masking half was a no-op, and Call 2
+received the chapter's own explanation of the concept, unmasked, on every
+`advance` and `explain`.
+
+**Nothing failed.** 249 tests passed, `build/validate.py` was clean, and the
+section you are reading described the gap accurately in the present tense while
+its reason had expired. What surfaced it was reading the turn log: guard layer 1
+was firing on `advance` — 6 hits in a 258-turn session, each one regenerating,
+hitting again, and shipping a canned fallback in place of the tutor's line.
+
+The reason nobody looked is the interesting part. `guards.stats_snapshot()`
+splits layer-1 hits into `parametric_reconstruction` (`ask`, `hint_*` — Call 2
+saw no answer, so a hit can only have come from the weights) and
+`authorised_naming` (`advance`, `explain` — these actions are *meant* to name
+the answer, and pooling them would inflate the figure that matters). That split
+is right, and it is why the reported §6 number was never contaminated.
+
+But it is a statement about the ACTION, not about the mechanism, and it quietly
+absorbed the defect. `advance` is licensed to confirm an answer the student has
+already given. It is not licensed to forward the chapter's unmasked explanation
+of the concept — that is precisely what §5's `answer_spans` masking exists to
+prevent. The bucket labelled the symptom "intended" and the inert mask underneath
+it stayed invisible. Same shape as the two failures in
+[numbers-that-looked-fine.md](numbers-that-looked-fine.md): a correctly computed
+signal read as evidence about something it cannot distinguish.
+
+`build/annotate_spans.py` now populates the offsets against the chunk retrieval
+actually serves, and `build/validate.py` re-derives every one of them on every
+run, so a span that stops landing on the answer fails the build. Layer-1 hits on
+`advance` went from 6 in a 258-turn session to 0.
+
+**70 of 260 items have spans; the other 190 have no label-fidelity occurrence of
+their answer in the chunk they retrieve.** Literal offsets cannot mask a chunk
+that teaches slow start without writing the words, and no offset scheme could.
+The claim is therefore unchanged in shape and only narrower than it looks:
+masking is now real for the items where the chapter names the answer, and §5's
+retrieval gate — no chunk at all on `ask` and `hint_*`, which is where leakage
+would matter — remains the coarser and more important half.
+
+**Retrieval serves the section the chapter disagrees with for 9 of 52 nodes.**
+Measuring the spans required knowing which chunk each node retrieves, which made
+a number available that nothing had computed: the served chunk matches the
+node's own declared `source_sections` **43 of 52 times (83%)**.
+
+The misses are mostly a length effect. Cosine over a long chunk is diluted by
+that chunk's own vocabulary, so a short section wins over the long one that
+actually teaches the concept — "Slow Start" is served 6.4 (1,301 characters)
+rather than the 6.3.2 section named after it (10,699). BM25, the standard fix
+for exactly that, was measured over the same 52 nodes and scored 45. **Two nodes
+at n=52 is inside the interval**, and adopting it would force a recalibration of
+`RETRIEVAL_SCORE_FLOOR`, which was itself measured (52 in / 12 out). So the
+scorer stays as it is, the 83% is reported rather than repaired, and §11's "cut
+retrieval before you cut the tutor loop" is the reason that is the right trade
+rather than a shrug.
+
+What this bounds: on `advance` and `explain` the tutor cites the wrong section
+about one time in six, and a span computed against that chunk is correct and
+useless. It does not touch `ask` or `hint_*`, which receive no chunk at all.
 
 **§9.3's recall has a ceiling of 59% that has nothing to do with the model.**
 Edge extraction only asks the model about pairs that survive a filter: A must

@@ -25,6 +25,17 @@ python -m build.chunk --html` produces `data/chunks.json` — 15 section-aligned
 chunks, sections 6.1–6.4 — and retrieval runs over it with no key and no model
 call, so `advance` and `explain` cite the chapter even in `MOCK_MODE`.
 
+**And §5's answer masking is no longer inert.** `answer_spans` was `[]` for all
+260 items while there was no chunk to offset into; once there was one, that
+absence became a live leak on `advance` and `explain` and nothing failed.
+`python -m build.annotate_spans` populates the offsets against the chunk
+retrieval actually serves, `build/validate.py` re-derives every one of them, and
+layer-1 hits on `advance` went from 6 in a 258-turn session to 0. The same pass
+produced a number nothing had computed: retrieval serves the node's declared
+section **43 of 52 times (83%)**. BM25 scored 45 and was not adopted — see
+`docs/writeup/limitations.md` for why two nodes at n=52 does not buy a
+recalibration of the gate.
+
 **Next dated commitment: projector contrast test, Monday 2026-09-14** — see
 `docs/schedule.md`. **Deadline on the key: 2026-09-22 (day 19).** If there is no API key by then,
 `MOCK_MODE` ships and §9.3 and §9.5 are cut. See
@@ -37,7 +48,7 @@ than forcing a rewrite.
 ```bash
 pip install -r requirements.txt
 python -m build.validate         # strict; must be clean
-python -m pytest                 # 197 tests
+python -m pytest                 # 266 tests
 python -m server.main            # http://127.0.0.1:8000
 ```
 
@@ -147,7 +158,8 @@ NARROW_SCHEDULE=0,25,18,12,8 python -m server.main
 | `build/chunk.py` | chapter → chunks; the seam to swap when real PDF text arrives |
 | `build/extract_concepts.py` | pass 1, candidates for the human review |
 | `build/extract_edges.py` | pass 2; the precedence + co-occurrence filter |
-| `server/retrieval.py` | TF-IDF chunk search, gated by layer 4; no corpus yet |
+| `server/retrieval.py` | TF-IDF chunk search, gated by layer 4; 83% section accuracy |
+| `build/annotate_spans.py` | fills `answer_spans` so §5's mask masks; re-derived by `validate` |
 | `build/validate.py` | DAG / orphan / item checks; must pass before commit |
 | `build/freeze_layout.py` | runs once, writes x/y into `graph.json`, then never again |
 | `build/generate_items.py` | items from the graph; LLM behind a mocked seam |

@@ -360,6 +360,116 @@ def check_edge_item_anchors(graph: Graph, bank: ItemBank, rep: Report) -> None:
     )
 
 
+def check_answer_spans(graph: Graph, bank: ItemBank, rep: Report) -> None:
+    """Do the recorded offsets still blank the answer in the chunk that ships?
+
+    §3 defines `answer_spans` as offsets into the source chunk and §5 masks them
+    before a chunk reaches Call 2 on `advance` and `explain`. Both halves are
+    silent when wrong: an offset that no longer lands on the answer masks some
+    unrelated sentence, the chunk still names the answer, and the only thing
+    downstream is layer 1 - a monitor whose hit rate is a REPORTED number, so a
+    stale span shows up as a leak the model never committed.
+
+    So the offsets are re-derived here rather than trusted. `build.annotate_spans`
+    computes them from `retrieval.search`; this asks the same question again and
+    fails if the answer survives masking. That makes the pair
+    (chunks.json, retrieval scorer) a frozen input in fact and not just in
+    intent - change either and this check goes red before a demo does.
+
+    Retrieval accuracy is reported alongside, against each node's own declared
+    `source_sections`. A span computed against the wrong section is perfectly
+    valid and completely useless, and nothing else in the repo measures that.
+    """
+    from build.annotate_spans import answer_surface, find_spans
+    from server import guards, retrieval
+
+    nodes = {n.id: n for n in graph.nodes}
+    labels = {n.id: n.label for n in graph.nodes}
+
+    served_wrong_section, no_chunk = [], []
+    stale, survived = [], []
+    with_spans = 0
+
+    for item in bank.items:
+        node = nodes.get(item.node_id)
+        if node is None:
+            continue
+
+        hit = retrieval.search(f"{node.label} {node.definition}")
+        if hit is None:
+            no_chunk.append(item.node_id)
+            if item.answer_spans:
+                rep.error(
+                    f"item {item.id}: has answer_spans but retrieval refuses a "
+                    f"chunk for {item.node_id}, so nothing masks them"
+                )
+            continue
+
+        if node.source_sections and hit.chunk.section not in node.source_sections:
+            served_wrong_section.append(
+                (item.node_id, tuple(node.source_sections), hit.chunk.section))
+
+        surface = answer_surface(item.model_dump(by_alias=True), labels)
+        expected = find_spans(hit.chunk.text, surface)
+        recorded = [list(s) for s in item.answer_spans]
+
+        if recorded:
+            with_spans += 1
+            for start, end in recorded:
+                if not (0 <= start < end <= len(hit.chunk.text)):
+                    rep.error(
+                        f"item {item.id}: span [{start}, {end}] is outside the "
+                        f"{len(hit.chunk.text)}-character chunk {hit.chunk.id}"
+                    )
+
+        if recorded != expected:
+            stale.append(item.id)
+            continue
+
+        masked = guards.mask_spans(hit.chunk.text, item.answer_spans).casefold()
+        leftover = sorted(s for s in surface if s in masked)
+        if leftover:
+            survived.append((item.id, leftover[:2]))
+
+    if stale:
+        rep.error(
+            f"{len(stale)} item(s) carry answer_spans that do not match the "
+            f"chunk they would be masked against - re-run "
+            f"`python -m build.annotate_spans`: {stale[:6]}"
+            + (f", +{len(stale) - 6} more" if len(stale) > 6 else "")
+        )
+    for item_id, leftover in survived:
+        rep.error(
+            f"item {item_id}: the answer survives masking - {leftover} still "
+            f"appear in the chunk handed to Call 2 (§5)"
+        )
+
+    empty = len(bank.items) - with_spans
+    rep.note(
+        f"answer_spans: {with_spans}/{len(bank.items)} items masked. The other "
+        f"{empty} have no label-fidelity occurrence in the chunk they retrieve, "
+        f"so there is nothing to mask - §5's retrieval gate, not masking, is "
+        f"what keeps `ask`/`hint_*` clean."
+    )
+
+    scored = len(bank.items) - len(no_chunk)
+    if served_wrong_section:
+        rep.warn(
+            f"[retrieval] the served chunk disagrees with the node's declared "
+            f"source_sections for {len(set(n for n, _, _ in served_wrong_section))} "
+            f"of {len(nodes)} nodes. Spans there are correct for a chunk the "
+            f"chapter says is the wrong one, and `advance`/`explain` cite that "
+            f"section: "
+            + ", ".join(f"{n} ({'/'.join(want)} -> {got})"
+                        for n, want, got in sorted(set(served_wrong_section))[:5])
+        )
+    if no_chunk:
+        rep.warn(
+            f"[retrieval] guard layer 4 refuses a chunk for "
+            f"{len(set(no_chunk))} node(s); {scored} items are maskable at all"
+        )
+
+
 def check_item_distinctness(bank: ItemBank, rep: Report, fixture: bool) -> None:
     """Catch a generator fixture reaching data/ as though it were content.
 
@@ -454,6 +564,7 @@ def validate(graph_path: Path, items_path: Path, fixture: bool) -> Report:
         return rep
 
     check_item_distinctness(bank, rep, fixture)
+    check_answer_spans(graph, bank, rep)
 
     node_ids = [n.id for n in graph.nodes]
     node_set = set(node_ids)

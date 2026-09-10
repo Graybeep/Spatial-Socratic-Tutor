@@ -17,21 +17,27 @@ query expansion, no vector store. Fifty concepts in one chapter do not need any
 of that, and every hour spent here is an hour not spent on the three numbers in
 §9 that the project is actually judged on.
 
-# There is no corpus yet, and that is the honest state
+# The corpus landed, and here is how well it is doing
 
-`data/chunks.json` does not exist. The graph was hand-authored from the chapter
-rather than extracted from a stored copy of it (see data/SOURCE.md), so there is
-no chunk file to search. `search()` therefore returns None for every query, and
-guard layer 4 turns that into the tutor saying the chapter does not cover it.
+`data/chunks.json` holds 15 section-level chunks over sections 6.1-6.4. Before
+it existed `search()` returned None for every query and guard layer 4 turned
+that into the tutor saying the chapter does not cover it — the correct behaviour
+for an empty corpus rather than a stub, since the failure this file exists to
+prevent is answering from parametric knowledge.
 
-That is the correct behaviour for an empty corpus, not a stub: the failure mode
-this file exists to prevent is answering from parametric knowledge, which is how
-a tutor for one chapter quietly becomes a general chatbot with a graph on the
-screen. An empty corpus should refuse, loudly and in the log, rather than let
-the model improvise.
+Now that it searches something, the number that matters is whether it searches
+it WELL, and `build/validate.py` reports that on every run: for how many nodes
+does the chunk this returns match the node's own declared `source_sections`?
 
-When a chapter file lands, `build/extract_concepts.py` writes chunks.json and
-this starts contributing with no change here.
+**43 of 52 (83%).** The nine misses are mostly a length effect — cosine over a
+long chunk is diluted by its own vocabulary, so a short section beats the long
+one that actually teaches the concept ("Slow Start" is served 6.4 rather than
+the 6.3.2 section named after it). BM25, the standard answer to exactly that,
+was measured against the same 52 nodes and scored 45. Two nodes at n=52 is
+inside the interval, and switching scorers would require recalibrating
+RETRIEVAL_SCORE_FLOOR, which was measured (52 in / 12 out). So this stays
+TF-IDF, the 83% is reported rather than fixed, and §11's "cut retrieval before
+you cut the tutor loop" is why that is the right trade.
 
 # What retrieval is FOR, which is narrower than it sounds
 

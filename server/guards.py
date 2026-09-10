@@ -399,10 +399,19 @@ def mask_spans(text: str, spans: Iterable[tuple[int, int]]) -> str:
     """Blank the answer's character offsets before a chunk goes to Call 2 (§5).
 
     Applied right-to-left so earlier offsets stay valid as the string changes
-    length. Every item in the current bank has empty `answer_spans` — the graph
-    was hand-authored rather than extracted, so there is no chunk to offset into
-    — which means this path is written but untested against real spans. Stated
-    in docs/writeup/limitations.md rather than left to be discovered.
+    length.
+
+    This path ran against empty spans for the first two weeks — the graph was
+    hand-authored, so there was no chunk to offset into and every item carried
+    `answer_spans: []`. `data/chunks.json` closed that: `build/annotate_spans.py`
+    populates the offsets and `build/validate.py` re-derives them on every run,
+    so a span that stops landing on the answer fails the build rather than
+    quietly masking an unrelated sentence.
+
+    70 of 260 items have spans. The rest have no label-fidelity occurrence of
+    the answer in the chunk they retrieve, so there is nothing here to blank —
+    §5's retrieval gate, which sends no chunk at all on `ask` and `hint_*`, is
+    the coarser and more important half. See docs/writeup/limitations.md.
     """
     out = text
     for start, end in sorted(spans, key=lambda s: -s[0]):

@@ -32,14 +32,19 @@ MCQs are false, which is why the mix here comes out around 40% true - close to
 what §3 expects of a real bank, and the ratio §9.1's leakage subset depends on.
 build/validate.py enforces the identity invariant that goes with it.
 
-ANSWER_SPANS ARE EMPTY AND THAT IS A KNOWN GAP
+ANSWER_SPANS ARE NOT WRITTEN HERE
 
 §3 wants character offsets of the answer inside the source chunk, and §5 masks
-those spans before handing a chunk to Call 2 on `advance` and `explain`. The
-graph was hand-authored from the chapter rather than extracted from it, so there
-are no offsets to record: there is no chunk file to offset into. Every item here
-therefore has `answer_spans: []`, which means span masking is untested rather
-than working. See docs/writeup/limitations.md.
+those spans before handing a chunk to Call 2 on `advance` and `explain`. This
+script emits `answer_spans: []` for every item and that is deliberate: the
+offsets depend on `data/chunks.json` and on which chunk retrieval serves, which
+is a different input from the graph this script reads.
+
+`build/annotate_spans.py` fills them in afterwards, against the existing bank,
+so the §4 human-correction pass is never discarded to add one field. Run it
+after any regeneration:
+
+    python -m build.generate_items && python -m build.annotate_spans
 """
 from __future__ import annotations
 
