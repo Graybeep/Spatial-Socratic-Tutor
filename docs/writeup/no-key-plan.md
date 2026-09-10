@@ -36,10 +36,50 @@ this is not a fallback to be built. It is a decision to stop waiting.
 | §9.3 **classifier** precision/recall | needs an extractor run, which needs a model. The **ceiling half of §9.3 reports today** — see below |
 | §9.5 diagnosis read-through | needs 30 real Call 1 `diagnosis` fields |
 | "the utterances are model-generated" | they are templates; say so plainly |
-| parametric-reconstruction rate | a mock has no weights to reconstruct from |
+| parametric-reconstruction rate (§6.1) | a mock has no weights to reconstruct from. **The instrument now exists and refuses to report** — see below |
 
 None of the four is a contribution. Three are measurements of a model we do not
 have, and the fourth is a property of the demo rather than of the design.
+
+### §6.1 is now blocked rather than absent, and the difference is the point
+
+§6 asks for the layer-1 hit rate and calls it free: *"Log the rate; it is a free
+and genuinely interesting number for the writeup."* The logging half was built on
+day 1 and `guards.stats_snapshot()` even computes the split — but **nothing ever
+called it**. The number lived in 457,000 unaggregated jsonl lines. Free the way
+an unopened box is packed.
+
+`eval/leak_monitor.py` opens it, and the first thing it does with the corpus is
+refuse to report a rate over it. Three refusals, each one a mistake this project
+had already made in some other form:
+
+- **it will not pool builds.** Layer 1 fired on **17,433 `backtrack` turns**
+  before the Call 2 fidelity ceiling landed — 100% of backtrack turns across two
+  50,000-turn blocks — because backtrack was handed the target node's label.
+  `backtrack` is a reconstruction action, so a pass over the whole file reports
+  **3.94% parametric reconstruction** produced entirely by a bug that is fixed.
+  Turn records now carry the build that wrote them; the ones that predate the
+  stamp are reported and excluded.
+- **it will not pool actions.** `advance` and `explain` are *meant* to name the
+  answer. That split already existed in `guards.RECONSTRUCTION_ACTIONS` and is
+  imported rather than restated, so the eval cannot drift from the server.
+- **it will not report a mock rate as §6.1's number.** `MOCK_MODE` Call 2 is a
+  template lookup. Zero hits over 10,334 mock turns is not weak evidence of no
+  leakage — it is no evidence, and on a slide it reads exactly like the real
+  thing. The headline returns `rate: null` with `blocked_by` set, and the
+  renderer prints **NOT MEASURABLE** rather than a number.
+
+So §6.1 joins §9.3-precision and §9.5 on the key-blocked list. It joins it
+**with the instrument built, tested (15 tests) and green**, which is the whole
+difference between a section we cut and a section that fills itself in on the
+day a key arrives.
+
+What the mock corpus *does* support, and is reported: the historical rate by
+build, the surfaces layer 1 matched (`congestion control` ×1,774, `congestion
+window` ×1,633, `resource allocation` ×1,632 — concentration on the chapter's
+own topic vocabulary, which is a vocabulary finding and not a model finding),
+and the count of turns that shipped a canned fallback because regeneration hit
+too. On current code, on reconstruction actions, that count is zero.
 
 ---
 

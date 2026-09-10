@@ -48,7 +48,7 @@ than forcing a rewrite.
 ```bash
 pip install -r requirements.txt
 python -m build.validate         # strict; must be clean
-python -m pytest                 # 266 tests
+python -m pytest                 # 287 tests
 python -m server.main            # http://127.0.0.1:8000
 ```
 
@@ -88,6 +88,20 @@ Screen the item bank (§9.4) - no key, no chapter, no network:
 ```bash
 python -m eval.distractor_screen
 ```
+
+Aggregate guard layer 1 (§6.1) from the turn log - no key, and it will tell you
+what it refuses to report:
+
+```bash
+python -m eval.leak_monitor
+```
+
+§6 calls the layer-1 rate free. It was logged from day 1 and never aggregated,
+so it was free the way an unopened box is packed. The aggregator will not pool
+builds (17,433 `backtrack` hits in the log come from a bug fixed by the fidelity
+ceiling), will not pool actions, and **will not report a mock rate as §6.1's
+number** - a template lookup has no weights to reconstruct an answer from, so it
+prints `NOT MEASURABLE` instead of `0.00%`. See `docs/writeup/no-key-plan.md`.
 
 Every eval output carries a `provenance` block saying what it sampled
 (`population`, `distinct`, `coverage`). Check it before quoting a number: §9.1
@@ -167,6 +181,7 @@ NARROW_SCHEDULE=0,25,18,12,8 python -m server.main
 | `data/SOURCE.md` | attribution, and why the gold graph was frozen first |
 | `eval/adversarial.py` | §9.1 effective leakage — `python -m eval.adversarial` |
 | `eval/graph_quality.py` | §9.3 extraction recall ceiling; deterministic, no key |
+| `eval/leak_monitor.py` | §6.1 layer-1 rate from the log; refuses to pool builds or report a mock |
 | `docs/writeup/representation-blindness.md` | the design contribution: fidelity ceiling, not field whitelist |
 | `docs/writeup/numbers-that-looked-fine.md` | evals that produced well-formed numbers over nothing |
 | `docs/writeup/` | other draft report sections — identity leakage, limitations |

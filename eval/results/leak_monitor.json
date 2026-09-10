@@ -1,0 +1,289 @@
+{
+  "log": "logs/turns.jsonl",
+  "turns": 490192,
+  "events": 0,
+  "malformed": 0,
+  "builds": {
+    "pre-stamp": 473635,
+    "e2408c7-dirty": 11038,
+    "af60e60-dirty": 5519
+  },
+  "stamped_builds": [
+    "af60e60-dirty",
+    "e2408c7-dirty"
+  ],
+  "unstamped_turns": 473635,
+  "real_turns": 0,
+  "mock_turns": 490192,
+  "arms": {
+    "af60e60-dirty [mock]": {
+      "authorised_naming": {
+        "checks": 352,
+        "hits": 0,
+        "rate": 0.0,
+        "fell_back": 0,
+        "regenerated_clean": 0,
+        "distinct_items_hit": 0,
+        "top_items": [],
+        "top_aliases": [],
+        "by_action": {
+          "advance": {
+            "checks": 352,
+            "hits": 0
+          }
+        },
+        "provenance": {
+          "population": 260,
+          "distinct": 5,
+          "observations": 352,
+          "unit": "items",
+          "expect_full": false,
+          "coverage": 0.0192,
+          "complete": false
+        }
+      },
+      "parametric_reconstruction": {
+        "checks": 5167,
+        "hits": 0,
+        "rate": 0.0,
+        "fell_back": 0,
+        "regenerated_clean": 0,
+        "distinct_items_hit": 0,
+        "top_items": [],
+        "top_aliases": [],
+        "by_action": {
+          "ask": {
+            "checks": 2235,
+            "hits": 0
+          },
+          "backtrack": {
+            "checks": 965,
+            "hits": 0
+          },
+          "hint_verbal": {
+            "checks": 488,
+            "hits": 0
+          },
+          "hint_visual": {
+            "checks": 1479,
+            "hits": 0
+          }
+        },
+        "provenance": {
+          "population": 260,
+          "distinct": 88,
+          "observations": 5167,
+          "unit": "items",
+          "expect_full": false,
+          "coverage": 0.3385,
+          "complete": false
+        }
+      }
+    },
+    "e2408c7-dirty [mock]": {
+      "authorised_naming": {
+        "checks": 704,
+        "hits": 0,
+        "rate": 0.0,
+        "fell_back": 0,
+        "regenerated_clean": 0,
+        "distinct_items_hit": 0,
+        "top_items": [],
+        "top_aliases": [],
+        "by_action": {
+          "advance": {
+            "checks": 704,
+            "hits": 0
+          }
+        },
+        "provenance": {
+          "population": 260,
+          "distinct": 5,
+          "observations": 704,
+          "unit": "items",
+          "expect_full": false,
+          "coverage": 0.0192,
+          "complete": false
+        }
+      },
+      "parametric_reconstruction": {
+        "checks": 10334,
+        "hits": 0,
+        "rate": 0.0,
+        "fell_back": 0,
+        "regenerated_clean": 0,
+        "distinct_items_hit": 0,
+        "top_items": [],
+        "top_aliases": [],
+        "by_action": {
+          "ask": {
+            "checks": 4470,
+            "hits": 0
+          },
+          "backtrack": {
+            "checks": 1930,
+            "hits": 0
+          },
+          "hint_verbal": {
+            "checks": 976,
+            "hits": 0
+          },
+          "hint_visual": {
+            "checks": 2958,
+            "hits": 0
+          }
+        },
+        "provenance": {
+          "population": 260,
+          "distinct": 88,
+          "observations": 10334,
+          "unit": "items",
+          "expect_full": false,
+          "coverage": 0.3385,
+          "complete": false
+        }
+      }
+    },
+    "pre-stamp [mock]": {
+      "authorised_naming": {
+        "checks": 31100,
+        "hits": 30,
+        "rate": 0.001,
+        "fell_back": 30,
+        "regenerated_clean": 0,
+        "distinct_items_hit": 2,
+        "top_items": [
+          [
+            "itm_0021",
+            15
+          ],
+          [
+            "itm_0026",
+            15
+          ]
+        ],
+        "top_aliases": [
+          [
+            "resource allocation",
+            15
+          ],
+          [
+            "congestion control",
+            15
+          ]
+        ],
+        "by_action": {
+          "advance": {
+            "checks": 31100,
+            "hits": 30
+          }
+        },
+        "provenance": {
+          "population": 260,
+          "distinct": 221,
+          "observations": 31100,
+          "unit": "items",
+          "expect_full": false,
+          "coverage": 0.85,
+          "complete": false
+        }
+      },
+      "parametric_reconstruction": {
+        "checks": 442535,
+        "hits": 17433,
+        "rate": 0.0394,
+        "fell_back": 17433,
+        "regenerated_clean": 0,
+        "distinct_items_hit": 25,
+        "top_items": [
+          [
+            "itm_0026",
+            1774
+          ],
+          [
+            "itm_0141",
+            1633
+          ],
+          [
+            "itm_0021",
+            1632
+          ],
+          [
+            "itm_0081",
+            1384
+          ],
+          [
+            "itm_0106",
+            1346
+          ]
+        ],
+        "top_aliases": [
+          [
+            "congestion control",
+            1774
+          ],
+          [
+            "congestion window",
+            1633
+          ],
+          [
+            "resource allocation",
+            1632
+          ],
+          [
+            "feedback-based",
+            1384
+          ],
+          [
+            "fifo queuing",
+            1346
+          ]
+        ],
+        "by_action": {
+          "ask": {
+            "checks": 167824,
+            "hits": 0
+          },
+          "backtrack": {
+            "checks": 75382,
+            "hits": 17433
+          },
+          "hint_verbal": {
+            "checks": 88366,
+            "hits": 0
+          },
+          "hint_visual": {
+            "checks": 110963,
+            "hits": 0
+          }
+        },
+        "provenance": {
+          "population": 260,
+          "distinct": 169,
+          "observations": 442535,
+          "unit": "items",
+          "expect_full": false,
+          "coverage": 0.65,
+          "complete": false
+        }
+      }
+    }
+  },
+  "headline": {
+    "arms": [],
+    "checks": 0,
+    "hits": 0,
+    "rate": null,
+    "blocked_by": "no stamped real-model turns in the log",
+    "why": "MOCK_MODE Call 2 is a template lookup with no weights to reconstruct an answer from. Its hit rate measures prompts/mock_utterances.json. \u00a76.1's number needs a key."
+  },
+  "provenance": {
+    "population": 260,
+    "distinct": 221,
+    "observations": 490192,
+    "unit": "items",
+    "expect_full": false,
+    "coverage": 0.85,
+    "complete": false
+  }
+}
