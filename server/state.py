@@ -15,10 +15,28 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Optional
 
+from server import build_info
 from server.config import CONFIG
 
 class StaleSessionError(RuntimeError):
-    """A session whose mastery refers to a graph that has since been replaced."""
+    """A session whose mastery cannot be trusted under the code now running.
+
+    TWO KINDS OF DRIFT, and for a while this caught only one.
+
+    graph   the mastery keys name nodes that no longer exist. Loud, immediate,
+            and it was the only case guarded.
+
+    code    the mastery VALUES were computed by different logic - a different
+            §7 update rule, a different scorable set, a different definition of
+            what an item is worth. The keys still resolve, the graph
+            fingerprint still matches, and the session loads without complaint.
+
+    The second is the quieter failure and the more dangerous one for a demo: a
+    session resumed across a restart is new code reading numbers that old code
+    wrote, with nothing on screen to say so. Same shape as the turn log being
+    pooled across builds (see eval/leak_monitor.py) - a guard scoped to one kind
+    of drift is blind to the other.
+    """
 
 
 SCHEMA = """
@@ -38,7 +56,8 @@ CREATE TABLE IF NOT EXISTS sessions (
     n_obs                 TEXT NOT NULL DEFAULT '{}',
     completed_items       TEXT NOT NULL DEFAULT '[]',
     history               TEXT NOT NULL DEFAULT '[]',
-    session_complete      INTEGER NOT NULL DEFAULT 0
+    session_complete      INTEGER NOT NULL DEFAULT 0,
+    code_fingerprint      TEXT NOT NULL DEFAULT ''
 );
 """
 
@@ -48,6 +67,9 @@ class SessionState:
     session_id: str
     #: Content hash of the graph this session's mastery rows refer to.
     graph_fingerprint: str = ""
+    #: Build that computed this session's mastery. '' means it predates the
+    #: stamp, which is itself a mismatch - unknown logic is not this logic.
+    code_fingerprint: str = ""
     turn_id: int = 0
     current_node: Optional[str] = None
     current_item_id: Optional[str] = None
@@ -152,20 +174,22 @@ class Store:
         state = SessionState(
             session_id=session_id or f"sess_{uuid.uuid4().hex[:12]}",
             graph_fingerprint=graph_fingerprint,
+            code_fingerprint=build_info.CODE,
             theta_map=dict(initial_theta),
             n_obs={k: 0 for k in initial_theta},
         )
         now = time.time()
         self._conn.execute(
-            "INSERT INTO sessions (session_id, graph_fingerprint, created_at, updated_at, "
-            "theta_map, n_obs) VALUES (?, ?, ?, ?, ?, ?)",
-            (state.session_id, state.graph_fingerprint, now, now,
+            "INSERT INTO sessions (session_id, graph_fingerprint, code_fingerprint, "
+            "created_at, updated_at, theta_map, n_obs) VALUES (?, ?, ?, ?, ?, ?, ?)",
+            (state.session_id, state.graph_fingerprint, state.code_fingerprint, now, now,
              json.dumps(state.theta_map), json.dumps(state.n_obs)),
         )
         self._conn.commit()
         return state
 
-    def get(self, session_id: str, graph_fingerprint: Optional[str] = None) -> Optional[SessionState]:
+    def get(self, session_id: str, graph_fingerprint: Optional[str] = None,
+            code_fingerprint: Optional[str] = None) -> Optional[SessionState]:
         row = self._conn.execute(
             "SELECT * FROM sessions WHERE session_id = ?", (session_id,)
         ).fetchone()
@@ -180,6 +204,18 @@ class Store:
                 f"({row['graph_fingerprint'] or 'unknown'}, now {graph_fingerprint}). "
                 f"Its mastery refers to nodes that no longer exist. "
                 f"Start a new session, or delete {CONFIG.state_db_path.name} to reset."
+            )
+        want_code = build_info.CODE if code_fingerprint is None else code_fingerprint
+        if want_code and row["code_fingerprint"] != want_code:
+            # The keys still resolve and the graph still matches; the NUMBERS
+            # were computed by other logic. Resuming here is new code reading
+            # old mastery, and there is nothing on screen that would say so.
+            raise StaleSessionError(
+                f"session {session_id} was advanced by a different build "
+                f"({row['code_fingerprint'] or 'before the stamp existed'}, "
+                f"now {want_code}). Its mastery was computed by logic that is no "
+                f"longer running. Start a new session; the old one is not "
+                f"repairable, only re-runnable."
             )
         return SessionState(
             session_id=row["session_id"],
@@ -196,16 +232,18 @@ class Store:
             completed_items=json.loads(row["completed_items"]),
             history=json.loads(row["history"]),
             session_complete=bool(row["session_complete"]),
+            code_fingerprint=row["code_fingerprint"],
         )
 
     def save(self, state: SessionState) -> None:
         self._conn.execute(
-            "UPDATE sessions SET graph_fingerprint=?, updated_at=?, turn_id=?, current_node=?, current_item_id=?, "
+            "UPDATE sessions SET graph_fingerprint=?, code_fingerprint=?, updated_at=?, turn_id=?, current_node=?, current_item_id=?, "
             "hint_counter=?, visual_narrow_level=?, turns_on_item=?, consecutive_failures=?, "
             "theta_map=?, n_obs=?, "
             "completed_items=?, history=?, session_complete=? WHERE session_id=?",
             (
                 state.graph_fingerprint,
+                state.code_fingerprint,
                 time.time(),
                 state.turn_id,
                 state.current_node,

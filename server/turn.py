@@ -42,12 +42,13 @@ import time
 from dataclasses import dataclass, field
 from typing import Optional
 
+from server import build_info
 from server import guards
 from server import llm as llm_mod
 from server import mastery as mastery_mod
 from server import mock_tutor
 from server import retrieval
-from server.config import CONFIG, ROOT
+from server.config import CONFIG
 from server.graph_store import GraphStore
 from server.schemas import (
     SCORABLE_EXPECTS,
@@ -705,50 +706,6 @@ def complete_turn(store: GraphStore, db: Store, phase1: Phase1) -> TurnResponse:
 # step 9 - log everything (CLAUDE.md §5, §10: no silent anything)
 # ---------------------------------------------------------------------------
 
-def _code_fingerprint() -> str:
-    """Which build wrote this line. `git describe`-ish, or "unknown".
-
-    WHY A LOG LINE NEEDS THIS. turns.jsonl accumulates across the whole project
-    and is never truncated - §9.1, §9.4 and §9.5 all read it as evidence. So it
-    is a corpus written by many different versions of this file, and aggregating
-    it whole silently pools them.
-
-    That is not hypothetical. Guard layer 1 fired on 17,433 `backtrack` turns
-    before the Call 2 fidelity ceiling landed, because backtrack was handed the
-    target node's label and the tutor said it. `backtrack` is in
-    RECONSTRUCTION_ACTIONS, so a naive pass over the file reports those as the
-    model reconstructing the answer parametrically - §6's headline number, at
-    24%, from a bug that was fixed. The current code's rate on those actions is
-    zero.
-
-    `provenance.py` exists because an eval result that carries its value but not
-    its sampling cannot be trusted. A turn record that cannot say which code
-    emitted it is the same failure one layer down: the sampling frame is the
-    file, and the file is not homogeneous. This is the cheapest stamp that makes
-    the seams visible, and it costs one subprocess at import.
-    """
-    import subprocess
-    try:
-        out = subprocess.run(
-            ["git", "rev-parse", "--short", "HEAD"],
-            capture_output=True, text=True, timeout=5, cwd=str(ROOT),
-        )
-        rev = out.stdout.strip()
-        if not rev:
-            return "unknown"
-        dirty = subprocess.run(
-            ["git", "status", "--porcelain"],
-            capture_output=True, text=True, timeout=5, cwd=str(ROOT),
-        )
-        return f"{rev}-dirty" if dirty.stdout.strip() else rev
-    except Exception:  # noqa: BLE001 - a log stamp must never fail a turn
-        return "unknown"
-
-
-#: Read once at import, like everything else that must not vary per request.
-CODE = _code_fingerprint()
-
-
 def _log_event(kind: str, payload: dict) -> None:
     """A non-turn event: a fallback, a retry, a guard trip.
 
@@ -756,7 +713,7 @@ def _log_event(kind: str, payload: dict) -> None:
     jsonl as the turns so a single file is the whole record of a session.
     """
     CONFIG.log_dir.mkdir(parents=True, exist_ok=True)
-    record = {"ts": time.time(), "code": CODE, "event": kind, **payload}
+    record = {"ts": time.time(), "code": build_info.CODE, "event": kind, **payload}
     with (CONFIG.log_dir / "turns.jsonl").open("a", encoding="utf-8") as fh:
         fh.write(json.dumps(record, ensure_ascii=False) + chr(10))
 
@@ -774,7 +731,7 @@ def _log(phase1: Phase1, response: TurnResponse) -> None:
         # Which build wrote this line. See _code_fingerprint: turns.jsonl spans
         # the whole project and pooling it across versions is how a fixed bug
         # gets reported as a result.
-        "code": CODE,
+        "code": build_info.CODE,
         "session_id": response.session_id,
         "turn_id": response.turn_id,
         "mock": CONFIG.mock_mode,
