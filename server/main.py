@@ -112,8 +112,9 @@ async def post_turn(req: TurnRequest, stream: bool = Query(default=False)):
         state = db.get(req.session_id, graph_fingerprint=store.fingerprint)
     except StaleSessionError as exc:
         # 409, not 500: the request is well-formed, the stored session is just
-        # no longer meaningful against this graph. The client shows the message
-        # and opens a new session.
+        # no longer meaningful - either its mastery names nodes this graph does
+        # not have, or it was computed by a build that is no longer running. The
+        # client shows the message and opens a new session.
         raise HTTPException(status_code=409, detail=str(exc)) from exc
     if state is None:
         raise HTTPException(status_code=404, detail=f"unknown session {req.session_id}")

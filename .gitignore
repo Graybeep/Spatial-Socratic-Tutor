@@ -10,6 +10,10 @@ logs/*.jsonl
 *.sqlite
 *.sqlite3
 
+# retired state files, moved aside rather than deleted when a session store is
+# reset. Never committed: they are stale by definition.
+.attic/
+
 # python
 __pycache__/
 *.py[cod]

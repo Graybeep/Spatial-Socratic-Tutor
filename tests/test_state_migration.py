@@ -13,7 +13,7 @@ import sqlite3
 
 import pytest
 
-from server.state import SessionState, Store
+from server.state import SessionState, StaleSessionError, Store
 
 OLD_SCHEMA = """
 CREATE TABLE sessions (
@@ -73,12 +73,49 @@ def test_a_stale_db_can_still_be_written_after_migration(stale_db):
 
 
 def test_migration_preserves_existing_rows(stale_db):
+    """Migration must not DESTROY an old row. Whether the server will USE it is
+    a separate question, answered by the fingerprint checks below - the row is
+    still there to be inspected, exported or replayed."""
     store = Store(db_path=stale_db)
-    old = store.get("sess_old")
+    old = store.get("sess_old", code_fingerprint="")
     assert old is not None, "migration dropped an existing session"
     assert old.theta_map == {"a": 0.25}
     assert old.n_obs == {"a": 3}
     assert old.visual_narrow_level == 0, "new column should default, not corrupt"
+    assert old.code_fingerprint == "", "a pre-stamp row must not claim a build"
+    store.close()
+
+
+def test_a_row_written_before_the_stamp_is_refused(stale_db):
+    """The case that motivated this: a server left running across a code change
+    resumes sessions whose mastery was computed by the old logic. The graph
+    fingerprint cannot see it - the graph did not move."""
+    store = Store(db_path=stale_db)
+    with pytest.raises(StaleSessionError) as exc:
+        store.get("sess_old")
+    assert "different build" in str(exc.value)
+    assert "before the stamp existed" in str(exc.value)
+    store.close()
+
+
+def test_a_matching_graph_does_not_excuse_a_mismatched_build(stale_db):
+    """Both guards run, and the graph one passing means nothing about the other."""
+    store = Store(db_path=stale_db)
+    row = store._conn.execute(
+        "SELECT graph_fingerprint FROM sessions WHERE session_id='sess_old'"
+    ).fetchone()
+    with pytest.raises(StaleSessionError) as exc:
+        store.get("sess_old", graph_fingerprint=row["graph_fingerprint"],
+                  code_fingerprint="some-other-build")
+    assert "different build" in str(exc.value)
+    store.close()
+
+
+def test_a_session_written_by_this_build_loads(stale_db):
+    store = Store(db_path=stale_db)
+    state = store.create({"a": 0.0})
+    store.save(state)
+    assert store.get(state.session_id) is not None
     store.close()
 
 
@@ -97,3 +134,20 @@ def test_a_fresh_db_needs_no_migration(tmp_path):
     store.save(state)
     assert isinstance(store.get(state.session_id), SessionState)
     store.close()
+
+
+def test_the_endpoint_returns_409_on_a_build_mismatch(client, session):
+    """End to end: the drift check has to reach the client as a recoverable
+    state, not a 500. A demo that dies here looks broken; one that says "start a
+    new session" looks careful."""
+    from server import main as main_mod
+
+    main_mod.DB._conn.execute(
+        "UPDATE sessions SET code_fingerprint='a-different-build' WHERE session_id=?",
+        (session,),
+    )
+    main_mod.DB._conn.commit()
+
+    r = client.post("/turn", json={"session_id": session, "response": None})
+    assert r.status_code == 409
+    assert "different build" in r.json()["detail"]

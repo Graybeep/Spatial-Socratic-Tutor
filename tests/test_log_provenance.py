@@ -19,6 +19,7 @@ import json
 
 import pytest
 
+from server import build_info
 from server import turn as turn_mod
 from server.config import CONFIG
 
@@ -48,7 +49,7 @@ def test_non_turn_events_are_stamped_too(client, session, store):
     turn_mod._log_event("test_event", {"detail": "x"})
     record = _records(CONFIG.log_dir)[-1]
     assert record["event"] == "test_event"
-    assert record["code"] == turn_mod.CODE
+    assert record["code"] == build_info.CODE
 
 
 def test_the_stamp_is_read_once_not_per_turn(client, session, store):
@@ -57,7 +58,7 @@ def test_the_stamp_is_read_once_not_per_turn(client, session, store):
     data = turn(client, session)
     turn(client, session, correct_response(data, store))
     stamps = {r["code"] for r in _records(CONFIG.log_dir)}
-    assert stamps == {turn_mod.CODE}
+    assert stamps == {build_info.CODE}
 
 
 def test_a_missing_git_degrades_to_unknown_and_never_raises(monkeypatch):
@@ -69,7 +70,7 @@ def test_a_missing_git_degrades_to_unknown_and_never_raises(monkeypatch):
         raise FileNotFoundError("git")
 
     monkeypatch.setattr(subprocess, "run", boom)
-    assert turn_mod._code_fingerprint() == "unknown"
+    assert build_info.code_fingerprint() == "unknown"
 
 
 def test_an_uncommitted_tree_says_so(monkeypatch):
@@ -88,7 +89,7 @@ def test_an_uncommitted_tree_says_so(monkeypatch):
         return Result("abc1234\n") if "rev-parse" in args else Result(" M server/turn.py\n")
 
     monkeypatch.setattr(subprocess, "run", fake)
-    assert turn_mod._code_fingerprint() == "abc1234-dirty"
+    assert build_info.code_fingerprint() == "abc1234-dirty"
 
 
 def test_the_stamp_never_reaches_the_client(client, session):
