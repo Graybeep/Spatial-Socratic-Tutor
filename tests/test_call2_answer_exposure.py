@@ -31,7 +31,7 @@ MEASURED EXPOSURE, over 25 items driven to the turn budget:
     hint_visual                65                51    78%
     hint_verbal                15                15   100%
     backtrack                  64                64   100%
-    advance                    10                10   100%   (legitimate, §5)
+    advance                    10                10   100%   (NOT legitimate - below)
     resolved_with_support       3                 0     0%   (legitimate, §6/3)
 
 Layer 1 fires on only 62 of 400 turns, so the OBSERVED leak rate is 15.5% —
@@ -44,6 +44,31 @@ mock does.
 This is the third instance of the failure class in
 docs/writeup/representation-blindness.md: two fields that are different things in
 the schema and the same thing in the domain.
+
+AND THEN A FOURTH, WHICH THIS FILE MISSED FOR A WEEK
+
+The `advance` row above is marked "legitimate, §5" and it was not. The whole
+suite below scopes its assertions to NON_LEAKING_ACTIONS = ask/hint_*, on the
+reasoning that advance and explain are allowed to name the answer because the
+item is behind them. That reasoning is false for both:
+
+  advance   `_advance_to_next_node` runs INSIDE the same turn, so by the time
+            Call 2 is called, current_node is the NEXT item's node and that item
+            is open and about to be asked. 12 of 30 advance turns in a driven
+            session handed over a label on the open item's answer surface.
+
+  explain   explaining is what the tutor does INSTEAD of the student answering.
+            The item is open by definition. Unlike §6 layer 3's forced reveal,
+            explain costs no mastery, so a name here is free credit.
+
+Nothing failed. 287 tests passed, because every assertion in this file asked
+"was the action a hinting action?" when the property that matters is "was an
+item open and unanswered on this turn?". An exemption keyed to an action name
+survives the action changing meaning; one keyed to the state does not.
+
+The fix is in CALL2_FIDELITY (advance and explain are `safe_label`, not
+`labels`). The tests that would have caught it are at the bottom of this file,
+asserted over EVERY action rather than over a named subset.
 """
 from __future__ import annotations
 
@@ -252,3 +277,71 @@ def test_a_delivered_chunk_never_contains_the_answer_verbatim(store):
         if not item.answer_spans:
             continue
         assert item.answer.lower() not in c["chunk"].lower()
+
+
+# ---------------------------------------------------------------------------
+# the property, not the action name
+# ---------------------------------------------------------------------------
+
+#: The one action licensed to name the answer of an OPEN item: §6 layer 3's
+#: forced reveal, which charges zero mastery in exchange. Everything else is
+#: covered by the assertions below, whatever it is called.
+LICENSED_TO_REVEAL = {"resolved_with_support"}
+
+
+def test_no_action_hands_over_the_open_item_s_answer(store):
+    """The assertion the rest of this file should always have made.
+
+    Scoped to the STATE (is an item open and unanswered?) rather than to a set
+    of action names. `advance` and `explain` both slipped through the name-based
+    version: advance because start_item() has already opened the next item on
+    the same turn, explain because it is by definition a turn where the item is
+    still open.
+    """
+    breaches = []
+    for call in _drive(store):
+        if call["action"] in LICENSED_TO_REVEAL:
+            continue
+        aliases = _answer_aliases(store, call["item_id"])
+        for label in call["labels"]:
+            if label.casefold() in aliases:
+                breaches.append((call["action"], label, call["item_id"]))
+
+    assert not breaches, (
+        f"Call 2 was handed the open item's answer on {len(breaches)} turns; "
+        f"first three: {breaches[:3]}"
+    )
+
+
+def test_advance_is_covered_by_that_assertion_and_actually_occurs(store):
+    """A guard that never runs is not a guard. `advance` was exempt for a week
+    and the exemption was invisible because the suite never checked the action
+    was exercised at all."""
+    actions = {c["action"] for c in _drive(store)}
+    assert "advance" in actions, "no advance turn was driven; the test above proves nothing"
+
+
+def test_the_fidelity_table_grants_full_labels_to_exactly_one_action(store):
+    """Pins the contract itself, so a future edit that promotes an action back
+    to `labels` has to argue with a test rather than pass silently."""
+    full = {a for a, f in turn_mod.CALL2_FIDELITY.items() if f == "labels"}
+    assert full == LICENSED_TO_REVEAL, (
+        f"{full - LICENSED_TO_REVEAL} may now name an open item's answer. "
+        f"Only a forced reveal may, and §6 layer 3 takes the mastery for it."
+    )
+
+
+def test_the_edge_anchor_concession_is_ask_only(store):
+    """Naming one endpoint exists because a question about an edge cannot be
+    POSED without it. Explaining and moving on can be."""
+    for call in _drive(store):
+        if call["action"] in ("advance", "explain") and call["item_id"]:
+            item = store.item(call["item_id"])
+            if "->" not in item.answer:
+                continue
+            surface = {store.label(e.strip()).casefold()
+                       for e in item.answer.split("->")
+                       if e.strip() in {n.id for n in store.graph.nodes}}
+            assert not (surface & {l.casefold() for l in call["labels"]}), (
+                f"{call['action']} named an endpoint of open edge item {call['item_id']}"
+            )
