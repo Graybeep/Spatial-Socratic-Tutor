@@ -95,6 +95,12 @@ export interface TurnBudget {
  * graph", and the client does not need it to. focus_nodes is derived and exists
  * for logging and eval §9.2; render from dimmed_nodes.
  */
+/** How the session stands. Both non-"active" values are terminal. */
+export type SessionStatus = "active" | "mastered" | "concluded";
+
+/** Why a terminal session ended. Server-decided and closed. */
+export type SessionEndReason = "graph_mastered" | "support_ceiling";
+
 export interface GraphState {
   current_node: string | null;
   focus_nodes: string[];
@@ -117,6 +123,11 @@ export interface GraphStatePhase {
   turn_budget: TurnBudget;
   resolved_with_support: boolean;
   session_complete: boolean;
+  /** See TurnResponse. Arrives in phase 1 for the same reason panel_locked
+   *  does: a concluded session must stop looking answerable the moment the
+   *  graph repaints, not when the closing line lands ~1.4s later. */
+  session_state: SessionStatus;
+  session_end_reason: SessionEndReason | null;
   /** See TurnResponse. Arrives in phase 1 because the gate has to be live the
    *  moment the graph becomes interactive. */
   panel_locked: boolean;
@@ -137,7 +148,22 @@ export interface TurnResponse {
   item: ItemPublic | null;
   turn_budget: TurnBudget;
   resolved_with_support: boolean;
+  /**
+   * Derived server-side from `session_state` and impossible to disagree with
+   * it. Kept because "is it over" is the question most of the client asks.
+   */
   session_complete: boolean;
+  /**
+   * WHICH ending. Rendering both terminal states the same way is wrong in the
+   * direction that matters: `mastered` is the student finishing the graph,
+   * `concluded` is the tutor deciding to stop after the support ceiling. On a
+   * terminal turn `item` is null and `expects` is "text", so a client that
+   * routes on `expects` alone shows nothing at all - which is what this field
+   * exists to prevent.
+   */
+  session_state: SessionStatus;
+  /** Why it ended. Null while active. */
+  session_end_reason: SessionEndReason | null;
   /**
    * True while an item whose answer is a node is open. The node panel must not
    * open on ANY node while it is set.

@@ -48,7 +48,7 @@ than forcing a rewrite.
 ```bash
 pip install -r requirements.txt
 python -m build.validate         # strict; must be clean
-python -m pytest                 # 291 tests
+python -m pytest                 # 322 tests
 python -m server.main            # http://127.0.0.1:8000
 ```
 

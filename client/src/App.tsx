@@ -8,6 +8,7 @@ import type {
   FrozenGraph,
   GraphState,
   McqOption,
+  SessionStatus,
   StudentResponse,
   TurnBudget,
 } from "./types";
@@ -37,7 +38,10 @@ export default function App() {
   const [panelLocked, setPanelLocked] = useState(false);
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState<string | null>(null);
-  const [complete, setComplete] = useState(false);
+  // WHICH ending, not just whether. `mastered` is the student finishing the
+  // graph; `concluded` is the tutor stopping after the support ceiling. They
+  // are not the same news and must not read as the same news.
+  const [sessionState, setSessionState] = useState<SessionStatus>("active");
 
   // Confirm-or-undo (CLAUDE.md §8). A click is a PROPOSAL. Nothing reaches
   // /turn until the student confirms, because a misclick scored as wrong
@@ -92,7 +96,7 @@ export default function App() {
           setBudget(p.turn_budget);
           setResolvedWithSupport(p.resolved_with_support);
           setPanelLocked(p.panel_locked);
-          setComplete(p.session_complete);
+          setSessionState(p.session_state);
         },
         onUtterance: (text) => {
           setLines((l) => [...l, { who: "tutor", text }]);
@@ -243,7 +247,7 @@ export default function App() {
           mcq={mcq}
           budget={budget}
           resolvedWithSupport={resolvedWithSupport}
-          complete={complete}
+          sessionState={sessionState}
           pendingLabel={pendingLabel}
           onConfirm={confirmPending}
           onUndo={clearPending}

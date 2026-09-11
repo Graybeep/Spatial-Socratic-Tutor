@@ -198,13 +198,34 @@
       "title": "Schema Version",
       "type": "string"
     },
-    "session_complete": {
-      "default": false,
-      "title": "Session Complete",
-      "type": "boolean"
+    "session_end_reason": {
+      "anyOf": [
+        {
+          "enum": [
+            "graph_mastered",
+            "support_ceiling"
+          ],
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Session End Reason"
     },
     "session_id": {
       "title": "Session Id",
+      "type": "string"
+    },
+    "session_state": {
+      "default": "active",
+      "enum": [
+        "active",
+        "mastered",
+        "concluded"
+      ],
+      "title": "Session State",
       "type": "string"
     },
     "turn_budget": {

@@ -83,6 +83,20 @@ class Phase1:
     #: Set when guard layer 1 fired. Always logged (§6, §10).
     leak_note: Optional[str] = None
 
+    @property
+    def session_status(self) -> str:
+        """active / mastered / concluded. `session_complete` says THAT it ended;
+        this says which of the two endings it was, and they are not the same
+        event to a student watching."""
+        if not self.session_complete:
+            return "active"
+        return ("concluded" if self.state.session_end_reason == "support_ceiling"
+                else "mastered")
+
+    @property
+    def session_end_reason(self) -> Optional[str]:
+        return self.state.session_end_reason if self.session_complete else None
+
     def reveals_answer(self) -> bool:
         """True when naming the current node would give the answer away.
 
@@ -158,6 +172,13 @@ CALL2_FIDELITY = {
     "advance": "safe_label",  # explains from the chunk, never by naming
     "explain": "safe_label",
     "resolved_with_support": "labels",  # forced reveal, §6 layer 3
+    # The circuit breaker's closing turn. No item is open, so there is nothing
+    # to withhold; safe_label rather than labels so that stays true if one ever
+    # is. Server-only, like resolved_with_support - it is never in the `Action`
+    # literal and Call 1 can never request it.
+    "conclude": "safe_label",
+    #: The other ending: §7 found nothing left below threshold.
+    "complete": "safe_label",
 }
 
 
@@ -328,11 +349,15 @@ def _advance_to_next_node(store: GraphStore, state: SessionState) -> Optional[It
     node_id = mastery_mod.next_node(store, _mastery_map(state))
     if node_id is None:
         state.session_complete = True
+        state.session_end_reason = "graph_mastered"
         state.current_item_id = None
         return None
     item = _pick_item(store, state, node_id)
     if item is None:
+        # Every ready node is out of items. Terminal for the same reason and
+        # with the same student-facing meaning: there is nothing left to ask.
         state.session_complete = True
+        state.session_end_reason = "graph_mastered"
         return None
     state.start_item(node_id, item.id)
     state.consecutive_failures = 0
@@ -542,6 +567,9 @@ def begin_turn(
     if resolved_with_support:
         action = "advance"
         state.completed_items.append(item.id)
+        # SESSION-level, never reset. turns_on_item resets on every item, which
+        # is what makes that a budget and this a circuit breaker.
+        state.forced_reveals += 1
     elif graded is True:
         action = "advance"
         state.completed_items.append(item.id)
@@ -563,10 +591,37 @@ def begin_turn(
                 item = next_item
                 hint_level = 0
 
-    if action == "advance":
+    # --- the circuit breaker, ABOVE §7 -------------------------------------
+    #
+    # §6 layer 3 caps turns on ONE item. §7 decides which node to move to next.
+    # Neither decides when to stop trying, and without that a student who cannot
+    # answer anything backtracks between a node and its prereq forever - measured
+    # at 400 turns, 0 nodes mastered, 2 distinct nodes visited, no exit. §7's
+    # bottomless backtrack is a defensible per-node TEACHING rule; it was never
+    # meant to be the thing running while an audience watches.
+    #
+    # So this reads session-level state only and overrides the routing decision
+    # rather than participating in it. §7 is untouched: it still answers "which
+    # node next", and is simply not asked.
+    if state.support_ceiling_reached and not state.session_complete:
+        state.session_complete = True
+        state.session_end_reason = "support_ceiling"
+        state.current_item_id = None
+        state.current_node = None
+        item = None
+        session_complete = True
+        action = "advance"
+    elif action == "advance":
         next_item = _advance_to_next_node(store, state)
         if next_item is None:
             session_complete = True
+            state.session_end_reason = "graph_mastered"
+            # A terminal turn has NO open item, and `item` must say so. It used
+            # to keep the last answered one, so a finished session shipped
+            # expects="edge_click" and panel_locked=true alongside item=null -
+            # the client being told to collect an answer for something that is
+            # not there. Both endings clear it, for the same reason.
+            item = None
         else:
             item = next_item
             hint_level = 0
@@ -650,7 +705,19 @@ def complete_turn(store: GraphStore, db: Store, phase1: Phase1) -> TurnResponse:
 
     labels, n_lit, answer_category = _call2_context(store, state, phase1)
 
-    if phase1.resolved_with_support:
+    if phase1.session_status in ("concluded", "mastered"):
+        # Terminal. No item is open and none is coming, so the ordinary
+        # `advance` line ("Next idea.") is a promise the server cannot keep.
+        # The two endings get different words on purpose: finishing the graph is
+        # an achievement, and the circuit breaker stopping is the tutor's
+        # decision. A student should be able to tell which one happened.
+        utterance = _call2(
+            state,
+            "complete" if phase1.session_status == "mastered" else "conclude",
+            0, labels, n_lit,
+        )
+        leak_note = None
+    elif phase1.resolved_with_support:
         # The budget forced a reveal, which is SUPPOSED to name the answer
         # (§6 layer 3, zero mastery in exchange). Layer 1 is not run on it:
         # screening this turn would trip on the system working correctly.
@@ -693,7 +760,8 @@ def complete_turn(store: GraphStore, db: Store, phase1: Phase1) -> TurnResponse:
         item=phase1.item_public(),
         turn_budget=TurnBudget(used=state.turns_on_item, max=CONFIG.turn_budget),
         resolved_with_support=phase1.resolved_with_support,
-        session_complete=phase1.session_complete,
+        session_state=phase1.session_status,
+        session_end_reason=phase1.session_end_reason,
         panel_locked=phase1.reveals_answer(),
     )
 
@@ -744,6 +812,9 @@ def _log(phase1: Phase1, response: TurnResponse) -> None:
         "visual_narrow_level": phase1.state.visual_narrow_level,
         "n_lit": len(response.graph_state.focus_nodes) or None,
         "resolved_with_support": response.resolved_with_support,
+        "session_state": response.session_state,
+        "session_end_reason": response.session_end_reason,
+        "forced_reveals": phase1.state.forced_reveals,
         "item_id": phase1.item.id if phase1.item else None,
         "focus_nodes": response.graph_state.focus_nodes,
         "dimmed_nodes": response.graph_state.dimmed_nodes,

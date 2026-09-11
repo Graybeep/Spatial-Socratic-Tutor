@@ -104,6 +104,21 @@ class Config:
     items_path: Path = field(default_factory=lambda: _path("ITEMS_PATH", "data/items.json"))
     gold_graph_path: Path = field(default_factory=lambda: _path("GOLD_GRAPH_PATH", "data/gold_graph.json"))
     prompts_dir: Path = field(default_factory=lambda: _path("PROMPTS_DIR", "prompts"))
+    #: How many §6 layer 3 forced reveals a SESSION absorbs before the tutor
+    #: concludes the thread instead of loading another item.
+    #:
+    #: A POLICY BOUND, not a derived one. §6 layer 3 caps turns on ONE item and
+    #: §7 routes to the next node; neither decides when to stop trying, so a
+    #: student who cannot answer anything backtracks between a node and its
+    #: prereq indefinitely - measured at 400 turns, 0 mastered, 2 distinct
+    #: nodes, no exit. That is the state the demo's own centrepiece walks into:
+    #: a volunteer stuck on purpose, watching the graph narrow.
+    #:
+    #: 3 is chosen, not calculated. Two risks concluding a student who was
+    #: unlucky twice; four is more forced reveals than a demo slot has turns for.
+    #: Config so it can be swept, and so a longer session can raise it (§13.1).
+    conclude_after_forced_reveals: int = field(
+        default_factory=lambda: _int("CONCLUDE_AFTER_FORCED_REVEALS", 3))
     #: Which canned fallback to use when an action has no file of its own. The
     #: fallback handler is the one path that must never raise, so an unknown
     #: action degrades to this instead of to a FileNotFoundError. Every canned

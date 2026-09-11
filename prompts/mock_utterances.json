@@ -13,7 +13,8 @@
     "the demo projector.",
     "RULE FOR EDITING: hint_visual must never name the answer. It points at the",
     "screen; that is the whole thesis.",
-    "BACKTRACK CARRIES NO NAME. Under CALL2_FIDELITY (server/turn.py) backtrack gets a lit COUNT and no identities, because start_item() has already moved to the target - so {first} would render the NEW item's answer. The graph moves the student; the text must not name where."
+    "BACKTRACK CARRIES NO NAME. Under CALL2_FIDELITY (server/turn.py) backtrack gets a lit COUNT and no identities, because start_item() has already moved to the target - so {first} would render the NEW item's answer. The graph moves the student; the text must not name where.",
+    "CONCLUDE IS THE CIRCUIT BREAKER'S LAST TURN. No item is open and none is coming, so it must not promise a next question. It also must not read as a failure notice: the tutor is choosing to stop, which is a different thing from the student running out."
   ],
   "ask": [
     "Have a look at the map. Which node fits?",
@@ -46,5 +47,13 @@
   ],
   "resolved_with_support": [
     "We've spent enough turns here - it's {first}. Let's move on and come back to it later."
+  ],
+  "conclude": [
+    "Let's stop here for today. The ideas that stayed hard are the ones worth coming back to fresh.",
+    "Good place to leave it. We'll pick up the parts that fought back next time."
+  ],
+  "complete": [
+    "That's the whole map. Every node on it is one you placed yourself.",
+    "Done - the map is covered. Worth a look back at the shape of it before you go."
   ]
 }

@@ -18,13 +18,30 @@ from __future__ import annotations
 
 from typing import Literal, Optional
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, computed_field, ConfigDict, Field
 
 SCHEMA_VERSION = "1.0"
 
 StudentState = Literal["on_track", "confused_prereq", "stuck", "correct", "guessing"]
 Action = Literal["ask", "hint_visual", "hint_verbal", "advance", "backtrack", "explain"]
 Expects = Literal["text", "node_click", "edge_click", "mcq"]
+
+#: How a session stands. `active` is every ordinary turn; the other two are
+#: terminal and differ in WHY, which is the whole reason this is not a boolean.
+#:
+#:   mastered    §7's next_node() found nothing left below threshold. The
+#:               student finished the graph.
+#:   concluded   the tutor stopped on its own terms after hitting the support
+#:               ceiling (§6 layer 3 fired CONCLUDE_AFTER_FORCED_REVEALS times).
+#:               Nothing is wrong; the thread is simply not worth continuing.
+#:
+#: A client that renders both as "done" is wrong in the direction that matters:
+#: one is an achievement and the other is a tutor deciding to stop.
+SessionStatus = Literal["active", "mastered", "concluded"]
+
+#: Why a terminal session ended. Server-decided and closed - never model text,
+#: so §1.6's whitelist is not widened by carrying it.
+SessionEndReason = Literal["graph_mastered", "support_ceiling"]
 ItemType = Literal["node_click", "edge_click", "mcq"]
 EdgeType = Literal["prereq", "related"]
 
@@ -290,7 +307,21 @@ class TurnResponse(Strict):
     # Set when the turn budget forced a reveal. Mastery awarded is zero
     # (CLAUDE.md §6 layer 3).
     resolved_with_support: bool = False
-    session_complete: bool = False
+
+    #: Authoritative. `session_complete` below is DERIVED from this and cannot
+    #: disagree with it - two fields that answer overlapping questions and are
+    #: assigned separately is the failure this repo has now hit four times.
+    session_state: SessionStatus = "active"
+    session_end_reason: Optional[SessionEndReason] = None
+
+    @computed_field  # type: ignore[prop-decorator]
+    @property
+    def session_complete(self) -> bool:
+        """Kept on the wire: "is it over" is a question worth one field, and
+        every existing consumer asks it. Computed, never stored, so it is
+        impossible for it to say `false` while session_state says `concluded`.
+        """
+        return self.session_state != "active"
 
 
 #: Every model that tests/test_schemas_frozen.py snapshots.

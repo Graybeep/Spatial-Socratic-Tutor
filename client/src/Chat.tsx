@@ -1,5 +1,5 @@
 import type { CSSProperties, ReactNode } from "react";
-import type { Expects, GraphNode, McqOption, TurnBudget } from "./types";
+import type { Expects, GraphNode, McqOption, SessionStatus, TurnBudget } from "./types";
 
 /**
  * The rail. Two components, both of them rail furniture, both in this file
@@ -27,7 +27,10 @@ interface ChatProps {
   mcq: McqOption[];
   budget: TurnBudget | null;
   resolvedWithSupport: boolean;
-  complete: boolean;
+  /** Terminal turns carry no item and expects="text", so routing the composer
+   *  on `expects` alone leaves the rail blank at exactly the moment the student
+   *  needs to be told the session is over. This is what says so. */
+  sessionState: SessionStatus;
   /** A click is a PROPOSAL until confirmed (CLAUDE.md §8). Non-null = one waiting. */
   pendingLabel: string | null;
   onConfirm: () => void;
@@ -44,7 +47,7 @@ export function Chat({
   mcq,
   budget,
   resolvedWithSupport,
-  complete,
+  sessionState,
   pendingLabel,
   onConfirm,
   onUndo,
@@ -76,8 +79,8 @@ export function Chat({
       <Budget budget={budget} resolvedWithSupport={resolvedWithSupport} />
 
       <div style={{ borderTop: "1px solid var(--rule)", padding: 18 }}>
-        {complete ? (
-          <p style={{ margin: 0, opacity: 0.7 }}>That is the whole chapter.</p>
+        {sessionState !== "active" ? (
+          <SessionEnded state={sessionState} />
         ) : pendingLabel !== null ? (
           // The only gate between a stray click and a permanent mastery penalty.
           <div style={{ display: "grid", gap: 10 }}>
@@ -282,4 +285,27 @@ const plainBtn: CSSProperties = {
 
 function Hint({ children }: { children: ReactNode }) {
   return <p style={{ margin: 0, fontSize: 14, opacity: 0.7 }}>{children}</p>;
+}
+
+/** The two endings, said differently on purpose.
+ *
+ *  Collapsing them into one "session over" line was the previous behaviour and
+ *  it told a student who never finished the chapter that they had. The graph is
+ *  still on screen and still carries their mastery colours in both cases; what
+ *  changes is whether the last thing they read is an achievement or a decision
+ *  the tutor made for them. */
+function SessionEnded({ state }: { state: SessionStatus }) {
+  const mastered = state === "mastered";
+  return (
+    <div style={{ display: "grid", gap: 6 }}>
+      <p style={{ margin: 0, fontWeight: 600, fontSize: 14 }}>
+        {mastered ? "Chapter complete" : "Stopped here for now"}
+      </p>
+      <p style={{ margin: 0, fontSize: 13, opacity: 0.7 }}>
+        {mastered
+          ? "Every node on the map is one you placed yourself."
+          : "The tutor ended the session rather than keep pushing. The map keeps what you did reach - start a new session to pick it up again."}
+      </p>
+    </div>
+  );
 }

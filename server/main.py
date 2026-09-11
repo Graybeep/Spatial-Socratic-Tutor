@@ -153,6 +153,11 @@ async def post_turn(req: TurnRequest, stream: bool = Query(default=False)):
                 },
                 "resolved_with_support": phase1.resolved_with_support,
                 "session_complete": phase1.session_complete,
+                # Phase 1 for the same reason as panel_locked: a concluded
+                # session must stop looking answerable the moment the graph
+                # repaints, not ~1.4s later when the closing line arrives.
+                "session_state": phase1.session_status,
+                "session_end_reason": phase1.session_end_reason,
                 # Phase 1, not `done`: the panel gate has to be live the moment
                 # the graph becomes interactive, or it is open for ~1.4s on a
                 # narrowed screen, which is the whole window that matters.
