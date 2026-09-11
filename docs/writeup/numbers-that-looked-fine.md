@@ -1,7 +1,7 @@
 # Numbers that looked fine
 
 *Evaluation code that ran, passed its tests, and produced well-formed numbers
-over nothing. Two instances, one shared property: **the output had valid shape,
+over nothing. Three instances, one shared property: **the output had valid shape,
 and no test asserted on the sampling underneath it or on the distribution of
 scores it was aggregating.***
 
@@ -130,7 +130,45 @@ partial-knowledge figure sat at 52–56% **in every arm**, making the four arms
 look indistinguishable — the comparison the whole evaluation exists to make,
 washed out by items answering a different question.
 
-## A third, adjacent: a constant calibrated against nothing
+## Instance 3 — the drift test had a blind spot shaped like the drift
+
+The two above are evaluations. This one is a **test**, and that makes it the
+worst of the three: it is the instrument written specifically to catch a class
+of problem, failing to register an instance of exactly that class.
+
+`tests/test_client_types_match.py` exists to catch the server and the client
+disagreeing about the wire. It compares the TypeScript interface's field names
+against `model.model_fields`, and it has caught real drift.
+
+`TurnResponse.session_complete` was then changed from a stored field to a
+pydantic `@computed_field`, derived from the new `session_state` so the two could
+not contradict each other. Computed fields are **absent from `model_fields` and
+present in every payload**. So the test's view of "what the server sends" silently
+lost a field that the server still sends, on every response.
+
+What it would have reported is the part worth dwelling on. Not "a field is
+missing" — it would have said the *client* declared `session_complete` while the
+server never sends it, and the obvious remedy for that message is to delete it
+from the client. **Following the test's advice would have removed the one field
+most of the client uses to ask whether the session is over**, and the suite would
+have gone green on the way.
+
+It was caught because the field set changed in the same commit and the failure
+was read rather than satisfied. Nothing structural caught it.
+
+The narrow fix is two lines: `wire_fields()` now returns
+`model_fields | model_computed_fields`. The general one is the same lesson as the
+fallback enumeration in [limitations.md](limitations.md) — **a test that derives
+its expectation from a subset of the thing it is checking will pass on exactly
+the cases that subset omits.** `model_fields` was not wrong; it was one of two
+places a field can live, and the test knew about one.
+
+We record this separately from the schema change that exposed it. The schema
+change was routine. A drift detector that cannot see one of the two kinds of
+field it is meant to detect drift in is a fact about our test coverage, and it
+would still be true if `session_state` had never been added.
+
+## Adjacent, and the same shape: a constant calibrated against nothing
 
 Not an evaluation, but the same shape, and it cost the demo a whole capability.
 
@@ -208,15 +246,15 @@ every output we produce.
 
 ## What we are not claiming
 
-Two defects and one adjacent constant, in one four-week project, found by the
-people who wrote the code. There is an obvious selection effect in which bugs
-get noticed and written up.
+Two defects, one blind test and one adjacent constant, in one four-week project,
+found by the people who wrote the code. There is an obvious selection effect in
+which bugs get noticed and written up.
 
 What we can say is narrower and we think still worth stating: all of them
 survived a test suite a reviewer would have called adequate; and in every case
 the intuitive fix would have hidden the problem rather than surfaced it —
 bootstrap the loop variable, widen the student's answer set, nudge the threshold
-down until something passes.
+down until something passes, delete the field the drift test says is unused.
 
 If that generalises even weakly, published leakage and learning-gain figures
 from systems of this shape deserve a question that is rarely asked of them:
