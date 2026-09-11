@@ -183,7 +183,7 @@ NARROW_SCHEDULE=0,25,18,12,8 python -m server.main
 | `eval/graph_quality.py` | §9.3 extraction recall ceiling; deterministic, no key |
 | `eval/leak_monitor.py` | §6.1 layer-1 rate from the log; refuses to pool builds or report a mock |
 | `docs/writeup/representation-blindness.md` | the design contribution: fidelity ceiling, not field whitelist (4 instances) |
-| `docs/writeup/numbers-that-looked-fine.md` | evals that produced well-formed numbers over nothing |
+| `docs/writeup/numbers-that-looked-fine.md` | evals, and one drift test, that produced well-formed results over nothing |
 | `docs/writeup/` | other draft report sections — identity leakage, limitations |
 | `docs/writeup/no-key-plan.md` | **the report that stands without a key**, and the day-19 decision |
 | `build/fetch_chapter.py` | downloads the chapter into a gitignored dir; URLs in `build/config.py` |

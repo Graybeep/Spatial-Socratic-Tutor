@@ -395,6 +395,57 @@ the counts were right and the DAG was clean — no check asked whether the items
 were *different from each other*. See `numbers-that-looked-fine.md`; it is the same
 failure class as the two recorded there.
 
+**A set enumerated in prose drifted from the set the code produces, and the
+gap was a crash on the least recoverable turn.** §5 specifies "six canned
+fallback utterances, one per action". Seven things are passed to `_call2` as an
+action: the six in the `Action` literal, plus `resolved_with_support`, which is
+not an `Action` at all but is handed to Call 2 as one on a §6 layer 3 forced
+reveal.
+
+That seventh had no `prompts/` file. So a Call 2 timeout on a forced-reveal turn
+raised `FileNotFoundError` out of the fallback handler — the one code path whose
+entire purpose is graceful degradation. A fallback for the fallback, missing.
+
+It is the same shape as the key-is-always-longest finding above: **a property
+that was true by accident and encoded in a place nothing could check it
+against.** "Six" was true when §5 was written and stopped being true the moment
+`resolved_with_support` was added, and nothing anywhere held a list of actions
+that Python could compare against a list of files. Prose cannot be asserted on.
+
+Two things made it invisible for a fortnight. `mock_call2` never raises, so
+`MOCK_MODE` cannot reach the handler; and `llm.call2` is never called without a
+key, so neither can a keyless run. Every one of our tests was therefore
+structurally incapable of executing the line. It would have run for the first
+time on the day the key landed, on a forced reveal — the turn where the student
+is already frustrated, the graph has already moved, and the tutor going silent
+is worst.
+
+The repair is not the missing file. It is that `tests/test_fallback_coverage.py`
+now enumerates from `CALL2_FIDELITY`, the dict `turn.py` actually indexes when
+it calls Call 2, so the set under test is the set the code uses rather than the
+set a docstring remembers.
+
+**The build-drift guard on `state.db` is correct exactly up to an uncommitted
+tree, and that edge is the point.** Sessions carry a `code_fingerprint`, and
+`Store.get` refuses one written by a different build — the mastery *values* were
+computed by other logic even when the graph fingerprint still matches and every
+key still resolves.
+
+The fingerprint is `<short sha>`, or `<short sha>-dirty` when the tree is not
+clean. Two different dirty trees therefore stamp identically, so **drift between
+an uncommitted fix and its commit is exactly as unguarded as the gap this
+closed.** That is a deliberate trade and not an oversight: a stamp that changed
+on every keystroke would invalidate the running session on every edit and the
+guard would be turned off within a day.
+
+We state it as a boundary rather than a caveat because it is the third guard in
+this system with that structure — correct up to a named edge, and dangerous only
+if the edge is discovered by someone else. `RETRIEVAL_SCORE_FLOOR` is a claim
+about a distribution and was a guess until the corpus existed. The graph
+fingerprint catches content drift and is blind to code drift. This one catches
+code drift and is blind to uncommitted code. Each is worth having; none is worth
+mistaking for the general case.
+
 **Latency figures come from a mock.** The two-call timing profile the interface
 is built around was reproduced from configured delays, not measured against a
 live model under load.
