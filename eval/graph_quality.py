@@ -204,10 +204,16 @@ def render(result: dict) -> str:
     L.append(f"  Ceiling at an INFINITE window: {shipped['order_capped_ceiling']:.1%}. "
              f"That is the wall.")
     L.append("")
+    # Interpolated from the measured ceiling, never a literal. The first
+    # version of this line hardcoded 0.59, which was the shipped ceiling when it
+    # was written; the chunker moved and the sentence went on asserting a figure
+    # this eval no longer produces, in the output of the eval that produces it.
+    ceiling = shipped["recall_ceiling"]
+    example = round(ceiling * 0.9, 2)
     L.append("  REPORT THE CEILING BESIDE ANY RECALL FIGURE, not after it. An")
-    L.append("  extraction recall of 0.5 against a ceiling of 0.59 is a good")
-    L.append("  classifier; against a ceiling of 1.0 it is a poor one, and the two")
-    L.append("  are indistinguishable without this number.")
+    L.append(f"  extraction recall of {example} against a ceiling of {ceiling:.2f} is a")
+    L.append("  good classifier; against a ceiling of 1.0 it is a poor one, and the")
+    L.append("  two are indistinguishable without this number.")
     return "\n".join(L)
 
 
