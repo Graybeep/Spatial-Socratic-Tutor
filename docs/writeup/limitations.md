@@ -169,13 +169,20 @@ What this bounds: on `advance` and `explain` the tutor cites the wrong section
 about one time in six, and a span computed against that chunk is correct and
 useless. It does not touch `ask` or `hint_*`, which receive no chunk at all.
 
-**§9.3's recall has a ceiling of 59% that has nothing to do with the model.**
+**§9.3's recall has a ceiling of 45% that has nothing to do with the model.**
 Edge extraction only asks the model about pairs that survive a filter: A must
 precede B in the text, and the two must appear within N sections. Measured
-against our hand-annotated graph on the real chapter, that filter passes 39 of
-66 true prerequisite edges at the shipped window. No extraction run can score
-above that, however good the model is, so the ceiling belongs beside the recall
-figure rather than being discovered when the number comes back low.
+against our hand-annotated graph on the real chapter, that filter passes **30 of
+66** true prerequisite edges at the shipped window of 2. No extraction run can
+score above that, however good the model is, so the ceiling belongs beside the
+recall figure rather than being discovered when the number comes back low.
+
+Widening the window does not rescue it. 1/2/3/4 sections give 23/30/32/35 edges,
+and at an **infinite** window it stops at 49 of 66 — **74.2%**. That residual is
+not a knob: 17 edges are missed because the chapter names the dependent concept
+*before* its prerequisite, usually where a section heading announces a topic and
+the body introduces the parts afterwards. The window is a tunable; the ordering
+assumption is a wall.
 
 It was 21% before we ran the pipeline on real text. Comparing sections alone
 discarded every pair whose two concepts appear in the *same* section, and 34 of
@@ -183,6 +190,17 @@ our 66 edges are exactly that — a textbook introduces several related concepts
 in one section, in order, and section-level position cannot see that order. We
 now resolve position within the section. We would not have found this from a
 test fixture, because a fixture has one concept per section by construction.
+
+**This paragraph said 59% and 39 of 66 until day 8, and that is its own
+finding.** Those figures were written by hand in the commit that first ran the
+pipeline on real text — before `eval/graph_quality.py` existed to compute them.
+The chunker then changed two commits later, and when the eval was finally built
+it measured 45%. Nothing connected the two: the prose was not derived from the
+eval, so it could not go stale *visibly*. The reproducible number is whatever
+`python -m eval.graph_quality` prints today, and the figure in the eval's own
+closing advice is now interpolated from the measurement rather than typed,
+because that sentence had hardcoded 0.59 and was still asserting it in the
+output of the tool that disagreed.
 
 **The answer monitor's similarity metric misses synonym paraphrase, and that is
 the biased direction.** §6 specifies embedding cosine; embeddings are a

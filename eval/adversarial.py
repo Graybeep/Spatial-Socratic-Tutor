@@ -725,7 +725,7 @@ def main() -> int:
     parser.add_argument("--population", choices=POPULATIONS, default="scored",
                         help="scored = the 69 items mastery is computed from "
                              "(default). answerable = all 101, including the 32 "
-                             "determined edge items; reproduces the 82% figure "
+                             "determined edge items; reproduces the 82%% figure "
                              "and is NOT a mastery claim.")
     args = parser.parse_args()
 
