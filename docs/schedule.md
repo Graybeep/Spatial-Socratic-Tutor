@@ -68,11 +68,47 @@ tested-and-passed §8 look identical in a repo three weeks later.
 
 ---
 
+### Monday 2026-09-14 (day 11) — confirm-or-undo, watched by someone else
+
+**Open since week 2. Not booked as of 2026-09-11.** Recorded here because an
+unbooked item that lives in someone's head and a booked one look identical in a
+repo, which is the whole reason this file exists.
+
+The projector test above and this are two tests wearing one name, and only one
+of them can be run by the people who built the thing:
+
+| | question | who can answer it |
+|---|---|---|
+| render + dimming | does the 0.20/0.06 split survive the actual projector from the back row | **us** — it is a hardware question |
+| confirm-or-undo | does someone who did not design the gesture understand what a click commits to *before* they commit to it | **not us** |
+
+The second is unanswerable from the inside. We already know what a click means,
+and that knowledge is exactly the variable under test. §8 calls confirm-or-undo
+the only gate between a stray click and a permanent mastery penalty — a gate
+nobody has watched a stranger use is an assumption with a UI on it.
+
+**What it needs:** one person who has not seen the interface, ten minutes, at
+the projector, after the contrast check. No script beyond "answer the tutor's
+question" and no prompting. Watch for one thing:
+
+- [ ] Does the click → **Confirm / Undo** step read as *"nothing has happened
+      yet"*, or as *"this has been submitted"*? If they treat the click itself
+      as the answer and the confirm as an acknowledgement, the gate is decorative
+      and the fix is in the wording, not the logic.
+
+**If nobody is booked by Monday morning**, say so in the writeup rather than
+letting it read as tested. `docs/writeup/limitations.md` already lists a human
+pilot under *what would change our minds*; an unwatched confirm-or-undo belongs
+in the same list, at a much smaller scale.
+
+---
+
 ## Standing dates
 
 | date | day | what | state |
 |---|---|---|---|
 | 2026-09-14 | 11 | projector contrast test (§8) | **booked, above** |
+| 2026-09-14 | 11 | confirm-or-undo watched by a non-author | **NOT booked** — decide by Monday morning, above |
 | 2026-09-22 | 19 | **API key cut.** No key → `MOCK_MODE` ships, §9.3 and §9.5 are cut | pending — see [no-key-plan.md](writeup/no-key-plan.md) |
 | 2026-09-18…24 | week 3 | diagnosis read-through, 30 logged `diagnosis` fields (§9.5) | blocked on a key |
 | — | — | §6.1 parametric-reconstruction rate | **instrument built, blocked on a key.** `python -m eval.leak_monitor` prints `NOT MEASURABLE` and says why; a mock has no weights to reconstruct from. Fills itself in on the day a key lands |
