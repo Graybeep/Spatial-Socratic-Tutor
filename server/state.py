@@ -57,7 +57,9 @@ CREATE TABLE IF NOT EXISTS sessions (
     completed_items       TEXT NOT NULL DEFAULT '[]',
     history               TEXT NOT NULL DEFAULT '[]',
     session_complete      INTEGER NOT NULL DEFAULT 0,
-    code_fingerprint      TEXT NOT NULL DEFAULT ''
+    code_fingerprint      TEXT NOT NULL DEFAULT '',
+    forced_reveals        INTEGER NOT NULL DEFAULT 0,
+    session_end_reason    TEXT
 );
 """
 
@@ -89,8 +91,20 @@ class SessionState:
     #: (CLAUDE.md §5). Entries are {"role": "tutor"|"student", "text": str}.
     history: list = field(default_factory=list)
     session_complete: bool = False
+    #: SESSION-level count of §6 layer 3 forced reveals. Distinct from
+    #: turns_on_item, which resets on every item: this one never resets, which
+    #: is what makes it a circuit breaker rather than another per-item budget.
+    forced_reveals: int = 0
+    #: Set once, when the session becomes terminal. None while active.
+    session_end_reason: Optional[str] = None
 
     # --- counters: the server's job, not the model's ------------------------
+
+    @property
+    def support_ceiling_reached(self) -> bool:
+        """The circuit breaker. Sits ABOVE §7, and reads only session-level
+        state - §7 decides which node comes next, never whether to stop."""
+        return self.forced_reveals >= CONFIG.conclude_after_forced_reveals
 
     def bump_hint(self, requested_level: int) -> int:
         """Guard layer 2 - hint monotonicity.
@@ -233,6 +247,8 @@ class Store:
             history=json.loads(row["history"]),
             session_complete=bool(row["session_complete"]),
             code_fingerprint=row["code_fingerprint"],
+            forced_reveals=row["forced_reveals"],
+            session_end_reason=row["session_end_reason"],
         )
 
     def save(self, state: SessionState) -> None:
@@ -240,7 +256,8 @@ class Store:
             "UPDATE sessions SET graph_fingerprint=?, code_fingerprint=?, updated_at=?, turn_id=?, current_node=?, current_item_id=?, "
             "hint_counter=?, visual_narrow_level=?, turns_on_item=?, consecutive_failures=?, "
             "theta_map=?, n_obs=?, "
-            "completed_items=?, history=?, session_complete=? WHERE session_id=?",
+            "completed_items=?, history=?, session_complete=?, forced_reveals=?, "
+            "session_end_reason=? WHERE session_id=?",
             (
                 state.graph_fingerprint,
                 state.code_fingerprint,
@@ -257,6 +274,8 @@ class Store:
                 json.dumps(state.completed_items),
                 json.dumps(state.history),
                 int(state.session_complete),
+                state.forced_reveals,
+                state.session_end_reason,
                 state.session_id,
             ),
         )

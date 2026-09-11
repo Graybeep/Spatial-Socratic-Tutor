@@ -85,13 +85,24 @@ def source() -> str:
 def wire_fields(model) -> set[str]:
     """What the model actually puts on the wire, which is not its field names.
 
-    `from` is a Python keyword, so Edge and EdgeRef declare `from_` with
-    `alias="from"` - and `from` is what the client sees. Comparing
+    Two ways the wire name differs from the field name, and both have bitten:
+
+    ALIASES. `from` is a Python keyword, so Edge and EdgeRef declare `from_`
+    with `alias="from"` - and `from` is what the client sees. Comparing
     `model_fields` keys directly would report drift on every edge type forever,
     and the obvious way to quieten that is to drop those types from PAIRS, which
     would leave the client's edge handling unchecked.
+
+    COMPUTED FIELDS. `TurnResponse.session_complete` is derived from
+    `session_state` rather than stored, so it is absent from `model_fields` and
+    present in every payload. Reading only `model_fields` would have declared
+    the client's `session_complete` to be a field the server never sends - and
+    the fix that suggests itself is deleting it from the client, which would
+    break every consumer of the one field that says whether the session is over.
     """
-    return {f.alias or name for name, f in model.model_fields.items()}
+    declared = {f.alias or name for name, f in model.model_fields.items()}
+    computed = {f.alias or name for name, f in model.model_computed_fields.items()}
+    return declared | computed
 
 
 @pytest.mark.parametrize("ts_name,model", PAIRS, ids=[p[0] for p in PAIRS])

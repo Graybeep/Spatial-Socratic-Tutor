@@ -21,10 +21,17 @@ from tests.conftest import config_override, turn, wrong_response
 # guard layer 0 - the whitelist (CLAUDE.md §1.6)
 # ---------------------------------------------------------------------------
 
+#: Everything TurnResponse puts on the wire, declared and computed. The
+#: computed half is not optional to include: `session_complete` is derived from
+#: `session_state` and still ships, so a whitelist that read `model_fields`
+#: alone would stop seeing a field that reaches the client.
+WIRE_FIELDS = set(TurnResponse.model_fields) | set(TurnResponse.model_computed_fields)
+
+
 def test_response_field_set_is_exactly_the_whitelist():
     """Adding a model-authored text field to TurnResponse is a severity-1 bug.
     Update this list only alongside a deliberate schema change."""
-    assert set(TurnResponse.model_fields) == {
+    assert WIRE_FIELDS == {
         "session_id", "turn_id", "schema_version",
         "utterance",
         "action", "hint_level", "expects", "mcq_options",
@@ -33,6 +40,9 @@ def test_response_field_set_is_exactly_the_whitelist():
         # Added deliberately: a server-owned interaction gate, not model text.
         # See tests/test_panel_lock.py.
         "panel_locked",
+        # Added deliberately: WHICH ending, and why. Both are closed Literals
+        # decided by the server, so §1.6's one-text-field rule is untouched.
+        "session_state", "session_end_reason",
     }
 
 
@@ -380,13 +390,14 @@ def test_stream_phase1_carries_everything_the_client_needs_to_interact(client, s
     assert set(phase1) == {
         "session_id", "turn_id", "action", "hint_level", "expects", "item",
         "mcq_options", "turn_budget", "resolved_with_support", "session_complete",
+        "session_state", "session_end_reason",
         "panel_locked", "graph_state",
     }
     assert set(phase1["graph_state"]) == {
         "current_node", "focus_nodes", "focus_edges", "dimmed_nodes", "mastery",
     }
     assert set(frames[1]["data"]) == {"utterance"}
-    assert set(frames[2]["data"]) == set(TurnResponse.model_fields)
+    assert set(frames[2]["data"]) == WIRE_FIELDS
 
 
 def test_stream_and_json_transports_agree(client, store):

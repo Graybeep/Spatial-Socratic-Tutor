@@ -104,10 +104,38 @@ Response:
 
   "turn_budget": { "used": 3, "max": 8 },
   "resolved_with_support": false,
+
+  "session_state": "active",
+  "session_end_reason": null,
   "session_complete": false,
+
   "panel_locked": true
 }
 ```
+
+#### Session endings
+
+`session_state` is authoritative; `session_complete` is computed from it
+server-side and cannot disagree with it.
+
+| `session_state` | `session_end_reason` | what happened |
+|---|---|---|
+| `active` | `null` | an ordinary turn |
+| `mastered` | `graph_mastered` | §7 found nothing left below threshold |
+| `concluded` | `support_ceiling` | the tutor stopped after `CONCLUDE_AFTER_FORCED_REVEALS` forced reveals in one session |
+
+**Render these differently.** One is the student finishing the chapter; the
+other is the tutor deciding to stop. Telling a student who never finished that
+they did is the specific bug this field exists to prevent.
+
+On BOTH terminal turns `item` is `null`, `expects` is `"text"`, `mcq_options` is
+empty and `panel_locked` is `false`. A client that routes its composer on
+`expects` alone therefore renders nothing at all on the turn the student most
+needs to be told something — route on `session_state` first.
+
+`session_state` arrives in the **phase 1** SSE frame, for the same reason
+`panel_locked` does: a concluded session must stop looking answerable the moment
+the graph repaints, not ~1.4s later when the closing line lands.
 
 ### `POST /turn?stream=true` — build against this one
 
