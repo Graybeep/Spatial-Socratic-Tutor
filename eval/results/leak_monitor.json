@@ -46,8 +46,11 @@
   "real_turns": 0,
   "mock_turns": 652473,
   "arms": {
-    "115a0c0 [mock]": {
+    "115a0c0 [mock] <pre-origin>": {
       "authorised_naming": {
+        "build": "115a0c0",
+        "mode": "mock",
+        "origin": "pre-origin",
         "checks": 352,
         "hits": 0,
         "rate": 0.0,
@@ -70,11 +73,14 @@
           "expect_full": false,
           "coverage": 0.0192,
           "complete": false,
-          "code": "6c69a84",
-          "generated_at": "2026-09-15T18:17:01+0530"
+          "code": "e5361a2",
+          "generated_at": "2026-09-15T18:29:40+0530"
         }
       },
       "parametric_reconstruction": {
+        "build": "115a0c0",
+        "mode": "mock",
+        "origin": "pre-origin",
         "checks": 5167,
         "hits": 0,
         "rate": 0.0,
@@ -109,13 +115,16 @@
           "expect_full": false,
           "coverage": 0.3385,
           "complete": false,
-          "code": "6c69a84",
-          "generated_at": "2026-09-15T18:17:01+0530"
+          "code": "e5361a2",
+          "generated_at": "2026-09-15T18:29:40+0530"
         }
       }
     },
-    "115a0c0-dirty [mock]": {
+    "115a0c0-dirty [mock] <pre-origin>": {
       "authorised_naming": {
+        "build": "115a0c0-dirty",
+        "mode": "mock",
+        "origin": "pre-origin",
         "checks": 1904,
         "hits": 0,
         "rate": 0.0,
@@ -138,11 +147,14 @@
           "expect_full": false,
           "coverage": 0.0192,
           "complete": false,
-          "code": "6c69a84",
-          "generated_at": "2026-09-15T18:17:01+0530"
+          "code": "e5361a2",
+          "generated_at": "2026-09-15T18:29:40+0530"
         }
       },
       "parametric_reconstruction": {
+        "build": "115a0c0-dirty",
+        "mode": "mock",
+        "origin": "pre-origin",
         "checks": 22853,
         "hits": 0,
         "rate": 0.0,
@@ -177,13 +189,16 @@
           "expect_full": false,
           "coverage": 0.3385,
           "complete": false,
-          "code": "6c69a84",
-          "generated_at": "2026-09-15T18:17:01+0530"
+          "code": "e5361a2",
+          "generated_at": "2026-09-15T18:29:40+0530"
         }
       }
     },
-    "1352227 [mock]": {
+    "1352227 [mock] <pre-origin>": {
       "authorised_naming": {
+        "build": "1352227",
+        "mode": "mock",
+        "origin": "pre-origin",
         "checks": 430,
         "hits": 0,
         "rate": 0.0,
@@ -206,11 +221,14 @@
           "expect_full": false,
           "coverage": 0.0192,
           "complete": false,
-          "code": "6c69a84",
-          "generated_at": "2026-09-15T18:17:01+0530"
+          "code": "e5361a2",
+          "generated_at": "2026-09-15T18:29:40+0530"
         }
       },
       "parametric_reconstruction": {
+        "build": "1352227",
+        "mode": "mock",
+        "origin": "pre-origin",
         "checks": 5839,
         "hits": 0,
         "rate": 0.0,
@@ -245,13 +263,16 @@
           "expect_full": false,
           "coverage": 0.3385,
           "complete": false,
-          "code": "6c69a84",
-          "generated_at": "2026-09-15T18:17:01+0530"
+          "code": "e5361a2",
+          "generated_at": "2026-09-15T18:29:40+0530"
         }
       }
     },
-    "1352227-dirty [mock]": {
+    "1352227-dirty [mock] <pre-origin>": {
       "authorised_naming": {
+        "build": "1352227-dirty",
+        "mode": "mock",
+        "origin": "pre-origin",
         "checks": 430,
         "hits": 0,
         "rate": 0.0,
@@ -274,11 +295,14 @@
           "expect_full": false,
           "coverage": 0.0192,
           "complete": false,
-          "code": "6c69a84",
-          "generated_at": "2026-09-15T18:17:01+0530"
+          "code": "e5361a2",
+          "generated_at": "2026-09-15T18:29:40+0530"
         }
       },
       "parametric_reconstruction": {
+        "build": "1352227-dirty",
+        "mode": "mock",
+        "origin": "pre-origin",
         "checks": 5839,
         "hits": 0,
         "rate": 0.0,
@@ -313,13 +337,16 @@
           "expect_full": false,
           "coverage": 0.3385,
           "complete": false,
-          "code": "6c69a84",
-          "generated_at": "2026-09-15T18:17:01+0530"
+          "code": "e5361a2",
+          "generated_at": "2026-09-15T18:29:40+0530"
         }
       }
     },
-    "5e4d343-dirty [mock]": {
+    "5e4d343-dirty [mock] <pre-origin>": {
       "authorised_naming": {
+        "build": "5e4d343-dirty",
+        "mode": "mock",
+        "origin": "pre-origin",
         "checks": 430,
         "hits": 0,
         "rate": 0.0,
@@ -342,11 +369,14 @@
           "expect_full": false,
           "coverage": 0.0192,
           "complete": false,
-          "code": "6c69a84",
-          "generated_at": "2026-09-15T18:17:01+0530"
+          "code": "e5361a2",
+          "generated_at": "2026-09-15T18:29:40+0530"
         }
       },
       "parametric_reconstruction": {
+        "build": "5e4d343-dirty",
+        "mode": "mock",
+        "origin": "pre-origin",
         "checks": 5839,
         "hits": 0,
         "rate": 0.0,
@@ -381,13 +411,16 @@
           "expect_full": false,
           "coverage": 0.3385,
           "complete": false,
-          "code": "6c69a84",
-          "generated_at": "2026-09-15T18:17:01+0530"
+          "code": "e5361a2",
+          "generated_at": "2026-09-15T18:29:40+0530"
         }
       }
     },
-    "6c69a84 [mock]": {
+    "6c69a84 [mock] <pre-origin>": {
       "authorised_naming": {
+        "build": "6c69a84",
+        "mode": "mock",
+        "origin": "pre-origin",
         "checks": 984,
         "hits": 0,
         "rate": 0.0,
@@ -410,11 +443,14 @@
           "expect_full": false,
           "coverage": 0.0154,
           "complete": false,
-          "code": "6c69a84",
-          "generated_at": "2026-09-15T18:17:01+0530"
+          "code": "e5361a2",
+          "generated_at": "2026-09-15T18:29:40+0530"
         }
       },
       "parametric_reconstruction": {
+        "build": "6c69a84",
+        "mode": "mock",
+        "origin": "pre-origin",
         "checks": 21144,
         "hits": 0,
         "rate": 0.0,
@@ -449,13 +485,16 @@
           "expect_full": false,
           "coverage": 0.3885,
           "complete": false,
-          "code": "6c69a84",
-          "generated_at": "2026-09-15T18:17:01+0530"
+          "code": "e5361a2",
+          "generated_at": "2026-09-15T18:29:40+0530"
         }
       }
     },
-    "6c69a84-dirty [mock]": {
+    "6c69a84-dirty [mock] <pre-origin>": {
       "authorised_naming": {
+        "build": "6c69a84-dirty",
+        "mode": "mock",
+        "origin": "pre-origin",
         "checks": 840,
         "hits": 0,
         "rate": 0.0,
@@ -478,11 +517,14 @@
           "expect_full": false,
           "coverage": 0.0154,
           "complete": false,
-          "code": "6c69a84",
-          "generated_at": "2026-09-15T18:17:01+0530"
+          "code": "e5361a2",
+          "generated_at": "2026-09-15T18:29:40+0530"
         }
       },
       "parametric_reconstruction": {
+        "build": "6c69a84-dirty",
+        "mode": "mock",
+        "origin": "pre-origin",
         "checks": 10632,
         "hits": 0,
         "rate": 0.0,
@@ -517,13 +559,16 @@
           "expect_full": false,
           "coverage": 0.3885,
           "complete": false,
-          "code": "6c69a84",
-          "generated_at": "2026-09-15T18:17:01+0530"
+          "code": "e5361a2",
+          "generated_at": "2026-09-15T18:29:40+0530"
         }
       }
     },
-    "6faa2d8 [mock]": {
+    "6faa2d8 [mock] <pre-origin>": {
       "authorised_naming": {
+        "build": "6faa2d8",
+        "mode": "mock",
+        "origin": "pre-origin",
         "checks": 430,
         "hits": 0,
         "rate": 0.0,
@@ -546,11 +591,14 @@
           "expect_full": false,
           "coverage": 0.0192,
           "complete": false,
-          "code": "6c69a84",
-          "generated_at": "2026-09-15T18:17:01+0530"
+          "code": "e5361a2",
+          "generated_at": "2026-09-15T18:29:40+0530"
         }
       },
       "parametric_reconstruction": {
+        "build": "6faa2d8",
+        "mode": "mock",
+        "origin": "pre-origin",
         "checks": 5840,
         "hits": 0,
         "rate": 0.0,
@@ -585,13 +633,16 @@
           "expect_full": false,
           "coverage": 0.3385,
           "complete": false,
-          "code": "6c69a84",
-          "generated_at": "2026-09-15T18:17:01+0530"
+          "code": "e5361a2",
+          "generated_at": "2026-09-15T18:29:40+0530"
         }
       }
     },
-    "6faa2d8-dirty [mock]": {
+    "6faa2d8-dirty [mock] <pre-origin>": {
       "authorised_naming": {
+        "build": "6faa2d8-dirty",
+        "mode": "mock",
+        "origin": "pre-origin",
         "checks": 430,
         "hits": 0,
         "rate": 0.0,
@@ -614,11 +665,14 @@
           "expect_full": false,
           "coverage": 0.0192,
           "complete": false,
-          "code": "6c69a84",
-          "generated_at": "2026-09-15T18:17:01+0530"
+          "code": "e5361a2",
+          "generated_at": "2026-09-15T18:29:40+0530"
         }
       },
       "parametric_reconstruction": {
+        "build": "6faa2d8-dirty",
+        "mode": "mock",
+        "origin": "pre-origin",
         "checks": 5839,
         "hits": 0,
         "rate": 0.0,
@@ -653,13 +707,16 @@
           "expect_full": false,
           "coverage": 0.3385,
           "complete": false,
-          "code": "6c69a84",
-          "generated_at": "2026-09-15T18:17:01+0530"
+          "code": "e5361a2",
+          "generated_at": "2026-09-15T18:29:40+0530"
         }
       }
     },
-    "987ed4c-dirty [mock]": {
+    "987ed4c-dirty [mock] <pre-origin>": {
       "authorised_naming": {
+        "build": "987ed4c-dirty",
+        "mode": "mock",
+        "origin": "pre-origin",
         "checks": 860,
         "hits": 0,
         "rate": 0.0,
@@ -682,11 +739,14 @@
           "expect_full": false,
           "coverage": 0.0192,
           "complete": false,
-          "code": "6c69a84",
-          "generated_at": "2026-09-15T18:17:01+0530"
+          "code": "e5361a2",
+          "generated_at": "2026-09-15T18:29:40+0530"
         }
       },
       "parametric_reconstruction": {
+        "build": "987ed4c-dirty",
+        "mode": "mock",
+        "origin": "pre-origin",
         "checks": 11678,
         "hits": 0,
         "rate": 0.0,
@@ -721,13 +781,16 @@
           "expect_full": false,
           "coverage": 0.3385,
           "complete": false,
-          "code": "6c69a84",
-          "generated_at": "2026-09-15T18:17:01+0530"
+          "code": "e5361a2",
+          "generated_at": "2026-09-15T18:29:40+0530"
         }
       }
     },
-    "a6c6bf2 [mock]": {
+    "a6c6bf2 [mock] <pre-origin>": {
       "authorised_naming": {
+        "build": "a6c6bf2",
+        "mode": "mock",
+        "origin": "pre-origin",
         "checks": 555,
         "hits": 0,
         "rate": 0.0,
@@ -750,11 +813,14 @@
           "expect_full": false,
           "coverage": 0.0192,
           "complete": false,
-          "code": "6c69a84",
-          "generated_at": "2026-09-15T18:17:01+0530"
+          "code": "e5361a2",
+          "generated_at": "2026-09-15T18:29:40+0530"
         }
       },
       "parametric_reconstruction": {
+        "build": "a6c6bf2",
+        "mode": "mock",
+        "origin": "pre-origin",
         "checks": 11772,
         "hits": 0,
         "rate": 0.0,
@@ -789,13 +855,16 @@
           "expect_full": false,
           "coverage": 0.3385,
           "complete": false,
-          "code": "6c69a84",
-          "generated_at": "2026-09-15T18:17:01+0530"
+          "code": "e5361a2",
+          "generated_at": "2026-09-15T18:29:40+0530"
         }
       }
     },
-    "af60e60-dirty [mock]": {
+    "af60e60-dirty [mock] <pre-origin>": {
       "authorised_naming": {
+        "build": "af60e60-dirty",
+        "mode": "mock",
+        "origin": "pre-origin",
         "checks": 704,
         "hits": 0,
         "rate": 0.0,
@@ -818,11 +887,14 @@
           "expect_full": false,
           "coverage": 0.0192,
           "complete": false,
-          "code": "6c69a84",
-          "generated_at": "2026-09-15T18:17:01+0530"
+          "code": "e5361a2",
+          "generated_at": "2026-09-15T18:29:40+0530"
         }
       },
       "parametric_reconstruction": {
+        "build": "af60e60-dirty",
+        "mode": "mock",
+        "origin": "pre-origin",
         "checks": 10334,
         "hits": 0,
         "rate": 0.0,
@@ -857,13 +929,16 @@
           "expect_full": false,
           "coverage": 0.3385,
           "complete": false,
-          "code": "6c69a84",
-          "generated_at": "2026-09-15T18:17:01+0530"
+          "code": "e5361a2",
+          "generated_at": "2026-09-15T18:29:40+0530"
         }
       }
     },
-    "df5e392-dirty [mock]": {
+    "df5e392-dirty [mock] <pre-origin>": {
       "authorised_naming": {
+        "build": "df5e392-dirty",
+        "mode": "mock",
+        "origin": "pre-origin",
         "checks": 1290,
         "hits": 0,
         "rate": 0.0,
@@ -886,11 +961,14 @@
           "expect_full": false,
           "coverage": 0.0192,
           "complete": false,
-          "code": "6c69a84",
-          "generated_at": "2026-09-15T18:17:01+0530"
+          "code": "e5361a2",
+          "generated_at": "2026-09-15T18:29:40+0530"
         }
       },
       "parametric_reconstruction": {
+        "build": "df5e392-dirty",
+        "mode": "mock",
+        "origin": "pre-origin",
         "checks": 17517,
         "hits": 0,
         "rate": 0.0,
@@ -925,13 +1003,16 @@
           "expect_full": false,
           "coverage": 0.3385,
           "complete": false,
-          "code": "6c69a84",
-          "generated_at": "2026-09-15T18:17:01+0530"
+          "code": "e5361a2",
+          "generated_at": "2026-09-15T18:29:40+0530"
         }
       }
     },
-    "e2408c7-dirty [mock]": {
+    "e2408c7-dirty [mock] <pre-origin>": {
       "authorised_naming": {
+        "build": "e2408c7-dirty",
+        "mode": "mock",
+        "origin": "pre-origin",
         "checks": 704,
         "hits": 0,
         "rate": 0.0,
@@ -954,11 +1035,14 @@
           "expect_full": false,
           "coverage": 0.0192,
           "complete": false,
-          "code": "6c69a84",
-          "generated_at": "2026-09-15T18:17:01+0530"
+          "code": "e5361a2",
+          "generated_at": "2026-09-15T18:29:40+0530"
         }
       },
       "parametric_reconstruction": {
+        "build": "e2408c7-dirty",
+        "mode": "mock",
+        "origin": "pre-origin",
         "checks": 10334,
         "hits": 0,
         "rate": 0.0,
@@ -993,13 +1077,16 @@
           "expect_full": false,
           "coverage": 0.3385,
           "complete": false,
-          "code": "6c69a84",
-          "generated_at": "2026-09-15T18:17:01+0530"
+          "code": "e5361a2",
+          "generated_at": "2026-09-15T18:29:40+0530"
         }
       }
     },
-    "e35ff32 [mock]": {
+    "e35ff32 [mock] <pre-origin>": {
       "authorised_naming": {
+        "build": "e35ff32",
+        "mode": "mock",
+        "origin": "pre-origin",
         "checks": 72,
         "hits": 0,
         "rate": 0.0,
@@ -1022,11 +1109,14 @@
           "expect_full": false,
           "coverage": 0.0115,
           "complete": false,
-          "code": "6c69a84",
-          "generated_at": "2026-09-15T18:17:01+0530"
+          "code": "e5361a2",
+          "generated_at": "2026-09-15T18:29:40+0530"
         }
       },
       "parametric_reconstruction": {
+        "build": "e35ff32",
+        "mode": "mock",
+        "origin": "pre-origin",
         "checks": 5256,
         "hits": 0,
         "rate": 0.0,
@@ -1061,13 +1151,16 @@
           "expect_full": false,
           "coverage": 0.2654,
           "complete": false,
-          "code": "6c69a84",
-          "generated_at": "2026-09-15T18:17:01+0530"
+          "code": "e5361a2",
+          "generated_at": "2026-09-15T18:29:40+0530"
         }
       }
     },
-    "e508372-dirty [mock]": {
+    "e508372-dirty [mock] <pre-origin>": {
       "authorised_naming": {
+        "build": "e508372-dirty",
+        "mode": "mock",
+        "origin": "pre-origin",
         "checks": 430,
         "hits": 0,
         "rate": 0.0,
@@ -1090,11 +1183,14 @@
           "expect_full": false,
           "coverage": 0.0192,
           "complete": false,
-          "code": "6c69a84",
-          "generated_at": "2026-09-15T18:17:01+0530"
+          "code": "e5361a2",
+          "generated_at": "2026-09-15T18:29:40+0530"
         }
       },
       "parametric_reconstruction": {
+        "build": "e508372-dirty",
+        "mode": "mock",
+        "origin": "pre-origin",
         "checks": 5839,
         "hits": 0,
         "rate": 0.0,
@@ -1129,13 +1225,16 @@
           "expect_full": false,
           "coverage": 0.3385,
           "complete": false,
-          "code": "6c69a84",
-          "generated_at": "2026-09-15T18:17:01+0530"
+          "code": "e5361a2",
+          "generated_at": "2026-09-15T18:29:40+0530"
         }
       }
     },
-    "e92bdae-dirty [mock]": {
+    "e92bdae-dirty [mock] <pre-origin>": {
       "authorised_naming": {
+        "build": "e92bdae-dirty",
+        "mode": "mock",
+        "origin": "pre-origin",
         "checks": 430,
         "hits": 0,
         "rate": 0.0,
@@ -1158,11 +1257,14 @@
           "expect_full": false,
           "coverage": 0.0192,
           "complete": false,
-          "code": "6c69a84",
-          "generated_at": "2026-09-15T18:17:01+0530"
+          "code": "e5361a2",
+          "generated_at": "2026-09-15T18:29:40+0530"
         }
       },
       "parametric_reconstruction": {
+        "build": "e92bdae-dirty",
+        "mode": "mock",
+        "origin": "pre-origin",
         "checks": 5839,
         "hits": 0,
         "rate": 0.0,
@@ -1197,13 +1299,16 @@
           "expect_full": false,
           "coverage": 0.3385,
           "complete": false,
-          "code": "6c69a84",
-          "generated_at": "2026-09-15T18:17:01+0530"
+          "code": "e5361a2",
+          "generated_at": "2026-09-15T18:29:40+0530"
         }
       }
     },
-    "pre-stamp [mock]": {
+    "pre-stamp [mock] <pre-origin>": {
       "authorised_naming": {
+        "build": "pre-stamp",
+        "mode": "mock",
+        "origin": "pre-origin",
         "checks": 31100,
         "hits": 30,
         "rate": 0.001,
@@ -1244,11 +1349,14 @@
           "expect_full": false,
           "coverage": 0.85,
           "complete": false,
-          "code": "6c69a84",
-          "generated_at": "2026-09-15T18:17:01+0530"
+          "code": "e5361a2",
+          "generated_at": "2026-09-15T18:29:40+0530"
         }
       },
       "parametric_reconstruction": {
+        "build": "pre-stamp",
+        "mode": "mock",
+        "origin": "pre-origin",
         "checks": 442537,
         "hits": 17433,
         "rate": 0.0394,
@@ -1325,11 +1433,14 @@
           "expect_full": false,
           "coverage": 0.65,
           "complete": false,
-          "code": "6c69a84",
-          "generated_at": "2026-09-15T18:17:01+0530"
+          "code": "e5361a2",
+          "generated_at": "2026-09-15T18:29:40+0530"
         }
       }
     }
+  },
+  "origins": {
+    "pre-origin": 652473
   },
   "headline": {
     "arms": [],
@@ -1347,7 +1458,7 @@
     "expect_full": false,
     "coverage": 0.85,
     "complete": false,
-    "code": "6c69a84",
-    "generated_at": "2026-09-15T18:17:01+0530"
+    "code": "e5361a2",
+    "generated_at": "2026-09-15T18:29:40+0530"
   }
 }

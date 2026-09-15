@@ -32,6 +32,11 @@ def _turn(**kw):
     return record
 
 
+def _arm(build, mode="mock", driver=LM.UNKNOWN_ORIGIN):
+    """Arm key, spelled by the module rather than by this file."""
+    return LM.arm_id(build, mode, driver)
+
+
 def _log(tmp_path, records):
     path = tmp_path / "turns.jsonl"
     path.write_text(
@@ -72,9 +77,10 @@ def test_builds_are_not_pooled(tmp_path):
         _turn(code="new"),
     ])
     arms = LM.measure(path)["arms"]
-    assert "old [mock]" in arms and "new [mock]" in arms
-    assert arms["old [mock]"]["parametric_reconstruction"]["hits"] == 1
-    assert arms["new [mock]"]["parametric_reconstruction"]["hits"] == 0
+    old_arm, new_arm = _arm("old"), _arm("new")
+    assert old_arm in arms and new_arm in arms
+    assert arms[old_arm]["parametric_reconstruction"]["hits"] == 1
+    assert arms[new_arm]["parametric_reconstruction"]["hits"] == 0
 
 
 def test_unstamped_turns_are_counted_but_never_reach_the_headline(tmp_path):
@@ -87,7 +93,7 @@ def test_unstamped_turns_are_counted_but_never_reach_the_headline(tmp_path):
 
     result = LM.measure(path)
     assert result["unstamped_turns"] == 1
-    assert f"{LM.UNSTAMPED} [mock]" in result["arms"]
+    assert _arm(LM.UNSTAMPED) in result["arms"]
     assert result["headline"]["hits"] == 0
 
 
@@ -105,8 +111,8 @@ def test_a_mock_only_log_refuses_to_produce_a_headline(tmp_path):
 def test_mock_and_real_are_never_pooled(tmp_path):
     path = _log(tmp_path, [_turn(mock=True), _turn(mock=False)])
     arms = LM.measure(path)["arms"]
-    assert "abc1234 [mock]" in arms
-    assert "abc1234 [real]" in arms
+    assert _arm("abc1234") in arms
+    assert _arm("abc1234", "real") in arms
 
 
 def test_a_real_turn_produces_a_headline(tmp_path):
@@ -134,7 +140,7 @@ def test_a_rate_over_one_item_is_visible_as_such(tmp_path):
     """§9.1 reported a rate over one item out of 101 for four days. The
     provenance block is what makes that assertable instead of invisible."""
     path = _log(tmp_path, [_turn() for _ in range(200)])
-    cell = LM.measure(path)["arms"]["abc1234 [mock]"]["parametric_reconstruction"]
+    cell = LM.measure(path)["arms"][_arm("abc1234")]["parametric_reconstruction"]
     assert cell["provenance"]["distinct"] == 1
     assert cell["provenance"]["observations"] == 200
     from eval.provenance import Provenance
@@ -151,7 +157,7 @@ def test_turns_with_no_item_are_not_counted_as_clean_checks(tmp_path):
     Counting a session-complete turn as a clean check dilutes every rate."""
     path = _log(tmp_path, [_turn(item_id=None), _turn()])
     arms = LM.measure(path)["arms"]
-    assert arms["abc1234 [mock]"]["parametric_reconstruction"]["checks"] == 1
+    assert arms[_arm("abc1234")]["parametric_reconstruction"]["checks"] == 1
 
 
 def test_non_turn_events_are_counted_separately(tmp_path):
@@ -190,3 +196,54 @@ def test_render_never_quotes_a_rate_it_refused_to_compute(tmp_path):
     text = LM.render(LM.measure(path))
     assert "NOT MEASURABLE" in text
     assert "needs a key" in text
+
+
+# --- origin partitioning ------------------------------------------------------
+
+
+def test_arms_are_split_by_origin(tmp_path):
+    """A scripted sweep and a person are two populations, and once a key lands
+    they are both `[real]` at the same build (server/origin.py)."""
+    records = [
+        _turn(mock=False, origin="server", item_id=f"itm_{i:04d}")
+        for i in range(4)
+    ] + [
+        _turn(mock=False, origin="eval:adversarial:visual_only:zero",
+              item_id=f"itm_{i:04d}")
+        for i in range(4)
+    ]
+    result = LM.measure(_log(tmp_path, records))
+
+    keys = sorted(result["arms"])
+    assert len(keys) == 2, f"origins were pooled into one arm: {keys}"
+    assert any("<server>" in k for k in keys), keys
+    assert any("<eval:adversarial" in k for k in keys), keys
+
+    assert result["headline"]["mixed_origins"] is True
+    assert "server" in result["headline"]["origins"]
+
+
+def test_a_turn_without_an_origin_is_not_assumed_human(tmp_path):
+    """Everything logged before day 12 has no origin. Calling it `server` would
+    put ~650k simulated turns into §9.5's sample pool."""
+    record = _turn(mock=False)
+    record.pop("origin", None)
+    result = LM.measure(_log(tmp_path, [record]))
+
+    assert LM.UNKNOWN_ORIGIN in result["origins"]
+    assert result["headline"]["origins"] == [LM.UNKNOWN_ORIGIN]
+    assert "server" not in result["headline"]["origins"]
+
+
+def test_the_headline_filters_on_fields_not_on_key_spelling(tmp_path):
+    """The arm id gained `<origin>`; a filter that matched `endswith("[real]")`
+    would have started silently excluding every real arm."""
+    result = LM.measure(_log(tmp_path, [
+        _turn(mock=False, origin="server", item_id="itm_0001"),
+        _turn(mock=True, origin="server", item_id="itm_0002"),
+    ]))
+    assert result["headline"]["blocked_by"] is None, (
+        "a real stamped turn was not counted; the headline is matching on the "
+        "shape of the arm id rather than on its fields"
+    )
+    assert result["headline"]["checks"] == 1, "a mock turn reached §6.1's number"

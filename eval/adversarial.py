@@ -72,6 +72,7 @@ from dataclasses import dataclass, field
 from typing import Optional
 
 from server import mock_tutor
+from server import origin
 from server import turn as turn_mod
 from server.config import CONFIG
 from server.graph_store import GraphStore
@@ -496,7 +497,15 @@ def measure(store: GraphStore, arm_label: str, mode: str, condition: str, n: int
     items = scored_bank(store, population)
     check_strata_answerable(store, items)
     bank = [i.id for i in items]
-    with _config(ladder_mode=mode):
+    # DECLARE WHO IS DRIVING. Every turn below is logged to the same
+    # `logs/turns.jsonl` a real session writes to, and the students here are
+    # three scripted policies. §9.5 hand-reads `diagnosis` to ask whether the
+    # tutor's model of the STUDENT is real; a policy's dialogue answers a
+    # different question. `mock` separates them only until a key lands - see
+    # server/origin.py. Per arm, not per run, so the read-through can also
+    # exclude one condition rather than all of eval/.
+    driver = f"eval:adversarial:{mode}:{condition}"
+    with origin.declare(driver), _config(ladder_mode=mode):
         for i in range(n):
             student = Student(condition=condition, rng=random.Random(f"{arm_label}:{condition}:{i}"))
             run = run_dialogue(store, student, seed=i,
