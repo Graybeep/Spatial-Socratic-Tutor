@@ -45,10 +45,11 @@ def test_the_refusal_is_wired_to_mock_mode(monkeypatch, capsys):
 @pytest.mark.parametrize("expects,pick,attr,value", [
     ("node_click", "tcp_vegas", "node_id", "tcp_vegas"),
     ("mcq", "opt_b", "choice_id", "opt_b"),
-    ("text", "some prose", "text", "some prose"),
 ])
 def test_response_carries_the_pick_as_the_type_the_server_asked_for(
         store, expects, pick, attr, value):
+    """Click answers pass through verbatim. Free text does NOT - see
+    test_a_free_text_answer_is_prose_not_a_node_id."""
     r = RT._response(store, store.item("itm_0001"), expects, pick)
     assert r.type == expects
     assert getattr(r, attr) == value
@@ -134,3 +135,14 @@ def test_the_result_names_the_model_that_wrote_the_diagnoses():
     assert result["call1_model"] == CONFIG.call1.model
     assert result["provider"] == CONFIG.llm_provider
     assert result["call1_model"] in RT.render(result)
+
+
+def test_a_free_text_answer_is_prose_not_a_node_id(store):
+    """`Student.choose` returns an id. Sending it verbatim as free text gives the
+    server something no person would type - and the tutor noticed, diagnosing
+    "the student keeps offering text instead of clicking". That read as a
+    hallucination until the driver was checked."""
+    r = RT._response(store, store.item("itm_0001"), "text", "tcp_slow_start")
+    assert r.type == "text"
+    assert r.text == "I think it's tcp slow start"
+    assert "_" not in r.text, "a node id leaked into what the student 'typed'"
