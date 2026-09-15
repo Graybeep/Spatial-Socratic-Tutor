@@ -413,3 +413,17 @@ def test_a_daily_cap_is_not_waited_out(message, daily):
     class R:
         text = message
     assert llm._is_daily_limit(R()) is daily
+
+
+def test_a_daily_cap_still_fails_fast_by_default():
+    """A turn serving a user must not hang on a limit that clears tomorrow."""
+    assert CONFIG.llm_daily_limit_wait_s == 0.0, (
+        "the default now waits on a daily cap; a serving turn would hang"
+    )
+
+
+def test_the_daily_wait_is_available_for_batch_runs():
+    """An offline eval CAN wait out a continuously-refilling daily budget, and
+    failing fast there discards a run that only needed to go slower."""
+    with config_override(llm_daily_limit_wait_s=900.0):
+        assert CONFIG.llm_daily_limit_wait_s == 900.0
