@@ -242,9 +242,20 @@ def score(results: list) -> dict:
     #: THE NUMBER THAT MATTERS. Can the model separate the two cases that are
     #: unambiguously different students? A model answering `stuck` everywhere
     #: scores full marks on admissibility and zero here.
+    #:
+    #: THREE-VALUED ON PURPOSE. True / False / None, where None means "not
+    #: measured". A two-valued version reported `False` - rendered as "the
+    #: diagnosis is not reading the history" - from a run where every call had
+    #: failed on an exhausted token budget, because two empty distributions
+    #: compare equal. That is this project's own recurring failure (see
+    #: docs/writeup/numbers-that-looked-fine.md) reproduced inside the instrument
+    #: built to catch it, and it is exactly the shape that survives into a slide.
     scattered = by_case.get("scattered_clicks", {}).get("said", {})
     prereqs = by_case.get("all_clicks_are_prereqs", {}).get("said", {})
-    discriminates = scattered != prereqs and bool(scattered) and bool(prereqs)
+    if not scattered or not prereqs:
+        discriminates = None
+    else:
+        discriminates = scattered != prereqs
 
     return {
         "call1_model": CONFIG.call1.model,
@@ -271,7 +282,12 @@ def render(result: dict) -> str:
     L.append(f"  admissible = any defensible state ({'stuck' } is admissible almost everywhere)")
     L.append("  specific   = the state the evidence actually supports")
     L.append("")
-    if result["separates_guessing_from_prereq_confusion"]:
+    verdict = result["separates_guessing_from_prereq_confusion"]
+    if verdict is None:
+        L.append("  NOT MEASURED - one or both contrasting cases returned nothing.")
+        L.append("  This is not a finding about the model. A verdict needs both")
+        L.append("  distributions; with either empty there is nothing to compare.")
+    elif verdict:
         L.append("  SEPARATES a scattered guesser from a prerequisite confusion.")
     else:
         L.append("  DOES NOT SEPARATE a scattered guesser from a prerequisite confusion:")
