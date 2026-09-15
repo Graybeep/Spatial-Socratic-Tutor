@@ -36,8 +36,9 @@ section **43 of 52 times (83%)**. BM25 scored 45 and was not adopted — see
 `docs/writeup/limitations.md` for why two nodes at n=52 does not buy a
 recalibration of the gate.
 
-**Next dated commitment: projector contrast test, Monday 2026-09-14** — see
-`docs/schedule.md`. **Deadline on the key: 2026-09-22 (day 19).** If there is no API key by then,
+**Next dated commitment: projector contrast test, rebooked into week 3
+(2026-09-18…24)** — it was booked for Monday 2026-09-14 and did not happen; see
+`docs/schedule.md` for what the slip costs. **Deadline on the key: 2026-09-22 (day 19).** If there is no API key by then,
 `MOCK_MODE` ships and §9.3 and §9.5 are cut. See
 `docs/writeup/no-key-plan.md`, which is the version of the report that needs no
 key — written early on purpose, so a key arriving late adds two sections rather
@@ -191,7 +192,7 @@ NARROW_SCHEDULE=0,25,18,12,8 python -m server.main
 | `client/src/types.ts` | reconciled against `/schemas`; supersedes `templates/` |
 | `client/src/Graph.tsx` | the frozen-layout SVG and the two dimming channels |
 | `client/contrast-check.html` | §8 projector test, at the 9-lit rung the demo really reaches |
-| `docs/schedule.md` | dated commitments and their pass/fail — next: projector test Mon 2026-09-14 |
+| `docs/schedule.md` | dated commitments and their pass/fail — next: projector test, week 3 (slipped from 09-14) |
 | `client/src/Chat.tsx` | the rail — transcript, composer, turn budget, node panel |
 
 Full layout in `CLAUDE.md` §2.
