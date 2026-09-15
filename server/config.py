@@ -141,6 +141,17 @@ class Config:
     #: Ceiling on any single wait, so one call cannot hang a turn indefinitely.
     llm_rate_limit_max_wait_s: float = field(
         default_factory=lambda: _float("LLM_RATE_LIMIT_MAX_WAIT_S", 60.0))
+
+    #: Seconds to wait on a DAILY cap (TPD). Default 0: do not wait, because a
+    #: daily limit does not clear in seconds and a serving turn must fail rather
+    #: than hang - that fix came from watching 5x60s of waiting achieve nothing.
+    #:
+    #: A long offline eval is the opposite case. Groq's daily budget refills
+    #: continuously (~139 tokens/min at 200k/day), so a paced batch run CAN wait
+    #: it out, and failing fast there throws away a run that only needed to go
+    #: slower. Set it for a batch job; leave it at 0 for anything serving a user.
+    llm_daily_limit_wait_s: float = field(
+        default_factory=lambda: _float("LLM_DAILY_LIMIT_WAIT_S", 0.0))
     anthropic_version: str = field(
         default_factory=lambda: _str("ANTHROPIC_VERSION", "2023-06-01"))
 

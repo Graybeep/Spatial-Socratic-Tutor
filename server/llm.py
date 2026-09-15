@@ -340,10 +340,23 @@ def _invoke(cfg: LLMCallConfig, system: str, user: str, tool: _Tool, label: str)
             # and then fails anyway. Measured: five minutes of wall clock, zero
             # progress, and a log that looked like ordinary throttling.
             if _is_daily_limit(r):
-                last = f"HTTP 429 DAILY quota exhausted: {r.text[:220]}"
-                log.error("%s: %s -- not retrying; this resets tomorrow, not in "
-                          "seconds. Switch model or wait.", label, last)
-                break
+                if CONFIG.llm_daily_limit_wait_s <= 0:
+                    last = f"HTTP 429 DAILY quota exhausted: {r.text[:220]}"
+                    log.error("%s: %s -- not retrying; a daily cap does not clear "
+                              "in seconds. Switch model, or set "
+                              "LLM_DAILY_LIMIT_WAIT_S for a batch run.", label, last)
+                    break
+                waits += 1
+                if waits > CONFIG.llm_max_rate_limit_waits:
+                    last = f"HTTP 429 DAILY quota still exhausted after {waits - 1} waits"
+                    log.error("%s: %s", label, last)
+                    break
+                STATS["rate_limited"] += 1
+                log.warning("%s: daily budget exhausted, waiting %.0fs for refill "
+                            "(%d/%d)", label, CONFIG.llm_daily_limit_wait_s,
+                            waits, CONFIG.llm_max_rate_limit_waits)
+                time.sleep(CONFIG.llm_daily_limit_wait_s)
+                continue
             delay = _retry_after(r)
             waits += 1
             if waits > CONFIG.llm_max_rate_limit_waits:
