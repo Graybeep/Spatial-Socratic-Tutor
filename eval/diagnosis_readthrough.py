@@ -72,6 +72,11 @@ CONDITIONS = ("zero", "partial", "adversarial")
 class Field:
     """One logged diagnosis, with everything needed to judge it."""
 
+    #: `lit` is what the student SAW before choosing; `hint_level` is where the
+    #: server moved AFTER reading the choice. They describe two different
+    #: moments and the sheet labels them separately - printed on one line they
+    #: read as one state, and a reader judging "was that hint proportionate"
+    #: would be comparing the wrong pair.
     n: int = 0
     item_id: str = ""
     item_type: str = ""
@@ -101,7 +106,19 @@ def _response(store: GraphStore, item, expects: str, pick: str) -> StudentRespon
         return StudentResponse(type="edge_click", edge=EdgeRef(**{"from": src, "to": dst}))
     if expects == "node_click":
         return StudentResponse(type="node_click", node_id=pick)
-    return StudentResponse(type="text", text=pick)
+    # A NODE ID IS NOT AN UTTERANCE. `Student.choose` returns an id, and wrapping
+    # it as free text sends the server something no person would type. It hit
+    # only 2 of 40 turns, and the tutor CAUGHT it - diagnosing "the student keeps
+    # offering text instead of clicking", which read as a hallucination until the
+    # driver was checked and turned out to be an accurate report of an instrument
+    # bug. §1.4 never scores free text, so these turns teach nothing and spend a
+    # turn of the budget.
+    return StudentResponse(type="text", text=_as_prose(pick))
+
+
+def _as_prose(pick: str) -> str:
+    """The nearest thing to what a student would actually type."""
+    return "I think it's " + pick.replace("_", " ")
 
 
 def collect(n: int, seed: int, max_turns: int, pace_s: float = 0.0,
@@ -257,9 +274,10 @@ def render_sheet(fields: list) -> str:
          ""]
     for f in fields:
         L.append(f"--- {f.n:>2} ----------------------------------------------------------")
-        L.append(f"  item      {f.item_id} ({f.item_type}) on '{f.node_label}', turn {f.turn}, hint {f.hint_level}, {f.lit} lit")
+        L.append(f"  item      {f.item_id} ({f.item_type}) on '{f.node_label}', turn {f.turn}")
+        L.append(f"  SAW       {f.lit} nodes lit when the student chose")
         L.append(f"  TRUTH     student knows: {f.condition:<12} clicked {f.student_pick!r} -> {'RIGHT' if f.pick_correct else 'wrong'}")
-        L.append(f"  tutor     correct={f.tutor_correct}  state={f.tutor_state}  action={f.tutor_action}")
+        L.append(f"  tutor     correct={f.tutor_correct}  state={f.tutor_state}  action={f.tutor_action}  (then hint {f.hint_level})")
         L.append(f"  focus     {f.focus_nodes}")
         L.append(f"  DIAGNOSIS {f.diagnosis}")
         L.append("")
@@ -332,22 +350,37 @@ def main() -> int:
                 json.dump({"result": score(so_far),
                            "fields": [asdict(f) for f in so_far]}, fh, indent=2)
 
+    # Windows stdout defaults to cp1252 and the sheet carries § and em-dashes,
+    # which killed a completed 30-field run at its last step. Reconfigure rather
+    # than strip: those characters are in the prompts and in the diagnoses.
+    for stream in (sys.stdout, sys.stderr):
+        try:
+            stream.reconfigure(encoding="utf-8", errors="replace")
+        except AttributeError:  # pragma: no cover - very old Python
+            pass
+
     fields = collect(args.n, args.seed, args.max_turns, args.pace_s,
                      checkpoint if args.json else None)
     result = score(fields)
     sheet = render_sheet(fields)
 
-    print(sheet)
-    print(render(result))
-
+    # PERSIST FIRST, DISPLAY SECOND. The expensive part is behind us by here -
+    # twenty minutes of paced calls against a daily token budget - and the cheap
+    # part is what crashed last time: printing the sheet to a cp1252 stdout took
+    # down a completed 30-field run at its final step.
     if args.sheet:
         with open(args.sheet, "w", encoding="utf-8") as fh:
             fh.write(sheet + "\n" + render(result) + "\n")
-        print(f"\nsheet -> {args.sheet}")
     if args.json:
         payload = {"result": result, "fields": [asdict(f) for f in fields]}
         with open(args.json, "w", encoding="utf-8") as fh:
             json.dump(payload, fh, indent=2)
+
+    print(sheet)
+    print(render(result))
+    if args.sheet:
+        print(f"\nsheet -> {args.sheet}")
+    if args.json:
         print(f"raw -> {args.json}")
     return 0
 
