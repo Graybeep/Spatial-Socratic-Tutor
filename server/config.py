@@ -50,6 +50,22 @@ def _path(name: str, default: str) -> Path:
     return value if value.is_absolute() else ROOT / value
 
 
+def _by_provider(anthropic, groq):
+    """A default that differs by provider.
+
+    Read at startup like every other default (§13.1), and still overridable by
+    the call's own env var - `CALL1_MAX_TOKENS` beats both.
+
+    It exists for exactly one value: the completion budget. Claude emits the
+    tool call directly and Call 1 fits in ~120 tokens; gpt-oss and qwen emit
+    reasoning FIRST and measured 534-580. Sharing one number does not degrade
+    gracefully - at 300 the response is truncated before the tool call exists
+    and the provider reports "model did not call a tool", which reads like the
+    model cannot do it. See `_explain` in server/llm.py.
+    """
+    return groq if _str("LLM_PROVIDER", "anthropic") == "groq" else anthropic
+
+
 @dataclass(frozen=True)
 class LLMCallConfig:
     """One of the two calls in CLAUDE.md 5.
@@ -69,16 +85,31 @@ class LLMCallConfig:
 
 @dataclass(frozen=True)
 class Config:
-    # --- credentials ---------------------------------------------------------
+    # --- provider and credentials --------------------------------------------
+    #: Which wire format `server/llm.py` speaks. CLAUDE.md §13.1 already puts
+    #: model ids and base URLs in config; the API they are spoken to is the same
+    #: kind of value. Two providers, both hand-written with httpx (§1.1):
+    #:
+    #:   anthropic  {base}/v1/messages, x-api-key, tools + tool_choice
+    #:   groq       {base}/openai/v1/chat/completions, Bearer, OpenAI functions
+    #:
+    #: The SCHEMA is not provider-specific and does not move: both providers are
+    #: asked to fill the same pydantic model under a forced tool call, and a
+    #: response that does not validate fails the same way on both.
+    llm_provider: str = field(default_factory=lambda: _str("LLM_PROVIDER", "anthropic"))
+
     api_key: str = field(default_factory=lambda: _str("ANTHROPIC_API_KEY", ""))
     base_url: str = field(default_factory=lambda: _str("ANTHROPIC_BASE_URL", "https://api.anthropic.com"))
+
+    groq_api_key: str = field(default_factory=lambda: _str("GROQ_API_KEY", ""))
+    groq_base_url: str = field(default_factory=lambda: _str("GROQ_BASE_URL", "https://api.groq.com"))
 
     # --- the two calls (CLAUDE.md 5) ----------------------------------------
     # Call 1 diagnoses. Its `diagnosis` field is what a human hand-reads thirty of
     # in week 3 (CLAUDE.md 9.5), so it gets the higher effort of the two.
     call1: LLMCallConfig = field(default_factory=lambda: LLMCallConfig(
-        model=_str("CALL1_MODEL", "claude-opus-5"),
-        max_tokens=_int("CALL1_MAX_TOKENS", 300),
+        model=_str("CALL1_MODEL", _by_provider("claude-opus-5", "openai/gpt-oss-120b")),
+        max_tokens=_int("CALL1_MAX_TOKENS", _by_provider(300, 1500)),
         effort=_str("CALL1_EFFORT", "medium"),
         timeout_s=_float("CALL1_TIMEOUT_S", 10.0),
     ))
@@ -88,16 +119,46 @@ class Config:
     # spends seconds of a 4.5s p95 budget, so the default is Haiku and the
     # judgement stays on Call 1, whose diagnosis is hand-read in week 3.
     call2: LLMCallConfig = field(default_factory=lambda: LLMCallConfig(
-        model=_str("CALL2_MODEL", "claude-haiku-4-5"),
-        max_tokens=_int("CALL2_MAX_TOKENS", 250),
+        model=_str("CALL2_MODEL", _by_provider("claude-haiku-4-5", "openai/gpt-oss-20b")),
+        max_tokens=_int("CALL2_MAX_TOKENS", _by_provider(250, 1200)),
         effort=_str("CALL2_EFFORT", "low"),
         timeout_s=_float("CALL2_TIMEOUT_S", 10.0),
     ))
     #: Retries per call on a transport error or a schema-invalid response.
     #: CLAUDE.md 10: every retry is logged. There are no silent ones.
     llm_max_retries: int = field(default_factory=lambda: _int("LLM_MAX_RETRIES", 1))
+
+    #: A 429 is a WAIT, not a failed attempt, so it has its own budget. Groq's
+    #: free tier is 8,000 tokens/minute and one Call 1 costs ~2,750, so a run of
+    #: any length spends most of its wall clock here. Retrying instantly - which
+    #: is what a shared budget does - burns every retry inside the window the
+    #: server just asked us to wait out.
+    llm_max_rate_limit_waits: int = field(
+        default_factory=lambda: _int("LLM_MAX_RATE_LIMIT_WAITS", 5))
+    #: Used when the provider names no delay.
+    llm_rate_limit_default_wait_s: float = field(
+        default_factory=lambda: _float("LLM_RATE_LIMIT_DEFAULT_WAIT_S", 20.0))
+    #: Ceiling on any single wait, so one call cannot hang a turn indefinitely.
+    llm_rate_limit_max_wait_s: float = field(
+        default_factory=lambda: _float("LLM_RATE_LIMIT_MAX_WAIT_S", 60.0))
     anthropic_version: str = field(
         default_factory=lambda: _str("ANTHROPIC_VERSION", "2023-06-01"))
+
+    @property
+    def llm_key(self) -> str:
+        """The credential for the ACTIVE provider.
+
+        A property rather than a field because it is derived: two keys can sit
+        in `.env` at once and which one is live is `llm_provider`'s answer, not
+        the environment's. Nothing reads os.environ at call time (§13.1) - both
+        keys were read at startup.
+        """
+        return self.groq_api_key if self.llm_provider == "groq" else self.api_key
+
+    @property
+    def llm_base_url(self) -> str:
+        """The base URL for the ACTIVE provider. See `llm_key`."""
+        return self.groq_base_url if self.llm_provider == "groq" else self.base_url
 
     # --- paths ---------------------------------------------------------------
     graph_path: Path = field(default_factory=lambda: _path("GRAPH_PATH", "data/graph.json"))

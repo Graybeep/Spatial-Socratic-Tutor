@@ -62,7 +62,9 @@ def test_call2_refuses_a_chunk_on_a_hint_turn():
 def test_call2_allows_a_chunk_where_5_permits_one():
     """advance and explain may receive a masked chunk. Asserted by getting past
     the gate to the API call, which then fails for want of a key."""
-    with config_override(api_key=""):
+    # Pin the provider: `api_key` stopped being "the active key" when the second
+    # provider landed, so clearing it alone proves nothing if GROQ_API_KEY is set.
+    with config_override(llm_provider="anthropic", api_key=""):
         with pytest.raises(llm.LLMError, match="ANTHROPIC_API_KEY"):
             llm.call2(action="explain", hint_level=0, focus_labels=["A"],
                       n_lit=1, recent=[], chunk="text")
@@ -74,20 +76,102 @@ def test_call2_allows_a_chunk_where_5_permits_one():
 
 def test_request_body_has_no_sampling_parameter():
     """Sampling params are removed on the Claude 5 models: a 400, every call."""
-    body = llm._request(CONFIG.call1, "sys", "user", llm.CALL1_TOOL)
+    body = llm._anthropic_request(CONFIG.call1, "sys", "user", llm.CALL1_TOOL)
     for banned in ("temperature", "top_p", "top_k"):
         assert banned not in body, f"{banned} would 400 on this model"
     assert body["output_config"] == {"effort": CONFIG.call1.effort}
 
 
 def test_request_forces_the_tool_so_output_is_schema_valid():
-    body = llm._request(CONFIG.call1, "sys", "user", llm.CALL1_TOOL)
+    body = llm._anthropic_request(CONFIG.call1, "sys", "user", llm.CALL1_TOOL)
     assert body["tool_choice"] == {"type": "tool", "name": "record_decision"}
     tool = body["tools"][0]
     assert tool["strict"] is True
     # strict requires both of these; pydantic gives the first for extra="forbid".
     assert tool["input_schema"]["additionalProperties"] is False
     assert tool["input_schema"]["required"]
+
+
+# ---------------------------------------------------------------------------
+# the second provider
+# ---------------------------------------------------------------------------
+
+def test_groq_request_forces_the_same_tool_and_the_same_schema():
+    """The wire format moves; the schema does not. That is what makes this a
+    seam rather than a second implementation."""
+    a = llm._anthropic_request(CONFIG.call1, "sys", "user", llm.CALL1_TOOL)
+    g = llm._groq_request(CONFIG.call1, "sys", "user", llm.CALL1_TOOL)
+
+    assert g["tool_choice"] == {"type": "function",
+                                "function": {"name": "record_decision"}}
+    fn = g["tools"][0]["function"]
+    assert fn["name"] == a["tools"][0]["name"]
+    assert fn["parameters"] == a["tools"][0]["input_schema"], (
+        "the two providers were handed different schemas; a response valid on "
+        "one could then be invalid on the other"
+    )
+    for banned in ("temperature", "top_p", "top_k"):
+        assert banned not in g
+
+
+def test_groq_takes_the_system_prompt_as_a_message():
+    """§10 re-injects the tutor contract every turn. If it silently vanished
+    into a field this provider ignores, the model drifts back into explaining."""
+    g = llm._groq_request(CONFIG.call2, "CONTRACT", "user", llm.CALL2_TOOL)
+    assert "system" not in g
+    assert g["messages"][0] == {"role": "system", "content": "CONTRACT"}
+    assert g["messages"][1] == {"role": "user", "content": "user"}
+
+
+def test_groq_does_not_send_effort_because_it_would_mean_nothing():
+    """Dropped, not mapped onto max_tokens: a knob that silently means something
+    else on one provider is worse than one that visibly does nothing."""
+    g = llm._groq_request(CONFIG.call1, "sys", "user", llm.CALL1_TOOL)
+    assert "output_config" not in g and "effort" not in g
+
+
+@pytest.mark.parametrize("payload,expect", [
+    ({"choices": [{"message": {"tool_calls": [{"function": {
+        "name": "record_decision", "arguments": '{"correct": true}'}}]}}]},
+     {"correct": True}),
+    ({"choices": []}, None),
+    ({"choices": [{"message": {}, "finish_reason": "length"}]}, None),
+    ({"choices": [{"message": {"tool_calls": [{"function": {
+        "arguments": "{not json"}}]}}]}, None),
+    ({"choices": [{"message": {"tool_calls": [{"function": {
+        "arguments": '["a list"]'}}]}}]}, None),
+])
+def test_groq_extract_reports_rather_than_raises(payload, expect):
+    """Every shape a refusal or a truncation can take comes back as a complaint
+    the retry loop can log (§10 forbids silent parse failures)."""
+    args, complaint = llm._groq_extract(payload)
+    assert args == expect
+    assert (complaint is None) == (expect is not None)
+
+
+def test_an_unknown_provider_is_refused_not_defaulted():
+    """A typo in LLM_PROVIDER must not quietly speak the wrong wire format at
+    the wrong host."""
+    with config_override(llm_provider="grok"):
+        with pytest.raises(llm.LLMError, match="unknown LLM_PROVIDER"):
+            llm.provider()
+
+
+def test_the_key_and_url_follow_the_active_provider():
+    with config_override(llm_provider="groq", groq_api_key="g-key",
+                         api_key="a-key"):
+        assert CONFIG.llm_key == "g-key"
+        assert CONFIG.llm_base_url == CONFIG.groq_base_url
+    with config_override(llm_provider="anthropic", groq_api_key="g-key",
+                         api_key="a-key"):
+        assert CONFIG.llm_key == "a-key"
+        assert CONFIG.llm_base_url == CONFIG.base_url
+
+
+def test_a_missing_key_names_the_variable_for_the_active_provider():
+    with config_override(llm_provider="groq", groq_api_key=""):
+        with pytest.raises(llm.LLMError, match="GROQ_API_KEY"):
+            llm.call2(action="ask", hint_level=0, focus_labels=[], n_lit=1, recent=[])
 
 
 def test_call1_schema_has_no_field_to_put_a_score_in():
@@ -100,7 +184,7 @@ def test_call1_schema_has_no_field_to_put_a_score_in():
 
 
 def test_no_key_is_a_clean_error_naming_the_way_out():
-    with config_override(api_key=""):
+    with config_override(llm_provider="anthropic", api_key=""):
         with pytest.raises(llm.LLMError, match="MOCK_MODE"):
             llm.call2(action="ask", hint_level=0, focus_labels=[], n_lit=1, recent=[])
 
@@ -288,3 +372,12 @@ def test_mask_spans_blanks_right_to_left():
 def test_mask_spans_ignores_out_of_range_offsets():
     text = "short"
     assert guards.mask_spans(text, [(99, 120)]) == text
+
+
+def test_the_suite_cannot_make_a_real_call_whatever_env_says():
+    """`.env` is read at import. The day one landed with MOCK_MODE=false the
+    suite began making paid network calls and then hung on a rate limiter."""
+    assert CONFIG.mock_mode is True, (
+        "the suite is configured for real model calls; _hermetic_by_default "
+        "is not in effect"
+    )
