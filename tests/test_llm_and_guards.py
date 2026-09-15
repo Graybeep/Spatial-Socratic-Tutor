@@ -381,3 +381,22 @@ def test_the_suite_cannot_make_a_real_call_whatever_env_says():
         "the suite is configured for real model calls; _hermetic_by_default "
         "is not in effect"
     )
+
+
+@pytest.mark.parametrize("message,expect", [
+    ("attempted to call tool 'json' which was not in request.tools", "TOOL NAME"),
+    ("Tool choice is required, but model did not call a tool", "TRUNCATION"),
+    ("Failed to parse tool call arguments as JSON", "TRUNCATION"),
+])
+def test_tool_use_failed_is_not_always_truncation(message, expect):
+    """One provider code, three faults. The first version of `_explain`
+    announced TRUNCATION for all of them and was wrong on two."""
+    class R:
+        text = json_dumps_error(message)
+        def json(self): return {"error": {"code": "tool_use_failed", "message": message}}
+    assert expect in llm._explain(R())
+
+
+def json_dumps_error(message):
+    import json as _json
+    return _json.dumps({"error": {"code": "tool_use_failed", "message": message}})

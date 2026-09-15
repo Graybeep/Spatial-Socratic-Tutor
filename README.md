@@ -17,8 +17,16 @@ Schemas frozen, mock server running, client rendering the graph against it.
 The chapter graph has landed: 52 hand-authored nodes over Peterson & Davie
 ch. 6 (Congestion Control), CC BY 4.0 — see `data/SOURCE.md` for attribution and
 for why it is hand-authored and why `gold_graph.json` was frozen *before* any
-extractor exists. The two-call tutor loop still runs against the mock; `MOCK_MODE`
-is still the default.
+extractor exists.
+
+**The tutor loop now runs against a real model.** `MOCK_MODE=true` is still the
+committed default — the whole demo runs with no key and no network — but a key
+arrived on day 12, seven days before the cut, and it is a **Groq** key rather
+than an Anthropic one. `server/llm.py` speaks both wire formats behind
+`LLM_PROVIDER`; the schema does not move between them. The tutor runs
+`openai/gpt-oss-120b` on Call 1 and `gpt-oss-20b` on Call 2, **not Claude**, and
+the writeup says so. What that cost and what it still constrains is in
+`docs/schedule.md` under *day 12*.
 
 **The chapter itself has now landed too.** `python -m build.fetch_chapter &&
 python -m build.chunk --html` produces `data/chunks.json` — 15 section-aligned
@@ -38,11 +46,18 @@ recalibration of the gate.
 
 **Next dated commitment: projector contrast test, rebooked into week 3
 (2026-09-18…24)** — it was booked for Monday 2026-09-14 and did not happen; see
-`docs/schedule.md` for what the slip costs. **Deadline on the key: 2026-09-22 (day 19).** If there is no API key by then,
-`MOCK_MODE` ships and §9.3 and §9.5 are cut. See
-`docs/writeup/no-key-plan.md`, which is the version of the report that needs no
-key — written early on purpose, so a key arriving late adds two sections rather
-than forcing a rewrite.
+`docs/schedule.md` for what the slip costs.
+
+**The day-19 key cut is met.** §9.5 and §6.1 are unblocked and no longer on the
+cut list. `docs/writeup/no-key-plan.md` stays exactly as written: it is still the
+report if the key is revoked, and having had it ready cost nothing.
+
+One limit the key does *not* lift. The free tier is 8,000 tokens/minute and one
+Call 1 costs ~2,750 — about two full turns a minute. §9.5 and §6.1 fit; a real-
+model re-run of §9.1 (12 arms × 138 dialogues) does not, so **§9.1 stays a
+mock-utterance result**. That is defensible because the visual arm's narrowing is
+deterministic and does not depend on what Call 2 writes, but it is a limitation
+rather than a footnote.
 
 ## Run the mock
 
@@ -89,6 +104,23 @@ Screen the item bank (§9.4) - no key, no chapter, no network:
 ```bash
 python -m eval.distractor_screen
 ```
+
+Hand-read 30 `diagnosis` fields (§9.5) — **needs a key**, and refuses to run
+without one, because reading thirty mock diagnoses measures `mock_tutor.py`:
+
+```bash
+LLM_PROVIDER=groq MOCK_MODE=false python -m eval.diagnosis_readthrough --n 30
+```
+
+It prints the fields with the student's **true** knowledge state and actual click
+on the page beside each one, so a diagnosis can be judged without cross-
+referencing a second file. The students are scripted, which is a real limitation
+and is stated — but it is also the only way to have ground truth at all: reading
+thirty diagnoses of a real student, nobody can say whether "confused about the
+prerequisite" was *true*. It also checks the two things that need no human: does
+`correct` match what was actually clicked (Call 1 sees the answer, so anything
+under 100% is a scoring fault), and does `student_state` move at all across three
+different true knowledge states.
 
 Aggregate guard layer 1 (§6.1) from the turn log - no key, and it will tell you
 what it refuses to report:
@@ -193,6 +225,7 @@ NARROW_SCHEDULE=0,25,18,12,8 python -m server.main
 | `eval/adversarial.py` | §9.1 effective leakage — `python -m eval.adversarial` |
 | `eval/graph_quality.py` | §9.3 extraction recall ceiling; deterministic, no key |
 | `eval/leak_monitor.py` | §6.1 layer-1 rate from the log; refuses to pool builds, origins or report a mock |
+| `eval/diagnosis_readthrough.py` | §9.5 — 30 diagnoses against ground truth; refuses to run on the mock |
 | **`docs/writeup/report.md`** | **the assembled report — start here** |
 | `docs/writeup/representation-blindness.md` | the design contribution: fidelity ceiling, not field whitelist (4 instances) |
 | `docs/writeup/numbers-that-looked-fine.md` | evals, and one drift test, that produced well-formed results over nothing |

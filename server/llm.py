@@ -246,7 +246,19 @@ def _explain(r) -> str:
         code = (r.json().get("error") or {}).get("code")
     except Exception:  # noqa: BLE001 - an error body that is not JSON
         return body
-    if code == "tool_use_failed":
+    if code != "tool_use_failed":
+        return body
+
+    # `tool_use_failed` covers at least three different faults and the message
+    # does not name which. Guessing one of them - the first version of this
+    # function announced TRUNCATION unconditionally - produces a diagnostic that
+    # is confidently wrong on two thirds of its hits.
+    if "which was not in request.tools" in body:
+        return (f"{body}  <-- the model invented a TOOL NAME (gpt-oss-20b likes "
+                f"'json'). Groq rejects this server-side, so it cannot be "
+                f"recovered in the extractor: use a model that honours the "
+                f"forced name, or fall back")
+    if "did not call a tool" in body or "as JSON" in body:
         return (f"{body}  <-- this is usually TRUNCATION, not refusal: raise "
                 f"max_tokens for this call (reasoning models spend output "
                 f"tokens before the tool call)")
