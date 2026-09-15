@@ -7,6 +7,33 @@ here is rewritten.*
 
 ---
 
+> ## Superseded on day 12 — a key arrived
+>
+> **This document is no longer the expected path.** It is kept exactly as
+> written, and not edited into the past tense, because it is still the report if
+> the key is revoked tomorrow — and because what it got right is only visible
+> while it still says what it said on day 6.
+>
+> The key is a **Groq** key, not an Anthropic one, so the two sections this plan
+> said would be *added* cost a provider seam in `server/llm.py` first. §9.5 and
+> §6.1 are unblocked. See `docs/schedule.md` under *day 12* for what that cost
+> and what it did not buy.
+>
+> **The part of this plan that survived contact is the framing, not the
+> forecast.** Writing the no-key report early was supposed to protect against a
+> key never arriving. What it actually bought was different: when a key did
+> arrive, in the wrong shape, there was no scramble to work out which claims
+> depended on it — the document had already separated them. The forecast was
+> wrong in both directions (the key came seven days early, and was not the key
+> anyone expected) and the preparation still paid, which is the argument for
+> doing this kind of writing before it is needed rather than after.
+>
+> **One thing it did not anticipate.** This plan treats "a key" as a switch:
+> present or absent. A key with a *daily token budget* is a third state, and it
+> is the one we are in — 200,000 tokens per model per day, against a §9.1 sweep
+> that would need days of them. So §9.1 ships as the mock-utterance result
+> exactly as this document planned, but for a reason it never names.
+
 ## The decision, with a date on it
 
 > **If no API key is in hand by 2026-09-22 (day 19), `MOCK_MODE` ships.**
