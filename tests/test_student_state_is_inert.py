@@ -114,3 +114,60 @@ def test_the_schema_still_offers_no_place_to_put_a_score():
     assert "correct" in props
     assert not (props & {"score", "mastery", "confidence", "probability", "theta",
                          "ability", "estimate"})
+
+
+# --- the other two judgement fields are inert too -----------------------------
+#
+# Measured on `qwen/qwen3.8-27b` with constructed cases (eval/diagnostic_
+# calibration.py): `correct` was right on 4 of 6 unambiguous histories, and Call 1
+# SEES the answer. That would be alarming if anything read it. Nothing does:
+# `mock_tutor.grade()` is a string comparison and mastery is computed from that.
+#
+# Likewise `focus_nodes`: the model proposes a set, and `_build_graph_state` is
+# fed `mock_tutor.lit_nodes(store, item, state.visual_narrow_level)` instead.
+# The narrowing - the project's entire thesis - is deterministic.
+
+
+def test_mastery_does_not_read_the_models_correct_boolean():
+    """§1.3. `grade()` compares strings; `decision.correct` is logged evidence.
+
+    If this fails, a model that was wrong on 2 of 6 constructed cases is now
+    writing the mastery estimate.
+    """
+    hits = _reads_of(_module_ast("turn.py"), "correct")
+    # `response.correct` does not exist; any read here is decision.correct.
+    assert not hits, (
+        f"server/turn.py reads `.correct` at line(s) {hits}. Mastery must come "
+        f"from mock_tutor.grade(), which compares the click to items.json."
+    )
+
+
+def test_the_narrowing_is_not_chosen_by_the_model():
+    """The visual channel is the contribution (§12). If the model picked the lit
+    set, the one thing this project claims would rest on a field measured to be
+    uncorrelated with the student."""
+    src = (ROOT / "server" / "turn.py").read_text(encoding="utf-8")
+    assert "mock_tutor.lit_nodes(" in src, (
+        "turn.py no longer derives the lit set deterministically"
+    )
+    tree = ast.parse(src)
+    # _build_graph_state must never be called with the decision's focus_nodes.
+    for node in ast.walk(tree):
+        if not (isinstance(node, ast.Call) and isinstance(node.func, ast.Name)
+                and node.func.id == "_build_graph_state"):
+            continue
+        for arg in node.args:
+            src_seg = ast.unparse(arg)
+            assert "focus_nodes" not in src_seg, (
+                f"_build_graph_state called with {src_seg!r}: the narrowing would "
+                f"then be the model's choice, not the ladder's."
+            )
+
+
+def test_the_server_owns_the_hint_counter():
+    """§1.7 and guard layer 2: the model requests, the server decides."""
+    src = (ROOT / "server" / "turn.py").read_text(encoding="utf-8")
+    assert "state.bump_hint(decision.requested_hint_level)" in src, (
+        "hint_level is no longer clamped by the server; the model's requested "
+        "level would reach the ladder directly."
+    )
