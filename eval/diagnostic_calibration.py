@@ -140,6 +140,12 @@ CASES = (
         why="the student clicked the answer",
         admissible=("correct",),
         specific="correct",
+        # ONE CLICK, SO ONE TURN. This case inherited the default 3 and told the
+        # model "three turns on item" while showing it a single click. The model
+        # answered `stuck` and wrote "three turns in with no clear right answer",
+        # which was a reasonable reading of a context we had made incoherent. The
+        # row was scored as a model failure until the case was re-read.
+        turns_on_item=1,
     ),
     Case(
         name="opening_turn",
@@ -172,6 +178,10 @@ class Result:
     item_id: str = ""
     said: str = ""
     action: str = ""
+    #: The boolean §7 computes mastery from. `student_state` is a label nothing
+    #: reads; THIS is the one that would corrupt the adaptive path, so a probe
+    #: that records the label and not the boolean measures the wrong field.
+    correct: Optional[bool] = None
     admissible: bool = False
     specific_hit: bool = False
     diagnosis: str = ""
@@ -214,6 +224,7 @@ def run(model: Optional[str], repeats: int, pace_s: float) -> list:
                     )
                     r.said = d.student_state
                     r.action = d.requested_action
+                    r.correct = d.correct
                     r.diagnosis = d.diagnosis
                     r.admissible = d.student_state in case.admissible
                     r.specific_hit = d.student_state == case.specific
@@ -257,8 +268,20 @@ def score(results: list) -> dict:
     else:
         discriminates = scattered != prereqs
 
+    #: The boolean, scored against what the constructed history actually shows.
+    #: Only `answered_correctly` has a true answer; every other case is a wrong
+    #: or absent click.
+    truth = {"answered_correctly": True, "scattered_clicks": False,
+             "all_clicks_are_prereqs": False}
+    graded = [r for r in done if r.case in truth]
+    correct_agreement = {
+        "agree": sum(1 for r in graded if r.correct is truth[r.case]),
+        "of": len(graded),
+    }
+
     return {
         "call1_model": CONFIG.call1.model,
+        "correct_boolean": correct_agreement,
         "provider": CONFIG.llm_provider,
         "cases": by_case,
         "errors": [asdict(r) for r in results if r.error],
@@ -282,6 +305,11 @@ def render(result: dict) -> str:
     L.append(f"  admissible = any defensible state ({'stuck' } is admissible almost everywhere)")
     L.append("  specific   = the state the evidence actually supports")
     L.append("")
+    cb = result["correct_boolean"]
+    if cb["of"]:
+        L.append(f"  `correct` boolean (the field §7 actually scores): "
+                 f"{cb['agree']}/{cb['of']}")
+        L.append("")
     verdict = result["separates_guessing_from_prereq_confusion"]
     if verdict is None:
         L.append("  NOT MEASURED - one or both contrasting cases returned nothing.")
