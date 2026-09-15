@@ -393,7 +393,9 @@
       "unit": "items",
       "expect_full": true,
       "coverage": 1.0,
-      "complete": true
+      "complete": true,
+      "code": "6c69a84",
+      "generated_at": "2026-09-15T18:16:10+0530"
     },
     "terminal_ci": {
       "lo": 0.0942,
@@ -800,7 +802,9 @@
       "unit": "items",
       "expect_full": true,
       "coverage": 1.0,
-      "complete": true
+      "complete": true,
+      "code": "6c69a84",
+      "generated_at": "2026-09-15T18:16:11+0530"
     },
     "terminal_ci": {
       "lo": 0.2899,
@@ -1207,7 +1211,9 @@
       "unit": "items",
       "expect_full": true,
       "coverage": 1.0,
-      "complete": true
+      "complete": true,
+      "code": "6c69a84",
+      "generated_at": "2026-09-15T18:16:12+0530"
     },
     "terminal_ci": {
       "lo": 0.2464,
@@ -1614,7 +1620,9 @@
       "unit": "items",
       "expect_full": true,
       "coverage": 1.0,
-      "complete": true
+      "complete": true,
+      "code": "6c69a84",
+      "generated_at": "2026-09-15T18:16:14+0530"
     },
     "terminal_ci": {
       "lo": 0.0507,
@@ -2021,7 +2029,9 @@
       "unit": "items",
       "expect_full": true,
       "coverage": 1.0,
-      "complete": true
+      "complete": true,
+      "code": "6c69a84",
+      "generated_at": "2026-09-15T18:16:15+0530"
     },
     "terminal_ci": {
       "lo": 0.1812,
@@ -2428,7 +2438,9 @@
       "unit": "items",
       "expect_full": true,
       "coverage": 1.0,
-      "complete": true
+      "complete": true,
+      "code": "6c69a84",
+      "generated_at": "2026-09-15T18:16:16+0530"
     },
     "terminal_ci": {
       "lo": 0.2826,
@@ -2835,7 +2847,9 @@
       "unit": "items",
       "expect_full": true,
       "coverage": 1.0,
-      "complete": true
+      "complete": true,
+      "code": "6c69a84",
+      "generated_at": "2026-09-15T18:16:17+0530"
     },
     "terminal_ci": {
       "lo": 0.0,
@@ -3242,7 +3256,9 @@
       "unit": "items",
       "expect_full": true,
       "coverage": 1.0,
-      "complete": true
+      "complete": true,
+      "code": "6c69a84",
+      "generated_at": "2026-09-15T18:16:18+0530"
     },
     "terminal_ci": {
       "lo": 0.1739,
@@ -3649,7 +3665,9 @@
       "unit": "items",
       "expect_full": true,
       "coverage": 1.0,
-      "complete": true
+      "complete": true,
+      "code": "6c69a84",
+      "generated_at": "2026-09-15T18:16:19+0530"
     },
     "terminal_ci": {
       "lo": 0.1739,
@@ -4056,7 +4074,9 @@
       "unit": "items",
       "expect_full": true,
       "coverage": 1.0,
-      "complete": true
+      "complete": true,
+      "code": "6c69a84",
+      "generated_at": "2026-09-15T18:16:21+0530"
     },
     "terminal_ci": {
       "lo": 0.0072,
@@ -4463,7 +4483,9 @@
       "unit": "items",
       "expect_full": true,
       "coverage": 1.0,
-      "complete": true
+      "complete": true,
+      "code": "6c69a84",
+      "generated_at": "2026-09-15T18:16:22+0530"
     },
     "terminal_ci": {
       "lo": 0.1884,
@@ -4870,7 +4892,9 @@
       "unit": "items",
       "expect_full": true,
       "coverage": 1.0,
-      "complete": true
+      "complete": true,
+      "code": "6c69a84",
+      "generated_at": "2026-09-15T18:16:23+0530"
     },
     "terminal_ci": {
       "lo": 0.2029,

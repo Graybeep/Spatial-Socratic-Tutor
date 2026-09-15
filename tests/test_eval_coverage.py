@@ -7,6 +7,7 @@ shape as a number computed over a hundred.
 """
 from __future__ import annotations
 
+import json
 import random
 
 import pytest
@@ -16,6 +17,8 @@ from eval.adversarial import (
 )
 from eval import adversarial as adversarial_mod
 from eval import distractor_screen, provenance
+from server import build_info
+from server import config as config_mod
 from server.config import CONFIG
 from server.graph_store import GraphStore
 
@@ -251,3 +254,56 @@ def test_measure_refuses_to_report_over_an_unreadable_stratum(store, monkeypatch
 
     with pytest.raises(AssertionError, match="unanswerable by construction"):
         adversarial_mod.measure(store, "t", "interleaved", "partial", n=4)
+
+
+# --- a result must say which build computed it --------------------------------
+
+
+def test_provenance_carries_the_build_stamp():
+    """A number that outlives its code has to say which code that was.
+
+    `eval/results/leakage.json` was written on day 6 and three behavioural
+    commits landed after it. It reproduces exactly on current `main` - but that
+    took a manual re-run to establish, because the file carried full sampling
+    provenance and no build stamp. Turn records have had `code` since day 8.
+    """
+    d = provenance.over(range(5), range(5), observations=5).as_dict()
+    assert d["code"] == build_info.CODE
+    assert d["code"], "an empty stamp is the same as no stamp"
+    assert d["generated_at"], "a build stamp with no date cannot order two runs"
+
+
+def test_every_written_result_file_is_stamped():
+    """The stamp reaches the files, not just the dataclass.
+
+    Provenance blocks sit at different depths in each eval's output - top level
+    in graph_quality, nested under `behavioural`/`structural` in the distractor
+    screen, once per arm in the leakage list - so this walks for them rather
+    than assuming a shape.
+    """
+    results = sorted((config_mod.ROOT / "eval" / "results").glob("*.json"))
+    assert results, "no eval results on disk; this test would prove nothing"
+
+    def blocks(node):
+        if isinstance(node, dict):
+            if "population" in node and "coverage" in node:
+                yield node
+            for v in node.values():
+                yield from blocks(v)
+        elif isinstance(node, list):
+            for v in node:
+                yield from blocks(v)
+
+    unstamped = []
+    for path in results:
+        found = list(blocks(json.loads(path.read_text(encoding="utf-8"))))
+        for b in found:
+            if not b.get("code"):
+                unstamped.append(path.name)
+                break
+
+    assert not unstamped, (
+        f"result files carry provenance but no build stamp: {sorted(set(unstamped))}. "
+        "Re-run those evals; a stored number that cannot name its build cannot be "
+        "quoted without a manual reproduction."
+    )

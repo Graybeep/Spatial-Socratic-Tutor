@@ -1,22 +1,52 @@
 {
   "log": "logs/turns.jsonl",
-  "turns": 490192,
+  "turns": 652473,
   "events": 0,
   "malformed": 0,
   "builds": {
-    "pre-stamp": 473635,
+    "pre-stamp": 473637,
+    "115a0c0-dirty": 24757,
+    "6c69a84": 22128,
+    "df5e392-dirty": 18807,
+    "987ed4c-dirty": 12538,
+    "a6c6bf2": 12327,
+    "6c69a84-dirty": 11472,
     "e2408c7-dirty": 11038,
-    "af60e60-dirty": 5519
+    "af60e60-dirty": 11038,
+    "6faa2d8": 6270,
+    "1352227": 6269,
+    "1352227-dirty": 6269,
+    "e508372-dirty": 6269,
+    "6faa2d8-dirty": 6269,
+    "5e4d343-dirty": 6269,
+    "e92bdae-dirty": 6269,
+    "115a0c0": 5519,
+    "e35ff32": 5328
   },
   "stamped_builds": [
+    "115a0c0",
+    "115a0c0-dirty",
+    "1352227",
+    "1352227-dirty",
+    "5e4d343-dirty",
+    "6c69a84",
+    "6c69a84-dirty",
+    "6faa2d8",
+    "6faa2d8-dirty",
+    "987ed4c-dirty",
+    "a6c6bf2",
     "af60e60-dirty",
-    "e2408c7-dirty"
+    "df5e392-dirty",
+    "e2408c7-dirty",
+    "e35ff32",
+    "e508372-dirty",
+    "e92bdae-dirty"
   ],
-  "unstamped_turns": 473635,
+  "unstamped_turns": 473637,
   "real_turns": 0,
-  "mock_turns": 490192,
+  "mock_turns": 652473,
   "arms": {
-    "af60e60-dirty [mock]": {
+    "115a0c0 [mock]": {
       "authorised_naming": {
         "checks": 352,
         "hits": 0,
@@ -39,7 +69,9 @@
           "unit": "items",
           "expect_full": false,
           "coverage": 0.0192,
-          "complete": false
+          "complete": false,
+          "code": "6c69a84",
+          "generated_at": "2026-09-15T18:17:01+0530"
         }
       },
       "parametric_reconstruction": {
@@ -76,11 +108,693 @@
           "unit": "items",
           "expect_full": false,
           "coverage": 0.3385,
-          "complete": false
+          "complete": false,
+          "code": "6c69a84",
+          "generated_at": "2026-09-15T18:17:01+0530"
         }
       }
     },
-    "e2408c7-dirty [mock]": {
+    "115a0c0-dirty [mock]": {
+      "authorised_naming": {
+        "checks": 1904,
+        "hits": 0,
+        "rate": 0.0,
+        "fell_back": 0,
+        "regenerated_clean": 0,
+        "distinct_items_hit": 0,
+        "top_items": [],
+        "top_aliases": [],
+        "by_action": {
+          "advance": {
+            "checks": 1904,
+            "hits": 0
+          }
+        },
+        "provenance": {
+          "population": 260,
+          "distinct": 5,
+          "observations": 1904,
+          "unit": "items",
+          "expect_full": false,
+          "coverage": 0.0192,
+          "complete": false,
+          "code": "6c69a84",
+          "generated_at": "2026-09-15T18:17:01+0530"
+        }
+      },
+      "parametric_reconstruction": {
+        "checks": 22853,
+        "hits": 0,
+        "rate": 0.0,
+        "fell_back": 0,
+        "regenerated_clean": 0,
+        "distinct_items_hit": 0,
+        "top_items": [],
+        "top_aliases": [],
+        "by_action": {
+          "ask": {
+            "checks": 10805,
+            "hits": 0
+          },
+          "backtrack": {
+            "checks": 3555,
+            "hits": 0
+          },
+          "hint_verbal": {
+            "checks": 2052,
+            "hits": 0
+          },
+          "hint_visual": {
+            "checks": 6441,
+            "hits": 0
+          }
+        },
+        "provenance": {
+          "population": 260,
+          "distinct": 88,
+          "observations": 22853,
+          "unit": "items",
+          "expect_full": false,
+          "coverage": 0.3385,
+          "complete": false,
+          "code": "6c69a84",
+          "generated_at": "2026-09-15T18:17:01+0530"
+        }
+      }
+    },
+    "1352227 [mock]": {
+      "authorised_naming": {
+        "checks": 430,
+        "hits": 0,
+        "rate": 0.0,
+        "fell_back": 0,
+        "regenerated_clean": 0,
+        "distinct_items_hit": 0,
+        "top_items": [],
+        "top_aliases": [],
+        "by_action": {
+          "advance": {
+            "checks": 430,
+            "hits": 0
+          }
+        },
+        "provenance": {
+          "population": 260,
+          "distinct": 5,
+          "observations": 430,
+          "unit": "items",
+          "expect_full": false,
+          "coverage": 0.0192,
+          "complete": false,
+          "code": "6c69a84",
+          "generated_at": "2026-09-15T18:17:01+0530"
+        }
+      },
+      "parametric_reconstruction": {
+        "checks": 5839,
+        "hits": 0,
+        "rate": 0.0,
+        "fell_back": 0,
+        "regenerated_clean": 0,
+        "distinct_items_hit": 0,
+        "top_items": [],
+        "top_aliases": [],
+        "by_action": {
+          "ask": {
+            "checks": 2610,
+            "hits": 0
+          },
+          "backtrack": {
+            "checks": 1022,
+            "hits": 0
+          },
+          "hint_verbal": {
+            "checks": 545,
+            "hits": 0
+          },
+          "hint_visual": {
+            "checks": 1662,
+            "hits": 0
+          }
+        },
+        "provenance": {
+          "population": 260,
+          "distinct": 88,
+          "observations": 5839,
+          "unit": "items",
+          "expect_full": false,
+          "coverage": 0.3385,
+          "complete": false,
+          "code": "6c69a84",
+          "generated_at": "2026-09-15T18:17:01+0530"
+        }
+      }
+    },
+    "1352227-dirty [mock]": {
+      "authorised_naming": {
+        "checks": 430,
+        "hits": 0,
+        "rate": 0.0,
+        "fell_back": 0,
+        "regenerated_clean": 0,
+        "distinct_items_hit": 0,
+        "top_items": [],
+        "top_aliases": [],
+        "by_action": {
+          "advance": {
+            "checks": 430,
+            "hits": 0
+          }
+        },
+        "provenance": {
+          "population": 260,
+          "distinct": 5,
+          "observations": 430,
+          "unit": "items",
+          "expect_full": false,
+          "coverage": 0.0192,
+          "complete": false,
+          "code": "6c69a84",
+          "generated_at": "2026-09-15T18:17:01+0530"
+        }
+      },
+      "parametric_reconstruction": {
+        "checks": 5839,
+        "hits": 0,
+        "rate": 0.0,
+        "fell_back": 0,
+        "regenerated_clean": 0,
+        "distinct_items_hit": 0,
+        "top_items": [],
+        "top_aliases": [],
+        "by_action": {
+          "ask": {
+            "checks": 2610,
+            "hits": 0
+          },
+          "backtrack": {
+            "checks": 1022,
+            "hits": 0
+          },
+          "hint_verbal": {
+            "checks": 545,
+            "hits": 0
+          },
+          "hint_visual": {
+            "checks": 1662,
+            "hits": 0
+          }
+        },
+        "provenance": {
+          "population": 260,
+          "distinct": 88,
+          "observations": 5839,
+          "unit": "items",
+          "expect_full": false,
+          "coverage": 0.3385,
+          "complete": false,
+          "code": "6c69a84",
+          "generated_at": "2026-09-15T18:17:01+0530"
+        }
+      }
+    },
+    "5e4d343-dirty [mock]": {
+      "authorised_naming": {
+        "checks": 430,
+        "hits": 0,
+        "rate": 0.0,
+        "fell_back": 0,
+        "regenerated_clean": 0,
+        "distinct_items_hit": 0,
+        "top_items": [],
+        "top_aliases": [],
+        "by_action": {
+          "advance": {
+            "checks": 430,
+            "hits": 0
+          }
+        },
+        "provenance": {
+          "population": 260,
+          "distinct": 5,
+          "observations": 430,
+          "unit": "items",
+          "expect_full": false,
+          "coverage": 0.0192,
+          "complete": false,
+          "code": "6c69a84",
+          "generated_at": "2026-09-15T18:17:01+0530"
+        }
+      },
+      "parametric_reconstruction": {
+        "checks": 5839,
+        "hits": 0,
+        "rate": 0.0,
+        "fell_back": 0,
+        "regenerated_clean": 0,
+        "distinct_items_hit": 0,
+        "top_items": [],
+        "top_aliases": [],
+        "by_action": {
+          "ask": {
+            "checks": 2610,
+            "hits": 0
+          },
+          "backtrack": {
+            "checks": 1022,
+            "hits": 0
+          },
+          "hint_verbal": {
+            "checks": 545,
+            "hits": 0
+          },
+          "hint_visual": {
+            "checks": 1662,
+            "hits": 0
+          }
+        },
+        "provenance": {
+          "population": 260,
+          "distinct": 88,
+          "observations": 5839,
+          "unit": "items",
+          "expect_full": false,
+          "coverage": 0.3385,
+          "complete": false,
+          "code": "6c69a84",
+          "generated_at": "2026-09-15T18:17:01+0530"
+        }
+      }
+    },
+    "6c69a84 [mock]": {
+      "authorised_naming": {
+        "checks": 984,
+        "hits": 0,
+        "rate": 0.0,
+        "fell_back": 0,
+        "regenerated_clean": 0,
+        "distinct_items_hit": 0,
+        "top_items": [],
+        "top_aliases": [],
+        "by_action": {
+          "advance": {
+            "checks": 984,
+            "hits": 0
+          }
+        },
+        "provenance": {
+          "population": 260,
+          "distinct": 4,
+          "observations": 984,
+          "unit": "items",
+          "expect_full": false,
+          "coverage": 0.0154,
+          "complete": false,
+          "code": "6c69a84",
+          "generated_at": "2026-09-15T18:17:01+0530"
+        }
+      },
+      "parametric_reconstruction": {
+        "checks": 21144,
+        "hits": 0,
+        "rate": 0.0,
+        "fell_back": 0,
+        "regenerated_clean": 0,
+        "distinct_items_hit": 0,
+        "top_items": [],
+        "top_aliases": [],
+        "by_action": {
+          "ask": {
+            "checks": 8400,
+            "hits": 0
+          },
+          "backtrack": {
+            "checks": 4752,
+            "hits": 0
+          },
+          "hint_verbal": {
+            "checks": 4140,
+            "hits": 0
+          },
+          "hint_visual": {
+            "checks": 3852,
+            "hits": 0
+          }
+        },
+        "provenance": {
+          "population": 260,
+          "distinct": 101,
+          "observations": 21144,
+          "unit": "items",
+          "expect_full": false,
+          "coverage": 0.3885,
+          "complete": false,
+          "code": "6c69a84",
+          "generated_at": "2026-09-15T18:17:01+0530"
+        }
+      }
+    },
+    "6c69a84-dirty [mock]": {
+      "authorised_naming": {
+        "checks": 840,
+        "hits": 0,
+        "rate": 0.0,
+        "fell_back": 0,
+        "regenerated_clean": 0,
+        "distinct_items_hit": 0,
+        "top_items": [],
+        "top_aliases": [],
+        "by_action": {
+          "advance": {
+            "checks": 840,
+            "hits": 0
+          }
+        },
+        "provenance": {
+          "population": 260,
+          "distinct": 4,
+          "observations": 840,
+          "unit": "items",
+          "expect_full": false,
+          "coverage": 0.0154,
+          "complete": false,
+          "code": "6c69a84",
+          "generated_at": "2026-09-15T18:17:01+0530"
+        }
+      },
+      "parametric_reconstruction": {
+        "checks": 10632,
+        "hits": 0,
+        "rate": 0.0,
+        "fell_back": 0,
+        "regenerated_clean": 0,
+        "distinct_items_hit": 0,
+        "top_items": [],
+        "top_aliases": [],
+        "by_action": {
+          "ask": {
+            "checks": 4080,
+            "hits": 0
+          },
+          "backtrack": {
+            "checks": 1584,
+            "hits": 0
+          },
+          "hint_verbal": {
+            "checks": 2916,
+            "hits": 0
+          },
+          "hint_visual": {
+            "checks": 2052,
+            "hits": 0
+          }
+        },
+        "provenance": {
+          "population": 260,
+          "distinct": 101,
+          "observations": 10632,
+          "unit": "items",
+          "expect_full": false,
+          "coverage": 0.3885,
+          "complete": false,
+          "code": "6c69a84",
+          "generated_at": "2026-09-15T18:17:01+0530"
+        }
+      }
+    },
+    "6faa2d8 [mock]": {
+      "authorised_naming": {
+        "checks": 430,
+        "hits": 0,
+        "rate": 0.0,
+        "fell_back": 0,
+        "regenerated_clean": 0,
+        "distinct_items_hit": 0,
+        "top_items": [],
+        "top_aliases": [],
+        "by_action": {
+          "advance": {
+            "checks": 430,
+            "hits": 0
+          }
+        },
+        "provenance": {
+          "population": 260,
+          "distinct": 5,
+          "observations": 430,
+          "unit": "items",
+          "expect_full": false,
+          "coverage": 0.0192,
+          "complete": false,
+          "code": "6c69a84",
+          "generated_at": "2026-09-15T18:17:01+0530"
+        }
+      },
+      "parametric_reconstruction": {
+        "checks": 5840,
+        "hits": 0,
+        "rate": 0.0,
+        "fell_back": 0,
+        "regenerated_clean": 0,
+        "distinct_items_hit": 0,
+        "top_items": [],
+        "top_aliases": [],
+        "by_action": {
+          "ask": {
+            "checks": 2611,
+            "hits": 0
+          },
+          "backtrack": {
+            "checks": 1022,
+            "hits": 0
+          },
+          "hint_verbal": {
+            "checks": 545,
+            "hits": 0
+          },
+          "hint_visual": {
+            "checks": 1662,
+            "hits": 0
+          }
+        },
+        "provenance": {
+          "population": 260,
+          "distinct": 88,
+          "observations": 5840,
+          "unit": "items",
+          "expect_full": false,
+          "coverage": 0.3385,
+          "complete": false,
+          "code": "6c69a84",
+          "generated_at": "2026-09-15T18:17:01+0530"
+        }
+      }
+    },
+    "6faa2d8-dirty [mock]": {
+      "authorised_naming": {
+        "checks": 430,
+        "hits": 0,
+        "rate": 0.0,
+        "fell_back": 0,
+        "regenerated_clean": 0,
+        "distinct_items_hit": 0,
+        "top_items": [],
+        "top_aliases": [],
+        "by_action": {
+          "advance": {
+            "checks": 430,
+            "hits": 0
+          }
+        },
+        "provenance": {
+          "population": 260,
+          "distinct": 5,
+          "observations": 430,
+          "unit": "items",
+          "expect_full": false,
+          "coverage": 0.0192,
+          "complete": false,
+          "code": "6c69a84",
+          "generated_at": "2026-09-15T18:17:01+0530"
+        }
+      },
+      "parametric_reconstruction": {
+        "checks": 5839,
+        "hits": 0,
+        "rate": 0.0,
+        "fell_back": 0,
+        "regenerated_clean": 0,
+        "distinct_items_hit": 0,
+        "top_items": [],
+        "top_aliases": [],
+        "by_action": {
+          "ask": {
+            "checks": 2610,
+            "hits": 0
+          },
+          "backtrack": {
+            "checks": 1022,
+            "hits": 0
+          },
+          "hint_verbal": {
+            "checks": 545,
+            "hits": 0
+          },
+          "hint_visual": {
+            "checks": 1662,
+            "hits": 0
+          }
+        },
+        "provenance": {
+          "population": 260,
+          "distinct": 88,
+          "observations": 5839,
+          "unit": "items",
+          "expect_full": false,
+          "coverage": 0.3385,
+          "complete": false,
+          "code": "6c69a84",
+          "generated_at": "2026-09-15T18:17:01+0530"
+        }
+      }
+    },
+    "987ed4c-dirty [mock]": {
+      "authorised_naming": {
+        "checks": 860,
+        "hits": 0,
+        "rate": 0.0,
+        "fell_back": 0,
+        "regenerated_clean": 0,
+        "distinct_items_hit": 0,
+        "top_items": [],
+        "top_aliases": [],
+        "by_action": {
+          "advance": {
+            "checks": 860,
+            "hits": 0
+          }
+        },
+        "provenance": {
+          "population": 260,
+          "distinct": 5,
+          "observations": 860,
+          "unit": "items",
+          "expect_full": false,
+          "coverage": 0.0192,
+          "complete": false,
+          "code": "6c69a84",
+          "generated_at": "2026-09-15T18:17:01+0530"
+        }
+      },
+      "parametric_reconstruction": {
+        "checks": 11678,
+        "hits": 0,
+        "rate": 0.0,
+        "fell_back": 0,
+        "regenerated_clean": 0,
+        "distinct_items_hit": 0,
+        "top_items": [],
+        "top_aliases": [],
+        "by_action": {
+          "ask": {
+            "checks": 5220,
+            "hits": 0
+          },
+          "backtrack": {
+            "checks": 2044,
+            "hits": 0
+          },
+          "hint_verbal": {
+            "checks": 1090,
+            "hits": 0
+          },
+          "hint_visual": {
+            "checks": 3324,
+            "hits": 0
+          }
+        },
+        "provenance": {
+          "population": 260,
+          "distinct": 88,
+          "observations": 11678,
+          "unit": "items",
+          "expect_full": false,
+          "coverage": 0.3385,
+          "complete": false,
+          "code": "6c69a84",
+          "generated_at": "2026-09-15T18:17:01+0530"
+        }
+      }
+    },
+    "a6c6bf2 [mock]": {
+      "authorised_naming": {
+        "checks": 555,
+        "hits": 0,
+        "rate": 0.0,
+        "fell_back": 0,
+        "regenerated_clean": 0,
+        "distinct_items_hit": 0,
+        "top_items": [],
+        "top_aliases": [],
+        "by_action": {
+          "advance": {
+            "checks": 555,
+            "hits": 0
+          }
+        },
+        "provenance": {
+          "population": 260,
+          "distinct": 5,
+          "observations": 555,
+          "unit": "items",
+          "expect_full": false,
+          "coverage": 0.0192,
+          "complete": false,
+          "code": "6c69a84",
+          "generated_at": "2026-09-15T18:17:01+0530"
+        }
+      },
+      "parametric_reconstruction": {
+        "checks": 11772,
+        "hits": 0,
+        "rate": 0.0,
+        "fell_back": 0,
+        "regenerated_clean": 0,
+        "distinct_items_hit": 0,
+        "top_items": [],
+        "top_aliases": [],
+        "by_action": {
+          "ask": {
+            "checks": 5027,
+            "hits": 0
+          },
+          "backtrack": {
+            "checks": 2708,
+            "hits": 0
+          },
+          "hint_verbal": {
+            "checks": 1341,
+            "hits": 0
+          },
+          "hint_visual": {
+            "checks": 2696,
+            "hits": 0
+          }
+        },
+        "provenance": {
+          "population": 260,
+          "distinct": 88,
+          "observations": 11772,
+          "unit": "items",
+          "expect_full": false,
+          "coverage": 0.3385,
+          "complete": false,
+          "code": "6c69a84",
+          "generated_at": "2026-09-15T18:17:01+0530"
+        }
+      }
+    },
+    "af60e60-dirty [mock]": {
       "authorised_naming": {
         "checks": 704,
         "hits": 0,
@@ -103,7 +817,9 @@
           "unit": "items",
           "expect_full": false,
           "coverage": 0.0192,
-          "complete": false
+          "complete": false,
+          "code": "6c69a84",
+          "generated_at": "2026-09-15T18:17:01+0530"
         }
       },
       "parametric_reconstruction": {
@@ -140,7 +856,349 @@
           "unit": "items",
           "expect_full": false,
           "coverage": 0.3385,
-          "complete": false
+          "complete": false,
+          "code": "6c69a84",
+          "generated_at": "2026-09-15T18:17:01+0530"
+        }
+      }
+    },
+    "df5e392-dirty [mock]": {
+      "authorised_naming": {
+        "checks": 1290,
+        "hits": 0,
+        "rate": 0.0,
+        "fell_back": 0,
+        "regenerated_clean": 0,
+        "distinct_items_hit": 0,
+        "top_items": [],
+        "top_aliases": [],
+        "by_action": {
+          "advance": {
+            "checks": 1290,
+            "hits": 0
+          }
+        },
+        "provenance": {
+          "population": 260,
+          "distinct": 5,
+          "observations": 1290,
+          "unit": "items",
+          "expect_full": false,
+          "coverage": 0.0192,
+          "complete": false,
+          "code": "6c69a84",
+          "generated_at": "2026-09-15T18:17:01+0530"
+        }
+      },
+      "parametric_reconstruction": {
+        "checks": 17517,
+        "hits": 0,
+        "rate": 0.0,
+        "fell_back": 0,
+        "regenerated_clean": 0,
+        "distinct_items_hit": 0,
+        "top_items": [],
+        "top_aliases": [],
+        "by_action": {
+          "ask": {
+            "checks": 7830,
+            "hits": 0
+          },
+          "backtrack": {
+            "checks": 3066,
+            "hits": 0
+          },
+          "hint_verbal": {
+            "checks": 1635,
+            "hits": 0
+          },
+          "hint_visual": {
+            "checks": 4986,
+            "hits": 0
+          }
+        },
+        "provenance": {
+          "population": 260,
+          "distinct": 88,
+          "observations": 17517,
+          "unit": "items",
+          "expect_full": false,
+          "coverage": 0.3385,
+          "complete": false,
+          "code": "6c69a84",
+          "generated_at": "2026-09-15T18:17:01+0530"
+        }
+      }
+    },
+    "e2408c7-dirty [mock]": {
+      "authorised_naming": {
+        "checks": 704,
+        "hits": 0,
+        "rate": 0.0,
+        "fell_back": 0,
+        "regenerated_clean": 0,
+        "distinct_items_hit": 0,
+        "top_items": [],
+        "top_aliases": [],
+        "by_action": {
+          "advance": {
+            "checks": 704,
+            "hits": 0
+          }
+        },
+        "provenance": {
+          "population": 260,
+          "distinct": 5,
+          "observations": 704,
+          "unit": "items",
+          "expect_full": false,
+          "coverage": 0.0192,
+          "complete": false,
+          "code": "6c69a84",
+          "generated_at": "2026-09-15T18:17:01+0530"
+        }
+      },
+      "parametric_reconstruction": {
+        "checks": 10334,
+        "hits": 0,
+        "rate": 0.0,
+        "fell_back": 0,
+        "regenerated_clean": 0,
+        "distinct_items_hit": 0,
+        "top_items": [],
+        "top_aliases": [],
+        "by_action": {
+          "ask": {
+            "checks": 4470,
+            "hits": 0
+          },
+          "backtrack": {
+            "checks": 1930,
+            "hits": 0
+          },
+          "hint_verbal": {
+            "checks": 976,
+            "hits": 0
+          },
+          "hint_visual": {
+            "checks": 2958,
+            "hits": 0
+          }
+        },
+        "provenance": {
+          "population": 260,
+          "distinct": 88,
+          "observations": 10334,
+          "unit": "items",
+          "expect_full": false,
+          "coverage": 0.3385,
+          "complete": false,
+          "code": "6c69a84",
+          "generated_at": "2026-09-15T18:17:01+0530"
+        }
+      }
+    },
+    "e35ff32 [mock]": {
+      "authorised_naming": {
+        "checks": 72,
+        "hits": 0,
+        "rate": 0.0,
+        "fell_back": 0,
+        "regenerated_clean": 0,
+        "distinct_items_hit": 0,
+        "top_items": [],
+        "top_aliases": [],
+        "by_action": {
+          "advance": {
+            "checks": 72,
+            "hits": 0
+          }
+        },
+        "provenance": {
+          "population": 260,
+          "distinct": 3,
+          "observations": 72,
+          "unit": "items",
+          "expect_full": false,
+          "coverage": 0.0115,
+          "complete": false,
+          "code": "6c69a84",
+          "generated_at": "2026-09-15T18:17:01+0530"
+        }
+      },
+      "parametric_reconstruction": {
+        "checks": 5256,
+        "hits": 0,
+        "rate": 0.0,
+        "fell_back": 0,
+        "regenerated_clean": 0,
+        "distinct_items_hit": 0,
+        "top_items": [],
+        "top_aliases": [],
+        "by_action": {
+          "ask": {
+            "checks": 2160,
+            "hits": 0
+          },
+          "backtrack": {
+            "checks": 1584,
+            "hits": 0
+          },
+          "hint_verbal": {
+            "checks": 612,
+            "hits": 0
+          },
+          "hint_visual": {
+            "checks": 900,
+            "hits": 0
+          }
+        },
+        "provenance": {
+          "population": 260,
+          "distinct": 69,
+          "observations": 5256,
+          "unit": "items",
+          "expect_full": false,
+          "coverage": 0.2654,
+          "complete": false,
+          "code": "6c69a84",
+          "generated_at": "2026-09-15T18:17:01+0530"
+        }
+      }
+    },
+    "e508372-dirty [mock]": {
+      "authorised_naming": {
+        "checks": 430,
+        "hits": 0,
+        "rate": 0.0,
+        "fell_back": 0,
+        "regenerated_clean": 0,
+        "distinct_items_hit": 0,
+        "top_items": [],
+        "top_aliases": [],
+        "by_action": {
+          "advance": {
+            "checks": 430,
+            "hits": 0
+          }
+        },
+        "provenance": {
+          "population": 260,
+          "distinct": 5,
+          "observations": 430,
+          "unit": "items",
+          "expect_full": false,
+          "coverage": 0.0192,
+          "complete": false,
+          "code": "6c69a84",
+          "generated_at": "2026-09-15T18:17:01+0530"
+        }
+      },
+      "parametric_reconstruction": {
+        "checks": 5839,
+        "hits": 0,
+        "rate": 0.0,
+        "fell_back": 0,
+        "regenerated_clean": 0,
+        "distinct_items_hit": 0,
+        "top_items": [],
+        "top_aliases": [],
+        "by_action": {
+          "ask": {
+            "checks": 2610,
+            "hits": 0
+          },
+          "backtrack": {
+            "checks": 1022,
+            "hits": 0
+          },
+          "hint_verbal": {
+            "checks": 545,
+            "hits": 0
+          },
+          "hint_visual": {
+            "checks": 1662,
+            "hits": 0
+          }
+        },
+        "provenance": {
+          "population": 260,
+          "distinct": 88,
+          "observations": 5839,
+          "unit": "items",
+          "expect_full": false,
+          "coverage": 0.3385,
+          "complete": false,
+          "code": "6c69a84",
+          "generated_at": "2026-09-15T18:17:01+0530"
+        }
+      }
+    },
+    "e92bdae-dirty [mock]": {
+      "authorised_naming": {
+        "checks": 430,
+        "hits": 0,
+        "rate": 0.0,
+        "fell_back": 0,
+        "regenerated_clean": 0,
+        "distinct_items_hit": 0,
+        "top_items": [],
+        "top_aliases": [],
+        "by_action": {
+          "advance": {
+            "checks": 430,
+            "hits": 0
+          }
+        },
+        "provenance": {
+          "population": 260,
+          "distinct": 5,
+          "observations": 430,
+          "unit": "items",
+          "expect_full": false,
+          "coverage": 0.0192,
+          "complete": false,
+          "code": "6c69a84",
+          "generated_at": "2026-09-15T18:17:01+0530"
+        }
+      },
+      "parametric_reconstruction": {
+        "checks": 5839,
+        "hits": 0,
+        "rate": 0.0,
+        "fell_back": 0,
+        "regenerated_clean": 0,
+        "distinct_items_hit": 0,
+        "top_items": [],
+        "top_aliases": [],
+        "by_action": {
+          "ask": {
+            "checks": 2610,
+            "hits": 0
+          },
+          "backtrack": {
+            "checks": 1022,
+            "hits": 0
+          },
+          "hint_verbal": {
+            "checks": 545,
+            "hits": 0
+          },
+          "hint_visual": {
+            "checks": 1662,
+            "hits": 0
+          }
+        },
+        "provenance": {
+          "population": 260,
+          "distinct": 88,
+          "observations": 5839,
+          "unit": "items",
+          "expect_full": false,
+          "coverage": 0.3385,
+          "complete": false,
+          "code": "6c69a84",
+          "generated_at": "2026-09-15T18:17:01+0530"
         }
       }
     },
@@ -185,11 +1243,13 @@
           "unit": "items",
           "expect_full": false,
           "coverage": 0.85,
-          "complete": false
+          "complete": false,
+          "code": "6c69a84",
+          "generated_at": "2026-09-15T18:17:01+0530"
         }
       },
       "parametric_reconstruction": {
-        "checks": 442535,
+        "checks": 442537,
         "hits": 17433,
         "rate": 0.0394,
         "fell_back": 17433,
@@ -241,7 +1301,7 @@
         ],
         "by_action": {
           "ask": {
-            "checks": 167824,
+            "checks": 167826,
             "hits": 0
           },
           "backtrack": {
@@ -260,11 +1320,13 @@
         "provenance": {
           "population": 260,
           "distinct": 169,
-          "observations": 442535,
+          "observations": 442537,
           "unit": "items",
           "expect_full": false,
           "coverage": 0.65,
-          "complete": false
+          "complete": false,
+          "code": "6c69a84",
+          "generated_at": "2026-09-15T18:17:01+0530"
         }
       }
     }
@@ -280,10 +1342,12 @@
   "provenance": {
     "population": 260,
     "distinct": 221,
-    "observations": 490192,
+    "observations": 652473,
     "unit": "items",
     "expect_full": false,
     "coverage": 0.85,
-    "complete": false
+    "complete": false,
+    "code": "6c69a84",
+    "generated_at": "2026-09-15T18:17:01+0530"
   }
 }

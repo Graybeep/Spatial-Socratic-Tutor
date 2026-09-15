@@ -34,11 +34,32 @@ Not every eval must reach full coverage - a deliberately subsampled run is
 legitimate. What must never happen again is coverage collapsing SILENTLY. So
 `Provenance.coverage` is always reported, `expect_full` marks the runs that
 intend completeness, and tests assert on it.
+
+WHICH BUILD COMPUTED IT
+-----------------------
+Sampling was the first half. The second is that a result which says WHAT it
+sampled still does not say WHEN, and a stored number outlives the code that
+produced it.
+
+`eval/results/leakage.json` was written on day 6 and three behavioural commits
+landed after it. Re-running the eval showed it reproduces exactly - but that had
+to be established by hand, because the file carried a full provenance block and
+no build stamp. `logs/turns.jsonl` has had a per-line `code` stamp since day 8
+and `eval/leak_monitor.py` refuses to pool builds because of it; the results
+files were the one artefact still going out unstamped.
+
+So `as_dict()` adds `code` and `generated_at`. It is derived rather than a field:
+the answer to "which commit is this" is not a knob (see `server/build_info.py`),
+and stamping at serialisation time is what makes it mean "the build that wrote
+this file".
 """
 from __future__ import annotations
 
+import time
 from dataclasses import dataclass, asdict
 from typing import Iterable, Optional
+
+from server.build_info import CODE
 
 
 @dataclass(frozen=True)
@@ -91,6 +112,12 @@ class Provenance:
         d = asdict(self)
         d["coverage"] = round(self.coverage, 4)
         d["complete"] = self.complete
+        #: Which build computed this, and when. Derived, not configured - see the
+        #: module docstring. Every eval already embeds a provenance block, at
+        #: whatever nesting depth suits it, so putting the stamp here reaches all
+        #: four results files without teaching each one to stamp itself.
+        d["code"] = CODE
+        d["generated_at"] = time.strftime("%Y-%m-%dT%H:%M:%S%z")
         return d
 
 
