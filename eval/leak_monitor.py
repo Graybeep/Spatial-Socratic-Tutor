@@ -80,6 +80,15 @@ from eval import provenance
 #: turns and are counted, but they cannot be attributed, so they never enter the
 #: headline - see the module docstring, reason 1.
 UNSTAMPED = "pre-stamp"
+def arm_id(build: str, mode: str, driver: str) -> str:
+    """The key an arm is reported under. One function, because the format was a
+    string literal in six test assertions and gained a field."""
+    return f"{build} [{mode}] <{driver}>"
+
+
+#: A turn written before `origin` existed. Not "server": a turn that cannot say
+#: who drove it must not be counted as a person, which is the reading §9.5 needs.
+UNKNOWN_ORIGIN = "pre-origin"
 
 
 @dataclass
@@ -159,6 +168,7 @@ def measure(path: Optional[Path] = None) -> dict:
     malformed = 0
     events = 0
     turns = 0
+    origins: Counter = Counter()
     screened_items: set = set()
 
     for record in read(path):
@@ -173,6 +183,7 @@ def measure(path: Optional[Path] = None) -> dict:
         build = record.get("code") or UNSTAMPED
         builds[build] += 1
 
+        origins[record.get("origin") or UNKNOWN_ORIGIN] += 1
         mode = "mock" if record.get("mock") else "real"
         if mode == "real":
             real_turns += 1
@@ -187,7 +198,13 @@ def measure(path: Optional[Path] = None) -> dict:
         if item_id is None:
             continue
 
-        arm = arms[(build, mode, bucket_for(action))]
+        # Origin partitions the log by WHO DROVE the turn, the same way
+        # `build` partitions it by what code wrote it. A scripted sweep and a
+        # person at the keyboard are two populations, and once a key lands they
+        # are both `[real]` at the same build. Turns logged before origin
+        # existed carry none, and say so rather than being assumed human.
+        driver = record.get("origin") or UNKNOWN_ORIGIN
+        arm = arms[(build, mode, driver, bucket_for(action))]
         arm.checks += 1
         arm.items.add(item_id)
         arm.by_action[action] += 1
@@ -213,12 +230,18 @@ def measure(path: Optional[Path] = None) -> dict:
     ]
 
     out_arms: dict = {}
-    for (build, mode, bucket), arm in sorted(arms.items()):
+    for (build, mode, driver, bucket), arm in sorted(arms.items()):
         prov = provenance.over(
             population, arm.items, observations=arm.checks,
             unit="items", expect_full=False,
         )
-        out_arms.setdefault(f"{build} [{mode}]", {})[bucket] = {
+        out_arms.setdefault(arm_id(build, mode, driver), {})[bucket] = {
+            # The partition, as fields rather than as a substring of the key.
+            # headline() filters on these: a rate that depends on parsing its
+            # own dict keys breaks silently the first time the format moves.
+            "build": build,
+            "mode": mode,
+            "origin": driver,
             "checks": arm.checks,
             "hits": arm.hits,
             "rate": round(arm.rate, 4),
@@ -248,6 +271,7 @@ def measure(path: Optional[Path] = None) -> dict:
         "real_turns": real_turns,
         "mock_turns": turns - real_turns,
         "arms": out_arms,
+        "origins": dict(origins.most_common()),
         "headline": headline(out_arms),
         "provenance": provenance.over(
             population, screened_items, observations=turns,
@@ -275,13 +299,15 @@ def headline(arms: dict) -> dict:
     """
     checks = hits = 0
     used = []
+    pooled_origins: set = set()
     for arm_id, buckets in arms.items():
-        if arm_id.startswith(UNSTAMPED) or not arm_id.endswith("[real]"):
-            continue
         cell = buckets.get("parametric_reconstruction")
         if not cell:
             continue
+        if cell["build"] == UNSTAMPED or cell["mode"] != "real":
+            continue
         used.append(arm_id)
+        pooled_origins.add(cell["origin"])
         checks += cell["checks"]
         hits += cell["hits"]
 
@@ -300,6 +326,13 @@ def headline(arms: dict) -> dict:
         }
     return {
         "arms": sorted(used),
+        # WHAT THIS RATE POOLED. Builds and actions are refused outright above;
+        # origins are pooled, because with a key the sample that makes §6.1
+        # measurable at all is a deliberate eval sweep. What must not happen is
+        # pooling them SILENTLY - a rate over three scripted policies and a rate
+        # over a person are different claims wearing the same number.
+        "origins": sorted(pooled_origins),
+        "mixed_origins": len(pooled_origins) > 1,
         "checks": checks,
         "hits": hits,
         "rate": round(hits / checks, 4),
@@ -312,6 +345,13 @@ def render(result: dict) -> str:
     L.append(f"log      {result['log']}")
     L.append(f"turns    {result['turns']:,}  events {result['events']:,}"
              + (f"  malformed {result['malformed']}" if result["malformed"] else ""))
+
+    pre_origin = result.get("origins", {}).get(UNKNOWN_ORIGIN, 0)
+    if pre_origin:
+        L.append("")
+        L.append(f"  {pre_origin:,} turns predate the origin stamp. They cannot say whether a")
+        L.append(f"  person or a scripted policy drove them, so they are '{UNKNOWN_ORIGIN}'")
+        L.append(f"  rather than assumed human. §9.5 reads `diagnosis` on real students.")
 
     if result["unstamped_turns"]:
         L.append(f"")
