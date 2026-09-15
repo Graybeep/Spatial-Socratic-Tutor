@@ -808,6 +808,14 @@ def _log(phase1: Phase1, response: TurnResponse) -> None:
         # question. See server/origin.py for why `mock` stops separating these
         # on the day a key lands.
         "origin": origin.current(),
+        # WHICH MODEL SAID THIS. `code` names the build and `origin` names the
+        # driver, and neither implies the model: CALL1_MODEL is config, so two
+        # runs at the same commit can be different models entirely. Found the
+        # hard way - §9.5's thirty diagnoses were recovered from this file after
+        # the run crashed, and the file could not say what wrote them.
+        "call1_model": None if CONFIG.mock_mode else CONFIG.call1.model,
+        "call2_model": None if CONFIG.mock_mode else CONFIG.call2.model,
+        "provider": None if CONFIG.mock_mode else CONFIG.llm_provider,
         "session_id": response.session_id,
         "turn_id": response.turn_id,
         "mock": CONFIG.mock_mode,

@@ -182,3 +182,21 @@ def test_an_empty_origin_is_refused():
     with pytest.raises(ValueError):
         with origin.declare(""):
             pass
+
+
+def test_a_real_turn_record_names_the_model(client, session, store):
+    """`code` names the build, `origin` the driver; neither implies the model.
+    CALL1_MODEL is config, so one commit can be two different models."""
+    from .conftest import config_override
+    data = turn(client, session)
+    turn(client, session, correct_response(data, store))
+    records = [r for r in _records(CONFIG.log_dir) if "turn_id" in r]
+    assert records
+    for r in records:
+        assert "call1_model" in r and "provider" in r, sorted(r)
+
+    # Under the mock there is no model, and naming one would be a lie that
+    # reads exactly like a real stamp three weeks later.
+    assert all(r["call1_model"] is None for r in records), (
+        "MOCK_MODE records name a model they did not call"
+    )
