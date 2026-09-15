@@ -91,6 +91,13 @@ framework; the five agents of the original design collapsed into one pipeline
 plus retrieval plus two deterministic functions, which we regard as a result
 rather than a compromise.
 
+Two providers sit behind one seam (`LLM_PROVIDER`): Anthropic's Messages API and
+Groq's OpenAI-compatible endpoint. Only the wire format differs — URL, auth
+header, body shape, and where the forced tool call lands in the response. The
+*schema* does not: both are handed the same pydantic model under a forced tool
+call, and a response that fails validation fails identically on either. The
+shipped demo runs on Groq; see §7.
+
 ```
 student response
    │
@@ -341,10 +348,31 @@ The four we would ask about first, in full at
   scripted policies.
 - **No human study.** No learning outcome is measured or claimed.
 
-And one that shapes how to read §5: the utterances are **templates**, not model
-output, unless an API key was present at run time. Everything architectural in
-§2 holds regardless — it is about what Call 2 is handed. Everything about how
-good the *writing* is does not.
+And three that shape how to read §5.
+
+**The model is not Claude.** The tutor runs `openai/gpt-oss-120b` on Call 1 and
+`gpt-oss-20b` on Call 2, served by Groq. The key available to this project is a
+Groq key; `server/llm.py` speaks both wire formats behind `LLM_PROVIDER` and the
+schema does not move between them, but the model identity is a fact about the
+results, not an implementation detail. Call 1's model was chosen on measured
+diagnosis quality over real items rather than on size, because §9.5 hand-reads
+that field.
+
+**§9.1's utterances are still templates.** The free tier is 8,000 tokens per
+minute and one Call 1 costs ~2,750 — about two full turns a minute — so a
+real-model re-run of twelve arms over 138 dialogues each is days of wall clock.
+§9.1 therefore reports the mock-utterance run. This is defensible rather than
+merely convenient: the visual arm's narrowing is *deterministic*, computed by
+`mastery.py` and the ladder, and does not depend on what Call 2 writes. The
+verbal arm is the one this limits, and it is the arm that lost.
+
+**§5's latency figure is an Anthropic number and is not re-derived here.** "Call
+1 is ~120 output tokens (~1s)" was written against a model that emits the tool
+call directly. gpt-oss emits reasoning first: measured 534–580 completion tokens
+and **p50 2.3s** to a validated decision. The architectural claim is untouched —
+the graph still moves on Call 1's return, before any utterance exists — but the
+*perceived-latency* argument in §5 was built on ~1s and has not been re-argued at
+2.3s. Treat that paragraph as stale rather than as verified.
 
 ## 8. What we cut, and said so
 

@@ -141,13 +141,65 @@ much smaller scale.
 | ~~2026-09-14~~ | 11 | projector contrast test (§8) | **SLIPPED — not run.** Rebooked into week 3, above |
 | ~~2026-09-14~~ | 11 | confirm-or-undo watched by a non-author | **SLIPPED — never booked.** Last slot is week 3, then it becomes a limitation, above |
 | 2026-09-18…24 | week 3 | both of the above, at the projector, contrast check first | rebooked |
-| 2026-09-22 | 19 | **API key cut.** No key → `MOCK_MODE` ships, §9.3 and §9.5 are cut | pending — see [no-key-plan.md](writeup/no-key-plan.md) |
-| 2026-09-18…24 | week 3 | diagnosis read-through, 30 logged `diagnosis` fields (§9.5) | blocked on a key |
-| — | — | §6.1 parametric-reconstruction rate | **instrument built, blocked on a key.** `python -m eval.leak_monitor` prints `NOT MEASURABLE` and says why; a mock has no weights to reconstruct from. Fills itself in on the day a key lands |
+| ~~2026-09-22~~ | 19 | **API key cut** — resolved early, on day 12. See below | **MET, with a caveat** |
+| 2026-09-18…24 | week 3 | diagnosis read-through, 30 logged `diagnosis` fields (§9.5) | **unblocked.** `python -m eval.diagnosis_readthrough` |
+| — | — | §6.1 parametric-reconstruction rate | **unblocked, not yet run.** Needs real turns in the log; `eval/leak_monitor.py` already partitions them by build and origin |
 | 2026-09-25 | 22 | **feature freeze.** Tag `feature-freeze` | pending |
 | 2026-09-29 | 26 | **video walkthrough recorded.** Tag `demo` | pending |
 
 Tags cut so far: `schemas-frozen`, `graph-frozen`, `loop-working`.
+
+### 2026-09-15 (day 12) — a key arrived, and it is not an Anthropic key
+
+The day-19 cut was written as *"no key → `MOCK_MODE` ships, §9.3 and §9.5 are
+cut"*. A key landed on day 12, seven days early. It is a **Groq** key: it 401s
+against `https://api.anthropic.com/v1/messages`, which is the API
+`server/llm.py` was written to speak.
+
+**What was done.** `server/llm.py` now speaks two wire formats behind
+`LLM_PROVIDER` (§13.1 already put base URLs and model ids in config; the API
+they are spoken to is the same kind of value). The *schema* does not move: both
+providers are handed the same pydantic model under a forced tool call, and a
+response that fails validation fails identically on either. No new dependency —
+httpx was already there, which matters because §1.8 freezes dependencies at the
+end of week 2 and this is day 12.
+
+**What it changes in the writeup, and this must be said out loud.** The tutor
+runs **`openai/gpt-oss-120b`** on Call 1 and `gpt-oss-20b` on Call 2, not Claude.
+Call 1's model was chosen on measured diagnosis quality over real items, because
+§9.5 hand-reads that field: 120b named the actual confusion where 20b said
+"uncertain about the terminology" and omitted the answer node from its focus set.
+
+**Three things the provider swap cost, all of them now fixed and none of them
+config:**
+
+- **`max_tokens=300` truncates the response before the tool call exists.**
+  gpt-oss emits reasoning *first* — measured 534–580 completion tokens on Call 1
+  where CLAUDE.md §5 budgets ~120. Groq reports this as "model did not call a
+  tool", which reads like a capability problem and is not one.
+- **A 429 was being retried instantly**, burning the whole retry budget inside
+  the window the server had just asked us to wait out. It now has its own budget
+  and honours `retry-after`.
+- **`.env` broke the test suite.** With `MOCK_MODE=false` the suite began making
+  paid network calls and hung on the rate limiter. Tests are now hermetic by
+  force, not by convention.
+
+**What is still constrained.** The free tier is 8,000 tokens/minute and one
+Call 1 costs ~2,750 — about **two full turns per minute**. §9.5 (30 fields) and
+§6.1 fit comfortably. A full §9.1 re-run against the real model does not: 12 arms
+× 138 dialogues is days of wall clock, so **§9.1 stays a mock-utterance result**
+and the report says so. That is defensible — the visual arm's narrowing is
+deterministic and does not depend on what Call 2 writes — but it is a limitation,
+not a footnote.
+
+**And §5's latency figure is now stale.** "Call 1 is ~120 output tokens (~1s)"
+was an Anthropic number. Measured on Groq: **p50 2.3s** to a validated decision.
+The architecture claim is untouched — the graph still moves before any utterance
+exists — but the number in the report needs re-deriving rather than re-typing.
+
+[no-key-plan.md](writeup/no-key-plan.md) is no longer the expected path. It stays
+as written: it is still the report if the key is revoked, and it cost nothing to
+have had it ready.
 
 ### A note for whoever runs the projector test
 
