@@ -96,7 +96,7 @@ Groq's OpenAI-compatible endpoint. Only the wire format differs — URL, auth
 header, body shape, and where the forced tool call lands in the response. The
 *schema* does not: both are handed the same pydantic model under a forced tool
 call, and a response that fails validation fails identically on either. The
-shipped demo runs on Groq; see §7.
+shipped demo runs on Groq; see §8.
 
 ```
 student response
@@ -345,12 +345,38 @@ then present that as an account of the person. A reviewer reading the fields
 would not catch this, and neither did we: it took tabulating against a truth the
 model could not see.
 
-**Nothing in §2 runs through this field**, which is the reason the system
-survives the finding: the fidelity ceiling is a property of Call 2's argument
-list, narrowing is deterministic, and `correct` is read off `items.json`. But it
-is the first evidence from inside this project for the rule in §1.3 and §1.5 that
-keeps mastery out of the model's hands — wired to mastery, `on_track` would have
-advanced a student who knew nothing, five times in twelve.
+A sharper instrument makes it worse. `eval/diagnostic_calibration.py` builds
+histories where one answer is *forced* — three clicks scattered across unrelated
+regions is guessing; three clicks inside the prerequisite region is prerequisite
+confusion, and the two node sets are disjoint by assertion. The model returns
+`stuck` to both, is never `correct` about a student who clicked the answer, and
+gets right only the case with **no history to read**. It also got the `correct`
+boolean wrong on **2 of 6** constructed histories while being shown the answer.
+
+The consequence needs three separate statements, because collapsing them produces
+either false alarm or false comfort:
+
+1. **The diagnosis is unreliable.** Measured, on two instruments, above.
+2. **The architecture makes it inert.** `student_state`, `correct` and
+   `focus_nodes` are logged and read by nothing; mastery comes from a string
+   comparison and the lit set from the ladder. Over §9.5's 40 turns the server
+   overrode Call 1 on **11 of the 12** turns where the curriculum moved.
+3. **That inertness is now enforced rather than incidental.** It was true on day
+   12 by accident — nothing stopped a later change from branching on the field,
+   and such a change would have passed all 364 tests then green.
+   `tests/test_student_state_is_inert.py` walks the AST of the decision modules
+   and fails on any read of the three fields. It is **mutation-tested**: planting
+   `if decision.student_state == 'guessing': action = 'backtrack'` fails it, as
+   does `lit = decision.focus_nodes`. A guard never shown to fail is not a guard,
+   and that demonstration is what makes this a property rather than a coincidence.
+
+**This is not a claim that the model does not matter.** `requested_action` still
+selects `ask` vs `hint_visual` vs `hint_verbal` wherever the curriculum does not
+move, which is most turns — so a student gets the wrong *flavour* of help, chosen
+on a reading of them that does not track them. The architecture contains the
+damage; it does not repair it. The repair is the prompt: a diagnosis carrying no
+cost for answering `stuck` to everything is a diagnosis that cannot be wrong, and
+that is precisely what was measured.
 
 ### 5.7 One number nothing asked for
 
@@ -367,14 +393,10 @@ is and the 83% is reported rather than repaired.
 
 ## 6. What we got wrong, and why that is in the report
 
-Four component-contract failures and six instrument failures, in four weeks,
-found by the people who wrote the code. We include them because in every case
-the *intuitive* fix would have hidden the problem rather than surfaced it, and
-because all of them survived a test suite a reviewer would have called adequate.
-
-The last three arrived together, on the first run of §9.5's harness against a
-real model, and one of them is the sharpest example in the project: **the tutor
-correctly reported a bug in our driver and we filed it as a hallucination.**
+Five failures in the system, in four weeks, found by the people who wrote the
+code. We include them because in every case the *intuitive* fix would have hidden
+the problem rather than surfaced it, and because all of them survived a test suite
+a reviewer would have called adequate.
 
 - **[representation-blindness.md](representation-blindness.md)** — four
   instances of one mechanism: two fields that are different things in the schema
@@ -385,19 +407,58 @@ correctly reported a bug in our driver and we filed it as a hallucination.**
   leakage rate computed over one item out of 101 for four days. A drift test
   blind to exactly the kind of drift it existed to catch.
 - **[diagnosis-readthrough.md](diagnosis-readthrough.md)** — the tutor's model
-  of the student, measured against a ground truth it could not see. Includes
-  three faults in our own harness, one of which the tutor reported accurately
-  and we filed as a hallucination.
+  of the student, measured against a ground truth it could not see, and found not
+  to track it.
 - **[limitations.md](limitations.md)** — everything above plus the rest,
   including two figures in this report's own source that were stale prose until
   day 8 because they had been typed rather than derived.
 
-If that last pattern generalises even weakly, published leakage and
-learning-gain figures from systems of this shape deserve a question rarely asked
-of them: **not "what is the number" but "what was it computed over, and how
-would you know."**
+If that pattern generalises even weakly, published leakage and learning-gain
+figures from systems of this shape deserve a question rarely asked of them:
+**not "what is the number" but "what was it computed over, and how would you
+know."**
 
-## 7. Limits
+## 7. The harness was wrong three times, and said so confidently
+
+**[instrument-failures.md](instrument-failures.md)** — kept separate from §6
+because it is a different failure and, we think, the more transferable one.
+
+The five above are faults in the tutor. These three are faults in the code doing
+the *measuring*, and each produced a confident, specific, plausible verdict **about
+the tutor** while the fault was in the harness. Two of the three were plausible
+enough that we acted on them before noticing.
+
+- A diagnosis said *"the student keeps offering text instead of clicking."* We
+  filed it as a hallucination. It was an accurate report of a bug in our driver,
+  which really was sending text.
+- A constructed case told the model *"three turns on this item"* and showed it
+  **one** click. It answered `stuck`, explaining *"three turns in with no clear
+  right answer"* — a correct reading of a context we had broken. We scored it as
+  a failure to recognise a correct answer, and it was directionally consistent
+  with a finding we already believed, which is why it went down easily.
+- A probe printed *"the diagnosis is not reading the history"* from a run in
+  which **every call had failed** on an exhausted token budget, because two empty
+  distributions compare equal.
+
+This is not the same as [numbers-that-looked-fine.md](numbers-that-looked-fine.md).
+There, the number was *empty* — a rate over one item — and an empty result invites
+the question "over what?". Here the number is *wrong in a specific direction and
+points at the system under test*, which invites agreement instead.
+
+The fix generalises and is cheap: **internal consistency assertions on every
+constructed case** (a probe that tells the model one thing and shows it another is
+not measuring the model) and **three-valued verdicts** (`True` / `False` /
+`NOT MEASURED`, so a blocked comparison cannot render as a negative result). Both
+are in the repo as tests, and one of them caught a third fault before it ever ran:
+the two contrasting histories originally shared a node, which would have reported
+"cannot discriminate" from two students who were not different.
+
+The uncomfortable part is that we had already built the three-valued refusal once,
+for §6.1, and written up why it mattered — then wrote a two-valued verdict into the
+next probe anyway. The lesson transferred when it became a test, not when it
+became a document.
+
+## 8. Limits
 
 The four we would ask about first, in full at
 **[limitations.md](limitations.md)**:
@@ -434,7 +495,7 @@ the graph still moves on Call 1's return, before any utterance exists — but th
 *perceived-latency* argument in §5 was built on ~1s and has not been re-argued at
 2.3s. Treat that paragraph as stale rather than as verified.
 
-## 8. What we cut, and said so
+## 9. What we cut, and said so
 
 - **The matched-elimination comparison (§9.2)** — cut deliberately. It asks "is
   visual narrowing better than saying the same thing", is only tractable at fine
