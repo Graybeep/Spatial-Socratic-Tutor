@@ -36,6 +36,8 @@ from __future__ import annotations
 
 import json
 import logging
+import re
+import time
 from dataclasses import dataclass
 from functools import lru_cache
 from typing import Optional
@@ -49,7 +51,8 @@ from server.schemas import Call1Decision, Call2Utterance
 log = logging.getLogger("tutor.llm")
 
 #: Counters for the writeup. Not a metrics system; four integers.
-STATS = {"call1": 0, "call2": 0, "retries": 0, "parse_failures": 0, "timeouts": 0}
+STATS = {"call1": 0, "call2": 0, "retries": 0, "parse_failures": 0,
+         "timeouts": 0, "rate_limited": 0}
 
 
 class LLMError(RuntimeError):
@@ -102,7 +105,23 @@ CALL2_TOOL = _Tool(
 )
 
 
-def _request(cfg: LLMCallConfig, system: str, user: str, tool: _Tool) -> dict:
+# ---------------------------------------------------------------------------
+# The wire, per provider.
+#
+# Four things differ and nothing else does: the URL, the auth header, the body,
+# and where the forced tool call lands in the response. The SCHEMA does not
+# differ - both providers are handed the same pydantic model and a response that
+# does not validate fails identically on both, which is the property that makes
+# this a seam rather than a fork.
+#
+# `effort` is Anthropic's depth control and has no Groq equivalent. It is
+# DROPPED rather than mapped onto max_tokens or a temperature: a knob that
+# silently means something else on one provider is worse than a knob that
+# visibly does nothing, and CALL1_EFFORT is documented as inert under groq in
+# .env.example.
+# ---------------------------------------------------------------------------
+
+def _anthropic_request(cfg: LLMCallConfig, system: str, user: str, tool: _Tool) -> dict:
     return {
         "model": cfg.model,
         "max_tokens": cfg.max_tokens,
@@ -115,24 +134,161 @@ def _request(cfg: LLMCallConfig, system: str, user: str, tool: _Tool) -> dict:
     }
 
 
+def _groq_request(cfg: LLMCallConfig, system: str, user: str, tool: _Tool) -> dict:
+    d = tool.definition()
+    return {
+        "model": cfg.model,
+        "max_tokens": cfg.max_tokens,
+        # System is a message here, not a top-level field.
+        "messages": [
+            {"role": "system", "content": system},
+            {"role": "user", "content": user},
+        ],
+        "tools": [{"type": "function", "function": {
+            "name": d["name"],
+            "description": d["description"],
+            # Same JSON Schema, different key.
+            "parameters": d["input_schema"],
+        }}],
+        "tool_choice": {"type": "function", "function": {"name": d["name"]}},
+    }
+
+
+def _anthropic_extract(payload: dict):
+    """(arguments, complaint). Exactly one is None."""
+    if payload.get("stop_reason") == "refusal":
+        return None, f"refusal: {payload.get('stop_details')}"
+    block = next(
+        (b for b in payload.get("content", []) if b.get("type") == "tool_use"),
+        None,
+    )
+    if block is None:
+        return None, f"no tool_use block; stop_reason={payload.get('stop_reason')}"
+    return block.get("input") or {}, None
+
+
+def _groq_extract(payload: dict):
+    """(arguments, complaint). Exactly one is None.
+
+    Arguments arrive as a JSON *string*, so a model that emits malformed JSON
+    surfaces here rather than as a confusing validation error three lines later.
+    """
+    choices = payload.get("choices") or []
+    if not choices:
+        return None, "no choices in response"
+    message = choices[0].get("message") or {}
+    calls = message.get("tool_calls") or []
+    if not calls:
+        finish = choices[0].get("finish_reason")
+        return None, f"no tool_call; finish_reason={finish}"
+    raw = (calls[0].get("function") or {}).get("arguments") or "{}"
+    try:
+        args = json.loads(raw)
+    except json.JSONDecodeError as exc:
+        return None, f"tool arguments were not valid JSON: {exc}"
+    if not isinstance(args, dict):
+        return None, f"tool arguments were {type(args).__name__}, not an object"
+    return args, None
+
+
+#: provider -> (path, auth header builder, body builder, response extractor).
+_PROVIDERS = {
+    "anthropic": (
+        "/v1/messages",
+        lambda key: {"x-api-key": key, "anthropic-version": CONFIG.anthropic_version},
+        _anthropic_request,
+        _anthropic_extract,
+    ),
+    "groq": (
+        "/openai/v1/chat/completions",
+        lambda key: {"Authorization": f"Bearer {key}"},
+        _groq_request,
+        _groq_extract,
+    ),
+}
+
+
+def _retry_after(r) -> float:
+    """How long the server asked us to wait, bounded.
+
+    Prefers the `retry-after` header; Groq also states the delay in the error
+    message when the header is absent. Falls back to a fixed pause rather than
+    to zero, because a 429 answered instantly is just another 429.
+    """
+    header = r.headers.get("retry-after")
+    if header:
+        try:
+            return min(float(header), CONFIG.llm_rate_limit_max_wait_s)
+        except ValueError:
+            pass
+    m = re.search(r"try again in ([0-9.]+)\s*(ms|s)", r.text)
+    if m:
+        seconds = float(m.group(1)) / (1000 if m.group(2) == "ms" else 1)
+        # A sub-second window still needs headroom: the limit is per minute and
+        # the next call costs the same as the one that just tripped it.
+        return min(max(seconds, 1.0) + 0.5, CONFIG.llm_rate_limit_max_wait_s)
+    return CONFIG.llm_rate_limit_default_wait_s
+
+
+def _explain(r) -> str:
+    """The provider's error, plus what to do about it when we can tell.
+
+    `tool_use_failed` is the shape a TRUNCATED response takes on an
+    OpenAI-compatible endpoint, and the raw message does not say so - it says
+    the model did not call a tool, which reads like a capability problem and is
+    not one. gpt-oss emits reasoning tokens before the tool call, so Call 1
+    needs ~550 completion tokens where CLAUDE.md §5 budgets ~120. Measured:
+    max_tokens 300 -> "did not call a tool", 600 -> "arguments as JSON", 1200 ->
+    valid at 534 completion tokens.
+    """
+    body = r.text[:300]
+    try:
+        code = (r.json().get("error") or {}).get("code")
+    except Exception:  # noqa: BLE001 - an error body that is not JSON
+        return body
+    if code == "tool_use_failed":
+        return (f"{body}  <-- this is usually TRUNCATION, not refusal: raise "
+                f"max_tokens for this call (reasoning models spend output "
+                f"tokens before the tool call)")
+    return body
+
+
+def provider() -> tuple:
+    """The active provider's four parts, or a loud failure.
+
+    An unknown provider name is refused at the call rather than defaulted to
+    Anthropic: a typo in LLM_PROVIDER that silently used the wrong wire format
+    would show up as an auth error against the wrong host.
+    """
+    try:
+        return _PROVIDERS[CONFIG.llm_provider]
+    except KeyError:
+        raise LLMError(
+            f"unknown LLM_PROVIDER {CONFIG.llm_provider!r}; "
+            f"expected one of {sorted(_PROVIDERS)}"
+        ) from None
+
+
 def _invoke(cfg: LLMCallConfig, system: str, user: str, tool: _Tool, label: str):
     """POST, force the tool call, validate. Retries are counted and logged."""
-    if not CONFIG.api_key:
+    path, auth, build_body, extract = provider()
+
+    if not CONFIG.llm_key:
+        env_var = "GROQ_API_KEY" if CONFIG.llm_provider == "groq" else "ANTHROPIC_API_KEY"
         raise LLMError(
-            f"{label}: no ANTHROPIC_API_KEY. Set one in .env, or run with "
-            f"MOCK_MODE=true (the default), which needs no key and no network."
+            f"{label}: no {env_var} (LLM_PROVIDER={CONFIG.llm_provider}). Set one "
+            f"in .env, or run with MOCK_MODE=true (the default), which needs no "
+            f"key and no network."
         )
 
-    body = _request(cfg, system, user, tool)
-    headers = {
-        "content-type": "application/json",
-        "x-api-key": CONFIG.api_key,
-        "anthropic-version": CONFIG.anthropic_version,
-    }
-    url = f"{CONFIG.base_url.rstrip('/')}/v1/messages"
+    body = build_body(cfg, system, user, tool)
+    headers = {"content-type": "application/json", **auth(CONFIG.llm_key)}
+    url = f"{CONFIG.llm_base_url.rstrip('/')}{path}"
 
     last: Optional[str] = None
-    for attempt in range(CONFIG.llm_max_retries + 1):
+    attempt = 0
+    waits = 0
+    while attempt <= CONFIG.llm_max_retries:
         if attempt:
             STATS["retries"] += 1
             log.warning("%s: retry %d/%d after %s",
@@ -143,43 +299,63 @@ def _invoke(cfg: LLMCallConfig, system: str, user: str, tool: _Tool, label: str)
         except httpx.TimeoutException:
             STATS["timeouts"] += 1
             last = f"timeout after {cfg.timeout_s}s"
+            attempt += 1
             continue
         except httpx.HTTPError as exc:
             last = f"transport error: {exc}"
+            attempt += 1
+            continue
+
+        # RATE LIMIT IS A WAIT, NOT A FAILED ATTEMPT. Retrying a 429 instantly -
+        # which is what the old loop did - burns the whole retry budget inside
+        # the window the server just told us to wait out. Groq's free tier is
+        # 8,000 tokens/minute and one Call 1 costs ~2,750, so this fires
+        # constantly at any real throughput. It gets its own budget so a genuine
+        # schema failure still gets its retries.
+        if r.status_code == 429:
+            delay = _retry_after(r)
+            waits += 1
+            if waits > CONFIG.llm_max_rate_limit_waits:
+                last = f"HTTP 429 after {waits - 1} waits: {r.text[:200]}"
+                log.error("%s: %s", label, last)
+                break
+            STATS["rate_limited"] += 1
+            log.warning("%s: rate limited, waiting %.1fs (%d/%d)",
+                        label, delay, waits, CONFIG.llm_max_rate_limit_waits)
+            time.sleep(delay)
             continue
 
         if r.status_code != 200:
-            # 4xx will not fix itself on a retry; 5xx and 429 might.
-            last = f"HTTP {r.status_code}: {r.text[:300]}"
-            if r.status_code < 500 and r.status_code != 429:
+            # 4xx will not fix itself on a retry; 5xx might.
+            last = f"HTTP {r.status_code}: {_explain(r)}"
+            if r.status_code < 500:
                 log.error("%s: %s", label, last)
                 break
+            attempt += 1
             continue
 
         payload = r.json()
 
         # A refusal is a 200 with no tool call. Do not read content blindly.
-        if payload.get("stop_reason") == "refusal":
-            last = f"refusal: {payload.get('stop_details')}"
-            log.error("%s: %s", label, last)
-            break
-
-        block = next(
-            (b for b in payload.get("content", []) if b.get("type") == "tool_use"),
-            None,
-        )
-        if block is None:
+        args, complaint = extract(payload)
+        if complaint is not None:
+            if complaint.startswith("refusal:"):
+                last = complaint
+                log.error("%s: %s", label, last)
+                break
             STATS["parse_failures"] += 1
-            last = f"no tool_use block; stop_reason={payload.get('stop_reason')}"
+            last = complaint
+            attempt += 1
             continue
 
         try:
-            return tool.model.model_validate(block.get("input") or {})
+            return tool.model.model_validate(args)
         except ValidationError as exc:
             # extra="forbid" means an invented field lands here rather than
             # being silently dropped. That is the intended behaviour.
             STATS["parse_failures"] += 1
             last = f"schema mismatch: {exc.errors()[:2]}"
+            attempt += 1
             continue
 
     raise LLMError(f"{label} failed after {CONFIG.llm_max_retries + 1} attempts: {last}")

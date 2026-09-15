@@ -5,6 +5,13 @@ never mutated at call time (CLAUDE.md §13.1). Tests that need a different ladde
 or schedule go through `config_override`, which uses object.__setattr__ and always
 restores. Nothing in the server does this; only tests.
 
+`_hermetic_by_default` forces MOCK_MODE on for the whole suite. A developer
+`.env` is read at import (§13.1: config once, at startup), so the day one landed
+with `MOCK_MODE=false` the suite silently began making paid network calls - and
+then hung on the provider's rate limiter rather than failing. A test run must not
+depend on whether a key happens to be present, must not cost money, and must not
+be able to hit a network at all. Tests that want the real path opt in explicitly.
+
 `logs/turns.jsonl` is EVIDENCE, not scratch. §6.1 and §9.5 read it, §13.2 says
 do not delete it, and nothing truncates it. So no test may write into it:
 `_isolate_the_turn_log` is autouse and unconditional, because the leak it closes
@@ -34,6 +41,17 @@ def config_override(**values):
     finally:
         for k, v in saved.items():
             object.__setattr__(CONFIG, k, v)
+
+
+@pytest.fixture(autouse=True, scope="session")
+def _hermetic_by_default():
+    """No test makes a real model call, whatever is in `.env`.
+
+    Autouse and session-scoped: the failure this prevents is not one a test
+    opts into, it is one a test inherits. See the module docstring.
+    """
+    with config_override(mock_mode=True):
+        yield
 
 
 @pytest.fixture(autouse=True)
