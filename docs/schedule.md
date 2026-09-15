@@ -11,10 +11,25 @@ week 3 09-18…09-24, week 4 09-25…10-01.
 
 ## Booked
 
-### Monday 2026-09-14 (day 11) — projector contrast test
+### Monday 2026-09-14 (day 11) — projector contrast test — **SLIPPED, not run**
 
-**§8, pulled forward.** §8 asks for week 3; this is week 2. Earlier is the
-allowed direction, and it is cheap now that the instrument exists.
+> **Outcome, recorded 2026-09-15 (day 12): it did not happen.** The day passed
+> and nobody ran it. Recorded as a slip rather than quietly rebooked, because
+> this file's whole claim is that a slip is visible on the day it happens.
+>
+> **Rebooked into week 3 (2026-09-18…24)**, which is where §8 asked for it in
+> the first place. So the *test* is not late. What is lost is the reason it was
+> pulled forward: the half-day contingency below — change `NARROW_SCHEDULE`,
+> re-run §9.1 — now falls **inside** week 3 instead of ahead of it, and week 3
+> is integration week. Pulling it forward bought exactly that half-day and the
+> slip spent it.
+>
+> Per `CLAUDE.md` §11, a week that overruns cuts from the bottom of the list; it
+> does not borrow from the next week. If the contingency fires and week 3 will
+> not hold it, the thing to cut is retrieval (§11 names it first), not the test.
+
+**§8, pulled forward.** §8 asks for week 3; this was booked in week 2. Earlier is
+the allowed direction, and it is cheap now that the instrument exists.
 
 Run it:
 
@@ -68,11 +83,24 @@ tested-and-passed §8 look identical in a repo three weeks later.
 
 ---
 
-### Monday 2026-09-14 (day 11) — confirm-or-undo, watched by someone else
+### Monday 2026-09-14 (day 11) — confirm-or-undo, watched by someone else — **still not booked**
 
-**Open since week 2. Not booked as of 2026-09-11.** Recorded here because an
-unbooked item that lives in someone's head and a booked one look identical in a
-repo, which is the whole reason this file exists.
+> **Outcome, recorded 2026-09-15 (day 12): still not booked, and now overdue.**
+> It was unbooked on 09-11 and it is unbooked on 09-15. Four days of being
+> written down changed nothing, which is worth noticing: writing an item down
+> is not the same as finding a person, and this one needs a person.
+>
+> It rides along with the projector test into week 3 — it is ten minutes at the
+> same projector, after the contrast check. But it has now failed to be booked
+> twice, so treat the week-3 slot as the last one. **If nobody is watching by
+> the end of week 3, it goes into `limitations.md` as untested** and stops being
+> a scheduled item. An assumption honestly labelled is worth more than a booking
+> that keeps sliding.
+
+**Open since week 2. Not booked as of 2026-09-11, and still not booked as of
+2026-09-15.** Recorded here because an unbooked item that lives in someone's head
+and a booked one look identical in a repo, which is the whole reason this file
+exists.
 
 The projector test above and this are two tests wearing one name, and only one
 of them can be run by the people who built the thing:
@@ -96,10 +124,13 @@ question" and no prompting. Watch for one thing:
       as the answer and the confirm as an acknowledgement, the gate is decorative
       and the fix is in the wording, not the logic.
 
-**If nobody is booked by Monday morning**, say so in the writeup rather than
-letting it read as tested. `docs/writeup/limitations.md` already lists a human
-pilot under *what would change our minds*; an unwatched confirm-or-undo belongs
-in the same list, at a much smaller scale.
+**Nobody was booked by Monday morning** — that deadline passed on 2026-09-14 and
+the item is still open. So the fallback this paragraph describes is now the live
+plan, not a contingency: **if week 3 ends with nobody having watched it, say so
+in the writeup** rather than letting it read as tested.
+`docs/writeup/limitations.md` already lists a human pilot under *what would
+change our minds*; an unwatched confirm-or-undo belongs in the same list, at a
+much smaller scale.
 
 ---
 
@@ -107,8 +138,9 @@ in the same list, at a much smaller scale.
 
 | date | day | what | state |
 |---|---|---|---|
-| 2026-09-14 | 11 | projector contrast test (§8) | **booked, above** |
-| 2026-09-14 | 11 | confirm-or-undo watched by a non-author | **NOT booked** — decide by Monday morning, above |
+| ~~2026-09-14~~ | 11 | projector contrast test (§8) | **SLIPPED — not run.** Rebooked into week 3, above |
+| ~~2026-09-14~~ | 11 | confirm-or-undo watched by a non-author | **SLIPPED — never booked.** Last slot is week 3, then it becomes a limitation, above |
+| 2026-09-18…24 | week 3 | both of the above, at the projector, contrast check first | rebooked |
 | 2026-09-22 | 19 | **API key cut.** No key → `MOCK_MODE` ships, §9.3 and §9.5 are cut | pending — see [no-key-plan.md](writeup/no-key-plan.md) |
 | 2026-09-18…24 | week 3 | diagnosis read-through, 30 logged `diagnosis` fields (§9.5) | blocked on a key |
 | — | — | §6.1 parametric-reconstruction rate | **instrument built, blocked on a key.** `python -m eval.leak_monitor` prints `NOT MEASURABLE` and says why; a mock has no weights to reconstruct from. Fills itself in on the day a key lands |
