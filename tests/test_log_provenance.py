@@ -22,6 +22,7 @@ import pytest
 
 from server import build_info
 from server import config as config_mod
+from server import origin
 from server import turn as turn_mod
 from server.config import CONFIG
 
@@ -138,3 +139,46 @@ def test_the_suite_never_writes_to_the_real_turn_log(store):
     assert written and written[-1]["event"] == "isolation_probe", (
         "the event went nowhere at all; this test would pass on a broken logger"
     )
+
+
+# --- and who drove it ---------------------------------------------------------
+
+
+def test_turn_records_carry_an_origin(client, session, store):
+    """§9.5 reads `diagnosis` to ask whether the tutor's model of the student is
+    real. A scripted policy's dialogue answers a different question."""
+    data = turn(client, session)
+    turn(client, session, correct_response(data, store))
+
+    records = [r for r in _records(CONFIG.log_dir) if "turn_id" in r]
+    assert records, "nothing was logged; this test proved nothing"
+    for record in records:
+        assert record["origin"] == origin.SERVER, (
+            f"an ordinary HTTP turn stamped {record['origin']!r}; the default "
+            "must be the honest one"
+        )
+
+
+def test_declared_origin_is_stamped_and_restored():
+    with origin.declare("eval:probe"):
+        turn_mod._log_event("inside", {})
+        assert origin.current() == "eval:probe"
+    turn_mod._log_event("outside", {})
+
+    by_kind = {r["event"]: r for r in _records(CONFIG.log_dir) if "event" in r}
+    assert by_kind["inside"]["origin"] == "eval:probe"
+    assert by_kind["outside"]["origin"] == origin.SERVER
+
+
+def test_a_crashed_driver_does_not_leak_its_origin():
+    """A failed eval must not leave the process stamping every later turn."""
+    with pytest.raises(RuntimeError):
+        with origin.declare("eval:crashes"):
+            raise RuntimeError("boom")
+    assert origin.current() == origin.SERVER
+
+
+def test_an_empty_origin_is_refused():
+    with pytest.raises(ValueError):
+        with origin.declare(""):
+            pass

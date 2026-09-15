@@ -47,6 +47,7 @@ from server import guards
 from server import llm as llm_mod
 from server import mastery as mastery_mod
 from server import mock_tutor
+from server import origin
 from server import retrieval
 from server.config import CONFIG
 from server.graph_store import GraphStore
@@ -781,7 +782,8 @@ def _log_event(kind: str, payload: dict) -> None:
     jsonl as the turns so a single file is the whole record of a session.
     """
     CONFIG.log_dir.mkdir(parents=True, exist_ok=True)
-    record = {"ts": time.time(), "code": build_info.CODE, "event": kind, **payload}
+    record = {"ts": time.time(), "code": build_info.CODE,
+              "origin": origin.current(), "event": kind, **payload}
     with (CONFIG.log_dir / "turns.jsonl").open("a", encoding="utf-8") as fh:
         fh.write(json.dumps(record, ensure_ascii=False) + chr(10))
 
@@ -800,6 +802,12 @@ def _log(phase1: Phase1, response: TurnResponse) -> None:
         # the whole project and pooling it across versions is how a fixed bug
         # gets reported as a result.
         "code": build_info.CODE,
+        # Who drove this turn - a person over HTTP, or a scripted policy in
+        # eval/. §9.5 reads `diagnosis` to ask whether the tutor's model of the
+        # student is real, and reading a simulated student answers a different
+        # question. See server/origin.py for why `mock` stops separating these
+        # on the day a key lands.
+        "origin": origin.current(),
         "session_id": response.session_id,
         "turn_id": response.turn_id,
         "mock": CONFIG.mock_mode,
