@@ -1,0 +1,26 @@
+{
+  "answered": 30,
+  "total": 40,
+  "table": {
+    "zero": {
+      "on_track": 5,
+      "stuck": 6,
+      "correct": 1
+    },
+    "partial": {
+      "stuck": 3,
+      "on_track": 6
+    },
+    "adversarial": {
+      "stuck": 5,
+      "on_track": 3,
+      "guessing": 1
+    }
+  },
+  "actions": {
+    "ask": 9,
+    "hint_visual": 9,
+    "advance": 7,
+    "backtrack": 5
+  }
+}
