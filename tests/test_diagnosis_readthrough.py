@@ -124,3 +124,13 @@ def test_the_sheet_puts_the_truth_next_to_the_claim():
     assert "partial" in sheet
     assert "tcp_vegas" in sheet
     assert "they conflate the two windows" in sheet
+
+
+def test_the_result_names_the_model_that_wrote_the_diagnoses():
+    """§9.5 judges a specific model's account of a student, and these fields
+    outlive the run. The build stamp does not imply the model: CALL1_MODEL is
+    config, so two builds can differ only in which model spoke."""
+    result = RT.score([_field()])
+    assert result["call1_model"] == CONFIG.call1.model
+    assert result["provider"] == CONFIG.llm_provider
+    assert result["call1_model"] in RT.render(result)

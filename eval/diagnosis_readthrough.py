@@ -221,6 +221,13 @@ def score(fields: list) -> dict:
 
     return {
         "fields": len(fields),
+        # WHICH MODEL SAID THIS. §9.5 is a judgement about a specific model's
+        # account of a student, and the fields outlive the run that produced
+        # them. `provenance` already carries the build; the model is the other
+        # half and is not derivable from it, because CALL1_MODEL is config.
+        "call1_model": CONFIG.call1.model,
+        "call2_model": CONFIG.call2.model,
+        "provider": CONFIG.llm_provider,
         "correct_agreement": {
             "agree": agree,
             "of": len(fields),
@@ -243,6 +250,7 @@ def score(fields: list) -> dict:
 def render_sheet(fields: list) -> str:
     """The thing a human actually reads. One field per block, context first."""
     L = ["CLAUDE.md §9.5 - diagnosis read-through",
+         f"Call 1: {CONFIG.call1.model} via {CONFIG.llm_provider}",
          "",
          "Read the diagnosis against the three lines above it. The question is",
          "not 'is it well written' but 'does it describe THIS student'.",
@@ -260,6 +268,9 @@ def render_sheet(fields: list) -> str:
 
 def render(result: dict) -> str:
     L = ["", "=" * 62, "WHAT IS CHECKABLE WITHOUT A HUMAN (this is not §9.5, it bounds it)", "=" * 62, ""]
+    L.append(f"Call 1 (wrote every diagnosis below): {result['call1_model']} "
+             f"via {result['provider']}")
+    L.append("")
     ca = result["correct_agreement"]
     L.append(f"`correct` vs what the student actually clicked: {ca['agree']}/{ca['of']}"
              + (f" = {ca['rate']:.0%}" if ca["rate"] is not None else ""))

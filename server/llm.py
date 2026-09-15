@@ -230,6 +230,15 @@ def _retry_after(r) -> float:
     return CONFIG.llm_rate_limit_default_wait_s
 
 
+def _is_daily_limit(r) -> bool:
+    """Is this 429 a per-DAY cap rather than a per-minute one?
+
+    Worth a function because the two are the same status code with the same
+    shape and opposite correct responses: wait a few seconds, or stop.
+    """
+    return "per day" in r.text.lower() or "tpd" in r.text.lower()
+
+
 def _explain(r) -> str:
     """The provider's error, plus what to do about it when we can tell.
 
@@ -325,6 +334,16 @@ def _invoke(cfg: LLMCallConfig, system: str, user: str, tool: _Tool, label: str)
         # constantly at any real throughput. It gets its own budget so a genuine
         # schema failure still gets its retries.
         if r.status_code == 429:
+            # A DAILY cap is not a wait. Groq reports TPD through the same 429 as
+            # TPM, and the retry-after it names is the per-minute figure, so the
+            # generic path sleeps 5 x 60s against a limit that resets tomorrow
+            # and then fails anyway. Measured: five minutes of wall clock, zero
+            # progress, and a log that looked like ordinary throttling.
+            if _is_daily_limit(r):
+                last = f"HTTP 429 DAILY quota exhausted: {r.text[:220]}"
+                log.error("%s: %s -- not retrying; this resets tomorrow, not in "
+                          "seconds. Switch model or wait.", label, last)
+                break
             delay = _retry_after(r)
             waits += 1
             if waits > CONFIG.llm_max_rate_limit_waits:

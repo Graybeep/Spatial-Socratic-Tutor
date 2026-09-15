@@ -400,3 +400,16 @@ def test_tool_use_failed_is_not_always_truncation(message, expect):
 def json_dumps_error(message):
     import json as _json
     return _json.dumps({"error": {"code": "tool_use_failed", "message": message}})
+
+
+@pytest.mark.parametrize("message,daily", [
+    ("Rate limit reached ... on tokens per day (TPD): Limit 200000, Used 197685", True),
+    ("Rate limit reached ... on tokens per minute (TPM): Limit 8000, Used 5124", False),
+    ("Rate limit reached ... on input tokens per minute (ITPM): Limit 7000", False),
+])
+def test_a_daily_cap_is_not_waited_out(message, daily):
+    """Same status code, same shape, opposite correct response: sleep a few
+    seconds, or stop. Treating TPD as TPM burned five minutes for no progress."""
+    class R:
+        text = message
+    assert llm._is_daily_limit(R()) is daily
