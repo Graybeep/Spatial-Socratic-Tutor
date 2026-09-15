@@ -81,6 +81,11 @@ something checkable is a warning about the parts that are not checkable.
 Three faults in the harness, all found by the first real run, and one of them
 matters for how the above is read:
 
+These are analysed as a pattern in their own right in
+**[instrument-failures.md](instrument-failures.md)** — the harness producing
+confident verdicts about the tutor while itself broken, twice plausibly enough to
+act on.
+
 - **The driver sent a node id as free text.** `Student.choose` returns an id; on
   the two turns where the server expected prose, the driver wrapped that id and
   sent it. The tutor **caught this** — *"the student keeps offering text instead
@@ -97,30 +102,152 @@ matters for how the above is read:
   names the build and `origin` names the driver, and neither implies the model,
   because `CALL1_MODEL` is config. Fixed; records now carry it.
 
+## A sharper instrument, and a worse result
+
+§9.5 tabulates against a *policy* label, which is a soft ground truth: "this
+student knows the region" does not say what the single right diagnosis of turn 3
+was, so a defender can always claim the model saw something the tabulation did
+not. `eval/diagnostic_calibration.py` removes that defence by constructing
+histories where one answer is forced by the clicks themselves — a student whose
+three clicks are scattered across unrelated regions is guessing; a student whose
+three clicks are all in the prerequisite region is confused about the
+prerequisite. The two node sets are disjoint, asserted by test.
+
+On `qwen/qwen3.8-27b`, 2 items per case:
+
+| case | n | admissible | specific | what it said |
+|---|---|---|---|---|
+| `scattered_clicks` | 2 | 2 | 0 | `stuck` ×2 |
+| `all_clicks_are_prereqs` | 2 | 2 | 0 | `stuck` ×2 |
+| `answered_correctly` | 2 | 0 | 0 | `on_track` ×1, `stuck` ×1 |
+| `opening_turn` | 2 | 2 | **2** | `on_track` ×2 |
+
+`admissible` is any defensible state and is deliberately generous — `stuck` is
+never *wrong* about a failing student. `specific` is the state the evidence
+actually supports. **The model scores full marks on admissibility and almost zero
+on discrimination**, which is the signature of a diagnosis that is not reading
+the history: two unambiguously different students, one distribution.
+
+The one case it gets right is `opening_turn` — the case with **no history to
+read**.
+
+It also got the `correct` boolean wrong on **2 of 6** constructed histories,
+while being shown the answer.
+
+---
+
+## The inertness claim, in three parts
+
+These are three different statements and the difference between them matters.
+Collapsing them produces either false alarm or false comfort.
+
+### 1. The diagnosis is unreliable
+
+Everything above. On two instruments, one using policy labels and one using
+forced-answer constructed cases, `student_state` does not track the student, and
+`correct` — a boolean the model is handed the answer for — is wrong a third of
+the time on unambiguous input. This is a property of the model and the prompt,
+measured, not inferred.
+
+### 2. The architecture makes it inert
+
+Every judgement field Call 1 emits is written, logged, and **read by nothing**:
+
+| field | what consumes it | what is used instead |
+|---|---|---|
+| `student_state` | nothing | — |
+| `correct` | nothing | `mock_tutor.grade()`, a string comparison against `items.json` |
+| `focus_nodes` | nothing | `mock_tutor.lit_nodes(store, item, state.visual_narrow_level)` |
+
+And the routing is not the model's either. Over §9.5's 40 turns, **the server
+overrode Call 1 on 11 of the 12 turns where the curriculum actually moved**:
+
+```
+Call 1 asked for  ->  server did     n
+     hint_visual  ->  advance        6   <-- OVERRIDDEN
+     hint_visual  ->  backtrack      3   <-- OVERRIDDEN
+             ask  ->  advance        1   <-- OVERRIDDEN
+         advance  ->  backtrack      1   <-- OVERRIDDEN
+```
+
+`advance` is gated on the deterministic grade; `backtrack` on
+`mastery_mod.backtrack_target` over the Python mastery map; the lit set on the
+ladder and a server-owned counter. The narrowing — this project's actual
+contribution (§12) — is computed, not chosen.
+
+**This is not a claim that the model does not matter.** `requested_action`
+survives wherever the curriculum does *not* move, which is most turns: it selects
+`ask` vs `hint_visual` vs `hint_verbal` vs `explain`. A student is therefore
+getting **the wrong flavour of help**, chosen on a reading of them that is
+uncorrelated with who they are. That is a real defect with a real cost to the
+demo. What it is not is a corrupted adaptive path.
+
+### 3. The inertness is now enforced, not incidental
+
+Part 2 was true on day 12 **by accident**. §1.3 and §1.5 say mastery stays in
+Python, but nothing in the codebase stopped a later change from branching on
+`student_state` — and such a change would have looked like an improvement, passed
+every one of the 364 tests then green, and made every within-item decision a
+function of a field we have now measured to be uncorrelated with the student.
+
+`tests/test_student_state_is_inert.py` makes it a property. Eleven tests walk the
+AST of the decision modules and fail on any *read* of the three fields, on
+`mastery.py` referencing the model at all, and on `_build_graph_state` being
+handed the model's `focus_nodes`.
+
+They are mutation-tested, which is what earns this part its place as a separate
+claim rather than a restatement of part 2. Planting the exact change the guard
+exists to stop:
+
+```python
+action = decision.requested_action
+if decision.student_state == 'guessing':
+    action = 'backtrack'
+```
+
+fails with `server/turn.py reads .student_state at line(s) [548]`. Planting
+`lit = decision.focus_nodes` fails
+`test_the_narrowing_is_not_chosen_by_the_model`. A guard that has never been
+shown to fail is not a guard.
+
+---
+
 ## What this does and does not license
 
-**It does not invalidate the tutor.** Nothing in §2's claims runs through
-`student_state`:
+Part 2 above establishes that §2's claims do not run through any of this. Three
+consequences that do not follow from it, and are worth stating separately.
 
-- the fidelity ceiling is a property of Call 2's argument list
-- narrowing is computed by `mastery.py` and the ladder, deterministically
-- `correct` is a boolean Call 1 reads off `items.json`, not a judgement
-
-**It does invalidate one thing we would otherwise have been tempted to claim.**
-A diagnosis field that reads this well is exactly the artefact a demo puts on a
+**It invalidates one thing we would otherwise have been tempted to claim.** A
+diagnosis field that reads this well is exactly the artefact a demo puts on a
 slide to show the tutor "understands the student". On this evidence it does not,
 and we will not show it that way.
 
-**It also puts a number on a design decision that was made for other reasons.**
-§1.3 and §1.5 keep mastery in Python and out of the model's hands, on the
-grounds that LLM-scored progress silently corrupts the adaptive path. This is
-the first direct evidence for that rule from inside this system rather than from
-the literature: had `student_state` been wired to mastery, a student who knew
-nothing would have been advanced on the strength of `on_track` five times in
-twelve.
+**It puts a number on a design decision that was made for other reasons.** §1.3
+and §1.5 keep mastery in Python and out of the model's hands, on the grounds that
+LLM-scored progress silently corrupts the adaptive path. That rule was adopted
+from the literature; this is the first direct evidence for it from inside this
+system. Two numbers, and the second is the sharper one:
+
+- had `student_state` been wired to routing, a student who knew nothing would
+  have been advanced on the strength of `on_track` five times in twelve
+- had `correct` been wired to mastery, **2 of 6** unambiguous observations would
+  have moved θ in the wrong direction — and Call 1 *is shown the answer*, which
+  is the strongest form of the input a scorer could get
+
+**It leaves a real defect unfixed.** `requested_action` still selects the flavour
+of help within an item, on a reading of the student that does not track them. The
+architecture contains the damage; it does not repair it. The fix is the prompt —
+a diagnosis that carries no cost for answering `stuck` to everything is a
+diagnosis that cannot be wrong, and what we measured is exactly that. See
+`prompts/call1_system.md`.
 
 ## Limits of this read
 
+- **The prompt is about to change.** Everything above measures
+  `prompts/call1_system.md` as it stood on day 12, which offers the model no cost
+  for answering `stuck`. A re-measurement is queued behind the rewrite rather
+  than run before it, because measuring a prompt you have already decided to
+  replace buys a row and not an answer.
 - **n=30, one model, one chapter.** §9.5 asks for thirty; thirty is what this is.
   The zero/partial/adversarial cells are 12/9/9 and no claim here needs a
   significance test, because the finding is a *near-absence* (0 and 1 uses of two
