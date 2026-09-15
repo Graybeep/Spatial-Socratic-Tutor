@@ -277,7 +277,7 @@ option set and one behavioural test is degenerate on the other half:
 212 items flagged for human review. The MCQ bank is demoted to unscored rather
 than deleted, so a real bank is a flag flip.
 
-### 5.5 §6.1 — the parametric-reconstruction rate, and why it is blank
+### 5.5 §6.1 — the parametric-reconstruction rate, now a bound rather than a blank
 
 `python -m eval.leak_monitor`
 
@@ -285,11 +285,32 @@ Because Call 2 never saw the answer on a hinting turn, a layer-1 hit there means
 the model reconstructed the answer from its own weights. §6 calls this a free
 and genuinely interesting number.
 
-**We are not reporting it, and the instrument says why.** `MOCK_MODE`'s Call 2 is
-a template lookup with no weights to reconstruct from, so a 0% over 10,334 mock
-turns is not weak evidence of no leakage — it is no evidence, and on a slide it
-reads identically to the real thing. The aggregator returns `rate: null` and
-prints `NOT MEASURABLE`.
+**It was blank until day 12, and the instrument said why.** `MOCK_MODE`'s Call 2
+is a template lookup with no weights to reconstruct from, so a 0% over mock turns
+is not weak evidence of no leakage — it is no evidence, and on a slide it reads
+identically to the real thing. The aggregator returned `rate: null` and printed
+`NOT MEASURABLE` for six days rather than a zero.
+
+**First real-model reading: 0 hits in 60 screened turns.** Quote it as a bound,
+not a result:
+
+- **n=60.** The 95% upper bound on 0/60 is **4.9%** — consistent with no
+  parametric reconstruction, and equally consistent with a rate of one turn in
+  twenty-five. These 60 checks are a by-product of the §9.5 run, not a
+  measurement designed to answer this.
+- **It pools four origins** (a demo session and three §9.5 student policies) and
+  more than one build. The monitor reports that rather than hiding it —
+  `mixed_origins: true` — because a rate over scripted policies and a rate over a
+  person are different claims wearing one number.
+- **The measure is weakest where the phenomenon is strongest.** Stemmed token
+  cosine plus trigram containment misses synonym paraphrase, and paraphrase is
+  exactly what reconstruction looks like. Treat 0/60 as a floor on detection, not
+  a ceiling on leakage.
+
+What it does support, modestly: across 60 real Call 2 turns on `gpt-oss-20b`,
+nothing the monitor can detect came back. The structural argument does not rest
+on it — Call 2's argument list is the guarantee, and this number is a check on
+the guarantee rather than a substitute for it.
 
 It also refuses to pool builds. The turn log contains 17,433 `backtrack` hits
 from before the Call 2 fidelity ceiling landed; pooling the file reports 3.94%
@@ -300,7 +321,38 @@ similarity metric is a stemmed token cosine plus trigram containment, which
 misses synonym paraphrase — and paraphrase is exactly what reconstruction is.
 The measure is weakest where the phenomenon is strongest.
 
-### 5.6 One number nothing asked for
+### 5.6 §9.5 — the diagnosis does not track the student
+
+Full write-up: **[diagnosis-readthrough.md](diagnosis-readthrough.md)**.
+
+Thirty answered turns, three student policies whose true knowledge state is known
+by construction, Call 1 on `qwen/qwen3.8-27b`:
+
+| true knowledge | `on_track` | `stuck` | `correct` | `guessing` | `confused_prereq` |
+|---|---|---|---|---|---|
+| **zero** — knows nothing | 5 | 6 | 1 | **0** | **0** |
+| **partial** — knows the region | 6 | 3 | 0 | **0** | **0** |
+| **adversarial** | 3 | 5 | 0 | 1 | **0** |
+
+Three true states, one distribution. A student who knows nothing is called
+`on_track` five times in twelve. `guessing` is used once in thirty turns, on the
+wrong student; `confused_prereq` never, on a graph built entirely out of
+prerequisites.
+
+The prose does not show it. The diagnoses are specific and well-observed *about
+the item* — they quote the definition and name the confusable neighbours — and
+then present that as an account of the person. A reviewer reading the fields
+would not catch this, and neither did we: it took tabulating against a truth the
+model could not see.
+
+**Nothing in §2 runs through this field**, which is the reason the system
+survives the finding: the fidelity ceiling is a property of Call 2's argument
+list, narrowing is deterministic, and `correct` is read off `items.json`. But it
+is the first evidence from inside this project for the rule in §1.3 and §1.5 that
+keeps mastery out of the model's hands — wired to mastery, `on_track` would have
+advanced a student who knew nothing, five times in twelve.
+
+### 5.7 One number nothing asked for
 
 Populating the answer-span mask required knowing which chunk each node
 retrieves, which made a number available that nothing had computed: retrieval
@@ -315,10 +367,14 @@ is and the 83% is reported rather than repaired.
 
 ## 6. What we got wrong, and why that is in the report
 
-Four component-contract failures and three instrument failures, in four weeks,
+Four component-contract failures and six instrument failures, in four weeks,
 found by the people who wrote the code. We include them because in every case
 the *intuitive* fix would have hidden the problem rather than surfaced it, and
 because all of them survived a test suite a reviewer would have called adequate.
+
+The last three arrived together, on the first run of §9.5's harness against a
+real model, and one of them is the sharpest example in the project: **the tutor
+correctly reported a bug in our driver and we filed it as a hallucination.**
 
 - **[representation-blindness.md](representation-blindness.md)** — four
   instances of one mechanism: two fields that are different things in the schema
@@ -328,6 +384,10 @@ because all of them survived a test suite a reviewer would have called adequate.
   code that ran, passed, and produced well-formed numbers over nothing. A
   leakage rate computed over one item out of 101 for four days. A drift test
   blind to exactly the kind of drift it existed to catch.
+- **[diagnosis-readthrough.md](diagnosis-readthrough.md)** — the tutor's model
+  of the student, measured against a ground truth it could not see. Includes
+  three faults in our own harness, one of which the tutor reported accurately
+  and we filed as a hallucination.
 - **[limitations.md](limitations.md)** — everything above plus the rest,
   including two figures in this report's own source that were stale prose until
   day 8 because they had been typed rather than derived.

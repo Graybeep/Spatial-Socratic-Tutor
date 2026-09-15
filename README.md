@@ -227,6 +227,7 @@ NARROW_SCHEDULE=0,25,18,12,8 python -m server.main
 | `eval/leak_monitor.py` | §6.1 layer-1 rate from the log; refuses to pool builds, origins or report a mock |
 | `eval/diagnosis_readthrough.py` | §9.5 — 30 diagnoses against ground truth; refuses to run on the mock |
 | **`docs/writeup/report.md`** | **the assembled report — start here** |
+| `docs/writeup/diagnosis-readthrough.md` | §9.5 — the tutor's model of the student, against a truth it could not see |
 | `docs/writeup/representation-blindness.md` | the design contribution: fidelity ceiling, not field whitelist (4 instances) |
 | `docs/writeup/numbers-that-looked-fine.md` | evals, and one drift test, that produced well-formed results over nothing |
 | `docs/writeup/` | other draft report sections — identity leakage, limitations |
