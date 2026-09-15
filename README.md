@@ -100,9 +100,18 @@ python -m eval.leak_monitor
 §6 calls the layer-1 rate free. It was logged from day 1 and never aggregated,
 so it was free the way an unopened box is packed. The aggregator will not pool
 builds (17,433 `backtrack` hits in the log come from a bug fixed by the fidelity
-ceiling), will not pool actions, and **will not report a mock rate as §6.1's
-number** - a template lookup has no weights to reconstruct an answer from, so it
-prints `NOT MEASURABLE` instead of `0.00%`. See `docs/writeup/no-key-plan.md`.
+ceiling), will not pool actions, will not pool **origins** without saying so, and
+**will not report a mock rate as §6.1's number** - a template lookup has no
+weights to reconstruct an answer from, so it prints `NOT MEASURABLE` instead of
+`0.00%`. See `docs/writeup/no-key-plan.md`.
+
+Every turn record also says **who drove it**. `origin` is `server` for a person
+over HTTP and `eval:adversarial:<mode>:<condition>` for one of the three scripted
+policies. Today `mock` separates those by accident; on the day a key lands an
+eval sweep and a real student are both `mock: false` at the same build, and §9.5
+- the hand-read of 30 `diagnosis` fields, the one check no metric substitutes for
+- would draw its sample from whichever ran last. Turns logged before day 12 read
+as `pre-origin`, not as people.
 
 Every eval output carries a `provenance` block saying what it sampled
 (`population`, `distinct`, `coverage`). Check it before quoting a number: §9.1
@@ -169,6 +178,7 @@ NARROW_SCHEDULE=0,25,18,12,8 python -m server.main
 | `prompts/` | tutor contract + both call instructions; never Python literals |
 | `server/mastery.py` | deterministic scoring, no LLM |
 | `server/mock_tutor.py` | scripted stand-in for Call 1 and Call 2 |
+| `server/origin.py` | who drove a turn - a person, or one of eval's policies; §9.5's sample gate |
 | `build/config.py` | build-pipeline knobs (§13.1); the server never imports it |
 | `build/chunk.py` | chapter → chunks; the seam to swap when real PDF text arrives |
 | `build/extract_concepts.py` | pass 1, candidates for the human review |
@@ -182,7 +192,7 @@ NARROW_SCHEDULE=0,25,18,12,8 python -m server.main
 | `data/SOURCE.md` | attribution, and why the gold graph was frozen first |
 | `eval/adversarial.py` | §9.1 effective leakage — `python -m eval.adversarial` |
 | `eval/graph_quality.py` | §9.3 extraction recall ceiling; deterministic, no key |
-| `eval/leak_monitor.py` | §6.1 layer-1 rate from the log; refuses to pool builds or report a mock |
+| `eval/leak_monitor.py` | §6.1 layer-1 rate from the log; refuses to pool builds, origins or report a mock |
 | **`docs/writeup/report.md`** | **the assembled report — start here** |
 | `docs/writeup/representation-blindness.md` | the design contribution: fidelity ceiling, not field whitelist (4 instances) |
 | `docs/writeup/numbers-that-looked-fine.md` | evals, and one drift test, that produced well-formed results over nothing |

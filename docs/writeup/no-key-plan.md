@@ -50,7 +50,7 @@ called it**. The number lived in 457,000 unaggregated jsonl lines. Free the way
 an unopened box is packed.
 
 `eval/leak_monitor.py` opens it, and the first thing it does with the corpus is
-refuse to report a rate over it. Three refusals, each one a mistake this project
+refuse to report a rate over it. Four refusals, each one a mistake this project
 had already made in some other form:
 
 - **it will not pool builds.** Layer 1 fired on **17,433 `backtrack` turns**
@@ -63,6 +63,17 @@ had already made in some other form:
 - **it will not pool actions.** `advance` and `explain` are *meant* to name the
   answer. That split already existed in `guards.RECONSTRUCTION_ACTIONS` and is
   imported rather than restated, so the eval cannot drift from the server.
+- **it will not pool origins silently.** A turn record now says *who drove it*
+  (`server/origin.py`): a person over HTTP, or one of `eval/adversarial.py`'s
+  three scripted policies. `mock` separates those today only by accident — eval
+  runs unkeyed and a demo session does not — and that accident expires on the
+  day a key lands, which is the same day §6.1 and §9.5 become possible. After
+  it, an eval sweep and a person are both `[real]`, at the same build, in the
+  same file. Origins *are* pooled in the headline, because with a key the sample
+  that makes §6.1 measurable at all is a deliberate sweep; what the headline
+  refuses is pooling them without saying so, which is what `origins` and
+  `mixed_origins` are for. The 652,473 turns logged before day 12 report as
+  `pre-origin` rather than as people.
 - **it will not report a mock rate as §6.1's number.** `MOCK_MODE` Call 2 is a
   template lookup. Zero hits over 10,334 mock turns is not weak evidence of no
   leakage — it is no evidence, and on a slide it reads exactly like the real
@@ -70,7 +81,7 @@ had already made in some other form:
   renderer prints **NOT MEASURABLE** rather than a number.
 
 So §6.1 joins §9.3-precision and §9.5 on the key-blocked list. It joins it
-**with the instrument built, tested (15 tests) and green**, which is the whole
+**with the instrument built, tested (18 tests) and green**, which is the whole
 difference between a section we cut and a section that fills itself in on the
 day a key arrives.
 
