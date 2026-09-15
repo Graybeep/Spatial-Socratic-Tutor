@@ -141,3 +141,37 @@ def test_one_empty_case_is_also_not_a_verdict():
                     DC.Result(case="all_clicks_are_prereqs", error="timeout")])
     assert out["separates_guessing_from_prereq_confusion"] is None
     assert "NOT MEASURED" in DC.render(out)
+
+
+def test_every_case_declares_as_many_turns_as_it_shows_clicks(store, probe_items):
+    """A case that says "three turns" while showing one click is incoherent, and
+    the model's answer to it is not evidence about the model.
+
+    `answered_correctly` inherited the default turns_on_item=3 with a one-click
+    history. qwen answered `stuck` and explained "three turns in with no clear
+    right answer" - an accurate reading of a context we had broken. It was
+    scored as a model failure until the case was re-read.
+    """
+    kinds = {"scattered_clicks": "scattered", "all_clicks_are_prereqs": "prereqs",
+             "answered_correctly": "correct", "opening_turn": "none"}
+    item = probe_items[0]
+    for case in DC.CASES:
+        clicks = len(_clicks(store, item, kinds[case.name]))
+        assert case.turns_on_item == clicks, (
+            f"{case.name}: declares turns_on_item={case.turns_on_item} but shows "
+            f"{clicks} click(s). The model is being told one thing and shown another."
+        )
+
+
+def test_the_probe_records_the_boolean_that_mastery_uses():
+    """`student_state` is a label nothing reads; `correct` is what §7 scores.
+    A probe that captures only the label measures the field that cannot hurt."""
+    r = DC.Result(case="answered_correctly", said="stuck", correct=True)
+    out = DC.score([r])
+    assert out["correct_boolean"] == {"agree": 1, "of": 1}
+    assert "`correct` boolean" in DC.render(out)
+
+
+def test_a_wrong_boolean_is_counted_against():
+    r = DC.Result(case="answered_correctly", said="correct", correct=False)
+    assert DC.score([r])["correct_boolean"] == {"agree": 0, "of": 1}
