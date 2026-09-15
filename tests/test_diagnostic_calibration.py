@@ -118,3 +118,26 @@ def test_the_result_names_the_model():
     out = DC.score([_result("scattered_clicks", "guessing")])
     assert out["call1_model"] == CONFIG.call1.model
     assert out["provenance"]["code"]
+
+
+# --- the verdict must not be a finding when there is no data ------------------
+
+def test_an_all_failed_run_is_not_reported_as_a_failure_to_discriminate():
+    """Every call 429'd on an exhausted daily budget and the first version
+    printed "the diagnosis is not reading the history" - a confident negative
+    over zero observations, because two empty distributions compare equal."""
+    blocked = [DC.Result(case="scattered_clicks", error="HTTP 429 DAILY quota exhausted"),
+               DC.Result(case="all_clicks_are_prereqs", error="HTTP 429 DAILY quota exhausted")]
+    out = DC.score(blocked)
+    assert out["separates_guessing_from_prereq_confusion"] is None
+    rendered = DC.render(out)
+    assert "NOT MEASURED" in rendered
+    assert "DOES NOT SEPARATE" not in rendered
+
+
+def test_one_empty_case_is_also_not_a_verdict():
+    """Half a comparison is not a comparison."""
+    out = DC.score([_result("scattered_clicks", "guessing"),
+                    DC.Result(case="all_clicks_are_prereqs", error="timeout")])
+    assert out["separates_guessing_from_prereq_confusion"] is None
+    assert "NOT MEASURED" in DC.render(out)
