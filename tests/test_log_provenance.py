@@ -16,10 +16,12 @@ sampling cannot be trusted. These tests hold the same line one layer down.
 from __future__ import annotations
 
 import json
+import pathlib
 
 import pytest
 
 from server import build_info
+from server import config as config_mod
 from server import turn as turn_mod
 from server.config import CONFIG
 
@@ -98,3 +100,41 @@ def test_the_stamp_never_reaches_the_client(client, session):
     data = turn(client, session)
     assert "code" not in data
     assert "code" not in json.dumps(data.get("item") or {})
+
+
+# --- the log is evidence, so the suite must not write into it -----------------
+
+
+def _real_log() -> "pathlib.Path":
+    """Where a server started from this repo would actually log."""
+    return config_mod.ROOT / "logs" / "turns.jsonl"
+
+
+def test_the_suite_never_writes_to_the_real_turn_log(store):
+    """Autouse isolation, asserted rather than assumed (CLAUDE.md §13.2).
+
+    This test takes the `store` fixture and NOT `client`, which is precisely the
+    combination that leaked: `store` does not touch config, so before
+    `_isolate_the_turn_log` was autouse, driving a turn from here appended to the
+    demo's own `logs/turns.jsonl`.
+    """
+    assert CONFIG.log_dir.resolve() != (config_mod.ROOT / "logs").resolve(), (
+        "CONFIG.log_dir points at the real logs/ during a test; "
+        "_isolate_the_turn_log is not in effect"
+    )
+
+    real = _real_log()
+    before = real.stat().st_size if real.exists() else None
+
+    turn_mod._log_event("isolation_probe", {"detail": "must not land in logs/"})
+
+    after = real.stat().st_size if real.exists() else None
+    assert after == before, (
+        f"the suite wrote {after - (before or 0)} bytes into {real}; "
+        "logs/turns.jsonl is §6.1 and §9.5 evidence and no test may append to it"
+    )
+
+    written = _records(CONFIG.log_dir)
+    assert written and written[-1]["event"] == "isolation_probe", (
+        "the event went nowhere at all; this test would pass on a broken logger"
+    )

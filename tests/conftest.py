@@ -4,6 +4,12 @@ CONFIG is a frozen dataclass on purpose - config is read once at startup and
 never mutated at call time (CLAUDE.md §13.1). Tests that need a different ladder
 or schedule go through `config_override`, which uses object.__setattr__ and always
 restores. Nothing in the server does this; only tests.
+
+`logs/turns.jsonl` is EVIDENCE, not scratch. §6.1 and §9.5 read it, §13.2 says
+do not delete it, and nothing truncates it. So no test may write into it:
+`_isolate_the_turn_log` is autouse and unconditional, because the leak it closes
+came from a test that simply did not ask for the fixture that would have saved
+it. Opt-in isolation protects the tests that remember to opt in.
 """
 from __future__ import annotations
 
@@ -30,13 +36,36 @@ def config_override(**values):
             object.__setattr__(CONFIG, k, v)
 
 
+@pytest.fixture(autouse=True)
+def _isolate_the_turn_log(tmp_path):
+    """No test writes to the real `logs/turns.jsonl`. Autouse, so it is not
+    possible to forget.
+
+    The eval tests drove `server.turn` through the `store` fixture, which does not
+    touch config, so every simulated turn appended to the demo's own log. Measured
+    at the point it was found: 625 MB, and ~800 KB more per run of
+    `tests/test_eval_adversarial.py` alone.
+
+    Real sessions stayed separable by `mock: false`, so no published number was
+    wrong. What was lost is the ability to tell a test run from a genuine
+    `eval.adversarial` run - both are `mock: true` at the same `code` - which is
+    exactly the distinction §9.5's hand-read of 30 `diagnosis` fields needs. See
+    `origin` in `server/turn.py` for the other half.
+    """
+    with config_override(log_dir=tmp_path / "logs"):
+        yield
+
+
 @pytest.fixture()
-def no_latency(tmp_path):
-    """Strip the mock's artificial delays so the suite doesn't sleep 2s a turn."""
+def no_latency():
+    """Strip the mock's artificial delays so the suite doesn't sleep 2s a turn.
+
+    The log redirect that used to live here is now `_isolate_the_turn_log`, which
+    is autouse: this fixture's job is latency, and only latency.
+    """
     with config_override(
         mock_call1_delay_s=0.0,
         mock_call2_delay_s=0.0,
-        log_dir=tmp_path / "logs",
     ):
         yield
 
