@@ -146,7 +146,7 @@ much smaller scale.
 | 2026-09-18…24 | week 3 | **repeat §9.5 on `gpt-oss-120b`**, the model the demo ships | one command, one day's token budget |
 | — | 12 | §6.1 parametric-reconstruction rate | **0/60, reported as a bound.** 95% upper bound 4.9%; pools 4 origins. A by-product of the §9.5 run, not a designed measurement |
 | 2026-09-25 | 22 | **feature freeze.** Tag `feature-freeze` | pending |
-| 2026-09-29 | 26 | **video walkthrough recorded.** Tag `demo` | pending |
+| 2026-09-29 | 26 | **video walkthrough recorded.** Tag `demo` | pending — **script it around narrowing, not mastery.** See below |
 
 Tags cut so far: `schemas-frozen`, `graph-frozen`, `loop-working`.
 
@@ -201,6 +201,53 @@ exists — but the number in the report needs re-deriving rather than re-typing.
 [no-key-plan.md](writeup/no-key-plan.md) is no longer the expected path. It stays
 as written: it is still the report if the key is revoked, and it cost nothing to
 have had it ready.
+
+### 2026-09-16 (day 13) — what a perfect run actually looks like
+
+Measured, no key needed: drive the demo answering **every item correctly** and
+count nodes crossing `MASTERY_THRESHOLD` (0.6).
+
+| turns | nodes mastered |
+|---|---|
+| 5 | 0 / 52 |
+| 15 | **0 / 52** |
+| 20 | 1 / 52 |
+| 40 | 3 / 52 |
+| 60 | 9 / 52 |
+| 150 | 23 / 52 |
+
+**A three-minute video is roughly 15–25 turns.** In that window a flawless
+student masters zero or one node, so §8's "mastery recolours nodes" is a change
+the viewer never sees. 150 perfect turns reach 23 of 52 and the session still
+does not complete.
+
+**This is not a bug and the constants are not being changed.** Two correct
+answers cross the threshold from a standing start, which is the intended shape —
+§7 fixes `K_START`, `K_MIN` and `THRESHOLD`, and CLAUDE.md §0 says decisions
+there are not re-litigated mid-implementation. The learning rate decays with
+`n_obs` on purpose, and a demo that recoloured the graph in five turns would be
+a demo of a scoring rule tuned for a demo.
+
+**The consequence is for the script, and it points the right way.** §12 says the
+contribution is *the visual as a shared referent — pointing as an answer, and
+dimming as a non-verbal hint channel*. Narrowing is visible on **turn two**: the
+map goes 52 lit to 12 lit before any text arrives. Mastery colour is secondary in
+§8 and slow by construction. So:
+
+- [ ] Script the walkthrough around **narrowing and pointing**, which show
+      immediately and are what the project claims
+- [ ] Do **not** promise "watch the graph light up as they learn" — at demo
+      length it will not
+- [ ] If mastery colour must appear on camera, open from a **returning student**
+      with prior state rather than a fresh session. That is honest (it is what
+      sqlite state is for) and it is not the same as retuning the scorer
+
+One check worth doing before recording: an earlier arithmetic pass concluded that
+the 35 nodes with a single scorable item could *never* be mastered, because one
+correct answer reaches 0.56 against a 0.60 threshold. **That was wrong** — items
+are re-served and re-scored, and 23 nodes reach mastery in the run above. The
+arithmetic assumed one scorable item meant one scoring observation. Recorded
+because the wrong version is the more plausible-sounding one.
 
 ### A note for whoever runs the projector test
 
