@@ -1,9 +1,18 @@
 # CLAUDE.md 1.1: no agent framework. Plain orchestration, httpx, the model API.
 # CLAUDE.md 1.8: no new dependencies after end of week 2.
-fastapi>=0.115
-uvicorn[standard]>=0.30
-pydantic>=2.7
-httpx>=0.27
+#
+# FROZEN 2026-09-17 (end of week 2). This list is closed: nothing is added to it,
+# and tests/test_dependency_freeze.py fails if anything is. Versions are pinned to
+# the ones the suite passed against on the freeze day, so the demo machine on
+# day 26 installs what was tested rather than whatever is newest.
+#
+# Deliberately absent: PyMuPDF. The chapter is ingested from HTML
+# (build.fetch_chapter), so build/chunk.py's PdfChunker never had a PDF to run
+# against and was not pinned before the door closed. See build/chunk.py.
+fastapi==0.136.3
+uvicorn[standard]==0.48.0
+pydantic==2.13.4
+httpx==0.28.1
 
 # dev
-pytest>=8.0
+pytest==9.1.1

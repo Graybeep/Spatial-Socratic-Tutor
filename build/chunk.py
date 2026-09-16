@@ -24,10 +24,12 @@ made their own assumption about what a chunk looks like.
 
 # PyMuPDF is imported lazily and on purpose
 
-It is not in requirements.txt. There is no PDF to test it against, so pinning a
-dependency we cannot exercise would be pinning a guess — and §1.8 closes the
-door on new dependencies at the end of week 2. The import happens inside the
-method, so the whole pipeline runs, and is tested, on the text chunker today.
+It is not in requirements.txt, and as of the dependency freeze (2026-09-17,
+§1.8) it will not be. The chapter arrived as HTML, not a PDF, so there was never
+a file to exercise it against, and pinning a dependency we cannot exercise would
+have been pinning a guess. The import happens inside the method, so the whole
+pipeline runs, and is tested, without it. `--pdf` is a door that closed before
+anything walked through it; `--html` is the path the frozen graph came from.
 
 # Equations and tables
 
@@ -287,11 +289,11 @@ class PdfChunker:
             import fitz  # PyMuPDF
         except ImportError as exc:  # pragma: no cover - no PDF to test against
             raise SystemExit(
-                "PyMuPDF is not installed and is not in requirements.txt: there "
-                "is no chapter PDF to test it against, so it was not pinned "
-                "(CLAUDE.md §1.8). `pip install pymupdf`, add it to "
-                "requirements.txt in the same commit, and expect to fix "
-                "PdfChunker once you have seen what it produces."
+                "PyMuPDF is not installed and is not in requirements.txt. The "
+                "dependency freeze (CLAUDE.md §1.8, 2026-09-17) closed before a "
+                "chapter PDF existed, so it was never added and cannot be now. "
+                "The chapter is ingested from HTML: `python -m "
+                "build.fetch_chapter && python -m build.chunk --html`."
             ) from exc
 
         lines: list[str] = []
