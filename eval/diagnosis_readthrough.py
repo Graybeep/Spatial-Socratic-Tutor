@@ -68,6 +68,32 @@ from eval.adversarial import Student, scored_bank
 CONDITIONS = ("zero", "partial", "adversarial")
 
 
+class Call1FellBack(RuntimeError):
+    """Call 1 failed and the turn ran on the mock's decision.
+
+    §9.5 reads the MODEL's account of the student. A fallback turn's diagnosis
+    is a template string from mock_tutor.py, and recording it as a field would
+    put "wrong answer at hint_level=2" into the table beside real diagnoses,
+    attributed to the model. Dropping it and carrying on is no better: the
+    likeliest cause is the daily token cap, which fails every turn after it, and
+    a run that silently skips its failures reports whichever conditions happened
+    to come first. So the run stops, with the fields it has.
+    """
+
+    def __init__(self, fields_so_far: int):
+        super().__init__(
+            f"Call 1 fell back to the mock after {fields_so_far} field(s). "
+            "Stopping rather than recording a template as the model's diagnosis. "
+            "See logs/turns.jsonl for the `call1_fallback` event and its error."
+        )
+        self.fields_so_far = fields_so_far
+
+
+def _refuse_fallback(phase1, fields: list) -> None:
+    if phase1.call1_fallback:
+        raise Call1FellBack(len(fields))
+
+
 @dataclass
 class Field:
     """One logged diagnosis, with everything needed to judge it."""
@@ -169,6 +195,7 @@ def collect(n: int, seed: int, max_turns: int, pace_s: float = 0.0,
 
             pace()
             phase1 = turn_mod.begin_turn(store, db, state, None)
+            _refuse_fallback(phase1, fields)
             turn_mod.complete_turn(store, db, phase1)
 
             for t in range(max_turns):
@@ -183,6 +210,7 @@ def collect(n: int, seed: int, max_turns: int, pace_s: float = 0.0,
 
                 pace()
                 phase1 = turn_mod.begin_turn(store, db, state, response)
+                _refuse_fallback(phase1, fields)
                 turn_mod.complete_turn(store, db, phase1)
 
                 d = phase1.decision
@@ -359,8 +387,17 @@ def main() -> int:
         except AttributeError:  # pragma: no cover - very old Python
             pass
 
-    fields = collect(args.n, args.seed, args.max_turns, args.pace_s,
-                     checkpoint if args.json else None)
+    try:
+        fields = collect(args.n, args.seed, args.max_turns, args.pace_s,
+                         checkpoint if args.json else None)
+    except Call1FellBack as exc:
+        # The checkpoint already holds every field collected before this turn,
+        # and none of them is a fallback. Partial and honest, not complete.
+        print(str(exc), file=sys.stderr)
+        if args.json:
+            print(f"partial raw (model-written fields only) -> {args.json}",
+                  file=sys.stderr)
+        return 3
     result = score(fields)
     sheet = render_sheet(fields)
 
