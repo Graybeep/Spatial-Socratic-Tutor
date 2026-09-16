@@ -291,6 +291,19 @@ is not weak evidence of no leakage — it is no evidence, and on a slide it read
 identically to the real thing. The aggregator returned `rate: null` and printed
 `NOT MEASURABLE` for six days rather than a zero.
 
+> **NOT QUOTABLE as of 2026-09-16 (day 13).** Two defects sit under these 60
+> checks, both found and fixed on day 13. **(1) The monitor could not see edge
+> answers.** An edge item's answer is an id pair with no aliases, and layer 1
+> caught an utterance naming its FROM endpoint on **0 of 49** edge items (both
+> endpoints: 5 of 49). Edge items are 49 of the 101 scored items; in the
+> real-model log, 418 ask/hint turns were on edge items, where a hit was
+> impossible. Fixed in `522defc` (49 of 49, no false positive on the anchor).
+> **(2) Call 2 was shown no history** — every past turn arrived as `role: text`
+> (fixed in `1cfc74a`) — so the model being monitored had less to reconstruct
+> from than the shipping one does. 0/60 is a count of what a half-blind monitor
+> saw on a context-starved model. It needs a re-run on the fixed build before
+> it bounds anything.
+
 **First real-model reading: 0 hits in 60 screened turns.** Quote it as a bound,
 not a result:
 
