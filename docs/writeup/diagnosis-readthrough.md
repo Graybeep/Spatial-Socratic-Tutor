@@ -5,6 +5,23 @@
 student policies. Raw: [`eval/results/diagnosis_readthrough.json`](../../eval/results/diagnosis_readthrough.json);
 instrument: `eval/diagnosis_readthrough.py`.*
 
+> **INVALIDATED 2026-09-16 (day 13) — read this before anything below.** Every
+> number in this document was produced by a Call 1 that **could not see the
+> dialogue.** `server/llm.py` formatted history with `for who, text in history`
+> over `{"role", "text"}` dicts, which yields the keys, so every entry under
+> RECENT TURNS reached the model as the literal line `role: text` — in the live
+> tutor, in this read-through, and in `diagnostic_calibration.py`, which builds
+> its histories in the same shape. Fixed in `1cfc74a`, pinned by
+> `tests/test_history_reaches_the_model.py`.
+>
+> So "the diagnosis does not track the student" is not a finding about the model.
+> It is what a model shown no clicks would say, and the one calibration case it
+> got right was the one with no history to read. The **architecture** half —
+> the judgement fields are inert, enforced by test — does not depend on the
+> model's input and stands. Everything about diagnosis *quality* is withdrawn
+> until §9.5 is re-run on the fixed build. Found on the first field of that
+> re-run, which said the student's inputs "were text".
+
 CLAUDE.md §9.5 asks for this and says why: it is *"the only way to find out
 whether the tutor's model of the student bears any relationship to reality, and
 no metric above would catch that failure."* That turns out to be exactly right,
