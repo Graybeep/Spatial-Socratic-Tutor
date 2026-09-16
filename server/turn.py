@@ -91,6 +91,9 @@ class Phase1:
     #: already opened the next one by the time Call 2 runs, and the reveal must
     #: name what was revealed, never what is now being asked.
     revealed_item: Optional[Item] = None
+    #: The item a correct answer CLOSED on this turn. Same reason as
+    #: revealed_item: `item` is already the next one when Call 2 runs.
+    answered_item: Optional[Item] = None
 
     @property
     def session_status(self) -> str:
@@ -539,6 +542,37 @@ def _chunk_for(store: GraphStore, state, action: str, item) -> Optional[str]:
         f"{node.label} {node.definition}", item.answer_spans)
 
 
+def _chunk_subject(store: GraphStore, phase1, action: str):
+    """Which item's source text Call 2 may cite on this turn.
+
+    `explain`: the open item - explaining is what happens instead of answering,
+    and §5 permits its chunk with the answer spans masked.
+
+    `advance`: the item just ANSWERED, never `phase1.item`. Routing runs before
+    Call 2, so phase1.item is the next question, and this used to retrieve that
+    question's passage - measured: answering Packet Flow handed Call 2 the
+    chapter's paragraph on router queuing while "Queuing Delay" was the open
+    item. §5 says the chunk "leaks the answer in higher fidelity than any single
+    field would"; masking the answer's spans removes the name and keeps the
+    explanation.
+
+    And no chunk when the next item's answer lives on the node just answered: a
+    passage about that node explains the open question, whichever item it came
+    from. Reading nothing is the cost; the student already got it right.
+    """
+    if action != "advance":
+        return phase1.item
+    answered = phase1.answered_item
+    if answered is None:
+        return None
+    if phase1.item is not None:
+        open_surface = _answer_surface(store, phase1.item) | {
+            store.label(phase1.item.node_id).casefold()}
+        if store.label(answered.node_id).casefold() in open_surface:
+            return None
+    return answered
+
+
 def _call2(state, action: str, hint_level: int, labels: list, n_lit: int,
            chunk: Optional[str] = None) -> str:
     if CONFIG.mock_mode:
@@ -635,6 +669,7 @@ def begin_turn(
     session_complete = False
     revealed_node = None
     revealed_item = item if resolved_with_support else None
+    answered_item = item if graded is True and not resolved_with_support else None
     if resolved_with_support:
         action = "advance"
         # The node just named goes to the back for one selection; see
@@ -739,6 +774,7 @@ def begin_turn(
         scored=graded,
         call1_fallback=call1_fallback,
         revealed_item=revealed_item,
+        answered_item=answered_item,
     )
 
 
@@ -801,7 +837,7 @@ def complete_turn(store: GraphStore, db: Store, phase1: Phase1) -> TurnResponse:
         utterance = _call2(state, "resolved_with_support", 0, labels, n_lit)
         leak_note = None
     else:
-        chunk = _chunk_for(store, state, action, phase1.item)
+        chunk = _chunk_for(store, state, action, _chunk_subject(store, phase1, action))
         utterance = _call2(state, action, phase1.hint_level, labels, n_lit, chunk)
         leak_note = None
         if phase1.item is not None:
