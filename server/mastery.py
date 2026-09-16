@@ -64,7 +64,7 @@ def decay_prereqs(theta_map: dict, prereqs: Iterable[str]) -> dict:
     return out
 
 
-def next_node(graph, mastery_map: dict) -> Optional[str]:
+def next_node(graph, mastery_map: dict, avoid: Optional[str] = None) -> Optional[str]:
     """Lowest-mastery unmastered node whose prerequisites are all mastered.
 
     `graph` is anything exposing `.node_ids` and `.prereqs(node_id)` - see
@@ -72,6 +72,18 @@ def next_node(graph, mastery_map: dict) -> Optional[str]:
 
     Relies on the prereq edges forming a DAG (build/validate.py enforces it); a
     cycle would make this loop forever by never producing a ready node.
+
+    `avoid` is the node a forced reveal (§6 layer 3) just named. That node has
+    just failed eight turns running, so it is almost always the lowest-mastery
+    ready node, and without this it came straight back: 28 of 32 reveals in a
+    simulated drive re-served the very item. The student then clicks what the
+    tutor said one turn earlier and is credited as unaided at hint 0 - layer 3's
+    zero-mastery reveal, repaid in full on the next turn. Avoiding the NODE, not
+    the item, because another node_click item on it has the same answer.
+
+    Only when there is somewhere else to go. If the revealed node is the only
+    unmastered ready node, it is returned: ending a session because the one
+    thing left to learn was just revealed is not what "graph mastered" means.
     """
     ready = [
         n for n in graph.node_ids
@@ -80,6 +92,8 @@ def next_node(graph, mastery_map: dict) -> Optional[str]:
     unmastered = [n for n in ready if mastery_map.get(n, 0.0) < THRESHOLD]
     if not unmastered:
         return None
+    if avoid is not None and len(unmastered) > 1:
+        unmastered = [n for n in unmastered if n != avoid]
     # Ties broken by id so selection is reproducible across runs and machines -
     # the eval reruns the same 60 dialogues and needs the same path.
     return min(unmastered, key=lambda n: (mastery_map.get(n, 0.0), n))
