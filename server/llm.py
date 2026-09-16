@@ -409,6 +409,18 @@ def _invoke(cfg: LLMCallConfig, system: str, user: str, tool: _Tool, label: str)
 # Call 1 - diagnosis and decision. Sees the answer.
 # ---------------------------------------------------------------------------
 
+def _history_lines(history: list) -> list:
+    """One prompt line per turn, from state.py's `{"role", "text"}` records.
+
+    This was `for who, text in history`, and unpacking a two-key dict yields its
+    KEYS: every turn reached both calls as the literal line "role: text". Call 1
+    was never shown a click and Call 2 never saw the dialogue, from the first
+    real call onward, and nothing failed - the prompt was well-formed, just
+    empty. Indexing by key makes a wrong shape a KeyError instead of a blank.
+    """
+    return [f"  {t['role']}: {t['text']}" for t in history] or ["  (none yet)"]
+
+
 def call1(
     *,
     item_prompt: str,
@@ -457,7 +469,7 @@ def call1(
             "CHUNK>>>",
         ]
     parts += ["", "RECENT TURNS (oldest first):"]
-    parts += [f"  {who}: {text}" for who, text in history] or ["  (none yet)"]
+    parts += _history_lines(history)
 
     STATS["call1"] += 1
     return _invoke(CONFIG.call1, system, "\n".join(parts), CALL1_TOOL, "call1")
@@ -510,7 +522,7 @@ def call2(
             "CHUNK>>>",
         ]
     parts += ["", "LAST TWO TURNS:"]
-    parts += [f"  {who}: {text}" for who, text in recent[-2:]] or ["  (none yet)"]
+    parts += _history_lines(recent[-2:])
 
     STATS["call2"] += 1
     return _invoke(CONFIG.call2, system, "\n".join(parts), CALL2_TOOL, "call2")
