@@ -66,6 +66,7 @@ import argparse
 import json
 import random
 import statistics
+import sys
 from collections import defaultdict
 from contextlib import contextmanager
 from dataclasses import dataclass, field
@@ -736,7 +737,25 @@ def main() -> int:
                              "(default). answerable = all 101, including the 32 "
                              "determined edge items; reproduces the 82%% figure "
                              "and is NOT a mastery claim.")
+    parser.add_argument("--real-model", action="store_true",
+                        help="allow the sweep to call the live model. Off by "
+                             "default: see the refusal below.")
     args = parser.parse_args()
+
+    # §9.1 IS A MOCK-UTTERANCE RESULT, and the report says so. `.env` sets
+    # MOCK_MODE=false for the demo, and this sweep inherits it: on day 13 a
+    # regeneration run sent 3,226 turns to Groq, spent the last of the daily
+    # token budget on its first 19, and then fell back to the mock on every
+    # turn after - producing a mock result, logged as real, at the cost of the
+    # day's §9.5 budget. The narrowing the sweep measures is deterministic and
+    # does not need the model; a run that wants it anyway has to say so.
+    if not CONFIG.mock_mode and not args.real_model:
+        print("MOCK_MODE is off (check .env). §9.1 is measured on mock utterances,\n"
+              "and 12 arms x 138 dialogues against the live model does not fit in a\n"
+              "day's token budget - it spends it and then falls back to the mock.\n"
+              "Run with MOCK_MODE=true, or pass --real-model if that is the point.",
+              file=sys.stderr)
+        return 2
 
     results = run_all(_default_n(args.n, args.population), population=args.population)
     print(render(results))

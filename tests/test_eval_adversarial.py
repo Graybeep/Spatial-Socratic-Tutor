@@ -187,3 +187,31 @@ def test_measure_splits_the_terminal_rate_by_item_type():
     for v in split.values():
         assert v["terminal_solve_rate"] is None or 0.0 <= v["terminal_solve_rate"] <= 1.0
         assert v["distinct_items"] >= 0
+
+
+def test_the_sweep_refuses_a_live_model_unless_asked(monkeypatch, capsys):
+    """Day 13: `.env` has MOCK_MODE=false and a regeneration run inherited it,
+    sending 3,226 turns to the provider and spending the day's budget on a
+    result that is mock-utterance by design."""
+    from eval import adversarial
+    from .conftest import config_override
+
+    def no_sweep(*a, **k):
+        raise AssertionError("the sweep ran against a live model")
+
+    monkeypatch.setattr(adversarial, "run_all", no_sweep)
+    monkeypatch.setattr("sys.argv", ["adversarial"])
+    with config_override(mock_mode=False):
+        assert adversarial.main() == 2
+    assert "MOCK_MODE" in capsys.readouterr().err
+
+
+def test_the_refusal_is_not_in_the_way_of_a_mock_run(monkeypatch):
+    from eval import adversarial
+
+    called = {}
+    monkeypatch.setattr(adversarial, "run_all", lambda *a, **k: called.setdefault("ran", []) or [])
+    monkeypatch.setattr(adversarial, "render", lambda results: "")
+    monkeypatch.setattr("sys.argv", ["adversarial"])
+    assert adversarial.main() == 0
+    assert "ran" in called

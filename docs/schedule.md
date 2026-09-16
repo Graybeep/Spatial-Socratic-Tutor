@@ -281,6 +281,33 @@ exits with an explanation; `--html` is the one the frozen graph came from.
 nothing, and its default styling fights the dimming channels. That was a choice
 made weeks ago; after today it is also not reversible.
 
+### 2026-09-16 (day 13, evening) — the §9.5 re-run, and where the budget went
+
+The re-run on `gpt-oss-120b` was started and did not finish. It is now
+**tomorrow's first task**, on a fresh daily budget. In order:
+
+- **Field 1 exposed a bug under every diagnosis ever measured.** Call 1 and Call 2
+  received every past turn as the literal line `role: text` (fixed `1cfc74a`).
+  §9.5's day-12 findings and §6.1's 0/60 bound are withdrawn in the writeup.
+- **Run 2 stopped itself at field 12** on a Call 1 that called a tool named
+  `commentary`; the new fallback refusal did its job. That 400 is now retried
+  as a parse failure (`614d066`).
+- **Run 3 reached field 15** and was killed by the OS for memory. Partial, not
+  committed: `zero` → `guessing` ×6, `correct` agreed with the click 15/15.
+- **The rest of the day's budget went to a mistake.** Checking whether §9.1 was
+  affected by the reveal fix, a regeneration inherited `MOCK_MODE=false` from
+  `.env` and sent 3,226 turns to Groq: 19 succeeded and exhausted the cap, the
+  rest fell back to the mock. Those turns are in `logs/turns.jsonl` as
+  `origin eval:adversarial:*`, build `ac2fc28`, `mock: false`, and are **not**
+  real-model evidence. `eval.adversarial` now refuses a live model unless passed
+  `--real-model`.
+
+Tomorrow, with the browser closed:
+
+```bash
+LLM_DAILY_LIMIT_WAIT_S=600 python -m eval.diagnosis_readthrough --json $T/diagnosis_readthrough.json --sheet $T/sheet.md
+```
+
 ### A note for whoever runs the projector test
 
 Run it against a server started **from current `main`**. Three things landed
