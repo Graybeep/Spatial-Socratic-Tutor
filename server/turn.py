@@ -87,6 +87,10 @@ class Phase1:
     #: runs - a degraded turn beats a dead one - but anything READING the
     #: decision as the model's (§9.5 above all) has to be able to tell.
     call1_fallback: bool = False
+    #: The item a §6 layer 3 forced reveal CLOSED. Not `item`: routing has
+    #: already opened the next one by the time Call 2 runs, and the reveal must
+    #: name what was revealed, never what is now being asked.
+    revealed_item: Optional[Item] = None
 
     @property
     def session_status(self) -> str:
@@ -246,6 +250,13 @@ def _call2_context(store: GraphStore, state: SessionState, phase1) -> tuple:
     """
     item = phase1.item
     action = "advance" if phase1.session_complete else phase1.action
+    if phase1.resolved_with_support and not phase1.session_complete:
+        # Routing rewrote the action to `advance` before this runs, so keying on
+        # phase1.action alone meant the "labels" row below was never reached:
+        # a reveal got advance's safe_label, which is computed against the NEXT
+        # item and named the revealed node only when the next item happened to
+        # sit on it.
+        action = "resolved_with_support"
     fidelity = CALL2_FIDELITY.get(action, "count")
 
     focus = phase1.graph_state.focus_nodes
@@ -253,14 +264,28 @@ def _call2_context(store: GraphStore, state: SessionState, phase1) -> tuple:
     category = _answer_category(item)
 
     if fidelity == "labels":
-        # Only `resolved_with_support` reaches here now. The `or` fallback names
-        # current_node, which after start_item() is an OPEN item's answer - the
-        # ordering that made backtrack leak on 100% of turns and advance on 40%.
-        # A forced reveal is the one action licensed to do that, and §6 layer 3
-        # charges the student's mastery for it.
-        return store.labels(focus) or (
-            [store.label(state.current_node)] if state.current_node else []
-        ), n_lit, category
+        # Only `resolved_with_support` reaches here. It names the REVEALED
+        # item's answer, read from phase1.revealed_item.
+        #
+        # This row was never reached before (see the key fix above): a reveal
+        # got advance's safe_label, computed from current_node, which is the
+        # NEXT item's node because routing runs before Call 2. safe_label kept
+        # the next item's answer out, but it named the revealed concept only
+        # when the next item sat on the same node - true in 28 of 32 simulated
+        # reveals only because that node came straight back. Otherwise the
+        # reveal named some other concept, or nothing.
+        revealed = phase1.revealed_item
+        if revealed is None:
+            return [], n_lit, category
+        node_ids = set(store.node_ids)
+        if "->" in revealed.answer:
+            ends = [e.strip() for e in revealed.answer.split("->")]
+            names = [store.label(e) for e in ends if e in node_ids]
+        elif revealed.answer in node_ids:
+            names = [store.label(revealed.answer)]
+        else:
+            names = [store.label(revealed.node_id)]
+        return names, n_lit, _answer_category(revealed)
 
     if fidelity == "count":
         # No identities at all. The graph has already said which nodes; saying
@@ -350,8 +375,9 @@ def _pick_item(store: GraphStore, state: SessionState, node_id: str) -> Optional
     return next((i for i in pool if _is_scorable(i)), pool[0])
 
 
-def _advance_to_next_node(store: GraphStore, state: SessionState) -> Optional[Item]:
-    node_id = mastery_mod.next_node(store, _mastery_map(state))
+def _advance_to_next_node(store: GraphStore, state: SessionState,
+                          avoid: Optional[str] = None) -> Optional[Item]:
+    node_id = mastery_mod.next_node(store, _mastery_map(state), avoid=avoid)
     if node_id is None:
         state.session_complete = True
         state.session_end_reason = "graph_mastered"
@@ -571,8 +597,14 @@ def begin_turn(
 
     # --- step 4d: route. Reads the mastery written immediately above. ------
     session_complete = False
+    revealed_node = None
+    revealed_item = item if resolved_with_support else None
     if resolved_with_support:
         action = "advance"
+        # The node just named goes to the back for one selection; see
+        # mastery.next_node. Otherwise it is the weakest ready node and returns
+        # at once, to a student who was told the answer a turn ago.
+        revealed_node = item.node_id
         state.completed_items.append(item.id)
         # SESSION-level, never reset. turns_on_item resets on every item, which
         # is what makes that a budget and this a circuit breaker.
@@ -619,7 +651,7 @@ def begin_turn(
         session_complete = True
         action = "advance"
     elif action == "advance":
-        next_item = _advance_to_next_node(store, state)
+        next_item = _advance_to_next_node(store, state, avoid=revealed_node)
         if next_item is None:
             session_complete = True
             state.session_end_reason = "graph_mastered"
@@ -670,6 +702,7 @@ def begin_turn(
         session_complete=session_complete or state.session_complete,
         scored=graded,
         call1_fallback=call1_fallback,
+        revealed_item=revealed_item,
     )
 
 
@@ -754,7 +787,7 @@ def complete_turn(store: GraphStore, db: Store, phase1: Phase1) -> TurnResponse:
             )
 
     phase1.leak_note = leak_note
-    state.record_history("tutor", utterance)
+    state.record_history("tutor", utterance, reveal=phase1.resolved_with_support)
 
     response = TurnResponse(
         session_id=state.session_id,

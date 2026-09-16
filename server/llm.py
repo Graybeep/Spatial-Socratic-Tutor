@@ -547,7 +547,11 @@ def call2(
             "CHUNK>>>",
         ]
     parts += ["", "LAST TWO TURNS:"]
-    parts += _history_lines(recent[-2:])
+    # A forced reveal names the answer by design, and the next item can share
+    # it - another node_click item on the same node has the same answer. Dropped
+    # HERE rather than by the caller, for the reason the parameter list is the
+    # guarantee: §1.5 should not depend on every caller remembering.
+    parts += _history_lines([t for t in recent[-2:] if not t.get("reveal")])
 
     STATS["call2"] += 1
     return _invoke(CONFIG.call2, system, "\n".join(parts), CALL2_TOOL, "call2")
