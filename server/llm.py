@@ -328,6 +328,11 @@ def _invoke(cfg: LLMCallConfig, system: str, user: str, tool: _Tool, label: str)
 
     last: Optional[str] = None
     attempt = 0
+    #: Requests actually sent. `attempt` counts retry budget spent, which a
+    #: non-retried 4xx never touches - so the old message said "failed after 2
+    #: attempts" about a call that sent one request and stopped (§10: the log
+    #: must say what happened, not what the budget allowed).
+    sent = 0
     waits = 0
     while attempt <= CONFIG.llm_max_retries:
         if attempt:
@@ -335,6 +340,7 @@ def _invoke(cfg: LLMCallConfig, system: str, user: str, tool: _Tool, label: str)
             log.warning("%s: retry %d/%d after %s",
                         label, attempt, CONFIG.llm_max_retries, last)
         try:
+            sent += 1
             with httpx.Client(timeout=cfg.timeout_s) as client:
                 r = client.post(url, headers=headers, json=body)
         except httpx.TimeoutException:
@@ -427,7 +433,7 @@ def _invoke(cfg: LLMCallConfig, system: str, user: str, tool: _Tool, label: str)
             attempt += 1
             continue
 
-    raise LLMError(f"{label} failed after {CONFIG.llm_max_retries + 1} attempts: {last}")
+    raise LLMError(f"{label} failed after {sent} request{'' if sent == 1 else 's'}: {last}")
 
 
 # ---------------------------------------------------------------------------
