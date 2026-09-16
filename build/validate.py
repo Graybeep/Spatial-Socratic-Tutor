@@ -292,9 +292,23 @@ def check_edge_item_anchors(graph: Graph, bank: ItemBank, rep: Report) -> None:
         elif n < floor:
             thin.append((item.id, anchor, n, item.difficulty))
 
-        # A distractor equal to the true `from` endpoint is not a distractor.
-        if "->" in item.answer and item.answer.split("->")[0] in (item.distractors or []):
-            collisions.append(item.id)
+        # NOT A COLLISION. This used to flag an edge item whose distractor list
+        # contained the answer's own `from` endpoint, on the reasoning that "a
+        # distractor equal to the key is not a distractor". That is MCQ
+        # reasoning applied to a field that does not mean that here.
+        #
+        # `distractors` is only an option set for `mcq` items. For a click item
+        # it is a NARROWING-ORDER hint: mock_tutor.candidate_order pushes the
+        # answer, then the distractors, then graph neighbours, and lit_nodes
+        # takes a prefix of that. An edge item is never served as MCQ, so its
+        # distractors are never shown as choices to pick between.
+        #
+        # For an edge `src->dst` the source is, by definition, a prerequisite of
+        # the target - so lit_nodes keeps it lit whether or not it is listed.
+        # Measured: all 17 scored edge items stay answerable at every rung, 14
+        # of them without the listing. The entry is redundant, not leaky.
+        #
+        # What actually matters for an edge item is checked below.
 
     if determined:
         worst = sorted(determined, key=lambda t: -t[2])[:5]
@@ -342,13 +356,7 @@ def check_edge_item_anchors(graph: Graph, bank: ItemBank, rep: Report) -> None:
         f"whole bank."
     )
 
-    if collisions:
-        rep.warn(
-            f"[edge anchor] {len(collisions)} edge item(s) list the answer's own "
-            f"`from` endpoint among their distractors, so one distractor is the "
-            f"key: {', '.join(collisions[:6])}"
-            + ("" if len(collisions) <= 6 else f", +{len(collisions) - 6} more")
-        )
+    check_edge_answers_survive_narrowing(graph, bank, rep)
 
     # The distribution, always, so a clean bank is visibly clean rather than
     # silently unchecked.
@@ -358,6 +366,73 @@ def check_edge_item_anchors(graph: Graph, bank: ItemBank, rep: Report) -> None:
         f"edge-item candidate counts (in-degree of the named anchor): {hist}. "
         f"Median {sorted(counts)[len(counts) // 2]}."
     )
+
+
+def check_edge_answers_survive_narrowing(graph: Graph, bank: ItemBank,
+                                         rep: Report) -> None:
+    """An edge answer needs BOTH endpoints lit, at every rung it can be asked at.
+
+    `_build_graph_state` derives `focus_edges` as the edges with both endpoints
+    in the focus set, and the client renders from that. So an edge item whose
+    source or target is dimmed is not a hard item - it is an item the interface
+    has made unanswerable, and the student's wrong click is scored against them
+    (§7 computes mastery from it) for a candidate that was never on screen.
+
+    THIS REPLACES A CHECK THAT WAS LOOKING AT THE WRONG THING. The old one warned
+    when a distractor equalled the answer's `from` endpoint, reasoning that a
+    distractor equal to the key is not a distractor. That is true for `mcq`, the
+    only item type whose distractors are options; for a click item the list is a
+    narrowing-order hint and including the source endpoint is redundant at worst.
+
+    It is checked here rather than left to the eval because `NARROW_SCHEDULE` is
+    a research variable - `docs/schedule.md` books a projector test that may
+    change it - and narrowing harder is exactly the edit that would break this
+    silently.
+    """
+    from server import mock_tutor
+    from server.config import CONFIG
+    from server.graph_store import GraphStore
+
+    try:
+        store = GraphStore.load()
+    except Exception as exc:  # noqa: BLE001 - validate must not die on this
+        rep.note(f"[edge narrowing] skipped: {exc}")
+        return
+
+    edge_items = [i for i in bank.items if i.type == "edge_click"]
+    if not edge_items:
+        return
+
+    broken: list = []
+    for item in edge_items:
+        src, _, dst = item.answer.partition("->")
+        for level in range(1, CONFIG.hint_max + 2):
+            lit = mock_tutor.lit_nodes(store, item, level)
+            if not lit:
+                continue
+            if src not in lit or dst not in lit:
+                broken.append((item.id, item.answer, level, len(lit),
+                               src in lit, dst in lit))
+                break
+
+    scored_broken = [b for b in broken
+                     if next((i.scorable for i in edge_items if i.id == b[0]), True)]
+
+    if broken:
+        rep.warn(
+            f"[edge narrowing] {len(broken)} edge item(s) lose an endpoint as the "
+            f"map narrows, so the answer edge cannot be clicked "
+            f"({len(scored_broken)} of them SCORED, where the student is then "
+            f"marked wrong for a candidate that was not on screen): "
+            + ", ".join(f"{iid} ({ans} gone at {n} lit)"
+                        for iid, ans, _lvl, n, _s, _d in broken[:4])
+        )
+    else:
+        rep.note(
+            f"[edge narrowing] all {len(edge_items)} edge items keep both "
+            f"endpoints lit at every rung of NARROW_SCHEDULE"
+            f"={CONFIG.narrow_schedule}, so every edge answer stays clickable."
+        )
 
 
 def check_answer_spans(graph: Graph, bank: ItemBank, rep: Report) -> None:

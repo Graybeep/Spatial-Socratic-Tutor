@@ -113,14 +113,30 @@ def test_related_edges_are_not_candidates():
         "a related in-edge was counted as a candidate and hid a determined item")
 
 
-def test_distractor_equal_to_the_true_from_endpoint_is_flagged():
+def test_a_from_endpoint_in_the_distractors_is_NOT_flagged():
+    """It used to be, and that was MCQ reasoning applied to the wrong field.
+
+    `distractors` is an option set only for `mcq`. For a click item it is a
+    narrowing-order hint - `mock_tutor.candidate_order` pushes the answer, then
+    the distractors, then graph neighbours - and an edge item is never served as
+    MCQ, so the list is never shown as choices. For an edge `src->dst` the source
+    is by definition a prerequisite of the target and stays lit regardless, so
+    listing it is redundant rather than leaky: measured, 14 of the 17 scored edge
+    items stay answerable at every rung WITHOUT the listing.
+
+    What replaced it is `check_edge_answers_survive_narrowing`, which asks the
+    question that has a wrong answer.
+    """
     graph = _graph([("n0", "n3", "prereq"), ("n1", "n3", "prereq"), ("n2", "n3", "prereq")])
     bank = _bank([_edge_item("itm_1", "n3", "n0->n3", distractors=["n0", "n1", "n2"])])
 
     rep = _run(graph, bank)
 
     coll = [w for w in rep.warnings if "`from` endpoint among their distractors" in w]
-    assert len(coll) == 1 and "itm_1" in coll[0]
+    assert not coll, (
+        "the retired MCQ-semantics warning is back; it fires on 10 items in the "
+        "shipped bank, none of which is a defect"
+    )
 
 
 def test_an_anchor_that_is_not_the_to_endpoint_is_called_out_not_scored():
@@ -168,3 +184,65 @@ def test_the_real_bank_has_its_determined_items_demoted_not_scored():
     assert len(scored) == 17
     assert all(len([e for e in graph.edges
                     if e.type == "prereq" and e.to == i.node_id]) == 2 for i in scored)
+
+
+# --- the check that replaced it ----------------------------------------------
+
+
+def test_the_shipped_bank_keeps_every_edge_answer_clickable():
+    """`focus_edges` needs BOTH endpoints lit. An edge item that loses one is not
+    a hard item - it is one the interface made unanswerable, and §7 still scores
+    the student's wrong click against them."""
+    from build import validate as V
+    from server.graph_store import GraphStore
+    from server import mock_tutor
+    from server.config import CONFIG
+
+    store = GraphStore.load()
+    edge_items = [i for i in store.bank.items if i.type == "edge_click"]
+    assert edge_items, "no edge items; this test proved nothing"
+
+    broken = []
+    for item in edge_items:
+        src, _, dst = item.answer.partition("->")
+        for level in range(1, CONFIG.hint_max + 2):
+            lit = mock_tutor.lit_nodes(store, item, level)
+            if lit and (src not in lit or dst not in lit):
+                broken.append((item.id, item.answer, level, len(lit)))
+                break
+    assert not broken, f"edge answers unreachable under narrowing: {broken}"
+
+
+def test_a_narrowing_that_drops_an_endpoint_is_caught(monkeypatch):
+    """The guard must be able to fail, or it guards nothing.
+
+    NARROW_SCHEDULE is a research variable - docs/schedule.md books a projector
+    test that may change it - and narrowing harder is exactly the edit that would
+    break an edge item silently.
+    """
+    from build import validate as V
+    from server.graph_store import GraphStore
+    from server.config import CONFIG
+
+    store = GraphStore.load()
+    edge = next(i for i in store.bank.items if i.type == "edge_click")
+
+    # TWO lit nodes, which is the tightest the interface will ever go:
+    # `candidate_floor` is max(2, ...), so one lit node is unreachable by
+    # construction - and rightly, since a single lit node IS the answer.
+    #
+    # At two, `candidate_order` yields [target, first distractor]. Unless that
+    # distractor happens to be the edge's source, the answer edge loses an
+    # endpoint and stops being clickable. That is the regression this guards.
+    from tests.conftest import config_override
+    with config_override(narrow_schedule_raw="0,2", max_guess_probability=0.5):
+        assert CONFIG.narrow_schedule[1] == 2, (
+            f"could not construct a two-node rung; got {CONFIG.narrow_schedule}"
+        )
+        rep = V.Report()
+        V.check_edge_answers_survive_narrowing(store.graph, store.bank, rep)
+
+    assert any("[edge narrowing]" in w for w in rep.warnings), (
+        "narrowing to a single lit node left every edge answer intact, which is "
+        "impossible - the check is not looking at the lit set"
+    )
