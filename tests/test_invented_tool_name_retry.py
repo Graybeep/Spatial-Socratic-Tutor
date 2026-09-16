@@ -94,3 +94,17 @@ def test_an_ordinary_400_still_stops_at_once(monkeypatch):
     with pytest.raises(llm_mod.LLMError):
         _call2()
     assert len(sent) == 1
+
+
+def test_the_failure_message_counts_requests_actually_sent(monkeypatch):
+    """A 4xx that stops at once sent one request; saying "2 attempts" in the
+    log misstates what happened (§10)."""
+    _wire(monkeypatch, (400, BAD_REQUEST))
+    with pytest.raises(llm_mod.LLMError, match="after 1 request:"):
+        _call2()
+
+
+def test_a_retried_failure_counts_both_requests(monkeypatch):
+    _wire(monkeypatch, (400, INVENTED), (400, INVENTED))
+    with pytest.raises(llm_mod.LLMError, match="after 2 requests:"):
+        _call2()
