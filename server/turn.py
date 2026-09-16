@@ -83,6 +83,10 @@ class Phase1:
     scored: Optional[bool] = None
     #: Set when guard layer 1 fired. Always logged (§6, §10).
     leak_note: Optional[str] = None
+    #: True when Call 1 failed and `decision` is the mock's. The turn still
+    #: runs - a degraded turn beats a dead one - but anything READING the
+    #: decision as the model's (§9.5 above all) has to be able to tell.
+    call1_fallback: bool = False
 
     @property
     def session_status(self) -> str:
@@ -419,12 +423,13 @@ def _build_graph_state(
 # per-action line §5 requires. Every fallback is logged (§10).
 
 
-def _call1(store, state, item, response, graded) -> Call1Decision:
+def _call1(store, state, item, response, graded) -> tuple[Call1Decision, bool]:
+    """The decision, and whether it is the mock's standing in for a failed call."""
     if CONFIG.mock_mode:
-        return mock_tutor.mock_call1(store, state, item, response, graded)
+        return mock_tutor.mock_call1(store, state, item, response, graded), False
 
     try:
-        return llm_mod.call1(
+        decision = llm_mod.call1(
             item_prompt=item.prompt,
             answer=item.answer,
             item_type=item.type,
@@ -439,7 +444,8 @@ def _call1(store, state, item, response, graded) -> Call1Decision:
     except llm_mod.LLMError as exc:
         # A degraded turn beats a dead one, but never a silent one.
         _log_event("call1_fallback", {"error": str(exc)[:400]})
-        return mock_tutor.mock_call1(store, state, item, response, graded)
+        return mock_tutor.mock_call1(store, state, item, response, graded), True
+    return decision, False
 
 
 #: §5's gate table, positive half. Only these two actions may receive source
@@ -539,7 +545,7 @@ def begin_turn(
     graded = mock_tutor.grade(item, response)
 
     # --- step 3: Call 1 ----------------------------------------------------
-    decision = _call1(store, state, item, response, graded)
+    decision, call1_fallback = _call1(store, state, item, response, graded)
 
     # --- step 4b: guards decide the final action AND whether we may score ---
     # Guard layer 2: the server owns the counter, the model only asked.
@@ -663,6 +669,7 @@ def begin_turn(
         resolved_with_support=resolved_with_support,
         session_complete=session_complete or state.session_complete,
         scored=graded,
+        call1_fallback=call1_fallback,
     )
 
 
