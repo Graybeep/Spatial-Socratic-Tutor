@@ -40,6 +40,61 @@ def test_the_refusal_is_wired_to_mock_mode(monkeypatch, capsys):
     assert "MOCK_MODE" in capsys.readouterr().err
 
 
+# --- a fallback is not a diagnosis ------------------------------------------
+
+def _model_that_dies_after(n_ok):
+    """A Call 1 that answers `n_ok` times and then hits the daily cap."""
+    from server import llm as llm_mod
+    from server import turn as turn_mod
+    calls = {"n": 0}
+
+    def call1(**_):
+        calls["n"] += 1
+        if calls["n"] > n_ok:
+            raise llm_mod.LLMError("HTTP 429 DAILY quota exhausted")
+        return turn_mod.Call1Decision(
+            student_state="stuck", diagnosis="model prose", correct=False,
+            requested_action="hint_visual", requested_hint_level=1,
+            focus_nodes=[], expects="node_click",
+        )
+    return call1
+
+
+def test_a_fallback_stops_the_run_and_keeps_only_model_fields(monkeypatch, tmp_path, capsys):
+    """The run that crosses the daily cap. Before this, every turn after the cap
+    was recorded with the mock's template as the model's diagnosis."""
+    from server import llm as llm_mod
+    from server import turn as turn_mod
+    from .conftest import config_override
+
+    # Opening turn + 2 answered turns succeed; the next Call 1 fails.
+    monkeypatch.setattr(llm_mod, "call1", _model_that_dies_after(3))
+    monkeypatch.setattr(turn_mod, "complete_turn", lambda *a, **k: None)
+    out = tmp_path / "rt.json"
+    monkeypatch.setattr("sys.argv", ["diagnosis_readthrough", "--n", "30",
+                                     "--pace-s", "0", "--max-turns", "3",
+                                     "--json", str(out)])
+    with config_override(mock_mode=False):
+        assert RT.main() == 3
+    assert "fell back" in capsys.readouterr().err
+
+    import json
+    fields = json.loads(out.read_text(encoding="utf-8"))["fields"]
+    assert len(fields) == 2
+    assert {f["diagnosis"] for f in fields} == {"model prose"}
+
+
+def test_a_fallback_on_the_opening_turn_records_nothing(monkeypatch, store):
+    from server import llm as llm_mod
+    from .conftest import config_override
+
+    monkeypatch.setattr(llm_mod, "call1", _model_that_dies_after(0))
+    with config_override(mock_mode=False):
+        with pytest.raises(RT.Call1FellBack) as exc:
+            RT.collect(5, 0, 1)
+    assert exc.value.fields_so_far == 0
+
+
 # --- the student answers honestly -------------------------------------------
 
 @pytest.mark.parametrize("expects,pick,attr,value", [
