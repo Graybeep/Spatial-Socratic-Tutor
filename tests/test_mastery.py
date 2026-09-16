@@ -92,6 +92,35 @@ def test_next_node_respects_prerequisites():
     assert mastery.next_node(graph, mastered_root) == "mid"
 
 
+def test_next_node_avoids_the_node_a_reveal_just_named():
+    """§6 layer 3 awards zero for a forced reveal. Re-serving the node at once
+    would let the student click what they were just told, credited at hint 0."""
+    graph = FakeGraph({"a": [], "b": [], "c": []})
+    theta = {"a": 0.5, "b": 0.2, "c": 0.4}
+    assert mastery.next_node(graph, theta) == "b"
+    assert mastery.next_node(graph, theta, avoid="b") == "c"
+
+
+def test_the_avoided_node_comes_back_on_the_next_selection():
+    """Avoidance is one selection, not a ban: nothing is stored."""
+    graph = FakeGraph({"a": [], "b": []})
+    theta = {"a": 0.5, "b": 0.2}
+    assert mastery.next_node(graph, theta, avoid="b") == "a"
+    assert mastery.next_node(graph, theta) == "b"
+
+
+def test_the_only_ready_node_is_returned_even_if_avoided():
+    """Ending the session as 'mastered' because the last thing to learn was just
+    revealed would be a lie about why it ended."""
+    graph = FakeGraph({"root": [], "leaf": ["root"]})
+    assert mastery.next_node(graph, {"root": 0.1, "leaf": 0.0}, avoid="root") == "root"
+
+
+def test_avoid_does_not_resurrect_a_mastered_node():
+    graph = FakeGraph({"a": [], "b": []})
+    assert mastery.next_node(graph, {"a": 0.9, "b": 0.9}, avoid="a") is None
+
+
 def test_next_node_picks_lowest_mastery_among_ready():
     graph = FakeGraph({"a": [], "b": [], "c": []})
     assert mastery.next_node(graph, {"a": 0.5, "b": 0.2, "c": 0.4}) == "b"
