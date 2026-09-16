@@ -142,8 +142,8 @@ much smaller scale.
 | ~~2026-09-14~~ | 11 | confirm-or-undo watched by a non-author | **SLIPPED — never booked.** Last slot is week 3, then it becomes a limitation, above |
 | 2026-09-18…24 | week 3 | both of the above, at the projector, contrast check first | rebooked |
 | ~~2026-09-22~~ | 19 | **API key cut** — resolved early, on day 12. See below | **MET, with a caveat** |
-| ~~2026-09-18…24~~ | 12 | diagnosis read-through, 30 `diagnosis` fields (§9.5) | **RUN, and it found something** — see [diagnosis-readthrough.md](writeup/diagnosis-readthrough.md). On `qwen3.8-27b`, not the shipping model |
-| 2026-09-18…24 | week 3 | **repeat §9.5 on `gpt-oss-120b`**, the model the demo ships | one command, one day's token budget |
+| ~~2026-09-18…24~~ | 12 | diagnosis read-through, 30 `diagnosis` fields (§9.5) | ~~**RUN, and it found something**~~ **INVALIDATED on day 13**: Call 1 was sent `role: text` for every past turn, so the model never saw a click. See [diagnosis-readthrough.md](writeup/diagnosis-readthrough.md) |
+| 2026-09-16 | 13 | **repeat §9.5 on `gpt-oss-120b`**, the model the demo ships — now also the first §9.5 run in which the model can see the dialogue | pulled forward; stopped at field 3 on day 13 when field 1 exposed the history bug, restarted on the fixed build |
 | — | 12 | §6.1 parametric-reconstruction rate | **0/60, reported as a bound.** 95% upper bound 4.9%; pools 4 origins. A by-product of the §9.5 run, not a designed measurement |
 | ~~2026-09-17~~ | 14 | **dependency freeze** (§1.8), end of week 2 | **MET a day early**, on day 13 — enforced by a test, see below |
 | 2026-09-25 | 22 | **feature freeze.** Tag `feature-freeze` | pending |

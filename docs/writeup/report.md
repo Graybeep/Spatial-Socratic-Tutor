@@ -325,6 +325,14 @@ The measure is weakest where the phenomenon is strongest.
 
 Full write-up: **[diagnosis-readthrough.md](diagnosis-readthrough.md)**.
 
+> **WITHDRAWN pending re-run (2026-09-16).** Both instruments below ran against a
+> Call 1 that received every past turn as the literal line `role: text` — a
+> formatting bug in `server/llm.py`, fixed in `1cfc74a`. The diagnosis-quality
+> claims in this section measure a model shown no history and are not evidence
+> about the model. Point 2 and point 3 (inertness, enforced by test) do not
+> depend on what the model saw and stand. See the note at the top of
+> diagnosis-readthrough.md.
+
 Thirty answered turns, three student policies whose true knowledge state is known
 by construction, Call 1 on `qwen/qwen3.8-27b`:
 
