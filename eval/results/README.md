@@ -17,6 +17,7 @@ the cost this stamp removes.)
 Regenerate **to a temp path first, then copy in**:
 
 ```bash
+export MOCK_MODE=true   # .env ships false for the demo; these results are mock-utterance
 T=$(mktemp -d)
 python -m eval.adversarial                      --json $T/leakage.json
 python -m eval.adversarial --population answerable --json $T/leakage_answerable.json
