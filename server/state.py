@@ -88,7 +88,9 @@ class SessionState:
     n_obs: dict = field(default_factory=dict)
     completed_items: list = field(default_factory=list)
     #: Rolling dialogue history. Call 1 gets the last 6, Call 2 the last 2
-    #: (CLAUDE.md §5). Entries are {"role": "tutor"|"student", "text": str}.
+    #: (CLAUDE.md §5). Entries are {"role": "tutor"|"student", "text": str},
+    #: plus "reveal": True on a §6 layer 3 forced reveal - the one tutor line
+    #: that names an answer on purpose, and which Call 2 must never be handed.
     history: list = field(default_factory=list)
     session_complete: bool = False
     #: SESSION-level count of §6 layer 3 forced reveals. Distinct from
@@ -133,8 +135,12 @@ class SessionState:
         self.visual_narrow_level = 0
         self.turns_on_item = 0
 
-    def record_history(self, role: str, text: str, keep: int = 12) -> None:
-        self.history.append({"role": role, "text": text})
+    def record_history(self, role: str, text: str, keep: int = 12,
+                       reveal: bool = False) -> None:
+        entry = {"role": role, "text": text}
+        if reveal:
+            entry["reveal"] = True
+        self.history.append(entry)
         del self.history[:-keep]
 
     def recent(self, n: int) -> list:
