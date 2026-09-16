@@ -239,6 +239,27 @@ def _is_daily_limit(r) -> bool:
     return "per day" in r.text.lower() or "tpd" in r.text.lower()
 
 
+def _invented_tool_name(r) -> bool:
+    """A 400 that is a SAMPLED fault, not a request fault.
+
+    Groq validates the tool call server-side and returns 400 `tool_use_failed`
+    when the model names a tool that was not offered - gpt-oss leaks its own
+    channel names, `json` from 20b and `commentary` from 120b. The request was
+    fine; the sample was not, and the next sample usually is. That makes it a
+    schema-invalid response, which `llm_max_retries` already covers, arriving
+    under a status code that the loop otherwise reads as "will not fix itself".
+
+    Only this sub-case. `tool_use_failed` also covers truncation, which is
+    deterministic at a given max_tokens and would fail identically on retry.
+    """
+    if r.status_code != 400 or "which was not in request.tools" not in r.text:
+        return False
+    try:
+        return (r.json().get("error") or {}).get("code") == "tool_use_failed"
+    except Exception:  # noqa: BLE001 - an error body that is not JSON
+        return False
+
+
 def _explain(r) -> str:
     """The provider's error, plus what to do about it when we can tell.
 
@@ -264,9 +285,8 @@ def _explain(r) -> str:
     # is confidently wrong on two thirds of its hits.
     if "which was not in request.tools" in body:
         return (f"{body}  <-- the model invented a TOOL NAME (gpt-oss-20b likes "
-                f"'json'). Groq rejects this server-side, so it cannot be "
-                f"recovered in the extractor: use a model that honours the "
-                f"forced name, or fall back")
+                f"'json', 120b 'commentary'). Groq rejects this server-side, so "
+                f"the extractor never sees it; it is retried as a parse failure")
     if "did not call a tool" in body or "as JSON" in body:
         return (f"{body}  <-- this is usually TRUNCATION, not refusal: raise "
                 f"max_tokens for this call (reasoning models spend output "
@@ -370,8 +390,13 @@ def _invoke(cfg: LLMCallConfig, system: str, user: str, tool: _Tool, label: str)
             continue
 
         if r.status_code != 200:
-            # 4xx will not fix itself on a retry; 5xx might.
+            # 4xx will not fix itself on a retry; 5xx might. One 400 is the
+            # model's output rejected at the provider, and that one might too.
             last = f"HTTP {r.status_code}: {_explain(r)}"
+            if _invented_tool_name(r):
+                STATS["parse_failures"] += 1
+                attempt += 1
+                continue
             if r.status_code < 500:
                 log.error("%s: %s", label, last)
                 break
