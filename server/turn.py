@@ -214,6 +214,42 @@ def _answer_surface(store: GraphStore, item) -> set:
     return surface
 
 
+def _layer1_terms(store: GraphStore, item) -> tuple[str, list, list]:
+    """(answer, aliases, context_phrases) for guard layer 1, per answer kind.
+
+    An EDGE item's answer is an id pair ("resource_allocation->best_effort") and
+    its aliases were deleted as unusable, so layer 1 was matching utterances
+    against nothing it could find. Measured on day 13: an utterance naming the
+    FROM endpoint was caught on 0 of 49 edge items, and naming BOTH endpoints on
+    5 of 49. Node items: 52 of 52. Layer 1 is the only live check on parametric
+    reconstruction, and the §6.1 rate is read from its notes, so both were blind
+    on half the scored bank.
+
+    The FROM endpoint is the answer surface; the TO endpoint (item.node_id) is
+    the anchor `ask` is licensed to name - see `_call2_context`. So FROM joins
+    the aliases, and context_phrases become every label EXCEPT the answer's:
+    identical to before for a node item, and for an edge item it keeps the
+    anchor in context, so "Flow Control" is still stripped when the answer is
+    "Flow" rather than tripping on every legitimate question.
+
+    And the id pair itself stops being screened. It was matched as though it
+    were an alias, and "fifo->priority_queuing" tokenizes to a string that
+    contains the anchor: the one false positive on the edge bank (itm_0117,
+    already present before this) was a question naming "Priority Queuing".
+    """
+    answer = item.answer
+    aliases = list(item.answer_aliases)
+    answer_node = item.node_id
+    if "->" in item.answer:
+        source = item.answer.split("->")[0].strip()
+        if source in set(store.node_ids):
+            answer = store.label(source)
+            aliases.append(answer)
+            answer_node = source
+    context = [n.label for n in store.graph.nodes if n.id != answer_node]
+    return answer, aliases, context
+
+
 def _answer_category(item) -> str:
     """The KIND of thing being asked for, carrying no identity.
 
@@ -769,10 +805,11 @@ def complete_turn(store: GraphStore, db: Store, phase1: Phase1) -> TurnResponse:
         utterance = _call2(state, action, phase1.hint_level, labels, n_lit, chunk)
         leak_note = None
         if phase1.item is not None:
+            answer, aliases, context = _layer1_terms(store, phase1.item)
             utterance, leak_note = guards.screen_utterance(
                 utterance,
-                phase1.item.answer,
-                phase1.item.answer_aliases,
+                answer,
+                aliases,
                 regenerate=lambda: _call2(
                     state, action, phase1.hint_level, labels, n_lit, chunk),
                 fallback=mock_tutor.fallback_utterance(action),
@@ -780,10 +817,7 @@ def complete_turn(store: GraphStore, db: Store, phase1: Phase1) -> TurnResponse:
                 # Every other concept name on the map. Without these, a hint
                 # naming the lit node "Flow Control" would be recorded as
                 # leaking the answer "Flow" - both are nodes here.
-                context_phrases=[
-                    n.label for n in store.graph.nodes
-                    if n.id != phase1.item.node_id
-                ],
+                context_phrases=context,
             )
 
     phase1.leak_note = leak_note
