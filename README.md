@@ -64,14 +64,14 @@ rather than a footnote.
 ```bash
 pip install -r requirements.txt
 python -m build.validate         # strict; must be clean
-python -m pytest                 # 322 tests
+python -m pytest
 python -m server.main            # http://127.0.0.1:8000
 ```
 
 Then the client, in a second terminal:
 
 ```bash
-cd client && npm install
+cd client && npm ci        # the lockfile, exactly (§1.8 freeze)
 npm run dev                      # http://localhost:5173
 ```
 

@@ -145,6 +145,7 @@ much smaller scale.
 | ~~2026-09-18…24~~ | 12 | diagnosis read-through, 30 `diagnosis` fields (§9.5) | **RUN, and it found something** — see [diagnosis-readthrough.md](writeup/diagnosis-readthrough.md). On `qwen3.8-27b`, not the shipping model |
 | 2026-09-18…24 | week 3 | **repeat §9.5 on `gpt-oss-120b`**, the model the demo ships | one command, one day's token budget |
 | — | 12 | §6.1 parametric-reconstruction rate | **0/60, reported as a bound.** 95% upper bound 4.9%; pools 4 origins. A by-product of the §9.5 run, not a designed measurement |
+| ~~2026-09-17~~ | 14 | **dependency freeze** (§1.8), end of week 2 | **MET a day early**, on day 13 — enforced by a test, see below |
 | 2026-09-25 | 22 | **feature freeze.** Tag `feature-freeze` | pending |
 | 2026-09-29 | 26 | **video walkthrough recorded.** Tag `demo` | pending — **script it around narrowing, not mastery.** See below |
 
@@ -248,6 +249,37 @@ correct answer reaches 0.56 against a 0.60 threshold. **That was wrong** — ite
 are re-served and re-scored, and 23 nodes reach mastery in the run above. The
 arithmetic assumed one scorable item meant one scoring observation. Recorded
 because the wrong version is the more plausible-sounding one.
+
+### 2026-09-16 (day 13) — the dependency freeze, and what it closed
+
+§1.8 closes dependencies at the end of week 2 (2026-09-17). It was never in the
+table above, which is how a hard rule turns into a thing someone remembers on
+day 15. Done a day early:
+
+- **The declared set is the imported set.** Python: `fastapi`, `uvicorn[standard]`,
+  `pydantic`, `httpx`, plus `pytest` for dev. Client: `react`, `react-dom`, and the
+  Vite/TypeScript toolchain. Every third-party import in `server/`, `build/`,
+  `eval/`, `tests/` and `client/src/` is one of these; nothing is declared and
+  unused.
+- **Versions are pinned exactly** to what the suite passed against on the day,
+  in both `requirements.txt` and `client/package.json`. The lockfile's resolved
+  tree did not move. The demo machine on day 26 installs what was tested, not
+  whatever is newest — use `npm ci`, not `npm install`.
+- **`tests/test_dependency_freeze.py` enforces it.** A new name in either
+  manifest, or an import of anything undeclared, fails the suite. Version bumps
+  are not blocked; new names are. The fix for a red test is not to edit the
+  frozen set.
+
+**What it closed, deliberately: PyMuPDF.** `build/chunk.py` has a `PdfChunker`
+that imports it lazily. The chapter arrived as HTML, so there was never a PDF to
+run it on, and it was not added before the door shut. `--pdf` is now a path that
+exits with an explanation; `--html` is the one the frozen graph came from.
+
+**Also closed, and worth saying in the writeup: React Flow.** CLAUDE.md §2 names
+`src/Graph.tsx` as React Flow. The client draws raw SVG instead, and
+`Graph.tsx`'s header says why: with frozen coordinates a graph library earns
+nothing, and its default styling fights the dimming channels. That was a choice
+made weeks ago; after today it is also not reversible.
 
 ### A note for whoever runs the projector test
 
