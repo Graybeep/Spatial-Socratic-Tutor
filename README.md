@@ -242,11 +242,3 @@ NARROW_SCHEDULE=0,25,18,12,8 python -m server.main
 | `client/src/Chat.tsx` | the rail — transcript, composer, turn budget, node panel |
 
 Full layout in `CLAUDE.md` §2.
-
-## Contributing
-
-One person, both roles. "Person A" (content/graph/scoring) and "Person B"
-(interface/tutor loop) name the two layers, not two people — see `CLAUDE.md` §0.
-Neither layer edits the other; schemas are the contract (§1.9). `main` must always
-run; push at least daily (§13.2). No configuration values hard-coded in source
-(§1.10, §13.1).
