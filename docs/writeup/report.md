@@ -649,7 +649,7 @@ a reviewer would have called adequate.
   what broke it: the Call 1 prompt rewrite landed an hour and three quarters
   after the day-12 run, so day 12 had been using a different prompt all along.
   An A/B that afternoon showed the old prompt reproducing the day-12 degeneracy
-  on a fully fixed harness. §5.5 now carries the controls table; §5.6 carries
+  on a fully fixed harness. §5.5 now carries the inference table; §5.6 carries
   the corrected attribution. **The lesson is not "check your commits" — it is
   that a fix you have just shipped is the most attractive available explanation
   for any improvement that follows it.**
