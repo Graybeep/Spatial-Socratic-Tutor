@@ -347,6 +347,30 @@ honest. Without that case the A/B was a clean 8/10-vs-6/10 win.
 
 `n=2` per cell. Actionable before the demo, not quotable as a measurement.
 
+**A second control turned up in the logs, and it points the same way.** Day 13's
+run 1 (`7ba8078`, 4 turns) predates the history fix by four minutes and already
+carries the new prompt — the one cell that separates prompt from history on the
+day-12 side. With the history still broken it produced `guessing` on 2 of 4
+turns with falsifiable reasoning, where day 12's old prompt managed 1 in 30. So
+the two controls agree from opposite directions:
+
+| | prompt | history | reaches for a specific state? |
+|---|---|---|---|
+| day 12 | old | broken | **no** — `stuck`/`on_track` |
+| run 1 | **new** | broken | **yes** — `guessing` 2/4 |
+| A/B arm B (day 18) | old | **fixed** | **no** — `stuck` to both |
+| A/B arm A (day 18) | new | fixed | **yes** |
+
+The prompt tracks the outcome in all four rows; the history fix does not. What
+the history fix demonstrably changes is **grounding**: run 1's diagnoses are
+well-reasoned about nothing (*"their recent inputs were text"* — an accurate
+report of our own bug), run 2's name the nodes actually clicked.
+
+**Day 12 is now withdrawn for cause, not merely superseded.** Its build is
+`77b7e5d-dirty` — an uncommitted tree with no commit that restores it — and its
+model was never logged. A number whose code and model cannot both be named was
+never admissible, independently of any later run disagreeing with it.
+
 **Still not isolated: the model.** `qwen3.8-27b` vs `gpt-oss-120b` remains
 confounded, and day 12's model is not even in the log — the `call1_model` stamp
 postdates it. The control is one command
