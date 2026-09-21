@@ -40,7 +40,7 @@ from __future__ import annotations
 import json
 import time
 from dataclasses import dataclass, field
-from typing import Optional
+from typing import NamedTuple, Optional
 
 from server import build_info
 from server import guards
@@ -87,6 +87,12 @@ class Phase1:
     #: runs - a degraded turn beats a dead one - but anything READING the
     #: decision as the model's (§9.5 above all) has to be able to tell.
     call1_fallback: bool = False
+    #: True when Call 2 failed and `utterance` is a canned string from
+    #: prompts/fallback_*.txt rather than the model's. Same argument as
+    #: call1_fallback, one call over: §6.1 asks whether the MODEL reconstructed
+    #: an answer from its weights, and a template has no weights. Such a turn is
+    #: logged with mock=false and must not sit in that denominator.
+    call2_fallback: bool = False
     #: The item a §6 layer 3 forced reveal CLOSED. Not `item`: routing has
     #: already opened the next one by the time Call 2 runs, and the reveal must
     #: name what was revealed, never what is now being asked.
@@ -573,26 +579,41 @@ def _chunk_subject(store: GraphStore, phase1, action: str):
     return answered
 
 
+class Call2Result(NamedTuple):
+    """An utterance plus whether the model actually wrote it.
+
+    Returned rather than a bare str so the caller can log the difference. A
+    canned fallback and a model utterance are the same type and read the same
+    on screen; the only place the distinction survives is here.
+    """
+
+    utterance: str
+    fell_back: bool = False
+
+
 def _call2(state, action: str, hint_level: int, labels: list, n_lit: int,
-           chunk: Optional[str] = None) -> str:
+           chunk: Optional[str] = None) -> Call2Result:
     if CONFIG.mock_mode:
-        return mock_tutor.mock_call2(action, hint_level, labels, n_lit, chunk).utterance
+        # MOCK_MODE is not a fallback: it is the configured tutor, and the turn
+        # record already carries mock=true. Flagging it here would double-count.
+        return Call2Result(
+            mock_tutor.mock_call2(action, hint_level, labels, n_lit, chunk).utterance)
 
     try:
         # No item, no answer, no aliases. `chunk` is None on every action but
         # advance and explain, and llm.call2 asserts that rather than trusting
         # this caller (§5).
-        return llm_mod.call2(
+        return Call2Result(llm_mod.call2(
             action=action,
             hint_level=hint_level,
             focus_labels=labels,
             n_lit=n_lit,
             recent=state.history[-2:],
             chunk=chunk,
-        ).utterance
+        ).utterance)
     except llm_mod.LLMError as exc:
         _log_event("call2_fallback", {"action": action, "error": str(exc)[:400]})
-        return mock_tutor.fallback_utterance(action)
+        return Call2Result(mock_tutor.fallback_utterance(action), fell_back=True)
 
 
 # ---------------------------------------------------------------------------
@@ -824,7 +845,7 @@ def complete_turn(store: GraphStore, db: Store, phase1: Phase1) -> TurnResponse:
         # The two endings get different words on purpose: finishing the graph is
         # an achievement, and the circuit breaker stopping is the tutor's
         # decision. A student should be able to tell which one happened.
-        utterance = _call2(
+        utterance, call2_fell_back = _call2(
             state,
             "complete" if phase1.session_status == "mastered" else "conclude",
             0, labels, n_lit,
@@ -834,20 +855,33 @@ def complete_turn(store: GraphStore, db: Store, phase1: Phase1) -> TurnResponse:
         # The budget forced a reveal, which is SUPPOSED to name the answer
         # (§6 layer 3, zero mastery in exchange). Layer 1 is not run on it:
         # screening this turn would trip on the system working correctly.
-        utterance = _call2(state, "resolved_with_support", 0, labels, n_lit)
+        utterance, call2_fell_back = _call2(
+            state, "resolved_with_support", 0, labels, n_lit)
         leak_note = None
     else:
         chunk = _chunk_for(store, state, action, _chunk_subject(store, phase1, action))
-        utterance = _call2(state, action, phase1.hint_level, labels, n_lit, chunk)
+        utterance, call2_fell_back = _call2(
+            state, action, phase1.hint_level, labels, n_lit, chunk)
         leak_note = None
         if phase1.item is not None:
             answer, aliases, context = _layer1_terms(store, phase1.item)
+
+            def _regenerate() -> str:
+                # A layer-1 regeneration can itself fall back. If it does, the
+                # utterance that ships is a template and the turn is still not
+                # evidence about the model's weights, so the flag has to
+                # survive the second call as well as the first.
+                nonlocal call2_fell_back
+                regen = _call2(
+                    state, action, phase1.hint_level, labels, n_lit, chunk)
+                call2_fell_back = call2_fell_back or regen.fell_back
+                return regen.utterance
+
             utterance, leak_note = guards.screen_utterance(
                 utterance,
                 answer,
                 aliases,
-                regenerate=lambda: _call2(
-                    state, action, phase1.hint_level, labels, n_lit, chunk),
+                regenerate=_regenerate,
                 fallback=mock_tutor.fallback_utterance(action),
                 action=action,
                 # Every other concept name on the map. Without these, a hint
@@ -857,6 +891,7 @@ def complete_turn(store: GraphStore, db: Store, phase1: Phase1) -> TurnResponse:
             )
 
     phase1.leak_note = leak_note
+    phase1.call2_fallback = call2_fell_back
     state.record_history("tutor", utterance, reveal=phase1.resolved_with_support)
 
     response = TurnResponse(
@@ -949,6 +984,11 @@ def _log(phase1: Phase1, response: TurnResponse) -> None:
         # (§6): post-split, a hit means the model reconstructed the answer
         # parametrically, because Call 2 never saw it.
         "leak_note": phase1.leak_note,
+        # Whether the MODEL wrote `utterance` or a prompts/fallback_*.txt
+        # template did. §6.1 screens utterances for parametric reconstruction;
+        # a template cannot reconstruct anything, so eval/leak_monitor.py drops
+        # these from its denominator rather than counting them as clean turns.
+        "call2_fallback": phase1.call2_fallback,
         "llm": llm_mod.stats_snapshot() if not CONFIG.mock_mode else None,
     }
     path = CONFIG.log_dir / "turns.jsonl"

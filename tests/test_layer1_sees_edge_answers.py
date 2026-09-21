@@ -70,7 +70,9 @@ def test_the_live_turn_screens_with_these_terms(store, monkeypatch, seed):
 
     item = _edge_items(store)[seed]
     leak = f"It starts from {_from_label(store, item)}."
-    monkeypatch.setattr(turn_mod, "_call2", lambda *a, **k: leak)
+    monkeypatch.setattr(
+        turn_mod, "_call2",
+        lambda *a, **k: turn_mod.Call2Result(leak))
 
     db = Store(db_path=":memory:")
     state = db.create(store.initial_theta_map(), graph_fingerprint=store.fingerprint)
