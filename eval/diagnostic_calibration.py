@@ -360,10 +360,25 @@ def score(results: list) -> dict:
     if len(versions) == 2:
         a, b = versions
         pa, pb = by_prompt[a], by_prompt[b]
-        measurable = pa["measured"] and pb["measured"]
+        # BOTH ARMS, AND THE SAME CASES IN EACH. `measured` alone only says an
+        # arm produced something: an arm that died after two cases would be
+        # compared against a complete one and the difference read as the
+        # prompt. The comparison is held until the arms are symmetric.
+        cov_a = {k: v["n"] for k, v in pa["cases"].items() if v["n"]}
+        cov_b = {k: v["n"] for k, v in pb["cases"].items() if v["n"]}
+        measurable = bool(cov_a) and cov_a == cov_b
+        asymmetry = None
+        if not measurable and (cov_a or cov_b):
+            asymmetry = {
+                "only_in_" + a: sorted(set(cov_a) - set(cov_b)),
+                "only_in_" + b: sorted(set(cov_b) - set(cov_a)),
+                "uneven_n": sorted(k for k in set(cov_a) & set(cov_b)
+                                   if cov_a[k] != cov_b[k]),
+            }
         out["ab"] = {
             "arms": [a, b],
             "measurable": measurable,
+            "asymmetry": asymmetry,
             "specific_hits": None if not measurable else {
                 a: pa["specific_hits_total"], b: pb["specific_hits_total"]},
             "of": None if not measurable else pa["scored_total"],
@@ -487,27 +502,40 @@ def render(result: dict) -> str:
         L.append("A/B (same model, same fixed harness, prompt is the only "
                  "variable)")
         if not ab["measurable"]:
-            L.append("  NOT MEASURABLE - an arm produced no scored cases. Two "
-                     "empty arms")
-            L.append("  compare equal, and this module has shipped that bug "
-                     "once already.")
-        else:
-            L.append(f"  specific diagnoses: {a} {ab['specific_hits'][a]}"
-                     f"/{ab['of']}   vs   {b} {ab['specific_hits'][b]}"
-                     f"/{ab['of']}")
-            L.append(f"  separates the two students: {a} "
-                     f"{ab['discriminates'][a]}   vs   {b} "
-                     f"{ab['discriminates'][b]}")
-            sw = ab["stuck_when_stuck_is_right"]
-            L.append(f"  says `stuck` when `stuck` IS right: {a} {sw[a]}"
-                     f"   vs   {b} {sw[b]}")
-            L.append("")
-            L.append("  The last row is the counter-test. The current prompt "
-                     "tells the model to")
-            L.append("  be suspicious of `stuck`; a prompt that made it unable "
-                     "to say `stuck` when")
-            L.append("  `stuck` is the honest answer would score well above and "
-                     "still be worse.")
+            L.append("  HELD - the arms are not comparable yet.")
+            asym = ab.get("asymmetry")
+            if asym and any(asym.values()):
+                for k, v in asym.items():
+                    if v:
+                        L.append(f"    {k}: {', '.join(v)}")
+                L.append("  An arm that stopped early, compared against a "
+                         "complete one, reads as")
+                L.append("  the prompt. Two empty arms compare equal. Neither "
+                         "is a result.")
+            else:
+                L.append("  No scored cases. There is nothing to compare.")
+            return "\n".join(L)
+
+        # THE COUNTER-TEST FIRST, on purpose.
+        #
+        # The headline rows flatter the current prompt, and a reader who meets
+        # them first has formed a verdict by the time the cost arrives. The
+        # current prompt tells the model that `stuck` is the cheap answer, so
+        # the thing most likely to go wrong is that it can no longer say
+        # `stuck` when `stuck` is true. That belongs at the top, not in a
+        # caveat underneath the score it qualifies.
+        sw = ab["stuck_when_stuck_is_right"]
+        L.append("  FIRST, the counter-test: says `stuck` when `stuck` IS the "
+                 "only defensible answer")
+        L.append(f"    {a}: {sw[a]}    vs    {b}: {sw[b]}")
+        L.append("    A prompt that simply never says `stuck` scores well on "
+                 "every row below")
+        L.append("    and is worse for it. Read this row before those.")
+        L.append("")
+        L.append(f"  specific diagnoses: {a} {ab['specific_hits'][a]}"
+                 f"/{ab['of']}   vs   {b} {ab['specific_hits'][b]}/{ab['of']}")
+        L.append(f"  separates the two students: {a} {ab['discriminates'][a]}"
+                 f"   vs   {b} {ab['discriminates'][b]}")
     return "\n".join(L)
 
 

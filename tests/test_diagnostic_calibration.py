@@ -248,7 +248,7 @@ def test_an_empty_arm_makes_the_ab_unmeasurable_not_a_win():
     ])
     assert out["ab"]["measurable"] is False
     assert out["ab"]["specific_hits"] is None
-    assert "NOT MEASURABLE" in DC.render(out)
+    assert "HELD" in DC.render(out)
 
 
 def test_stuck_is_the_specific_answer_for_exactly_one_case():
@@ -270,3 +270,47 @@ def test_the_stuck_case_shows_no_clicks_to_read(store, probe_items):
     assert not any("[clicked" in t for t in said), (
         "the stuck case contains clicks; confused_prereq and guessing both "
         "become defensible and the case stops being about stuck")
+
+
+def test_an_arm_that_stopped_early_holds_the_comparison():
+    """`measured` only says an arm produced SOMETHING. An arm that died after
+    two cases, compared against a complete one, reads as the prompt."""
+    out = DC.score([
+        _result("scattered_clicks", "guessing", prompt="current"),
+        _result("no_pattern_to_name", "stuck", prompt="current"),
+        _result("scattered_clicks", "stuck", prompt="pre-falsifiability"),
+    ])
+    assert out["ab"]["measurable"] is False, (
+        "an asymmetric pair was compared as though both arms were complete")
+    assert out["ab"]["asymmetry"]["only_in_current"] == ["no_pattern_to_name"]
+    assert "HELD" in DC.render(out)
+
+
+def test_uneven_repeats_also_hold_the_comparison():
+    """Same cases in both arms, different n. The rates would be over different
+    denominators and the difference would read as the prompt."""
+    out = DC.score([
+        _result("scattered_clicks", "guessing", prompt="current"),
+        DC.Result(case="scattered_clicks", prompt="current", said="guessing",
+                  item_id="i2", admissible=True, specific_hit=True),
+        _result("scattered_clicks", "stuck", prompt="pre-falsifiability"),
+    ])
+    assert out["ab"]["measurable"] is False
+    assert out["ab"]["asymmetry"]["uneven_n"] == ["scattered_clicks"]
+
+
+def test_the_counter_test_is_reported_before_the_scores():
+    """Ordering is load-bearing. A reader who meets 8/10-vs-6/10 first has a
+    verdict before the cost arrives."""
+    out = DC.score([
+        _result("scattered_clicks", "guessing", prompt="current"),
+        _result("no_pattern_to_name", "guessing", prompt="current"),
+        _result("scattered_clicks", "stuck", prompt="pre-falsifiability"),
+        _result("no_pattern_to_name", "stuck", prompt="pre-falsifiability"),
+    ])
+    text = DC.render(out)
+    assert out["ab"]["measurable"] is True
+    counter = text.index("counter-test")
+    scores = text.index("specific diagnoses:")
+    assert counter < scores, (
+        "the score comparison is printed before the counter-test that qualifies it")
