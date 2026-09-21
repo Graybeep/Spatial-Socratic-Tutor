@@ -39,16 +39,21 @@ and not in the way we expected.
 coverage 1.0. Raw: [`eval/results/diagnosis_readthrough.json`](../../eval/results/diagnosis_readthrough.json);
 sheet: [`readthrough-sheet.md`](readthrough-sheet.md).*
 
+> **Scope.** Everything in this section is about **`openai/gpt-oss-120b` running
+> the shipped prompt**. The model variable is not isolated and is closed as a
+> known gap (report.md §5.6). Every figure below is **directional**: n=12/9/9 on
+> the policy table, n=2 per cell on the A/B.
+
 **The day-12 finding reverses.** Same instrument, same three policies, same
 ground truth, on a build where the model can see what the student clicked — and,
 as it turns out, on a different Call 1 prompt. Which of those two did the work is
 answered further down, and it is not the one this file originally said:
 
-| true knowledge | `guessing` | `confused_prereq` | `correct` | `on_track` | `stuck` |
-|---|---|---|---|---|---|
-| **zero** — knows nothing | **12 / 12** | 0 | 0 | 0 | 0 |
-| **partial** — knows the region | 3 | 0 | 4 | 2 | 0 |
-| **adversarial** — plays the narrowing | 2 | **4** | 2 | 1 | 0 |
+| true knowledge | n | `guessing` | `confused_prereq` | `correct` | `on_track` | `stuck` |
+|---|---|---|---|---|---|---|
+| **zero** — knows nothing | **n=12** | **12** | 0 | 0 | 0 | 0 |
+| **partial** — knows the region | **n=9** | 3 | 0 | 4 | 2 | 0 |
+| **adversarial** — plays the narrowing | **n=9** | 2 | **4** | 2 | 1 | 0 |
 
 `correct` agreed with the deterministic grade on **30 of 30**.
 
@@ -92,8 +97,10 @@ not one lucky sample.
 ### What caused it — the prompt, and not what we first said
 
 Day 13 found the `role: text` history bug and this file credited the reversal to
-fixing it. That attribution does not survive the controls (report.md §5.5): the
-day-12 and day-18 runs differ in **prompt, history handling and model** at once.
+fixing it. That attribution does not survive report.md §5.5's inference table,
+which holds the model fixed and varies prompt against history across run 1, arm B
+and arm A — **without using day 12 at all**, since day 12 is withdrawn for cause
+(unreproducible dirty build, model never logged).
 
 `eval/diagnostic_calibration.py` was re-run on day 18 to isolate one of the
 three. Same model, same fixed harness, Call 1 prompt swapped for the version
@@ -104,18 +111,18 @@ comparison unless they do.
 **The counter-test comes first, because the other rows flatter the current
 prompt.** See *The cost of the fix* below for what it is and why it was built:
 
-| | current prompt | pre-falsifiability prompt |
-|---|---|---|
-| **`stuck` when `stuck` is the only answer** | **0/2** | **2/2** |
+| | n | current prompt | pre-falsifiability prompt |
+|---|---|---|---|
+| **`stuck` when `stuck` is the only answer** | **n=2** | **0/2** | **2/2** |
 
 Then the rest:
 
-| | current prompt | pre-falsifiability prompt |
-|---|---|---|
-| scattered clicks → `guessing` | 2/2 | **0/2** — said `stuck` |
-| all clicks upstream → `confused_prereq` | 2/2 | **0/2** — said `stuck` |
-| separates the two students | **yes** | **no** |
-| `correct` boolean | 6/6 | 6/6 |
+| | n | current prompt | pre-falsifiability prompt |
+|---|---|---|---|
+| scattered clicks → `guessing` | n=2 | 2/2 | **0/2** — said `stuck` |
+| all clicks upstream → `confused_prereq` | n=2 | 2/2 | **0/2** — said `stuck` |
+| separates the two students | n=4 contrasting | **yes** | **no** |
+| `correct` boolean | n=6 | 6/6 | 6/6 |
 
 **The old prompt reproduces the day-12 degeneracy on a fully fixed harness**, and
 run 1 on day 13 shows the converse: the current prompt reaches for `guessing`

@@ -300,50 +300,76 @@ history — every past turn arrived as the literal line `role: text` — so the 
 being monitored had less to reconstruct from than the shipping one does. Fixed in
 `1cfc74a`.
 
-### What changed between the five runs, and what that permits
+### The inference table
 
-Every §9.5 and §6.1 number in this report comes from one of five runs. They do
-not differ by one variable each, so most pairwise comparisons between them are
-uncontrolled. The table is here rather than in prose because the confound is not
-obvious until the columns are side by side.
+Three runs carry the argument. All three are **`openai/gpt-oss-120b`**, so the
+model is held fixed by construction rather than by assumption, and prompt and
+history handling vary across them. Day 12 is **not** in this table: it is
+withdrawn for cause below and is not evidence for anything.
 
-| | day-12 §9.5 | day-13 run 1 | day-13 run 2 | day-13 run 3 | day-18 |
-|---|---|---|---|---|---|
-| when | 09-15 20:29–20:49 | 09-16 20:31 | 09-16 20:37–20:45 | 09-16 20:49–20:59 | 09-21 21:18–21:39 |
-| build | `77b7e5d-dirty` **(dirty — unreproducible)** | `7ba8078` | `d594341` | `614d066` | `18d220d` |
-| turns logged | 40 | 4 | 16 | 20 | 40 |
-| **Call 1 prompt** | **pre-falsifiability** | current | current | current | current |
-| history reaches the model (`1cfc74a`) | **no** | **no** | yes | yes | yes |
-| layer 1 sees edge answers (`522defc`) | no | no | no | no | yes |
-| Call 1 model | `qwen3.8-27b` **(asserted, not logged)** | `gpt-oss-120b` | `gpt-oss-120b` | `gpt-oss-120b` | `gpt-oss-120b` |
+| | run 1 (`7ba8078`) | arm B (day 18) | arm A (day 18) |
+|---|---|---|---|
+| **n (turns / cases)** | **n=4 turns** | **n=10 cases (5 x 2)** | **n=10 cases (5 x 2)** |
+| Call 1 prompt | current | **pre-falsifiability** | current |
+| history reaches the model | **no** | yes | yes |
+| model | `gpt-oss-120b` | `gpt-oss-120b` | `gpt-oss-120b` |
+| reaches a specific state | **yes** — `guessing` 2/4 | **no** — `stuck` on 4/4 contrasting | **yes** — 8/10 specific |
+| separates the two students | not testable at n=4 | **no** (n=4 contrasting) | **yes** (n=4 contrasting) |
+| `stuck` when `stuck` is right | not in this run | **2/2** | **0/2** |
+| `correct` boolean | not scored in this run | 6/6 | 6/6 |
 
-Two cells carry warnings rather than values, and both are about day 12.
+**The two comparisons this licenses, and both are directional.**
 
-**The build is dirty.** `77b7e5d-dirty` means the working tree had uncommitted
-changes, and `server/build_info.py` says plainly what that costs: the stamp
-"does NOT distinguish two different uncommitted working trees". **There is no
-commit that reproduces that run.** Its exact code is gone, and no later run can
-be made to match it.
+- **run 1 vs arm B** — prompt differs, and so does history handling, so this pair
+  alone attributes nothing. Its value is that it puts the current prompt on a
+  *broken* harness: even there it reaches for `guessing` (n=4). That is the one
+  observation on that cell and it exists only because an aborted run happened to
+  log four turns.
+- **arm A vs arm B** — model, harness, cases and n all held fixed; **the prompt
+  is the only variable** (n=10 per arm, n=2 per cell).
 
-**The model is asserted, not logged.** The `call1_model` stamp postdates the run,
-so those 40 turns carry no model field. `qwen3.8-27b` comes from
-`diagnosis-readthrough.md`'s own header and cannot be confirmed from evidence.
+Read together they point one way: the prompt tracks whether the model reaches
+for a specific state, on a broken harness and on a fixed one. **This is a
+direction, not a measurement.** n=2 per cell and n=4 on run 1 are far too small
+to quote a rate from, and nothing in this section should be read as one.
 
-**The prompt row is the one that was nearly missed.** `516795d` landed
-**2026-09-15 22:39**, an hour and three quarters *after* the day-12 run finished
-at 20:49. Day 12 ran the old prompt, and this report did not say so for six days.
+What the history fix separately and visibly contributes is **grounding**. Run 1's
+diagnoses are well-reasoned about nothing — *"their recent inputs were text, so
+they have not engaged with the map"*, which is the model accurately reporting our
+own bug, the same pattern as case 1 in
+[instrument-failures.md](instrument-failures.md). Run 2, four minutes later on
+the fixed build, names actual clicked nodes: *"Student clicked Reservation-Based,
+which is unrelated to the target Packet Flow."* Two separable contributions:
 
-**What the columns license.**
+- **the prompt** decides whether the model reaches for a specific state or falls
+  back to `stuck`
+- **the history fix** decides whether that state is about the student at all
 
-- **run 1 vs run 2 isolates the history fix.** Same prompt, same model, minutes
-  apart; `1cfc74a` landed between them at 20:35. This is the control that did
-  not exist when §5.6 was first written.
-- **run 3 vs day-18 is a controlled replication.** Same prompt, model and history
-  handling; only the build and the edge-answer fix differ, and the latter is a
-  `leak_monitor` change that cannot touch a Call 1 diagnosis. They agree
-  (`zero` → `guessing` 6/6, `correct` 15/15 at field 15).
-- **day-12 vs any later run controls nothing**, and cannot be made to: prompt,
-  history and model all move, and the build it moved from is unreproducible.
+### The prompt also changes what the tutor does, not only what it logs
+
+`student_state` is inert by design (§5.6). `requested_action` is not — it selects
+the kind of help wherever the curriculum does not move. Across the same A/B, from
+the same logs, no extra calls:
+
+| case (n=2 per arm) | arm A (current) | arm B (pre-falsifiability) |
+|---|---|---|
+| all clicks upstream | **`backtrack` 2/2** | `hint_visual` 2/2 |
+| scattered clicks | `hint_visual` 2/2 | `hint_visual` 2/2 |
+| `stuck`-only case | `hint_visual` 2/2 | `hint_visual` 2/2 |
+| answered correctly | `advance` 2/2 | `advance` 2/2 |
+| opening turn | `ask` 2/2 | `ask` 2/2 |
+
+`confused_prereq` is the state §5 says "earns backtracking", and only the current
+prompt gets there. So the prompt change moves a **behaviour**, not just a label.
+
+**And it closes the concern that motivated the stuck-only case.** The worry was
+that a model told to distrust `stuck` would mislabel a genuinely stuck student
+and thereby under-help them. It does mislabel them — arm A says `guessing` 0/2
+correctly — but it requests `hint_visual` on 2/2, exactly as arm B does. **The
+student gets the same hint rung either way**, so on this case the mislabel is
+inert. `ask` appears nowhere except the opening turn, where no response exists
+yet. No server-side hint floor is warranted by this evidence; if a later run ever
+shows `ask` requested on a failing item, that is when the floor earns its place.
 
 ### Day 12 is withdrawn for cause, not merely superseded
 
@@ -351,57 +377,32 @@ Every §9.5 and §6.1 number from `77b7e5d-dirty` is withdrawn, and the reason i
 not that a later run disagreed with it. It is that the run cannot be defended on
 its own terms:
 
-1. **The build is unreproducible.** A dirty tree, with no commit that restores
-   it. Nothing can be re-measured against it.
-2. **The model is unrecorded.** The one field that would say what produced those
-   diagnoses did not exist yet.
+| | day-12 §9.5 |
+|---|---|
+| n | 40 turns / 30 answered |
+| build | `77b7e5d-dirty` — **dirty, unreproducible** |
+| Call 1 prompt | **pre-falsifiability** (established from `516795d`'s timestamp) |
+| history reaches the model | **no** |
+| Call 1 model | `qwen3.8-27b` — **asserted, never logged** |
+
+1. **The build is unreproducible.** A dirty tree with no commit that restores it;
+   `server/build_info.py` states plainly that the stamp cannot distinguish two
+   uncommitted working trees. Nothing can be re-measured against it.
+2. **The model is unrecorded.** The `call1_model` stamp postdates the run, so
+   those 40 turns carry no model field. `qwen3.8-27b` comes from
+   `diagnosis-readthrough.md`'s own header and cannot be confirmed from evidence.
 3. **Two known defects were live in it** — the history bug (`1cfc74a`) and layer
    1's edge blindness (`522defc`).
 4. **It ran a prompt this system no longer has**, and the write-up did not know
-   that for six days.
+   that for six days. `516795d` landed 2026-09-15 22:39, an hour and three
+   quarters after the run finished at 20:49.
 
-Any one of 1 and 2 is sufficient on its own. A number whose code and model cannot
-both be named is not a result that a later run has to beat; it is a result that
-was never admissible. It stays in the repo as history, cited from
-`diagnosis-readthrough.md`, and is not quoted as a measurement anywhere.
+Any one of 1 and 2 is sufficient alone. A number whose code and model cannot both
+be named is not a result a later run has to beat; it is a result that was never
+admissible. It stays in the repo as history, cited from
+`diagnosis-readthrough.md`, and is quoted as a measurement nowhere — including in
+the inference above, which is why it does not appear there.
 
-### What run 1 shows, and it is not what we said
-
-`7ba8078` is the missing cell: **the current prompt on the broken harness**, four
-turns before `1cfc74a` landed. It is the only run that separates the prompt from
-the history fix on the day-12 side of the change.
-
-| | day 12 (old prompt, broken) | run 1 (current prompt, broken) |
-|---|---|---|
-| `guessing` | 1 of 30 | **2 of 4** |
-| `stuck` | 14 of 30 | 1 of 4 |
-| reasoning given | describes the item | names what it looked for and did not find |
-
-With the history still broken, the current prompt already reaches for `guessing`
-and says why. The old prompt, on the same broken input, produced one `guessing`
-in thirty. **So the `stuck` degeneracy does not require the history bug** — which
-is the same conclusion the day-18 prompt A/B reaches from the other direction,
-on a fully fixed harness.
-
-What the history fix contributes is **grounding, not state selection**. Run 1's
-diagnoses are correctly reasoned about nothing: *"their recent inputs were text,
-so they have not engaged with the map."* That is the model accurately reporting
-our bug — the same pattern as case 1 in
-[instrument-failures.md](instrument-failures.md), where a true report of a driver
-fault was filed as a hallucination. Run 2, minutes later on the fixed build, names
-actual clicked nodes: *"Student clicked Reservation-Based, which is unrelated to
-the target Packet Flow."*
-
-Two separable contributions, then, and the report previously credited one of them
-with both:
-
-- **the prompt** decides whether the model reaches for a specific state or falls
-  back to `stuck`
-- **the history fix** decides whether that state is about the student at all
-
-`n=4` on run 1. It is a four-turn fragment from an aborted run, and it is
-reported because it is the only evidence that exists on that cell — not because
-four turns settle anything.
 
 **Re-measured 2026-09-21 (day 18), build `18d220d`, Call 2 on `gpt-oss-20b`:**
 
@@ -444,37 +445,45 @@ reports 3.94% parametric reconstruction from a bug that is fixed.
 
 Full write-up: **[diagnosis-readthrough.md](diagnosis-readthrough.md)**.
 
+> **Scope.** Every claim in this section is about **`openai/gpt-oss-120b` running
+> the prompt this demo ships**, on build `18d220d`. It is not a claim about LLM
+> tutors, about Groq, or about any other model. The model variable is not
+> isolated and will not be — see *What is not established* at the end.
+
 Thirty answered turns, three student policies whose true knowledge state is known
 by construction, Call 1 on `openai/gpt-oss-120b`, run 2026-09-21 (day 18) on
 build `18d220d`. Ten distinct items, coverage 1.0.
 
-| true knowledge | `guessing` | `confused_prereq` | `correct` | `on_track` | `stuck` |
-|---|---|---|---|---|---|
-| **zero** — knows nothing | **12 / 12** | 0 | 0 | 0 | 0 |
-| **partial** — knows the region | 3 | 0 | 4 | 2 | 0 |
-| **adversarial** — plays the narrowing | 2 | **4** | 2 | 1 | 0 |
+| true knowledge | n | `guessing` | `confused_prereq` | `correct` | `on_track` | `stuck` |
+|---|---|---|---|---|---|---|
+| **zero** — knows nothing | **n=12** | **12** | 0 | 0 | 0 | 0 |
+| **partial** — knows the region | **n=9** | 3 | 0 | 4 | 2 | 0 |
+| **adversarial** — plays the narrowing | **n=9** | 2 | **4** | 2 | 1 | 0 |
 
 `correct`, the one boolean the model is allowed to emit, agreed with the
 deterministic grade on **30 of 30**.
 
-**This reverses the day-12 finding.** That run reported the opposite table — a
-zero-knowledge student called `on_track` five times in twelve, `guessing` used
-once in thirty turns on the wrong student, and `confused_prereq` never used at
-all on a graph built entirely out of prerequisites.
+**Read the `zero` row as directional, not as a rate.** Twelve turns of one
+scripted policy on one model is a clear signal and a small sample; "12/12" is
+not evidence that the true rate is near 1.
 
-**What caused the reversal is a separate question from whether it happened, and
-the first answer we gave was wrong.** Day 13 found that Call 1 had received every
-past turn as the literal line `role: text` (`server/llm.py`, fixed in `1cfc74a`,
-pinned by `tests/test_history_reaches_the_model.py`) and this report credited the
-reversal to that fix. It cannot: as §5.5's controls table shows, the day-12 and
-day-18 runs differ in **prompt, history handling and model** simultaneously.
+**This supersedes a withdrawn claim rather than winning an argument against it.**
+An earlier version of this section, built on the day-12 run, reported that the
+diagnosis did not track the student at all. That run is withdrawn for cause
+(§5.5) — its build is unreproducible and its model was never logged — so the
+right description is that the day-18 measurement stands on its own and the
+earlier one is gone, not that the two were compared and one won. The day-12
+figures are in [diagnosis-readthrough.md](diagnosis-readthrough.md) as history.
 
-| | day 12 (`role: text`, `qwen3.8-27b`) | day 18 (fixed, `gpt-oss-120b`) |
-|---|---|---|
-| `zero` → `guessing` | 0 of 12 | **12 of 12** |
-| `zero` → `on_track` | 5 of 12 | 0 |
-| `confused_prereq` ever used | never, 0 of 30 | 4 |
-| server overrode Call 1 where the curriculum moved | 11 of 12 | 6 of 13 |
+**What produces this behaviour is a separate question from measuring it, and the
+first answer we gave was wrong.** Day 13 found that Call 1 had received every past turn
+as the literal line `role: text` (`server/llm.py`, fixed in `1cfc74a`, pinned by
+`tests/test_history_reaches_the_model.py`), and this report credited the
+improvement to that fix. **That attribution does not survive §5.5's inference
+table**, which holds the model fixed and varies prompt against history across run
+1, arm B and arm A. Note what the argument no longer needs: it does not compare
+against day 12 at all. Day 12 is withdrawn for cause, and the case below stands
+without it.
 
 **The one variable that has been isolated is the prompt**, by
 `eval/diagnostic_calibration.py` on day 18: same model, same fixed harness, the
@@ -489,9 +498,9 @@ can then no longer say `stuck` when `stuck` is true, so a case was built where
 clicks at all, leaving neither the scatter `guessing` needs nor the upstream
 clustering `confused_prereq` needs.
 
-| | current prompt | pre-falsifiability prompt |
-|---|---|---|
-| **`stuck` when `stuck` is the only answer** | **0/2** — said `guessing` | **2/2** |
+| | n | current prompt | pre-falsifiability prompt |
+|---|---|---|---|
+| **`stuck` when `stuck` is the only answer** | **n=2** | **0/2** — said `guessing` | **2/2** |
 
 **The shipped prompt fails that case and the old one passes it.** A prompt that
 simply never says `stuck` would score well on everything below and be worse for
@@ -499,12 +508,12 @@ it. That is the finding to carry into the demo.
 
 With that on the table, the rest:
 
-| | current prompt | pre-falsifiability prompt |
-|---|---|---|
-| scattered clicks (→ `guessing`) | 2/2 | **0/2** — said `stuck` |
-| all clicks upstream (→ `confused_prereq`) | 2/2 | **0/2** — said `stuck` |
-| separates the two students | **yes** | **no** |
-| specific diagnoses, all cases | 8/10 | 6/10 |
+| | n | current prompt | pre-falsifiability prompt |
+|---|---|---|---|
+| scattered clicks (→ `guessing`) | n=2 | 2/2 | **0/2** — said `stuck` |
+| all clicks upstream (→ `confused_prereq`) | n=2 | 2/2 | **0/2** — said `stuck` |
+| separates the two students | n=4 contrasting | **yes** | **no** |
+| specific diagnoses, all cases | n=10 | 8/10 | 6/10 |
 
 The old prompt answers `stuck` to both contrasting students **on a fully fixed
 harness** — the day-12 signature, reproduced without the day-12 bug. Run 1
@@ -521,8 +530,32 @@ The prose moved with it. Day 18's diagnoses name the clicks: *"Student clicked
 DCTCP and Expected Rate, both in the congestion control region, showing no
 movement toward Soft State or its prerequisites."*
 
-`n=2` per cell across five cases. Every number in this subsection is a signal to
-act on before the demo, not a measurement to quote.
+**Every number in this subsection is directional.** n=2 per cell, n=10 per arm,
+one model, one item bank. They are strong enough to act on before the demo and
+far too small to quote as rates, and the text above deliberately says "reaches
+for" and "tracks" rather than giving percentages.
+
+### What is not established, and is not going to be
+
+**The model is not isolated, and we are closing that as a known gap rather than
+leaving it open.** Day 12 ran a different model from every later run — or so its
+write-up says; the log cannot confirm it (§5.5). Isolating it would mean running
+the fixed harness and shipped prompt against `qwen3.8-27b`, which is one command
+and roughly 30,000 tokens.
+
+**We are not running it, and the reason is a decision rather than an oversight.**
+Day 12 is withdrawn for cause (§5.5), so the comparison it would serve is one
+this report no longer makes: nothing here rests on day 12, and a model control
+against an inadmissible run buys an answer to a question that has been dropped.
+The live claims — the prompt A/B and run 1 — are all `gpt-oss-120b` already, so
+the model is held fixed across them by construction and needs no separate control
+to stay fixed.
+
+What that costs, stated plainly: **nothing in this report distinguishes "this
+prompt change helps `gpt-oss-120b`" from "this prompt change helps models of this
+kind".** Only the first is claimed. Every diagnosis claim in §5.6 is scoped to
+`gpt-oss-120b` running the shipped prompt, and a reader should assume it
+transfers no further until someone tests that.
 
 **Two things this does not license, and both belong in the same breath.**
 

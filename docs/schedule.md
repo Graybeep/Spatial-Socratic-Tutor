@@ -371,11 +371,23 @@ report of our own bug), run 2's name the nodes actually clicked.
 model was never logged. A number whose code and model cannot both be named was
 never admissible, independently of any later run disagreeing with it.
 
-**Still not isolated: the model.** `qwen3.8-27b` vs `gpt-oss-120b` remains
-confounded, and day 12's model is not even in the log — the `call1_model` stamp
-postdates it. The control is one command
-(`--model qwen/qwen3.8-27b --prompts current`) and must land before the eval
-freeze below if it is going to land at all.
+**The model control is CLOSED, not scheduled.** `qwen3.8-27b` vs
+`gpt-oss-120b` stays confounded and will not be resolved. The reason is that day
+12 is withdrawn for cause, so the only comparison the control would serve is one
+the report no longer makes; the live claims (run 1, arm A, arm B) are all
+`gpt-oss-120b` already, so the model is held fixed across them by construction.
+The cost is stated in report.md §5.6: nothing distinguishes "this prompt helps
+`gpt-oss-120b`" from "this prompt helps models of this kind", and only the first
+is claimed. **This frees the last model-dependent item before the eval freeze**,
+so no live run is now required before Thursday 2026-09-24.
+
+**No server hint floor, on evidence.** The stuck-only case was re-read from the
+existing A/B logs (no new calls): on all 4 turns, both arms requested
+`hint_visual`. Arm A mislabels the student (`guessing`, 0/2) but asks for the
+same rung arm B does, so the mislabel costs the student no help. `ask` appears
+only on the opening turn, where no response exists yet. A two-strikes server
+floor would fire on turns that are already being hinted. If a future run shows
+`ask` requested on a failing item, that is when it earns its place.
 
 ---
 
