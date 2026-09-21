@@ -277,7 +277,7 @@ option set and one behavioural test is degenerate on the other half:
 212 items flagged for human review. The MCQ bank is demoted to unscored rather
 than deleted, so a real bank is a flag flip.
 
-### 5.5 §6.1 — the parametric-reconstruction rate, now a bound rather than a blank
+### 5.5 §6.1 — the parametric-reconstruction rate, re-measured on a monitor that can see
 
 `python -m eval.leak_monitor`
 
@@ -291,113 +291,132 @@ is not weak evidence of no leakage — it is no evidence, and on a slide it read
 identically to the real thing. The aggregator returned `rate: null` and printed
 `NOT MEASURABLE` for six days rather than a zero.
 
-> **NOT QUOTABLE as of 2026-09-16 (day 13).** Two defects sit under these 60
-> checks, both found and fixed on day 13. **(1) The monitor could not see edge
-> answers.** An edge item's answer is an id pair with no aliases, and layer 1
-> caught an utterance naming its FROM endpoint on **0 of 49** edge items (both
-> endpoints: 5 of 49). Edge items are 49 of the 101 scored items; in the
-> real-model log, 418 ask/hint turns were on edge items, where a hit was
-> impossible. Fixed in `522defc` (49 of 49, no false positive on the anchor).
-> **(2) Call 2 was shown no history** — every past turn arrived as `role: text`
-> (fixed in `1cfc74a`) — so the model being monitored had less to reconstruct
-> from than the shipping one does. 0/60 is a count of what a half-blind monitor
-> saw on a context-starved model. It needs a re-run on the fixed build before
-> it bounds anything.
+**The day-12 reading of 0/60 was withdrawn on day 13** for two defects, both since
+fixed. (1) The monitor could not see edge answers: an edge item's answer is an id
+pair with no aliases, and layer 1 caught an utterance naming its FROM endpoint on
+**0 of 49** edge items. Edge items are 49 of the 101 scored items. Fixed in
+`522defc` (49 of 49, no false positive on the anchor). (2) Call 2 was shown no
+history — every past turn arrived as the literal line `role: text` — so the model
+being monitored had less to reconstruct from than the shipping one does. Fixed in
+`1cfc74a`.
 
-**First real-model reading: 0 hits in 60 screened turns.** Quote it as a bound,
-not a result:
+**Re-measured 2026-09-21 (day 18), build `18d220d`, Call 2 on `gpt-oss-20b`:**
 
-- **n=60.** The 95% upper bound on 0/60 is **4.9%** — consistent with no
-  parametric reconstruction, and equally consistent with a rate of one turn in
-  twenty-five. These 60 checks are a by-product of the §9.5 run, not a
-  measurement designed to answer this.
-- **It pools four origins** (a demo session and three §9.5 student policies) and
-  more than one build. The monitor reports that rather than hiding it —
-  `mixed_origins: true` — because a rate over scripted policies and a rate over a
-  person are different claims wearing one number.
+```
+parametric_reconstruction    0 hits / 34 checks    over 10 distinct items
+authorised_naming            0 hits /  6 checks
+canned fallbacks in denominator: 0
+```
+
+- **n=34, and the 95% upper bound is 8.4%.** This is a *weaker* bound than the
+  withdrawn 0/60, whose bound was 4.9%. That is the honest shape of the re-run:
+  fixing the instrument shrank the population, because the only build carrying
+  **both** fixes is this one. Reporting the larger, older number would be
+  reporting a bound produced by a half-blind monitor.
+- **It is one build and three arms**, the three §9.5 student policies. It is a
+  by-product of the §9.5 run, not a measurement designed to answer this.
+- **The headline the tool prints is not this number, and must not be quoted.**
+  `leak_monitor`'s per-build table partitions correctly, but its HEADLINE pools
+  every *real* arm — on this log, 25 arms and 3,334 checks spanning builds that
+  predate both fixes, plus `ac2fc28 <eval:adversarial:*>`, the day-13 accidental
+  live run that `docs/schedule.md` records as **not real-model evidence**. The
+  per-build partition is the quotable object. See
+  [instrument-failures.md](instrument-failures.md).
 - **The measure is weakest where the phenomenon is strongest.** Stemmed token
   cosine plus trigram containment misses synonym paraphrase, and paraphrase is
-  exactly what reconstruction looks like. Treat 0/60 as a floor on detection, not
+  exactly what reconstruction looks like. Treat 0/34 as a floor on detection, not
   a ceiling on leakage.
 
-What it does support, modestly: across 60 real Call 2 turns on `gpt-oss-20b`,
-nothing the monitor can detect came back. The structural argument does not rest
-on it — Call 2's argument list is the guarantee, and this number is a check on
-the guarantee rather than a substitute for it.
+What it supports, modestly: across 34 screened real Call 2 turns on a build where
+the monitor can finally see edge answers and the model can finally see the
+dialogue, nothing detectable came back. The structural argument does not rest on
+it — Call 2's argument list is the guarantee, and this number is a check on the
+guarantee rather than a substitute for it.
 
-It also refuses to pool builds. The turn log contains 17,433 `backtrack` hits
-from before the Call 2 fidelity ceiling landed; pooling the file reports 3.94%
-parametric reconstruction from a bug that is fixed.
+It also refuses to pool builds *in the table*. The turn log contains 17,433
+`backtrack` hits from before the Call 2 fidelity ceiling landed; pooling the file
+reports 3.94% parametric reconstruction from a bug that is fixed.
 
-When the metric *can* run, treat it as a floor and not an estimate: the
-similarity metric is a stemmed token cosine plus trigram containment, which
-misses synonym paraphrase — and paraphrase is exactly what reconstruction is.
-The measure is weakest where the phenomenon is strongest.
-
-### 5.6 §9.5 — the diagnosis does not track the student
+### 5.6 §9.5 — the diagnosis tracks the student, once the model can see the student
 
 Full write-up: **[diagnosis-readthrough.md](diagnosis-readthrough.md)**.
 
-> **WITHDRAWN pending re-run (2026-09-16).** Both instruments below ran against a
-> Call 1 that received every past turn as the literal line `role: text` — a
-> formatting bug in `server/llm.py`, fixed in `1cfc74a`. The diagnosis-quality
-> claims in this section measure a model shown no history and are not evidence
-> about the model. Point 2 and point 3 (inertness, enforced by test) do not
-> depend on what the model saw and stand. See the note at the top of
-> diagnosis-readthrough.md.
-
 Thirty answered turns, three student policies whose true knowledge state is known
-by construction, Call 1 on `qwen/qwen3.8-27b`:
+by construction, Call 1 on `openai/gpt-oss-120b`, run 2026-09-21 (day 18) on
+build `18d220d`. Ten distinct items, coverage 1.0.
 
-| true knowledge | `on_track` | `stuck` | `correct` | `guessing` | `confused_prereq` |
+| true knowledge | `guessing` | `confused_prereq` | `correct` | `on_track` | `stuck` |
 |---|---|---|---|---|---|
-| **zero** — knows nothing | 5 | 6 | 1 | **0** | **0** |
-| **partial** — knows the region | 6 | 3 | 0 | **0** | **0** |
-| **adversarial** | 3 | 5 | 0 | 1 | **0** |
+| **zero** — knows nothing | **12 / 12** | 0 | 0 | 0 | 0 |
+| **partial** — knows the region | 3 | 0 | 4 | 2 | 0 |
+| **adversarial** — plays the narrowing | 2 | **4** | 2 | 1 | 0 |
 
-Three true states, one distribution. A student who knows nothing is called
-`on_track` five times in twelve. `guessing` is used once in thirty turns, on the
-wrong student; `confused_prereq` never, on a graph built entirely out of
-prerequisites.
+`correct`, the one boolean the model is allowed to emit, agreed with the
+deterministic grade on **30 of 30**.
 
-The prose does not show it. The diagnoses are specific and well-observed *about
-the item* — they quote the definition and name the confusable neighbours — and
-then present that as an account of the person. A reviewer reading the fields
-would not catch this, and neither did we: it took tabulating against a truth the
-model could not see.
+**This reverses the day-12 finding, and the reversal is the point.** That run
+reported the opposite table — a zero-knowledge student called `on_track` five
+times in twelve, `guessing` used once in thirty turns on the wrong student, and
+`confused_prereq` never used at all on a graph built entirely out of
+prerequisites. It was withdrawn on day 13 when the first field of the re-run
+revealed that Call 1 had received every past turn as the literal line
+`role: text` (`server/llm.py`, fixed in `1cfc74a`, pinned by
+`tests/test_history_reaches_the_model.py`). The model had never seen a click.
 
-A sharper instrument makes it worse. `eval/diagnostic_calibration.py` builds
-histories where one answer is *forced* — three clicks scattered across unrelated
-regions is guessing; three clicks inside the prerequisite region is prerequisite
-confusion, and the two node sets are disjoint by assertion. The model returns
-`stuck` to both, is never `correct` about a student who clicked the answer, and
-gets right only the case with **no history to read**. It also got the `correct`
-boolean wrong on **2 of 6** constructed histories while being shown the answer.
+| | day 12 (`role: text`, `qwen3.8-27b`) | day 18 (fixed, `gpt-oss-120b`) |
+|---|---|---|
+| `zero` → `guessing` | 0 of 12 | **12 of 12** |
+| `zero` → `on_track` | 5 of 12 | 0 |
+| `confused_prereq` ever used | never, 0 of 30 | 4 |
+| server overrode Call 1 where the curriculum moved | 11 of 12 | 6 of 13 |
 
-The consequence needs three separate statements, because collapsing them produces
-either false alarm or false comfort:
+So "the diagnosis does not track the student" was a finding about a string
+formatting bug, not about a model. The prose shows it too — the diagnoses now
+name what was clicked: *"Student clicked DCTCP and Expected Rate, both in the
+congestion control region, showing no movement toward Soft State or its
+prerequisites."*
 
-1. **The diagnosis is unreliable.** Measured, on two instruments, above.
-2. **The architecture makes it inert.** `student_state`, `correct` and
+**Two things this does not license, and both belong in the same breath.**
+
+- **`stuck` is now used zero times in thirty.** Day 12 had two dead states;
+  this run has one, a different one. The likely cause is the instrument rather
+  than the model — `--max-turns 3` means no student lingers on an item long
+  enough to be stuck — but that is a hypothesis, not a measurement, and it is
+  the read-through's job to say which.
+- **`partial` → `guessing` on 3 of 9.** A student who knows the region is not
+  guessing. This is the one cell that still looks like miscalibration, and it is
+  for the human read (§9.5 asks for a person, and this file is the evidence that
+  person starts from, not a replacement for them).
+
+**`diagnostic_calibration.py` has NOT been re-run and stays withdrawn.** It
+builds its histories in the same `{"role", "text"}` shape, so its day-12 result —
+`stuck` to every constructed history, the `correct` boolean wrong on 2 of 6 — was
+measured through the same bug. It is a separate instrument and a separate token
+budget. Nothing in this section should be read as repairing it.
+
+**The architecture half does not depend on any of this, and stands unchanged.**
+
+1. **The judgement fields are inert.** `student_state`, `correct` and
    `focus_nodes` are logged and read by nothing; mastery comes from a string
-   comparison and the lit set from the ladder. Over §9.5's 40 turns the server
-   overrode Call 1 on **11 of the 12** turns where the curriculum moved.
-3. **That inertness is now enforced rather than incidental.** It was true on day
-   12 by accident — nothing stopped a later change from branching on the field,
-   and such a change would have passed all 364 tests then green.
+   comparison and the lit set from the ladder. Over this run's 40 turns the
+   server overrode Call 1 on 6 of the 13 turns where the curriculum moved — less
+   often than on day 12, because the model is now more often right, which is
+   exactly why the guarantee cannot be *that the model is right*.
+2. **That inertness is enforced rather than incidental.** It was true on day 12
+   by accident — nothing stopped a later change from branching on the field.
    `tests/test_student_state_is_inert.py` walks the AST of the decision modules
    and fails on any read of the three fields. It is **mutation-tested**: planting
    `if decision.student_state == 'guessing': action = 'backtrack'` fails it, as
-   does `lit = decision.focus_nodes`. A guard never shown to fail is not a guard,
-   and that demonstration is what makes this a property rather than a coincidence.
+   does `lit = decision.focus_nodes`. A guard never shown to fail is not a guard.
 
 **This is not a claim that the model does not matter.** `requested_action` still
 selects `ask` vs `hint_visual` vs `hint_verbal` wherever the curriculum does not
-move, which is most turns — so a student gets the wrong *flavour* of help, chosen
-on a reading of them that does not track them. The architecture contains the
-damage; it does not repair it. The repair is the prompt: a diagnosis carrying no
-cost for answering `stuck` to everything is a diagnosis that cannot be wrong, and
-that is precisely what was measured.
+move, which is most turns. On day 12 that meant a student got the wrong *flavour*
+of help chosen on a reading that did not track them; on the fixed build the
+reading tracks them, and the architecture that contained the damage is now
+containing a decision that is mostly correct. Both facts are worth keeping: the
+containment was load-bearing precisely while the diagnosis was broken, and
+nothing about it had to change when the diagnosis improved.
 
 ### 5.7 One number nothing asked for
 
@@ -428,8 +447,10 @@ a reviewer would have called adequate.
   leakage rate computed over one item out of 101 for four days. A drift test
   blind to exactly the kind of drift it existed to catch.
 - **[diagnosis-readthrough.md](diagnosis-readthrough.md)** — the tutor's model
-  of the student, measured against a ground truth it could not see, and found not
-  to track it.
+  of the student, measured against a ground truth it could not see. Found not to
+  track it on day 12, then found to track it on day 18 once a formatting bug
+  stopped hiding the dialogue from the model. Both readings are in the file,
+  because the first one is the reason the second is believable.
 - **[limitations.md](limitations.md)** — everything above plus the rest,
   including two figures in this report's own source that were stale prose until
   day 8 because they had been typed rather than derived.
@@ -439,15 +460,16 @@ figures from systems of this shape deserve a question rarely asked of them:
 **not "what is the number" but "what was it computed over, and how would you
 know."**
 
-## 7. The harness was wrong three times, and said so confidently
+## 7. The harness was wrong four times, and said so confidently
 
 **[instrument-failures.md](instrument-failures.md)** — kept separate from §6
 because it is a different failure and, we think, the more transferable one.
 
-The five above are faults in the tutor. These three are faults in the code doing
+The five above are faults in the tutor. These are faults in the code doing
 the *measuring*, and each produced a confident, specific, plausible verdict **about
-the tutor** while the fault was in the harness. Two of the three were plausible
-enough that we acted on them before noticing.
+the tutor** while the fault was in the harness. Two of them were plausible
+enough that we acted on them before noticing, and the fourth was caught only
+because its own per-build table contradicted its summary line.
 
 - A diagnosis said *"the student keeps offering text instead of clicking."* We
   filed it as a hallucination. It was an accurate report of a bug in our driver,
@@ -460,6 +482,10 @@ enough that we acted on them before noticing.
 - A probe printed *"the diagnosis is not reading the history"* from a run in
   which **every call had failed** on an exhausted token budget, because two empty
   distributions compare equal.
+- The leak monitor, whose whole argument is that pooling builds reports a fixed
+  bug as a result, printed a **pooled headline** over 25 arms and 3,334 checks
+  while its own table partitioned correctly. Found on day 18, quoting it for
+  §6.1 would have inflated n by 98× in the flattering direction.
 
 This is not the same as [numbers-that-looked-fine.md](numbers-that-looked-fine.md).
 There, the number was *empty* — a rate over one item — and an empty result invites

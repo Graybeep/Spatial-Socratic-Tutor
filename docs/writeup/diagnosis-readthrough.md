@@ -1,11 +1,14 @@
 # §9.5 — the diagnosis read-through
 
-*Run on day 12 (2026-09-15), the day a key first made it possible. Call 1:
-`qwen/qwen3.8-27b` via Groq. 30 answered turns over the scored bank, three
-student policies. Raw: [`eval/results/diagnosis_readthrough.json`](../../eval/results/diagnosis_readthrough.json);
-instrument: `eval/diagnosis_readthrough.py`.*
+*Two dated readings of the same measurement. **Day 18 (2026-09-21)** is the
+live one: Call 1 `openai/gpt-oss-120b`, build `18d220d`, raw in
+[`diagnosis_readthrough.json`](../../eval/results/diagnosis_readthrough.json).
+**Day 12 (2026-09-15)** is kept below because it is the reason the re-run
+happened: Call 1 `qwen/qwen3.8-27b`, raw in
+[`diagnosis_readthrough_day12_invalidated.json`](../../eval/results/diagnosis_readthrough_day12_invalidated.json).
+Instrument for both: `eval/diagnosis_readthrough.py`.*
 
-> **INVALIDATED 2026-09-16 (day 13) — read this before anything below.** Every
+> **INVALIDATED 2026-09-16 (day 13), RE-RUN 2026-09-21 (day 18) — read this before anything below.** Every
 > number in this document was produced by a Call 1 that **could not see the
 > dialogue.** `server/llm.py` formatted history with `for who, text in history`
 > over `{"role", "text"}` dicts, which yields the keys, so every entry under
@@ -29,7 +32,69 @@ and not in the way we expected.
 
 ---
 
-## The headline
+## The day-18 re-run, on the fixed build
+
+*Run 2026-09-21 (day 18). Call 1: `openai/gpt-oss-120b` via Groq, build
+`18d220d`. 30 answered turns, three student policies, 10 distinct items,
+coverage 1.0. Raw: [`eval/results/diagnosis_readthrough.json`](../../eval/results/diagnosis_readthrough.json);
+sheet: [`readthrough-sheet.md`](readthrough-sheet.md).*
+
+**The day-12 finding reverses.** Same instrument, same three policies, same
+ground truth, on a build where the model can see what the student clicked:
+
+| true knowledge | `guessing` | `confused_prereq` | `correct` | `on_track` | `stuck` |
+|---|---|---|---|---|---|
+| **zero** — knows nothing | **12 / 12** | 0 | 0 | 0 | 0 |
+| **partial** — knows the region | 3 | 0 | 4 | 2 | 0 |
+| **adversarial** — plays the narrowing | 2 | **4** | 2 | 1 | 0 |
+
+`correct` agreed with the deterministic grade on **30 of 30**.
+
+Set against the table below, which is the same measurement through the
+`role: text` bug:
+
+| | day 12 (blind) | day 18 (fixed) |
+|---|---|---|
+| `zero` → `guessing` | 0 of 12 | **12 of 12** |
+| `zero` → `on_track` | 5 of 12 | 0 |
+| `confused_prereq` ever used | never, 0 of 30 | 4 |
+| server overrode Call 1 where the curriculum moved | 11 of 12 | 6 of 13 |
+
+The prose changed with it. Day 12's diagnoses were specific about the *item* and
+silent about the person; day 18's name the clicks:
+
+> *"Student clicked DCTCP and Expected Rate, both in the congestion control
+> region, showing no movement toward Soft State or its prerequisites."*
+
+> *"Clicks are on Queuing Delay, Resource Allocation, and Bottleneck Router,
+> which are in disparate parts of the map, showing no coherent prerequisite
+> focus, suggesting the student is guessing."*
+
+**This run independently reproduced day 13's abandoned partial.** Run 3 on day 13
+died to an OS memory kill at field 15, having recorded `zero` → `guessing` ×6 and
+`correct` agreeing 15/15. Day 18 hit exactly those numbers at its own field 15
+before continuing to 30. That is corroboration across two runs four days apart,
+not one lucky sample.
+
+### Two things the re-run does not fix
+
+- **`stuck` was used zero times in thirty.** Day 12 had two dead states
+  (`guessing`, `confused_prereq`); this run has one, a different one. The likely
+  cause is the instrument — `--max-turns 3` gives no student time to be stuck —
+  but that is a hypothesis. It is flagged here rather than explained away.
+- **`partial` → `guessing` on 3 of 9.** A student who knows the region is not
+  guessing. This is the one cell that still looks like real miscalibration.
+
+### What is still withdrawn
+
+**`eval/diagnostic_calibration.py` has not been re-run.** Everything in *A
+sharper instrument, and a worse result* below was measured through the same
+`{"role", "text"}` bug and stays withdrawn. It is a separate instrument on a
+separate token budget, and nothing in this section repairs it.
+
+---
+
+## The day-12 headline — superseded, kept because it is the reason the re-run happened
 
 **The diagnosis is fluent, specific about the item, and does not track the
 student.**
@@ -158,13 +223,23 @@ while being shown the answer.
 These are three different statements and the difference between them matters.
 Collapsing them produces either false alarm or false comfort.
 
-### 1. The diagnosis is unreliable
+### 1. The diagnosis is unreliable — **no longer supported as written**
 
-Everything above. On two instruments, one using policy labels and one using
-forced-answer constructed cases, `student_state` does not track the student, and
-`correct` — a boolean the model is handed the answer for — is wrong a third of
-the time on unambiguous input. This is a property of the model and the prompt,
-measured, not inferred.
+> **Superseded by the day-18 re-run.** This part was the day-12 reading. On the
+> fixed build `student_state` tracks the student (`zero` → `guessing` 12/12) and
+> `correct` agreed with the deterministic grade 30 of 30, not "wrong a third of
+> the time". The forced-answer half rests on `diagnostic_calibration.py`, which
+> has not been re-run and is still withdrawn, so no claim is made either way
+> about constructed cases.
+>
+> Parts 2 and 3 below do not depend on the diagnosis being unreliable and are
+> unaffected. That is the point of stating them separately: the architecture was
+> built so that this part could go either way without anything downstream moving.
+
+The day-12 text, kept for the record: on two instruments, one using policy labels
+and one using forced-answer constructed cases, `student_state` did not track the
+student, and `correct` — a boolean the model is handed the answer for — was wrong
+a third of the time on unambiguous input.
 
 ### 2. The architecture makes it inert
 

@@ -143,8 +143,8 @@ much smaller scale.
 | 2026-09-18…24 | week 3 | both of the above, at the projector, contrast check first | rebooked |
 | ~~2026-09-22~~ | 19 | **API key cut** — resolved early, on day 12. See below | **MET, with a caveat** |
 | ~~2026-09-18…24~~ | 12 | diagnosis read-through, 30 `diagnosis` fields (§9.5) | ~~**RUN, and it found something**~~ **INVALIDATED on day 13**: Call 1 was sent `role: text` for every past turn, so the model never saw a click. See [diagnosis-readthrough.md](writeup/diagnosis-readthrough.md) |
-| 2026-09-16 | 13 | **repeat §9.5 on `gpt-oss-120b`**, the model the demo ships — now also the first §9.5 run in which the model can see the dialogue | pulled forward; stopped at field 3 on day 13 when field 1 exposed the history bug, restarted on the fixed build |
-| — | 12 | §6.1 parametric-reconstruction rate | ~~**0/60, reported as a bound.**~~ **Withdrawn on day 13**: layer 1 could not see edge answers (0/49 recall) and Call 2 was shown no history. Re-measure with the §9.5 re-run, which produces these checks as a by-product |
+| ~~2026-09-16~~ 2026-09-21 | 13 → 18 | **repeat §9.5 on `gpt-oss-120b`**, the model the demo ships — now also the first §9.5 run in which the model can see the dialogue | **RUN AND COMPLETE**, 30/30 fields, five days late. See below |
+| — | 12 → 18 | §6.1 parametric-reconstruction rate | ~~**0/60, reported as a bound.**~~ Withdrawn day 13; **re-measured day 18 as 0/34** (95% bound 8.4%, weaker than the withdrawn one — the fix shrank the population). See below |
 | ~~2026-09-17~~ | 14 | **dependency freeze** (§1.8), end of week 2 | **MET a day early**, on day 13 — enforced by a test, see below |
 | 2026-09-25 | 22 | **feature freeze.** Tag `feature-freeze` | pending |
 | 2026-09-29 | 26 | **video walkthrough recorded.** Tag `demo` | pending — **script it around narrowing, not mastery.** See below |
@@ -315,6 +315,53 @@ after 2026-09-10 that change what the demo does on screen — §5's answer maski
 went from inert to working, and `advance`/`explain` stopped being handed the open
 item's answer label. A long-running dev server from an earlier day is serving
 the old behaviour.
+
+### 2026-09-21 (day 18) — the §9.5 re-run finally ran, five days late
+
+It was written down on day 13 as *"tomorrow's first task, on a fresh daily
+budget"*. Days 14–17 produced one commit, a README cleanup. The item did not
+fail on its merits; it simply was not picked up, which is the same failure mode
+as the two unbooked projector items above and is recorded the same way.
+
+**It ran clean:** 30/30 fields, exit 0, no Call 1 fallback, provenance complete,
+build `18d220d`. Roughly 18 minutes at `--pace-s 32`.
+
+**What it found is a reversal, not a confirmation.** `zero` → `guessing` 12/12
+where day 12 had 0/12; `confused_prereq` used 4 times where day 12 never used it;
+`correct` agreeing with the deterministic grade 30/30. The day-12 conclusion —
+*"the diagnosis does not track the student"* — was a finding about the
+`role: text` formatting bug. `report.md` §5.6 and
+[diagnosis-readthrough.md](writeup/diagnosis-readthrough.md) now carry both
+readings, dated.
+
+It also **reproduced day 13's abandoned run-3 partial exactly** (`zero` →
+`guessing` ×6, `correct` 15/15 at field 15) before continuing to 30.
+
+**What the delay cost, concretely.** Nothing in tokens — the run fits the daily
+budget with room. What it cost is week-3 integration time, in the week §11
+already names as the one to budget whole. The projector test and the
+confirm-or-undo observation are still unbooked and still need a person and
+hardware, and week 3 ends 2026-09-24.
+
+**Three things are still open and are not closed by this run:**
+
+- **`eval/diagnostic_calibration.py` has not been re-run.** Same `{"role",
+  "text"}` bug, same withdrawal, separate budget. Still withdrawn.
+- **§6.1 is now 0/34, a weaker bound than the withdrawn 0/60** (8.4% vs 4.9%).
+  The only build carrying both instrument fixes is `18d220d`, verified by
+  `git merge-base`: `614d066` has the history fix but not the edge-answer fix.
+- **`leak_monitor`'s printed HEADLINE pools builds** and must not be quoted;
+  the per-build partition is the quotable object. Recorded as case 4 in
+  [instrument-failures.md](writeup/instrument-failures.md), documented rather
+  than repaired, per §11's cut-from-the-bottom rule.
+
+**Also observed, worth a line in the writeup:** Call 2 on `gpt-oss-20b` invented
+a tool name (`json`) on 4 of 40 turns; the retry from `71501ac` recovered all but
+2, which shipped the canned fallback. Those 2 are real-mode turns carrying a
+template utterance, and the turn record has no `call2_fallback` flag to exclude
+them from §6.1's denominator. They did not land in the screened population this
+time (`fell_back=0` in the partition), but the gap is real and is the kind of
+thing that silently deflates a rate later.
 
 ## Not on this list
 

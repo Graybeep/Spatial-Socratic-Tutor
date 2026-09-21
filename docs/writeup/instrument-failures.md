@@ -1,8 +1,8 @@
 # When the measuring apparatus is the thing that is broken
 
-*Three cases from days 12–13. Each one produced a **confident, specific,
+*Four cases from days 12–18. Each one produced a **confident, specific,
 plausible verdict about the tutor** while the fault was in the code doing the
-measuring. Two of the three were plausible enough that we acted on them before
+measuring. Two of the first three were plausible enough that we acted on them before
 noticing.*
 
 This is a different failure from the ones in
@@ -64,7 +64,7 @@ That is a correct reading of the context we built. The model was answering a
 question about an incoherent history, and we scored the answer as a failure to
 recognise a correct click.
 
-**Why this one is the most dangerous of the three.** The result was *directionally
+**Why this one is the most dangerous of the first three.** The result was *directionally
 consistent with a finding we already believed*. §9.5 had just shown the diagnosis
 was uncorrelated with the student; "it cannot even recognise a correct answer"
 fits that story so neatly that it reads as confirmation rather than as an
@@ -92,7 +92,7 @@ with it.
 
 ---
 
-## What the three have in common
+## What the first three have in common
 
 None of them is a bug in the tutor. All three produced output in the register of
 a result: specific, causal, and about the system under test. And in all three the
@@ -171,3 +171,38 @@ list, because they are operational rather than epistemic: printing the sheet to 
 Windows cp1252 stdout killed a completed thirty-field run at its last step, and
 the turn log could not name which model wrote a diagnosis. Both cost time and
 neither produced a false claim. The distinction is the point of this document.
+
+---
+
+## Case 4 — a partitioned table with a pooled headline (found day 18)
+
+`eval/leak_monitor.py` exists because pooling `logs/turns.jsonl` across builds
+reports 3.94% parametric reconstruction from a bug that is fixed. Its docstring
+says so, its per-build table partitions on the `code` fingerprint, and the whole
+first third of the module is an argument for why that matters.
+
+**Its HEADLINE pools anyway.** Asked for §6.1 on day 18, it printed
+`0 / 3,334` over 25 arms — every *real* arm in the file, spanning builds that
+predate both of the fixes that made the monitor able to see, plus
+`ac2fc28 <eval:adversarial:*>`, the day-13 accidental live run that
+`docs/schedule.md` records in as many words as **not real-model evidence**. The
+clean population for that question was 34 checks on one build.
+
+What makes this worth a case rather than a bug report:
+
+- **The number was not wrong.** `0 / 3,334` is a true count of hits over turns.
+  It is a well-formed rate over a population assembled by no one, which is the
+  failure mode [numbers-that-looked-fine.md](numbers-that-looked-fine.md) is
+  about, occurring *inside the instrument written to prevent it*.
+- **The guard and the summary disagreed and neither noticed.** The partitioning
+  is real and correct; it simply does not reach the line a reader quotes. A
+  defence that holds in the table and lapses in the headline is worse than no
+  defence, because the table is what persuades you the headline is safe.
+- **It would have inflated n by 98×** and tightened a reported bound from 8.4%
+  to something near 0.1%, in the direction that flatters the system.
+
+The fix applied here was to quote the per-build partition in §5.5 and say
+explicitly that the headline is not quotable. That is a documentation fix to a
+code defect, chosen because day 18 is inside week 3 and `CLAUDE.md` §11 says a
+week that overruns cuts from the bottom rather than borrowing. The defect is
+recorded rather than repaired, which is the honest version of that trade.
