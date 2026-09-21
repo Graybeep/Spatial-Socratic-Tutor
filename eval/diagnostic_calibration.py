@@ -42,9 +42,13 @@ matters.
 from __future__ import annotations
 
 import argparse
+import contextlib
 import json
+import shutil
 import sys
+import tempfile
 import time
+from pathlib import Path
 from dataclasses import dataclass, field, asdict
 from typing import Optional
 
@@ -112,6 +116,29 @@ def _history(store: GraphStore, item, kind: str) -> list:
         picks = [answer]
     elif kind == "none":
         return []
+    elif kind == "text_only":
+        # NO CLICKS. The student types on-topic prose and is wrong each time.
+        #
+        # This is the case where `stuck` is the residual rather than the cheap
+        # answer, and it is built by REMOVING evidence rather than by adding a
+        # different pattern. `confused_prereq` needs clicks clustered upstream;
+        # `guessing` needs clicks scattered across unrelated regions. Neither
+        # has anything to read here, because there is no spatial evidence at
+        # all - and the prompt defines `stuck` as exactly that residual: "no
+        # pattern you can name".
+        #
+        # Free text is never scored (§1.4). It is still dialogue the tutor sees,
+        # and a student who types instead of clicking is not hypothetical.
+        said = [
+            "is it something about how the sender decides how fast to go?",
+            "i think it's the part where the router tells you it's full",
+            "something to do with the window getting smaller?",
+        ]
+        out = []
+        for text in said:
+            out.append({"role": "tutor", "text": item.prompt})
+            out.append({"role": "student", "text": text})
+        return out
     else:
         raise ValueError(kind)
 
@@ -148,6 +175,18 @@ CASES = (
         turns_on_item=1,
     ),
     Case(
+        name="no_pattern_to_name",
+        why=("three wrong free-text answers and no clicks at all - there is no "
+             "spatial pattern to read, which is what `stuck` is FOR"),
+        # Generous, per this module's convention. `guessing` is defensible on a
+        # student who is wrong three times; what is being tested is whether the
+        # model can still REACH for `stuck` when it is the honest residual.
+        admissible=("stuck", "guessing"),
+        specific="stuck",
+        turns_on_item=3,
+        hint_level=3,
+    ),
+    Case(
         name="opening_turn",
         why="no response exists yet; there is nothing to diagnose",
         admissible=("on_track",),
@@ -175,6 +214,10 @@ def _items_with_prereqs(store: GraphStore, n: int) -> list:
 @dataclass
 class Result:
     case: str = ""
+    #: WHICH PROMPT PRODUCED THIS. The day-12 read-through and the day-18 one
+    #: differ by model, by the history fix AND by this, so a result that cannot
+    #: name its prompt cannot attribute anything.
+    prompt: str = ""
     item_id: str = ""
     said: str = ""
     action: str = ""
@@ -188,7 +231,57 @@ class Result:
     error: str = ""
 
 
-def run(model: Optional[str], repeats: int, pace_s: float) -> list:
+#: Committed so the A/B is reproducible. `prompts/` is the LIVE prompt and is
+#: config (§13.1); these are historical artefacts kept as eval fixtures, the
+#: same way data/ holds frozen inputs. Extracted with
+#: `git show 516795d^:prompts/call1_system.md`.
+PROMPT_VERSIONS = {
+    "current": None,
+    "pre-falsifiability": "call1_system.pre-falsifiability.md",
+}
+
+
+def _prompt_dir() -> Path:
+    return Path(__file__).resolve().parent / "prompt_versions"
+
+
+@contextlib.contextmanager
+def use_prompt(version: str):
+    """Run the block with `prompts/call1_system.md` swapped for `version`.
+
+    Copies the whole prompts directory rather than editing it in place: a run
+    that dies mid-way must not leave the demo serving a three-week-old tutor
+    contract. `llm.prompt` is lru_cached, so the cache is cleared on the way in
+    AND on the way out - forgetting the second is how the next block silently
+    keeps the previous version.
+    """
+    name = PROMPT_VERSIONS[version]
+    if name is None:
+        yield version
+        return
+
+    source = _prompt_dir() / name
+    if not source.exists():
+        raise FileNotFoundError(f"no committed prompt fixture at {source}")
+
+    original = CONFIG.prompts_dir
+    with tempfile.TemporaryDirectory() as td:
+        staged = Path(td)
+        for f in original.iterdir():
+            if f.is_file():
+                shutil.copy2(f, staged / f.name)
+        shutil.copy2(source, staged / "call1_system.md")
+        object.__setattr__(CONFIG, "prompts_dir", staged)
+        llm.prompt.cache_clear()
+        try:
+            yield version
+        finally:
+            object.__setattr__(CONFIG, "prompts_dir", original)
+            llm.prompt.cache_clear()
+
+
+def run(model: Optional[str], repeats: int, pace_s: float,
+        prompts: tuple = ("current",)) -> list:
     store = GraphStore.load()
     digest = llm.graph_digest(store)
     items = _items_with_prereqs(store, repeats)
@@ -198,11 +291,14 @@ def run(model: Optional[str], repeats: int, pace_s: float) -> list:
             effort=CONFIG.call1.effort, timeout_s=90.0))
 
     kinds = {"scattered_clicks": "scattered", "all_clicks_are_prereqs": "prereqs",
-             "answered_correctly": "correct", "opening_turn": "none"}
+             "answered_correctly": "correct", "opening_turn": "none",
+             "no_pattern_to_name": "text_only"}
     results = []
     last = 0.0
     with origin.declare("eval:diagnostic_calibration"):
-        for case in CASES:
+      for version in prompts:
+        with use_prompt(version):
+          for case in CASES:
             for item in items:
                 if pace_s:
                     wait = pace_s - (time.monotonic() - last)
@@ -210,7 +306,7 @@ def run(model: Optional[str], repeats: int, pace_s: float) -> list:
                         time.sleep(wait)
                 last = time.monotonic()
 
-                r = Result(case=case.name, item_id=item.id)
+                r = Result(case=case.name, item_id=item.id, prompt=version)
                 try:
                     d = llm.call1(
                         item_prompt=item.prompt, answer=item.answer,
@@ -231,12 +327,57 @@ def run(model: Optional[str], repeats: int, pace_s: float) -> list:
                 except Exception as exc:  # noqa: BLE001 - reported, not raised
                     r.error = f"{type(exc).__name__}: {str(exc)[:160]}"
                 results.append(r)
-                print(f"  {case.name:24} {item.id} -> {r.said or r.error[:40]}",
+                print(f"  [{version:18}] {case.name:22} {item.id} -> "
+                      f"{r.said or r.error[:40]}",
                       file=sys.stderr, flush=True)
     return results
 
 
 def score(results: list) -> dict:
+    """One block per prompt version, plus the A/B comparison between them.
+
+    Reported PER PROMPT rather than pooled, because pooling is what made the
+    day-12/day-18 reversal unattributable in the first place: three variables
+    moved at once and the result had one number.
+    """
+    versions = []
+    for r in results:
+        if r.prompt not in versions:
+            versions.append(r.prompt)
+
+    by_prompt = {v: _score_one([r for r in results if r.prompt == v])
+                 for v in versions}
+
+    out = {
+        "call1_model": CONFIG.call1.model,
+        "provider": CONFIG.llm_provider,
+        "prompts": versions,
+        "by_prompt": by_prompt,
+    }
+
+    # The A/B, stated only where both arms actually produced data. Two empty
+    # arms compare equal, and this module has already shipped that bug once.
+    if len(versions) == 2:
+        a, b = versions
+        pa, pb = by_prompt[a], by_prompt[b]
+        measurable = pa["measured"] and pb["measured"]
+        out["ab"] = {
+            "arms": [a, b],
+            "measurable": measurable,
+            "specific_hits": None if not measurable else {
+                a: pa["specific_hits_total"], b: pb["specific_hits_total"]},
+            "of": None if not measurable else pa["scored_total"],
+            "discriminates": None if not measurable else {
+                a: pa["separates_guessing_from_prereq_confusion"],
+                b: pb["separates_guessing_from_prereq_confusion"]},
+            "stuck_when_stuck_is_right": None if not measurable else {
+                a: pa["cases"].get("no_pattern_to_name", {}).get("specific_hits"),
+                b: pb["cases"].get("no_pattern_to_name", {}).get("specific_hits")},
+        }
+    return out
+
+
+def _score_one(results: list) -> dict:
     done = [r for r in results if not r.error]
     by_case: dict = {}
     for case in CASES:
@@ -280,10 +421,12 @@ def score(results: list) -> dict:
     }
 
     return {
-        "call1_model": CONFIG.call1.model,
+        "measured": bool(done),
+        "n": len(done),
         "correct_boolean": correct_agreement,
-        "provider": CONFIG.llm_provider,
         "cases": by_case,
+        "specific_hits_total": sum(1 for r in done if r.specific_hit),
+        "scored_total": len(done),
         "errors": [asdict(r) for r in results if r.error],
         "separates_guessing_from_prereq_confusion": discriminates,
         "provenance": provenance.over(
@@ -295,34 +438,76 @@ def score(results: list) -> dict:
 
 
 def render(result: dict) -> str:
-    L = [f"Call 1 diagnostic calibration - {result['call1_model']} via {result['provider']}",
-         "",
-         f"{'case':26}{'n':>3}{'admissible':>12}{'specific':>10}   what it said",
+    L = [f"Call 1 diagnostic calibration - {result['call1_model']} "
+         f"via {result['provider']}",
+         f"prompts under test: {', '.join(result['prompts'])}",
          ""]
-    for name, c in result["cases"].items():
-        L.append(f"{name:26}{c['n']:>3}{c['admissible']:>12}{c['specific_hits']:>10}   {c['said']}")
-    L.append("")
-    L.append(f"  admissible = any defensible state ({'stuck' } is admissible almost everywhere)")
+
+    for version in result["prompts"]:
+        block = result["by_prompt"][version]
+        L.append(f"--- prompt: {version} " + "-" * max(0, 52 - len(version)))
+        L.append("")
+        L.append(f"{'case':26}{'n':>3}{'admissible':>12}{'specific':>10}"
+                 f"   what it said")
+        for name, c in block["cases"].items():
+            L.append(f"{name:26}{c['n']:>3}{c['admissible']:>12}"
+                     f"{c['specific_hits']:>10}   {c['said']}")
+        L.append("")
+        cb = block["correct_boolean"]
+        if cb["of"]:
+            L.append(f"  `correct` boolean (the field §7 actually scores): "
+                     f"{cb['agree']}/{cb['of']}")
+        verdict = block["separates_guessing_from_prereq_confusion"]
+        if verdict is None:
+            L.append("  NOT MEASURED - one or both contrasting cases returned "
+                     "nothing.")
+            L.append("  This is not a finding about the model. A verdict needs "
+                     "both distributions;")
+            L.append("  with either empty there is nothing to compare.")
+        elif verdict:
+            L.append("  SEPARATES a scattered guesser from a prerequisite "
+                     "confusion.")
+        else:
+            L.append("  DOES NOT SEPARATE a scattered guesser from a "
+                     "prerequisite confusion:")
+            L.append("  two unambiguously different students, one distribution.")
+        if block["errors"]:
+            L.append(f"  {len(block['errors'])} call(s) failed: "
+                     f"{block['errors'][0]['error']}")
+        L.append("")
+
+    L.append("  admissible = any defensible state (`stuck` is admissible almost "
+             "everywhere)")
     L.append("  specific   = the state the evidence actually supports")
     L.append("")
-    cb = result["correct_boolean"]
-    if cb["of"]:
-        L.append(f"  `correct` boolean (the field §7 actually scores): "
-                 f"{cb['agree']}/{cb['of']}")
-        L.append("")
-    verdict = result["separates_guessing_from_prereq_confusion"]
-    if verdict is None:
-        L.append("  NOT MEASURED - one or both contrasting cases returned nothing.")
-        L.append("  This is not a finding about the model. A verdict needs both")
-        L.append("  distributions; with either empty there is nothing to compare.")
-    elif verdict:
-        L.append("  SEPARATES a scattered guesser from a prerequisite confusion.")
-    else:
-        L.append("  DOES NOT SEPARATE a scattered guesser from a prerequisite confusion:")
-        L.append("  two unambiguously different students, one distribution. The")
-        L.append("  diagnosis is not reading the history.")
-    if result["errors"]:
-        L.append(f"\n  {len(result['errors'])} call(s) failed: {result['errors'][0]['error']}")
+
+    ab = result.get("ab")
+    if ab:
+        a, b = ab["arms"]
+        L.append("A/B (same model, same fixed harness, prompt is the only "
+                 "variable)")
+        if not ab["measurable"]:
+            L.append("  NOT MEASURABLE - an arm produced no scored cases. Two "
+                     "empty arms")
+            L.append("  compare equal, and this module has shipped that bug "
+                     "once already.")
+        else:
+            L.append(f"  specific diagnoses: {a} {ab['specific_hits'][a]}"
+                     f"/{ab['of']}   vs   {b} {ab['specific_hits'][b]}"
+                     f"/{ab['of']}")
+            L.append(f"  separates the two students: {a} "
+                     f"{ab['discriminates'][a]}   vs   {b} "
+                     f"{ab['discriminates'][b]}")
+            sw = ab["stuck_when_stuck_is_right"]
+            L.append(f"  says `stuck` when `stuck` IS right: {a} {sw[a]}"
+                     f"   vs   {b} {sw[b]}")
+            L.append("")
+            L.append("  The last row is the counter-test. The current prompt "
+                     "tells the model to")
+            L.append("  be suspicious of `stuck`; a prompt that made it unable "
+                     "to say `stuck` when")
+            L.append("  `stuck` is the honest answer would score well above and "
+                     "still be worse.")
     return "\n".join(L)
 
 
@@ -332,6 +517,10 @@ def main() -> int:
     parser.add_argument("--repeats", type=int, default=2,
                         help="items per case; each is one Call 1 (~2,900 tokens)")
     parser.add_argument("--pace-s", type=float, default=25.0)
+    parser.add_argument("--prompts", default="current",
+                        help="comma-separated prompt versions to sweep. "
+                             f"Known: {','.join(PROMPT_VERSIONS)}. "
+                             "Use 'current,pre-falsifiability' for the A/B.")
     parser.add_argument("--json", default=None)
     args = parser.parse_args()
 
@@ -346,7 +535,14 @@ def main() -> int:
               "would measure mock_tutor.py. Set MOCK_MODE=false.", file=sys.stderr)
         return 2
 
-    results = run(args.model, args.repeats, args.pace_s)
+    versions = tuple(v.strip() for v in args.prompts.split(",") if v.strip())
+    unknown = [v for v in versions if v not in PROMPT_VERSIONS]
+    if unknown:
+        print(f"unknown prompt version(s): {unknown}. "
+              f"Known: {sorted(PROMPT_VERSIONS)}", file=sys.stderr)
+        return 2
+
+    results = run(args.model, args.repeats, args.pace_s, versions)
     result = score(results)
 
     if args.json:
