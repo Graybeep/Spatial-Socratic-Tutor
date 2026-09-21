@@ -72,6 +72,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Iterable, Optional
 
+from server import build_info
 from server.config import CONFIG
 from server.guards import RECONSTRUCTION_ACTIONS
 from eval import provenance
@@ -159,8 +160,15 @@ def _relative(path: Path) -> str:
         return path.name
 
 
-def measure(path: Optional[Path] = None) -> dict:
+def measure(path: Optional[Path] = None, build: Optional[str] = None,
+            pool_builds: bool = False) -> dict:
     path = path or (CONFIG.log_dir / "turns.jsonl")
+
+    # Captured BEFORE the loop below, which reuses the name `build` for each
+    # record's own stamp. Without this the headline was scoped to whatever the
+    # last line in the file happened to be - found day 18, and it reported
+    # `pre-stamp` while build_info.CODE said otherwise.
+    want_build = build
 
     arms: dict = defaultdict(Arm)
     real_turns = 0
@@ -170,6 +178,11 @@ def measure(path: Optional[Path] = None) -> dict:
     turns = 0
     origins: Counter = Counter()
     screened_items: set = set()
+    #: Screened turns dropped because a template, not the model, wrote them.
+    #: Reported rather than silently subtracted - a denominator that shrinks
+    #: without saying why is the thing this module exists to prevent.
+    template_turns = 0
+    canned = _canned_fallbacks()
 
     for record in read(path):
         if record.get("_malformed"):
@@ -203,6 +216,20 @@ def measure(path: Optional[Path] = None) -> dict:
         # person at the keyboard are two populations, and once a key lands they
         # are both `[real]` at the same build. Turns logged before origin
         # existed carry none, and say so rather than being assumed human.
+        # A turn whose utterance came from prompts/fallback_*.txt is not
+        # evidence about a model: §6.1 asks whether the MODEL reconstructed the
+        # answer from its weights, and a template has none. Counting it as a
+        # clean screened turn inflates the denominator in the flattering
+        # direction - the same defect as pooling mock turns, one layer down.
+        #
+        # Layer 1's OWN fallback is a different animal and must stay: it ships
+        # the same canned text, but only after a hit was detected and the
+        # regeneration hit too. Those turns carry a leak_note and are the
+        # numerator. Dropping them by text match would delete real detections.
+        if _is_call2_fallback(record, canned):
+            template_turns += 1
+            continue
+
         driver = record.get("origin") or UNKNOWN_ORIGIN
         arm = arms[(build, mode, driver, bucket_for(action))]
         arm.checks += 1
@@ -269,10 +296,11 @@ def measure(path: Optional[Path] = None) -> dict:
         "stamped_builds": sorted(stamped),
         "unstamped_turns": builds.get(UNSTAMPED, 0),
         "real_turns": real_turns,
+        "template_turns": template_turns,
         "mock_turns": turns - real_turns,
         "arms": out_arms,
         "origins": dict(origins.most_common()),
-        "headline": headline(out_arms),
+        "headline": headline(out_arms, build=want_build, pool_builds=pool_builds),
         "provenance": provenance.over(
             population, screened_items, observations=turns,
             unit="items", expect_full=False,
@@ -280,10 +308,62 @@ def measure(path: Optional[Path] = None) -> dict:
     }
 
 
-def headline(arms: dict) -> dict:
-    """§6's number: parametric reconstruction, stamped builds, REAL turns only.
+def _is_call2_fallback(record: dict, canned: set) -> bool:
+    """Did a template write this utterance because Call 2 failed?
 
-    Two exclusions, and neither is fussiness.
+    Two tests, because the flag is younger than the log. `call2_fallback` is
+    authoritative where present. Where it is absent the utterance is compared
+    against the canned set, but ONLY on a turn with no leak_note - a note means
+    layer 1 fired, and layer 1's own fallback ships the same text for the
+    opposite reason.
+    """
+    if record.get("call2_fallback"):
+        return True
+    if record.get("call2_fallback") is False:
+        return False  # flag present and negative: trust it, do not guess
+    if record.get("leak_note"):
+        return False
+    return (record.get("utterance") or "").strip() in canned
+
+
+def _canned_fallbacks() -> set:
+    """Every string `mock_tutor.fallback_utterance` can ship, read from disk.
+
+    Needed because `call2_fallback` only exists on turns written from 97fe837
+    onward. The day-18 §6.1 population predates the flag, so without a
+    retroactive test the number already reported could not be corrected.
+    Matching on the text works backwards through the whole log.
+    """
+    return {
+        path.read_text(encoding="utf-8").strip()
+        for path in CONFIG.prompts_dir.glob("fallback_*.txt")
+    }
+
+
+def headline(arms: dict, build: Optional[str] = None,
+             pool_builds: bool = False) -> dict:
+    """§6's number: parametric reconstruction, ONE build, REAL turns only.
+
+    THE DEFAULT IS ONE BUILD, AND THAT IS THE WHOLE POINT OF THIS FUNCTION.
+    ---------------------------------------------------------------------
+    Until day 18 this pooled every stamped real arm in the file. Asked for
+    §6.1 that day it printed 0/3,334 over 25 arms, spanning builds that
+    predate both of the fixes that made the monitor able to see an edge
+    answer, plus `ac2fc28 <eval:adversarial:*>` - the accidental live run
+    that docs/schedule.md records in as many words as NOT real-model
+    evidence. The clean population for the question asked was 34 checks on
+    one build.
+
+    The per-build table below it was correct the whole time. That is what
+    made the headline dangerous: the table is what persuades a reader the
+    summary line is safe. A defence that holds in the table and lapses in
+    the line people quote is worse than no defence.
+
+    So: the headline is the CURRENT build unless told otherwise, `build=`
+    names a different one, and `pool_builds=True` restores the old
+    behaviour for anyone who wants it and has to ask.
+
+    Three exclusions, and none is fussiness.
 
     Unstamped turns cannot name the code that produced them, and this file's
     whole reason for existing is that a fixed bug in that corpus reports as a
@@ -297,14 +377,19 @@ def headline(arms: dict) -> dict:
     So when there are no real turns this returns `rate: None` and says why,
     rather than returning a number that would be quoted.
     """
+    want = build or build_info.CODE
     checks = hits = 0
     used = []
+    skipped_builds: set = set()
     pooled_origins: set = set()
     for arm_id, buckets in arms.items():
         cell = buckets.get("parametric_reconstruction")
         if not cell:
             continue
         if cell["build"] == UNSTAMPED or cell["mode"] != "real":
+            continue
+        if not pool_builds and cell["build"] != want:
+            skipped_builds.add(cell["build"])
             continue
         used.append(arm_id)
         pooled_origins.add(cell["origin"])
@@ -317,7 +402,16 @@ def headline(arms: dict) -> dict:
             "checks": 0,
             "hits": 0,
             "rate": None,
-            "blocked_by": "no stamped real-model turns in the log",
+            "build": want,
+            "pooled_builds": pool_builds,
+            "builds_not_pooled": sorted(skipped_builds),
+            "blocked_by": (
+                "no stamped real-model turns in the log"
+                if not skipped_builds else
+                f"no real turns at build {want}; "
+                f"{len(skipped_builds)} other build(s) present and NOT pooled "
+                f"(pass --pool-builds to override, and read why first)"
+            ),
             "why": (
                 "MOCK_MODE Call 2 is a template lookup with no weights to "
                 "reconstruct an answer from. Its hit rate measures "
@@ -326,6 +420,11 @@ def headline(arms: dict) -> dict:
         }
     return {
         "arms": sorted(used),
+        # WHICH BUILD. A rate that cannot name the code that produced it is
+        # not a result, and one that silently spans several is worse.
+        "build": want,
+        "pooled_builds": pool_builds,
+        "builds_not_pooled": sorted(skipped_builds),
         # WHAT THIS RATE POOLED. Builds and actions are refused outright above;
         # origins are pooled, because with a key the sample that makes §6.1
         # measurable at all is a deliberate eval sweep. What must not happen is
@@ -387,7 +486,18 @@ def render(result: dict) -> str:
     else:
         L.append(f"  parametric reconstruction: {head['hits']:,} / {head['checks']:,} "
                  f"= {head['rate']:.2%}")
-        L.append(f"  arms pooled: {', '.join(head['arms'])}")
+        L.append(f"  build: {head['build']}"
+                 + ("  (POOLED ACROSS BUILDS - see leak_monitor.headline)"
+                    if head["pooled_builds"] else ""))
+        L.append(f"  arms: {', '.join(head['arms'])}")
+        if head["builds_not_pooled"]:
+            L.append(f"  {len(head['builds_not_pooled'])} other real build(s) in "
+                     f"this log were NOT pooled, on purpose.")
+    if result.get("template_turns"):
+        L.append("")
+        L.append(f"  {result['template_turns']:,} screened turn(s) excluded: a "
+                 f"prompts/fallback_*.txt template wrote the utterance, not the")
+        L.append(f"  model, so they cannot exhibit parametric reconstruction.")
     L.append("")
     L.append("A hit on a reconstruction action means Call 2 produced the answer")
     L.append("without ever being shown it. A hit on an authorised action means the")
@@ -400,9 +510,17 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--log", type=Path, default=None)
     parser.add_argument("--json", type=str, default=None)
+    parser.add_argument("--build", default=None,
+                        help="which build the headline reports. Default: the "
+                             "current one. The per-build table always shows all.")
+    parser.add_argument("--pool-builds", action="store_true",
+                        help="pool every stamped real build into the headline. "
+                             "This is what produced 0/3,334 across 25 arms on "
+                             "day 18; read leak_monitor.headline before using it.")
     args = parser.parse_args()
 
-    result = measure(args.log)
+    result = measure(args.log, build=args.build,
+                     pool_builds=args.pool_builds)
     print(render(result))
 
     if args.json:

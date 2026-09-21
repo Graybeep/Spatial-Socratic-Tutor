@@ -64,7 +64,7 @@ def test_authorised_naming_is_not_pooled_into_the_headline(tmp_path):
         _turn(server_action="advance", mock=False, leak_note="leak_monitor_hit: alias 'x' at 1.00"),
         _turn(server_action="hint_verbal", mock=False),
     ])
-    result = LM.measure(path)
+    result = LM.measure(path, build="abc1234")
     assert result["headline"]["hits"] == 0
     assert result["headline"]["checks"] == 1
 
@@ -120,7 +120,7 @@ def test_a_real_turn_produces_a_headline(tmp_path):
         _turn(mock=False, item_id=f"itm_{i:04d}") for i in range(1, 5)
     ] + [_turn(mock=False, item_id="itm_0005",
                leak_note="leak_monitor_hit: alias 'slow start' at 1.00")])
-    head = LM.measure(path)["headline"]
+    head = LM.measure(path, build="abc1234")["headline"]
     assert head["checks"] == 5
     assert head["hits"] == 1
     assert head["rate"] == 0.2
@@ -212,7 +212,7 @@ def test_arms_are_split_by_origin(tmp_path):
               item_id=f"itm_{i:04d}")
         for i in range(4)
     ]
-    result = LM.measure(_log(tmp_path, records))
+    result = LM.measure(_log(tmp_path, records), build="abc1234")
 
     keys = sorted(result["arms"])
     assert len(keys) == 2, f"origins were pooled into one arm: {keys}"
@@ -228,7 +228,7 @@ def test_a_turn_without_an_origin_is_not_assumed_human(tmp_path):
     put ~650k simulated turns into §9.5's sample pool."""
     record = _turn(mock=False)
     record.pop("origin", None)
-    result = LM.measure(_log(tmp_path, [record]))
+    result = LM.measure(_log(tmp_path, [record]), build="abc1234")
 
     assert LM.UNKNOWN_ORIGIN in result["origins"]
     assert result["headline"]["origins"] == [LM.UNKNOWN_ORIGIN]
@@ -241,9 +241,118 @@ def test_the_headline_filters_on_fields_not_on_key_spelling(tmp_path):
     result = LM.measure(_log(tmp_path, [
         _turn(mock=False, origin="server", item_id="itm_0001"),
         _turn(mock=True, origin="server", item_id="itm_0002"),
-    ]))
+    ]), build="abc1234")
     assert result["headline"]["blocked_by"] is None, (
         "a real stamped turn was not counted; the headline is matching on the "
         "shape of the arm id rather than on its fields"
     )
     assert result["headline"]["checks"] == 1, "a mock turn reached §6.1's number"
+
+
+# --- templates are not model output ----------------------------------------
+
+def _canned(action="hint_verbal"):
+    """A real fallback string, read the way the server reads it."""
+    from server.config import CONFIG
+    return (CONFIG.prompts_dir / f"fallback_{action}.txt").read_text(
+        encoding="utf-8").strip()
+
+
+def test_a_call2_fallback_turn_is_not_a_clean_check(tmp_path):
+    """§6.1 asks whether the MODEL reconstructed an answer from its weights.
+    A prompts/fallback_*.txt template has none, so counting it as a screened
+    turn that produced no hit inflates the denominator - the same defect as
+    pooling mock turns, one layer down."""
+    path = _log(tmp_path, [
+        _turn(mock=False, item_id="itm_0001", call2_fallback=True,
+              utterance=_canned()),
+        _turn(mock=False, item_id="itm_0002", call2_fallback=False,
+              utterance="A model wrote this one."),
+    ])
+    result = LM.measure(path, build="abc1234")
+    assert result["headline"]["checks"] == 1, (
+        "a template utterance was counted as a clean screened turn")
+    assert result["template_turns"] == 1
+
+
+def test_the_exclusion_works_on_logs_older_than_the_flag(tmp_path):
+    """`call2_fallback` only exists from 97fe837 on. The day-18 §6.1 population
+    predates it, so the text of the canned set is the retroactive test."""
+    record = _turn(mock=False, item_id="itm_0001", utterance=_canned())
+    record.pop("call2_fallback", None)
+    path = _log(tmp_path, [record])
+    result = LM.measure(path, build="abc1234")
+    assert result["template_turns"] == 1
+    assert result["headline"]["rate"] is None, (
+        "the only screened turn was a template; there is no rate to report")
+
+
+def test_layer1s_own_fallback_is_still_a_hit(tmp_path):
+    """The one that must NOT be excluded.
+
+    Layer 1 ships the same canned text after a hit whose regeneration also hit.
+    Those turns carry a leak_note and are the NUMERATOR. Dropping them by text
+    match would delete real detections and report a cleaner system than exists.
+    """
+    path = _log(tmp_path, [
+        _turn(mock=False, item_id="itm_0001", utterance=_canned(),
+              leak_note="leak_monitor_hit: alias 'slow start' at 1.00 fell_back"),
+    ])
+    result = LM.measure(path, build="abc1234")
+    assert result["template_turns"] == 0, "a real layer-1 detection was dropped"
+    assert result["headline"]["hits"] == 1
+    assert result["headline"]["checks"] == 1
+
+
+def test_an_explicit_false_flag_is_trusted_over_the_text(tmp_path):
+    """If the model genuinely wrote something matching the canned text, the
+    flag is authoritative. Guessing over a recorded fact is how a monitor
+    starts disagreeing with the system it monitors."""
+    path = _log(tmp_path, [
+        _turn(mock=False, item_id="itm_0001", call2_fallback=False,
+              utterance=_canned()),
+    ])
+    result = LM.measure(path, build="abc1234")
+    assert result["template_turns"] == 0
+    assert result["headline"]["checks"] == 1
+
+
+# --- the headline is one build ---------------------------------------------
+
+def test_the_headline_does_not_pool_builds_by_default(tmp_path):
+    """Day 18: asked for §6.1 this printed 0/3,334 over 25 arms spanning builds
+    that predate the fixes making the monitor able to see, plus an accidental
+    live run the schedule records as not being evidence."""
+    path = _log(tmp_path, [
+        _turn(mock=False, code="old", item_id="itm_0001"),
+        _turn(mock=False, code="old", item_id="itm_0002"),
+        _turn(mock=False, code="new", item_id="itm_0003"),
+    ])
+    head = LM.measure(path, build="new")["headline"]
+    assert head["checks"] == 1, "builds were pooled into the headline"
+    assert head["build"] == "new"
+    assert head["builds_not_pooled"] == ["old"], (
+        "a build was dropped without the result saying so")
+
+
+def test_pooling_builds_is_available_but_must_be_asked_for(tmp_path):
+    path = _log(tmp_path, [
+        _turn(mock=False, code="old", item_id="itm_0001"),
+        _turn(mock=False, code="new", item_id="itm_0002"),
+    ])
+    head = LM.measure(path, pool_builds=True)["headline"]
+    assert head["checks"] == 2
+    assert head["pooled_builds"] is True
+
+
+def test_the_headline_build_survives_the_aggregation_loop(tmp_path):
+    """Regression. `measure` reuses the name `build` for each record's own
+    stamp, so the parameter was clobbered and the headline silently scoped
+    itself to whatever the LAST line in the file happened to be."""
+    path = _log(tmp_path, [
+        _turn(mock=False, code="wanted", item_id="itm_0001"),
+        _turn(mock=False, code="zzz_last_line", item_id="itm_0002"),
+    ])
+    head = LM.measure(path, build="wanted")["headline"]
+    assert head["build"] == "wanted"
+    assert head["checks"] == 1
