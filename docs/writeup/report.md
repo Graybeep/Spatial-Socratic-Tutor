@@ -503,7 +503,7 @@ is and the 83% is reported rather than repaired.
 
 ## 6. What we got wrong, and why that is in the report
 
-Five failures in the system, in four weeks, found by the people who wrote the
+Six failures in the system, in four weeks, found by the people who wrote the
 code. We include them because in every case the *intuitive* fix would have hidden
 the problem rather than surfaced it, and because all of them survived a test suite
 a reviewer would have called adequate.
@@ -518,12 +518,27 @@ a reviewer would have called adequate.
   blind to exactly the kind of drift it existed to catch.
 - **[diagnosis-readthrough.md](diagnosis-readthrough.md)** — the tutor's model
   of the student, measured against a ground truth it could not see. Found not to
-  track it on day 12, then found to track it on day 18 once a formatting bug
-  stopped hiding the dialogue from the model. Both readings are in the file,
-  because the first one is the reason the second is believable.
+  track it on day 12, found to track it on day 18. Both readings are in the file,
+  because the first is the reason the second is believable — and because the
+  *explanation* we gave for the difference on the morning of day 18 was wrong,
+  which is the sixth failure below.
 - **[limitations.md](limitations.md)** — everything above plus the rest,
   including two figures in this report's own source that were stale prose until
   day 8 because they had been typed rather than derived.
+
+- **The sixth is an attribution, not a bug, and it is ours from day 18.** The
+  §9.5 re-run reversed the day-12 finding, and we wrote up the reversal as the
+  history fix (`1cfc74a`) doing the work. It was a single-cause story for a
+  change that moved three variables — prompt, history handling and model — and
+  it was written *the same morning*, into a report whose entire argument is that
+  you must ask what a number was computed over. Checking commit timestamps is
+  what broke it: the Call 1 prompt rewrite landed an hour and three quarters
+  after the day-12 run, so day 12 had been using a different prompt all along.
+  An A/B that afternoon showed the old prompt reproducing the day-12 degeneracy
+  on a fully fixed harness. §5.5 now carries the controls table; §5.6 carries
+  the corrected attribution. **The lesson is not "check your commits" — it is
+  that a fix you have just shipped is the most attractive available explanation
+  for any improvement that follows it.**
 
 If that pattern generalises even weakly, published leakage and learning-gain
 figures from systems of this shape deserve a question rarely asked of them:
@@ -535,7 +550,7 @@ know."**
 **[instrument-failures.md](instrument-failures.md)** — kept separate from §6
 because it is a different failure and, we think, the more transferable one.
 
-The five above are faults in the tutor. These are faults in the code doing
+The six above are faults in the tutor, or in how we read it. These are faults in the code doing
 the *measuring*, and each produced a confident, specific, plausible verdict **about
 the tutor** while the fault was in the harness. Two of them were plausible
 enough that we acted on them before noticing, and the fourth was caught only
