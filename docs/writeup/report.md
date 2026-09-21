@@ -6,8 +6,17 @@ measurements do and do not support. Each section links to the detailed writeup
 that carries its evidence; nothing important is asserted here that is not argued
 there.*
 
-*Every number below is regenerable from a clean clone with no API key. The
-command that produces it is given beside it.*
+*The command that produces each number is given beside it. **Most of them
+regenerate from a clean clone with no API key** — §5.2, §5.3, §5.4 and §5.7 are
+deterministic or mock-driven and need neither key nor network.*
+
+***Two do not, and it would be a poor report that blurred the difference.***
+*§5.5's `0/34` and every figure in §5.6 come from live `gpt-oss-120b` runs. They
+need an API key, and §5.5's also needs `logs/turns.jsonl`, which is gitignored —
+on a clean clone `eval.leak_monitor` correctly reports `NOT MEASURABLE` rather
+than inventing a number. The raw outputs of those runs are committed under
+[`eval/results/`](../../eval/results/) so the figures can be **checked** without
+a key even though they cannot be **regenerated** without one.*
 
 ---
 
@@ -294,8 +303,10 @@ identically to the real thing. The aggregator returned `rate: null` and printed
 **The day-12 reading of 0/60 was withdrawn on day 13** for two defects, both since
 fixed. (1) The monitor could not see edge answers: an edge item's answer is an id
 pair with no aliases, and layer 1 caught an utterance naming its FROM endpoint on
-**0 of 49** edge items. Edge items are 49 of the 101 scored items. Fixed in
-`522defc` (49 of 49, no false positive on the anchor). (2) Call 2 was shown no
+**0 of 49** edge items. Those 49 are the edge half of the **101 click items**
+(§5.1); 17 of them are in the 69-item scored bank, and the monitor screens
+utterances on all 49 regardless of whether the item scores. Fixed in `522defc`
+(49 of 49, no false positive on the anchor). (2) Call 2 was shown no
 history — every past turn arrived as the literal line `role: text` — so the model
 being monitored had less to reconstruct from than the shipping one does. Fixed in
 `1cfc74a`.
@@ -419,12 +430,15 @@ canned fallbacks in denominator: 0
   reporting a bound produced by a half-blind monitor.
 - **It is one build and three arms**, the three §9.5 student policies. It is a
   by-product of the §9.5 run, not a measurement designed to answer this.
-- **The headline the tool prints is not this number, and must not be quoted.**
-  `leak_monitor`'s per-build table partitions correctly, but its HEADLINE pools
-  every *real* arm — on this log, 25 arms and 3,334 checks spanning builds that
-  predate both fixes, plus `ac2fc28 <eval:adversarial:*>`, the day-13 accidental
-  live run that `docs/schedule.md` records as **not real-model evidence**. The
-  per-build partition is the quotable object. See
+- **The tool used to print a different number here, and that is now fixed.**
+  `leak_monitor`'s per-build table always partitioned correctly, but its HEADLINE
+  pooled every *real* arm — on this log, 25 arms and 3,334 checks spanning builds
+  that predate both fixes, plus `ac2fc28 <eval:adversarial:*>`, the day-13
+  accidental live run that `docs/schedule.md` records as **not real-model
+  evidence**. Quoting it would have inflated *n* by 98× in the flattering
+  direction. Found and repaired on day 18: the headline now reports **one build**,
+  defaulting to the current one, and pooling is opt-in behind `--pool-builds`.
+  The figure above is what the tool prints today. See
   [instrument-failures.md](instrument-failures.md).
 - **The measure is weakest where the phenomenon is strongest.** Stemmed token
   cosine plus trigram containment misses synonym paraphrase, and paraphrase is
@@ -559,11 +573,15 @@ transfers no further until someone tests that.
 
 **Two things this does not license, and both belong in the same breath.**
 
-- **`stuck` is now used zero times in thirty.** Day 12 had two dead states;
-  this run has one, a different one. The likely cause is the instrument rather
-  than the model — `--max-turns 3` means no student lingers on an item long
-  enough to be stuck — but that is a hypothesis, not a measurement, and it is
-  the read-through's job to say which.
+- **`stuck` is used zero times in thirty, and the A/B says why.** The obvious
+  explanation is the instrument — `--max-turns 3` means no student lingers on an
+  item long enough to be stuck — and that is no longer the whole story. On the
+  constructed case where `stuck` is the *only* defensible answer, the shipped
+  prompt still does not say it (0/2, above). So at least part of this zero is
+  the prompt refusing a state it was told to distrust, not the turn budget
+  denying it the chance. **This is the cost side of the same change the rest of
+  the section credits**, and it is the one finding here to act on before the
+  demo.
 - **`partial` → `guessing` on 3 of 9.** A student who knows the region is not
   guessing. This is the one cell that still looks like miscalibration, and it is
   for the human read (§9.5 asks for a person, and this file is the evidence that
@@ -603,6 +621,9 @@ containment was load-bearing precisely while the diagnosis was broken, and
 nothing about it had to change when the diagnosis improved.
 
 ### 5.7 One number nothing asked for
+
+`python -m build.validate` · deterministic, no key · reported as the
+`[retrieval]` warning (9 of 52 disagree, so 43 agree)
 
 Populating the answer-span mask required knowing which chunk each node
 retrieves, which made a number available that nothing had computed: retrieval
@@ -756,7 +777,12 @@ the graph still moves on Call 1's return, before any utterance exists — but th
 
 ---
 
-*Reproduce everything: `pip install -r requirements.txt && python -m
+*Reproduce the keyless half: `pip install -r requirements.txt && python -m
 build.validate && python -m pytest && python -m eval.adversarial && python -m
-eval.graph_quality && python -m eval.distractor_screen && python -m
-eval.leak_monitor`. No API key, no network.*
+eval.graph_quality && python -m eval.distractor_screen`. No API key, no network.*
+
+*`python -m eval.leak_monitor` runs keyless too, but on a clean clone it has only
+the mock turns the line above just wrote, so it will report `NOT MEASURABLE` for
+§6.1 — which is the correct answer, not a failure. §5.5's `0/34` and §5.6's
+tables need a key and the day-18 turn log; their raw outputs are committed under
+`eval/results/`.*
