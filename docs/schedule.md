@@ -146,6 +146,7 @@ much smaller scale.
 | ~~2026-09-16~~ 2026-09-21 | 13 → 18 | **repeat §9.5 on `gpt-oss-120b`**, the model the demo ships — now also the first §9.5 run in which the model can see the dialogue | **RUN AND COMPLETE**, 30/30 fields, five days late. See below |
 | — | 12 → 18 | §6.1 parametric-reconstruction rate | ~~**0/60, reported as a bound.**~~ Withdrawn day 13; **re-measured day 18 as 0/34** (95% bound 8.4%, weaker than the withdrawn one — the fix shrank the population). See below |
 | ~~2026-09-17~~ | 14 | **dependency freeze** (§1.8), end of week 2 | **MET a day early**, on day 13 — enforced by a test, see below |
+| **2026-09-25 00:00 → 2026-09-26 00:00** | 21–22 | **eval freeze: no eval runs in the 24h before Sat 26** | booked, see below |
 | 2026-09-25 | 22 | **feature freeze.** Tag `feature-freeze` | pending |
 | 2026-09-29 | 26 | **video walkthrough recorded.** Tag `demo` | pending — **script it around narrowing, not mastery.** See below |
 
@@ -308,6 +309,79 @@ Tomorrow, with the browser closed:
 LLM_DAILY_LIMIT_WAIT_S=600 python -m eval.diagnosis_readthrough --json $T/diagnosis_readthrough.json --sheet $T/sheet.md
 ```
 
+### 2026-09-21 (day 18, later) — the prompt A/B, and a correction to this morning
+
+`python -m eval.diagnostic_calibration --prompts current,pre-falsifiability`.
+20 Call 1s, ~58k tokens, ~9 minutes. Raw:
+[`eval/results/diagnostic_calibration.json`](../eval/results/diagnostic_calibration.json).
+
+**Why it was run.** The §9.5 re-run earlier today was written up as the history
+fix (`1cfc74a`) repairing the diagnosis. Checking the provenance killed that:
+`516795d`, the Call 1 prompt rewrite, landed **2026-09-15 22:39** — an hour and
+three quarters after the day-12 run finished. So day 12 used the old prompt, and
+the day-12/day-18 pair moves prompt, history AND model at once.
+
+**Result, same model and same fixed harness, prompt the only variable:**
+
+| | current | pre-falsifiability |
+|---|---|---|
+| scattered clicks → `guessing` | 2/2 | **0/2** (`stuck`) |
+| all clicks upstream → `confused_prereq` | 2/2 | **0/2** (`stuck`) |
+| separates the two students | yes | **no** |
+| `stuck` when `stuck` IS right | **0/2** | 2/2 |
+| specific, all cases | 8/10 | 6/10 |
+| `correct` boolean | 6/6 | 6/6 |
+
+**The old prompt reproduces the day-12 degeneracy on a fully fixed harness.**
+The history fix is therefore neither necessary nor sufficient for the reversal,
+and the model change is not isolated at all. The prompt is the only variable
+demonstrated to move this result. `report.md` §5.5 now carries the controls
+table and §5.6 the corrected attribution.
+
+**And the current prompt has a cost that a new case was built to find.** Where
+`stuck` is the only defensible answer — three wrong free-text replies, no clicks,
+so nothing for `guessing` or `confused_prereq` to read — the current prompt says
+`guessing` 0/2 of the time correctly and the old one is right 2/2. Telling the
+model `stuck` is the cheap answer made it unable to say `stuck` when `stuck` is
+honest. Without that case the A/B was a clean 8/10-vs-6/10 win.
+
+`n=2` per cell. Actionable before the demo, not quotable as a measurement.
+
+**Still not isolated: the model.** `qwen3.8-27b` vs `gpt-oss-120b` remains
+confounded, and day 12's model is not even in the log — the `call1_model` stamp
+postdates it. The control is one command
+(`--model qwen/qwen3.8-27b --prompts current`) and must land before the eval
+freeze below if it is going to land at all.
+
+---
+
+### Eval freeze: no eval runs in the 24 hours before Saturday 2026-09-26
+
+**The window is Friday 2026-09-25 00:00 to Saturday 2026-09-26 00:00.** Nothing
+in `eval/` that touches the model runs inside it.
+
+This is a standing instruction recorded on day 18; the reason for the Saturday
+date is not written down here, and whoever reads this later should not infer one.
+What matters operationally is the deadline it creates:
+
+- **Anything needing the live model must finish by end of Thursday
+  2026-09-24.** That is inside week 3, which ends the same day.
+- The still-open model-dependent work is listed under day 18 below: the §9.5
+  model control on `qwen3.8-27b`, and any re-run of §6.1 or §9.5 on a later
+  build. If they do not happen by Thursday they do not happen before Saturday.
+- It collides with the **feature freeze on 2026-09-25** (day 22), which is the
+  first day of the window. A feature freeze normally invites one last
+  verification run; here it cannot have one. So the last full verification has
+  to be Thursday, a day *before* the freeze, and `main` must be left in a state
+  that does not need one.
+
+Offline evals that read `logs/turns.jsonl` and make no model call —
+`eval.leak_monitor`, `eval.graph_quality`, `eval.distractor_screen` — are not
+model runs and are unaffected. `eval.adversarial` already refuses a live model
+unless passed `--real-model`, so it is only in scope when that flag is used.
+
+---
+
 ### A note for whoever runs the projector test
 
 Run it against a server started **from current `main`**. Three things landed
@@ -345,8 +419,8 @@ hardware, and week 3 ends 2026-09-24.
 
 **Three things are still open and are not closed by this run:**
 
-- **`eval/diagnostic_calibration.py` has not been re-run.** Same `{"role",
-  "text"}` bug, same withdrawal, separate budget. Still withdrawn.
+- ~~**`eval/diagnostic_calibration.py` has not been re-run.**~~ **Re-run the
+  same day**, as a prompt A/B. See the day-18 A/B entry below.
 - **§6.1 is now 0/34, a weaker bound than the withdrawn 0/60** (8.4% vs 4.9%).
   The only build carrying both instrument fixes is `18d220d`, verified by
   `git merge-base`: `614d066` has the history fix but not the edge-answer fix.
