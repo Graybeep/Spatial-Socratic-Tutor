@@ -1,7 +1,7 @@
 {
   "log": "logs/turns.jsonl",
-  "turns": 652473,
-  "events": 0,
+  "turns": 661566,
+  "events": 6469,
   "malformed": 0,
   "builds": {
     "pre-stamp": 473637,
@@ -21,21 +21,41 @@
     "5e4d343-dirty": 6269,
     "e92bdae-dirty": 6269,
     "115a0c0": 5519,
-    "e35ff32": 5328
+    "e35ff32": 5328,
+    "891863b": 5328,
+    "ac2fc28": 3226,
+    "2b52c1b": 354,
+    "6f184ea-dirty": 63,
+    "77b7e5d-dirty": 40,
+    "18d220d": 40,
+    "614d066": 20,
+    "d594341": 16,
+    "7ba8078": 4,
+    "7783a34-dirty": 2
   },
   "stamped_builds": [
     "115a0c0",
     "115a0c0-dirty",
     "1352227",
     "1352227-dirty",
+    "18d220d",
+    "2b52c1b",
     "5e4d343-dirty",
+    "614d066",
     "6c69a84",
     "6c69a84-dirty",
+    "6f184ea-dirty",
     "6faa2d8",
     "6faa2d8-dirty",
+    "7783a34-dirty",
+    "77b7e5d-dirty",
+    "7ba8078",
+    "891863b",
     "987ed4c-dirty",
     "a6c6bf2",
+    "ac2fc28",
     "af60e60-dirty",
+    "d594341",
     "df5e392-dirty",
     "e2408c7-dirty",
     "e35ff32",
@@ -43,8 +63,8 @@
     "e92bdae-dirty"
   ],
   "unstamped_turns": 473637,
-  "real_turns": 0,
-  "mock_turns": 652473,
+  "real_turns": 3411,
+  "mock_turns": 658155,
   "arms": {
     "115a0c0 [mock] <pre-origin>": {
       "authorised_naming": {
@@ -73,8 +93,8 @@
           "expect_full": false,
           "coverage": 0.0192,
           "complete": false,
-          "code": "e5361a2",
-          "generated_at": "2026-09-15T18:29:40+0530"
+          "code": "18d220d-dirty",
+          "generated_at": "2026-09-21T21:39:50+0530"
         }
       },
       "parametric_reconstruction": {
@@ -115,8 +135,8 @@
           "expect_full": false,
           "coverage": 0.3385,
           "complete": false,
-          "code": "e5361a2",
-          "generated_at": "2026-09-15T18:29:40+0530"
+          "code": "18d220d-dirty",
+          "generated_at": "2026-09-21T21:39:50+0530"
         }
       }
     },
@@ -147,8 +167,8 @@
           "expect_full": false,
           "coverage": 0.0192,
           "complete": false,
-          "code": "e5361a2",
-          "generated_at": "2026-09-15T18:29:40+0530"
+          "code": "18d220d-dirty",
+          "generated_at": "2026-09-21T21:39:50+0530"
         }
       },
       "parametric_reconstruction": {
@@ -189,8 +209,8 @@
           "expect_full": false,
           "coverage": 0.3385,
           "complete": false,
-          "code": "e5361a2",
-          "generated_at": "2026-09-15T18:29:40+0530"
+          "code": "18d220d-dirty",
+          "generated_at": "2026-09-21T21:39:50+0530"
         }
       }
     },
@@ -221,8 +241,8 @@
           "expect_full": false,
           "coverage": 0.0192,
           "complete": false,
-          "code": "e5361a2",
-          "generated_at": "2026-09-15T18:29:40+0530"
+          "code": "18d220d-dirty",
+          "generated_at": "2026-09-21T21:39:50+0530"
         }
       },
       "parametric_reconstruction": {
@@ -263,8 +283,8 @@
           "expect_full": false,
           "coverage": 0.3385,
           "complete": false,
-          "code": "e5361a2",
-          "generated_at": "2026-09-15T18:29:40+0530"
+          "code": "18d220d-dirty",
+          "generated_at": "2026-09-21T21:39:50+0530"
         }
       }
     },
@@ -295,8 +315,8 @@
           "expect_full": false,
           "coverage": 0.0192,
           "complete": false,
-          "code": "e5361a2",
-          "generated_at": "2026-09-15T18:29:40+0530"
+          "code": "18d220d-dirty",
+          "generated_at": "2026-09-21T21:39:50+0530"
         }
       },
       "parametric_reconstruction": {
@@ -337,8 +357,250 @@
           "expect_full": false,
           "coverage": 0.3385,
           "complete": false,
-          "code": "e5361a2",
-          "generated_at": "2026-09-15T18:29:40+0530"
+          "code": "18d220d-dirty",
+          "generated_at": "2026-09-21T21:39:50+0530"
+        }
+      }
+    },
+    "18d220d [real] <eval:diagnosis_readthrough:adversarial>": {
+      "authorised_naming": {
+        "build": "18d220d",
+        "mode": "real",
+        "origin": "eval:diagnosis_readthrough:adversarial",
+        "checks": 2,
+        "hits": 0,
+        "rate": 0.0,
+        "fell_back": 0,
+        "regenerated_clean": 0,
+        "distinct_items_hit": 0,
+        "top_items": [],
+        "top_aliases": [],
+        "by_action": {
+          "advance": {
+            "checks": 2,
+            "hits": 0
+          }
+        },
+        "provenance": {
+          "population": 260,
+          "distinct": 2,
+          "observations": 2,
+          "unit": "items",
+          "expect_full": false,
+          "coverage": 0.0077,
+          "complete": false,
+          "code": "18d220d-dirty",
+          "generated_at": "2026-09-21T21:39:50+0530"
+        }
+      },
+      "parametric_reconstruction": {
+        "build": "18d220d",
+        "mode": "real",
+        "origin": "eval:diagnosis_readthrough:adversarial",
+        "checks": 10,
+        "hits": 0,
+        "rate": 0.0,
+        "fell_back": 0,
+        "regenerated_clean": 0,
+        "distinct_items_hit": 0,
+        "top_items": [],
+        "top_aliases": [],
+        "by_action": {
+          "ask": {
+            "checks": 3,
+            "hits": 0
+          },
+          "backtrack": {
+            "checks": 3,
+            "hits": 0
+          },
+          "hint_visual": {
+            "checks": 4,
+            "hits": 0
+          }
+        },
+        "provenance": {
+          "population": 260,
+          "distinct": 5,
+          "observations": 10,
+          "unit": "items",
+          "expect_full": false,
+          "coverage": 0.0192,
+          "complete": false,
+          "code": "18d220d-dirty",
+          "generated_at": "2026-09-21T21:39:50+0530"
+        }
+      }
+    },
+    "18d220d [real] <eval:diagnosis_readthrough:partial>": {
+      "authorised_naming": {
+        "build": "18d220d",
+        "mode": "real",
+        "origin": "eval:diagnosis_readthrough:partial",
+        "checks": 4,
+        "hits": 0,
+        "rate": 0.0,
+        "fell_back": 0,
+        "regenerated_clean": 0,
+        "distinct_items_hit": 0,
+        "top_items": [],
+        "top_aliases": [],
+        "by_action": {
+          "advance": {
+            "checks": 4,
+            "hits": 0
+          }
+        },
+        "provenance": {
+          "population": 260,
+          "distinct": 3,
+          "observations": 4,
+          "unit": "items",
+          "expect_full": false,
+          "coverage": 0.0115,
+          "complete": false,
+          "code": "18d220d-dirty",
+          "generated_at": "2026-09-21T21:39:50+0530"
+        }
+      },
+      "parametric_reconstruction": {
+        "build": "18d220d",
+        "mode": "real",
+        "origin": "eval:diagnosis_readthrough:partial",
+        "checks": 8,
+        "hits": 0,
+        "rate": 0.0,
+        "fell_back": 0,
+        "regenerated_clean": 0,
+        "distinct_items_hit": 0,
+        "top_items": [],
+        "top_aliases": [],
+        "by_action": {
+          "ask": {
+            "checks": 3,
+            "hits": 0
+          },
+          "backtrack": {
+            "checks": 1,
+            "hits": 0
+          },
+          "hint_visual": {
+            "checks": 4,
+            "hits": 0
+          }
+        },
+        "provenance": {
+          "population": 260,
+          "distinct": 5,
+          "observations": 8,
+          "unit": "items",
+          "expect_full": false,
+          "coverage": 0.0192,
+          "complete": false,
+          "code": "18d220d-dirty",
+          "generated_at": "2026-09-21T21:39:50+0530"
+        }
+      }
+    },
+    "18d220d [real] <eval:diagnosis_readthrough:zero>": {
+      "parametric_reconstruction": {
+        "build": "18d220d",
+        "mode": "real",
+        "origin": "eval:diagnosis_readthrough:zero",
+        "checks": 16,
+        "hits": 0,
+        "rate": 0.0,
+        "fell_back": 0,
+        "regenerated_clean": 0,
+        "distinct_items_hit": 0,
+        "top_items": [],
+        "top_aliases": [],
+        "by_action": {
+          "ask": {
+            "checks": 3,
+            "hits": 0
+          },
+          "backtrack": {
+            "checks": 3,
+            "hits": 0
+          },
+          "hint_visual": {
+            "checks": 10,
+            "hits": 0
+          }
+        },
+        "provenance": {
+          "population": 260,
+          "distinct": 6,
+          "observations": 16,
+          "unit": "items",
+          "expect_full": false,
+          "coverage": 0.0231,
+          "complete": false,
+          "code": "18d220d-dirty",
+          "generated_at": "2026-09-21T21:39:50+0530"
+        }
+      }
+    },
+    "2b52c1b [mock] <server>": {
+      "authorised_naming": {
+        "build": "2b52c1b",
+        "mode": "mock",
+        "origin": "server",
+        "checks": 350,
+        "hits": 0,
+        "rate": 0.0,
+        "fell_back": 0,
+        "regenerated_clean": 0,
+        "distinct_items_hit": 0,
+        "top_items": [],
+        "top_aliases": [],
+        "by_action": {
+          "advance": {
+            "checks": 350,
+            "hits": 0
+          }
+        },
+        "provenance": {
+          "population": 260,
+          "distinct": 123,
+          "observations": 350,
+          "unit": "items",
+          "expect_full": false,
+          "coverage": 0.4731,
+          "complete": false,
+          "code": "18d220d-dirty",
+          "generated_at": "2026-09-21T21:39:50+0530"
+        }
+      },
+      "parametric_reconstruction": {
+        "build": "2b52c1b",
+        "mode": "mock",
+        "origin": "server",
+        "checks": 4,
+        "hits": 0,
+        "rate": 0.0,
+        "fell_back": 0,
+        "regenerated_clean": 0,
+        "distinct_items_hit": 0,
+        "top_items": [],
+        "top_aliases": [],
+        "by_action": {
+          "ask": {
+            "checks": 4,
+            "hits": 0
+          }
+        },
+        "provenance": {
+          "population": 260,
+          "distinct": 1,
+          "observations": 4,
+          "unit": "items",
+          "expect_full": false,
+          "coverage": 0.0038,
+          "complete": false,
+          "code": "18d220d-dirty",
+          "generated_at": "2026-09-21T21:39:50+0530"
         }
       }
     },
@@ -369,8 +631,8 @@
           "expect_full": false,
           "coverage": 0.0192,
           "complete": false,
-          "code": "e5361a2",
-          "generated_at": "2026-09-15T18:29:40+0530"
+          "code": "18d220d-dirty",
+          "generated_at": "2026-09-21T21:39:50+0530"
         }
       },
       "parametric_reconstruction": {
@@ -411,8 +673,194 @@
           "expect_full": false,
           "coverage": 0.3385,
           "complete": false,
-          "code": "e5361a2",
-          "generated_at": "2026-09-15T18:29:40+0530"
+          "code": "18d220d-dirty",
+          "generated_at": "2026-09-21T21:39:50+0530"
+        }
+      }
+    },
+    "614d066 [real] <eval:diagnosis_readthrough:adversarial>": {
+      "authorised_naming": {
+        "build": "614d066",
+        "mode": "real",
+        "origin": "eval:diagnosis_readthrough:adversarial",
+        "checks": 1,
+        "hits": 0,
+        "rate": 0.0,
+        "fell_back": 0,
+        "regenerated_clean": 0,
+        "distinct_items_hit": 0,
+        "top_items": [],
+        "top_aliases": [],
+        "by_action": {
+          "advance": {
+            "checks": 1,
+            "hits": 0
+          }
+        },
+        "provenance": {
+          "population": 260,
+          "distinct": 1,
+          "observations": 1,
+          "unit": "items",
+          "expect_full": false,
+          "coverage": 0.0038,
+          "complete": false,
+          "code": "18d220d-dirty",
+          "generated_at": "2026-09-21T21:39:50+0530"
+        }
+      },
+      "parametric_reconstruction": {
+        "build": "614d066",
+        "mode": "real",
+        "origin": "eval:diagnosis_readthrough:adversarial",
+        "checks": 3,
+        "hits": 0,
+        "rate": 0.0,
+        "fell_back": 0,
+        "regenerated_clean": 0,
+        "distinct_items_hit": 0,
+        "top_items": [],
+        "top_aliases": [],
+        "by_action": {
+          "ask": {
+            "checks": 2,
+            "hits": 0
+          },
+          "backtrack": {
+            "checks": 1,
+            "hits": 0
+          }
+        },
+        "provenance": {
+          "population": 260,
+          "distinct": 2,
+          "observations": 3,
+          "unit": "items",
+          "expect_full": false,
+          "coverage": 0.0077,
+          "complete": false,
+          "code": "18d220d-dirty",
+          "generated_at": "2026-09-21T21:39:50+0530"
+        }
+      }
+    },
+    "614d066 [real] <eval:diagnosis_readthrough:partial>": {
+      "authorised_naming": {
+        "build": "614d066",
+        "mode": "real",
+        "origin": "eval:diagnosis_readthrough:partial",
+        "checks": 2,
+        "hits": 1,
+        "rate": 0.5,
+        "fell_back": 0,
+        "regenerated_clean": 1,
+        "distinct_items_hit": 1,
+        "top_items": [
+          [
+            "itm_0001",
+            1
+          ]
+        ],
+        "top_aliases": [
+          [
+            "flow",
+            1
+          ]
+        ],
+        "by_action": {
+          "advance": {
+            "checks": 2,
+            "hits": 1
+          }
+        },
+        "provenance": {
+          "population": 260,
+          "distinct": 2,
+          "observations": 2,
+          "unit": "items",
+          "expect_full": false,
+          "coverage": 0.0077,
+          "complete": false,
+          "code": "18d220d-dirty",
+          "generated_at": "2026-09-21T21:39:50+0530"
+        }
+      },
+      "parametric_reconstruction": {
+        "build": "614d066",
+        "mode": "real",
+        "origin": "eval:diagnosis_readthrough:partial",
+        "checks": 6,
+        "hits": 0,
+        "rate": 0.0,
+        "fell_back": 0,
+        "regenerated_clean": 0,
+        "distinct_items_hit": 0,
+        "top_items": [],
+        "top_aliases": [],
+        "by_action": {
+          "ask": {
+            "checks": 2,
+            "hits": 0
+          },
+          "backtrack": {
+            "checks": 1,
+            "hits": 0
+          },
+          "hint_visual": {
+            "checks": 3,
+            "hits": 0
+          }
+        },
+        "provenance": {
+          "population": 260,
+          "distinct": 4,
+          "observations": 6,
+          "unit": "items",
+          "expect_full": false,
+          "coverage": 0.0154,
+          "complete": false,
+          "code": "18d220d-dirty",
+          "generated_at": "2026-09-21T21:39:50+0530"
+        }
+      }
+    },
+    "614d066 [real] <eval:diagnosis_readthrough:zero>": {
+      "parametric_reconstruction": {
+        "build": "614d066",
+        "mode": "real",
+        "origin": "eval:diagnosis_readthrough:zero",
+        "checks": 8,
+        "hits": 0,
+        "rate": 0.0,
+        "fell_back": 0,
+        "regenerated_clean": 0,
+        "distinct_items_hit": 0,
+        "top_items": [],
+        "top_aliases": [],
+        "by_action": {
+          "ask": {
+            "checks": 2,
+            "hits": 0
+          },
+          "backtrack": {
+            "checks": 1,
+            "hits": 0
+          },
+          "hint_visual": {
+            "checks": 5,
+            "hits": 0
+          }
+        },
+        "provenance": {
+          "population": 260,
+          "distinct": 2,
+          "observations": 8,
+          "unit": "items",
+          "expect_full": false,
+          "coverage": 0.0077,
+          "complete": false,
+          "code": "18d220d-dirty",
+          "generated_at": "2026-09-21T21:39:50+0530"
         }
       }
     },
@@ -443,8 +891,8 @@
           "expect_full": false,
           "coverage": 0.0154,
           "complete": false,
-          "code": "e5361a2",
-          "generated_at": "2026-09-15T18:29:40+0530"
+          "code": "18d220d-dirty",
+          "generated_at": "2026-09-21T21:39:50+0530"
         }
       },
       "parametric_reconstruction": {
@@ -485,8 +933,8 @@
           "expect_full": false,
           "coverage": 0.3885,
           "complete": false,
-          "code": "e5361a2",
-          "generated_at": "2026-09-15T18:29:40+0530"
+          "code": "18d220d-dirty",
+          "generated_at": "2026-09-21T21:39:50+0530"
         }
       }
     },
@@ -517,8 +965,8 @@
           "expect_full": false,
           "coverage": 0.0154,
           "complete": false,
-          "code": "e5361a2",
-          "generated_at": "2026-09-15T18:29:40+0530"
+          "code": "18d220d-dirty",
+          "generated_at": "2026-09-21T21:39:50+0530"
         }
       },
       "parametric_reconstruction": {
@@ -559,8 +1007,196 @@
           "expect_full": false,
           "coverage": 0.3885,
           "complete": false,
-          "code": "e5361a2",
-          "generated_at": "2026-09-15T18:29:40+0530"
+          "code": "18d220d-dirty",
+          "generated_at": "2026-09-21T21:39:50+0530"
+        }
+      }
+    },
+    "6f184ea-dirty [real] <eval:diagnosis_readthrough:adversarial>": {
+      "authorised_naming": {
+        "build": "6f184ea-dirty",
+        "mode": "real",
+        "origin": "eval:diagnosis_readthrough:adversarial",
+        "checks": 4,
+        "hits": 0,
+        "rate": 0.0,
+        "fell_back": 0,
+        "regenerated_clean": 0,
+        "distinct_items_hit": 0,
+        "top_items": [],
+        "top_aliases": [],
+        "by_action": {
+          "advance": {
+            "checks": 4,
+            "hits": 0
+          }
+        },
+        "provenance": {
+          "population": 260,
+          "distinct": 3,
+          "observations": 4,
+          "unit": "items",
+          "expect_full": false,
+          "coverage": 0.0115,
+          "complete": false,
+          "code": "18d220d-dirty",
+          "generated_at": "2026-09-21T21:39:50+0530"
+        }
+      },
+      "parametric_reconstruction": {
+        "build": "6f184ea-dirty",
+        "mode": "real",
+        "origin": "eval:diagnosis_readthrough:adversarial",
+        "checks": 12,
+        "hits": 0,
+        "rate": 0.0,
+        "fell_back": 0,
+        "regenerated_clean": 0,
+        "distinct_items_hit": 0,
+        "top_items": [],
+        "top_aliases": [],
+        "by_action": {
+          "ask": {
+            "checks": 3,
+            "hits": 0
+          },
+          "backtrack": {
+            "checks": 2,
+            "hits": 0
+          },
+          "hint_verbal": {
+            "checks": 1,
+            "hits": 0
+          },
+          "hint_visual": {
+            "checks": 6,
+            "hits": 0
+          }
+        },
+        "provenance": {
+          "population": 260,
+          "distinct": 5,
+          "observations": 12,
+          "unit": "items",
+          "expect_full": false,
+          "coverage": 0.0192,
+          "complete": false,
+          "code": "18d220d-dirty",
+          "generated_at": "2026-09-21T21:39:50+0530"
+        }
+      }
+    },
+    "6f184ea-dirty [real] <eval:diagnosis_readthrough:partial>": {
+      "authorised_naming": {
+        "build": "6f184ea-dirty",
+        "mode": "real",
+        "origin": "eval:diagnosis_readthrough:partial",
+        "checks": 6,
+        "hits": 0,
+        "rate": 0.0,
+        "fell_back": 0,
+        "regenerated_clean": 0,
+        "distinct_items_hit": 0,
+        "top_items": [],
+        "top_aliases": [],
+        "by_action": {
+          "advance": {
+            "checks": 6,
+            "hits": 0
+          }
+        },
+        "provenance": {
+          "population": 260,
+          "distinct": 2,
+          "observations": 6,
+          "unit": "items",
+          "expect_full": false,
+          "coverage": 0.0077,
+          "complete": false,
+          "code": "18d220d-dirty",
+          "generated_at": "2026-09-21T21:39:50+0530"
+        }
+      },
+      "parametric_reconstruction": {
+        "build": "6f184ea-dirty",
+        "mode": "real",
+        "origin": "eval:diagnosis_readthrough:partial",
+        "checks": 13,
+        "hits": 0,
+        "rate": 0.0,
+        "fell_back": 0,
+        "regenerated_clean": 0,
+        "distinct_items_hit": 0,
+        "top_items": [],
+        "top_aliases": [],
+        "by_action": {
+          "ask": {
+            "checks": 6,
+            "hits": 0
+          },
+          "backtrack": {
+            "checks": 2,
+            "hits": 0
+          },
+          "hint_visual": {
+            "checks": 5,
+            "hits": 0
+          }
+        },
+        "provenance": {
+          "population": 260,
+          "distinct": 5,
+          "observations": 13,
+          "unit": "items",
+          "expect_full": false,
+          "coverage": 0.0192,
+          "complete": false,
+          "code": "18d220d-dirty",
+          "generated_at": "2026-09-21T21:39:50+0530"
+        }
+      }
+    },
+    "6f184ea-dirty [real] <eval:diagnosis_readthrough:zero>": {
+      "parametric_reconstruction": {
+        "build": "6f184ea-dirty",
+        "mode": "real",
+        "origin": "eval:diagnosis_readthrough:zero",
+        "checks": 28,
+        "hits": 0,
+        "rate": 0.0,
+        "fell_back": 0,
+        "regenerated_clean": 0,
+        "distinct_items_hit": 0,
+        "top_items": [],
+        "top_aliases": [],
+        "by_action": {
+          "ask": {
+            "checks": 6,
+            "hits": 0
+          },
+          "backtrack": {
+            "checks": 4,
+            "hits": 0
+          },
+          "hint_verbal": {
+            "checks": 1,
+            "hits": 0
+          },
+          "hint_visual": {
+            "checks": 17,
+            "hits": 0
+          }
+        },
+        "provenance": {
+          "population": 260,
+          "distinct": 6,
+          "observations": 28,
+          "unit": "items",
+          "expect_full": false,
+          "coverage": 0.0231,
+          "complete": false,
+          "code": "18d220d-dirty",
+          "generated_at": "2026-09-21T21:39:50+0530"
         }
       }
     },
@@ -591,8 +1227,8 @@
           "expect_full": false,
           "coverage": 0.0192,
           "complete": false,
-          "code": "e5361a2",
-          "generated_at": "2026-09-15T18:29:40+0530"
+          "code": "18d220d-dirty",
+          "generated_at": "2026-09-21T21:39:50+0530"
         }
       },
       "parametric_reconstruction": {
@@ -633,8 +1269,8 @@
           "expect_full": false,
           "coverage": 0.3385,
           "complete": false,
-          "code": "e5361a2",
-          "generated_at": "2026-09-15T18:29:40+0530"
+          "code": "18d220d-dirty",
+          "generated_at": "2026-09-21T21:39:50+0530"
         }
       }
     },
@@ -665,8 +1301,8 @@
           "expect_full": false,
           "coverage": 0.0192,
           "complete": false,
-          "code": "e5361a2",
-          "generated_at": "2026-09-15T18:29:40+0530"
+          "code": "18d220d-dirty",
+          "generated_at": "2026-09-21T21:39:50+0530"
         }
       },
       "parametric_reconstruction": {
@@ -707,8 +1343,1112 @@
           "expect_full": false,
           "coverage": 0.3385,
           "complete": false,
-          "code": "e5361a2",
-          "generated_at": "2026-09-15T18:29:40+0530"
+          "code": "18d220d-dirty",
+          "generated_at": "2026-09-21T21:39:50+0530"
+        }
+      }
+    },
+    "7783a34-dirty [real] <server>": {
+      "parametric_reconstruction": {
+        "build": "7783a34-dirty",
+        "mode": "real",
+        "origin": "server",
+        "checks": 2,
+        "hits": 0,
+        "rate": 0.0,
+        "fell_back": 0,
+        "regenerated_clean": 0,
+        "distinct_items_hit": 0,
+        "top_items": [],
+        "top_aliases": [],
+        "by_action": {
+          "ask": {
+            "checks": 1,
+            "hits": 0
+          },
+          "hint_visual": {
+            "checks": 1,
+            "hits": 0
+          }
+        },
+        "provenance": {
+          "population": 260,
+          "distinct": 1,
+          "observations": 2,
+          "unit": "items",
+          "expect_full": false,
+          "coverage": 0.0038,
+          "complete": false,
+          "code": "18d220d-dirty",
+          "generated_at": "2026-09-21T21:39:50+0530"
+        }
+      }
+    },
+    "77b7e5d-dirty [real] <eval:diagnosis_readthrough:adversarial>": {
+      "authorised_naming": {
+        "build": "77b7e5d-dirty",
+        "mode": "real",
+        "origin": "eval:diagnosis_readthrough:adversarial",
+        "checks": 3,
+        "hits": 0,
+        "rate": 0.0,
+        "fell_back": 0,
+        "regenerated_clean": 0,
+        "distinct_items_hit": 0,
+        "top_items": [],
+        "top_aliases": [],
+        "by_action": {
+          "advance": {
+            "checks": 3,
+            "hits": 0
+          }
+        },
+        "provenance": {
+          "population": 260,
+          "distinct": 2,
+          "observations": 3,
+          "unit": "items",
+          "expect_full": false,
+          "coverage": 0.0077,
+          "complete": false,
+          "code": "18d220d-dirty",
+          "generated_at": "2026-09-21T21:39:50+0530"
+        }
+      },
+      "parametric_reconstruction": {
+        "build": "77b7e5d-dirty",
+        "mode": "real",
+        "origin": "eval:diagnosis_readthrough:adversarial",
+        "checks": 9,
+        "hits": 0,
+        "rate": 0.0,
+        "fell_back": 0,
+        "regenerated_clean": 0,
+        "distinct_items_hit": 0,
+        "top_items": [],
+        "top_aliases": [],
+        "by_action": {
+          "ask": {
+            "checks": 4,
+            "hits": 0
+          },
+          "backtrack": {
+            "checks": 1,
+            "hits": 0
+          },
+          "hint_visual": {
+            "checks": 4,
+            "hits": 0
+          }
+        },
+        "provenance": {
+          "population": 260,
+          "distinct": 5,
+          "observations": 9,
+          "unit": "items",
+          "expect_full": false,
+          "coverage": 0.0192,
+          "complete": false,
+          "code": "18d220d-dirty",
+          "generated_at": "2026-09-21T21:39:50+0530"
+        }
+      }
+    },
+    "77b7e5d-dirty [real] <eval:diagnosis_readthrough:partial>": {
+      "authorised_naming": {
+        "build": "77b7e5d-dirty",
+        "mode": "real",
+        "origin": "eval:diagnosis_readthrough:partial",
+        "checks": 4,
+        "hits": 0,
+        "rate": 0.0,
+        "fell_back": 0,
+        "regenerated_clean": 0,
+        "distinct_items_hit": 0,
+        "top_items": [],
+        "top_aliases": [],
+        "by_action": {
+          "advance": {
+            "checks": 4,
+            "hits": 0
+          }
+        },
+        "provenance": {
+          "population": 260,
+          "distinct": 3,
+          "observations": 4,
+          "unit": "items",
+          "expect_full": false,
+          "coverage": 0.0115,
+          "complete": false,
+          "code": "18d220d-dirty",
+          "generated_at": "2026-09-21T21:39:50+0530"
+        }
+      },
+      "parametric_reconstruction": {
+        "build": "77b7e5d-dirty",
+        "mode": "real",
+        "origin": "eval:diagnosis_readthrough:partial",
+        "checks": 8,
+        "hits": 0,
+        "rate": 0.0,
+        "fell_back": 0,
+        "regenerated_clean": 0,
+        "distinct_items_hit": 0,
+        "top_items": [],
+        "top_aliases": [],
+        "by_action": {
+          "ask": {
+            "checks": 5,
+            "hits": 0
+          },
+          "backtrack": {
+            "checks": 1,
+            "hits": 0
+          },
+          "hint_visual": {
+            "checks": 2,
+            "hits": 0
+          }
+        },
+        "provenance": {
+          "population": 260,
+          "distinct": 5,
+          "observations": 8,
+          "unit": "items",
+          "expect_full": false,
+          "coverage": 0.0192,
+          "complete": false,
+          "code": "18d220d-dirty",
+          "generated_at": "2026-09-21T21:39:50+0530"
+        }
+      }
+    },
+    "77b7e5d-dirty [real] <eval:diagnosis_readthrough:zero>": {
+      "parametric_reconstruction": {
+        "build": "77b7e5d-dirty",
+        "mode": "real",
+        "origin": "eval:diagnosis_readthrough:zero",
+        "checks": 16,
+        "hits": 0,
+        "rate": 0.0,
+        "fell_back": 0,
+        "regenerated_clean": 0,
+        "distinct_items_hit": 0,
+        "top_items": [],
+        "top_aliases": [],
+        "by_action": {
+          "ask": {
+            "checks": 9,
+            "hits": 0
+          },
+          "backtrack": {
+            "checks": 3,
+            "hits": 0
+          },
+          "hint_visual": {
+            "checks": 4,
+            "hits": 0
+          }
+        },
+        "provenance": {
+          "population": 260,
+          "distinct": 6,
+          "observations": 16,
+          "unit": "items",
+          "expect_full": false,
+          "coverage": 0.0231,
+          "complete": false,
+          "code": "18d220d-dirty",
+          "generated_at": "2026-09-21T21:39:50+0530"
+        }
+      }
+    },
+    "7ba8078 [real] <eval:diagnosis_readthrough:zero>": {
+      "parametric_reconstruction": {
+        "build": "7ba8078",
+        "mode": "real",
+        "origin": "eval:diagnosis_readthrough:zero",
+        "checks": 4,
+        "hits": 0,
+        "rate": 0.0,
+        "fell_back": 0,
+        "regenerated_clean": 0,
+        "distinct_items_hit": 0,
+        "top_items": [],
+        "top_aliases": [],
+        "by_action": {
+          "ask": {
+            "checks": 1,
+            "hits": 0
+          },
+          "hint_visual": {
+            "checks": 3,
+            "hits": 0
+          }
+        },
+        "provenance": {
+          "population": 260,
+          "distinct": 1,
+          "observations": 4,
+          "unit": "items",
+          "expect_full": false,
+          "coverage": 0.0038,
+          "complete": false,
+          "code": "18d220d-dirty",
+          "generated_at": "2026-09-21T21:39:50+0530"
+        }
+      }
+    },
+    "891863b [mock] <eval:adversarial:interleaved:adversarial>": {
+      "authorised_naming": {
+        "build": "891863b",
+        "mode": "mock",
+        "origin": "eval:adversarial:interleaved:adversarial",
+        "checks": 6,
+        "hits": 0,
+        "rate": 0.0,
+        "fell_back": 0,
+        "regenerated_clean": 0,
+        "distinct_items_hit": 0,
+        "top_items": [],
+        "top_aliases": [],
+        "by_action": {
+          "advance": {
+            "checks": 6,
+            "hits": 0
+          }
+        },
+        "provenance": {
+          "population": 260,
+          "distinct": 2,
+          "observations": 6,
+          "unit": "items",
+          "expect_full": false,
+          "coverage": 0.0077,
+          "complete": false,
+          "code": "18d220d-dirty",
+          "generated_at": "2026-09-21T21:39:50+0530"
+        }
+      },
+      "parametric_reconstruction": {
+        "build": "891863b",
+        "mode": "mock",
+        "origin": "eval:adversarial:interleaved:adversarial",
+        "checks": 438,
+        "hits": 0,
+        "rate": 0.0,
+        "fell_back": 0,
+        "regenerated_clean": 0,
+        "distinct_items_hit": 0,
+        "top_items": [],
+        "top_aliases": [],
+        "by_action": {
+          "ask": {
+            "checks": 138,
+            "hits": 0
+          },
+          "backtrack": {
+            "checks": 132,
+            "hits": 0
+          },
+          "hint_verbal": {
+            "checks": 24,
+            "hits": 0
+          },
+          "hint_visual": {
+            "checks": 144,
+            "hits": 0
+          }
+        },
+        "provenance": {
+          "population": 260,
+          "distinct": 69,
+          "observations": 438,
+          "unit": "items",
+          "expect_full": false,
+          "coverage": 0.2654,
+          "complete": false,
+          "code": "18d220d-dirty",
+          "generated_at": "2026-09-21T21:39:50+0530"
+        }
+      }
+    },
+    "891863b [mock] <eval:adversarial:interleaved:partial>": {
+      "authorised_naming": {
+        "build": "891863b",
+        "mode": "mock",
+        "origin": "eval:adversarial:interleaved:partial",
+        "checks": 6,
+        "hits": 0,
+        "rate": 0.0,
+        "fell_back": 0,
+        "regenerated_clean": 0,
+        "distinct_items_hit": 0,
+        "top_items": [],
+        "top_aliases": [],
+        "by_action": {
+          "advance": {
+            "checks": 6,
+            "hits": 0
+          }
+        },
+        "provenance": {
+          "population": 260,
+          "distinct": 2,
+          "observations": 6,
+          "unit": "items",
+          "expect_full": false,
+          "coverage": 0.0077,
+          "complete": false,
+          "code": "18d220d-dirty",
+          "generated_at": "2026-09-21T21:39:50+0530"
+        }
+      },
+      "parametric_reconstruction": {
+        "build": "891863b",
+        "mode": "mock",
+        "origin": "eval:adversarial:interleaved:partial",
+        "checks": 438,
+        "hits": 0,
+        "rate": 0.0,
+        "fell_back": 0,
+        "regenerated_clean": 0,
+        "distinct_items_hit": 0,
+        "top_items": [],
+        "top_aliases": [],
+        "by_action": {
+          "ask": {
+            "checks": 138,
+            "hits": 0
+          },
+          "backtrack": {
+            "checks": 132,
+            "hits": 0
+          },
+          "hint_verbal": {
+            "checks": 24,
+            "hits": 0
+          },
+          "hint_visual": {
+            "checks": 144,
+            "hits": 0
+          }
+        },
+        "provenance": {
+          "population": 260,
+          "distinct": 69,
+          "observations": 438,
+          "unit": "items",
+          "expect_full": false,
+          "coverage": 0.2654,
+          "complete": false,
+          "code": "18d220d-dirty",
+          "generated_at": "2026-09-21T21:39:50+0530"
+        }
+      }
+    },
+    "891863b [mock] <eval:adversarial:interleaved:zero>": {
+      "authorised_naming": {
+        "build": "891863b",
+        "mode": "mock",
+        "origin": "eval:adversarial:interleaved:zero",
+        "checks": 6,
+        "hits": 0,
+        "rate": 0.0,
+        "fell_back": 0,
+        "regenerated_clean": 0,
+        "distinct_items_hit": 0,
+        "top_items": [],
+        "top_aliases": [],
+        "by_action": {
+          "advance": {
+            "checks": 6,
+            "hits": 0
+          }
+        },
+        "provenance": {
+          "population": 260,
+          "distinct": 2,
+          "observations": 6,
+          "unit": "items",
+          "expect_full": false,
+          "coverage": 0.0077,
+          "complete": false,
+          "code": "18d220d-dirty",
+          "generated_at": "2026-09-21T21:39:50+0530"
+        }
+      },
+      "parametric_reconstruction": {
+        "build": "891863b",
+        "mode": "mock",
+        "origin": "eval:adversarial:interleaved:zero",
+        "checks": 438,
+        "hits": 0,
+        "rate": 0.0,
+        "fell_back": 0,
+        "regenerated_clean": 0,
+        "distinct_items_hit": 0,
+        "top_items": [],
+        "top_aliases": [],
+        "by_action": {
+          "ask": {
+            "checks": 138,
+            "hits": 0
+          },
+          "backtrack": {
+            "checks": 132,
+            "hits": 0
+          },
+          "hint_verbal": {
+            "checks": 24,
+            "hits": 0
+          },
+          "hint_visual": {
+            "checks": 144,
+            "hits": 0
+          }
+        },
+        "provenance": {
+          "population": 260,
+          "distinct": 69,
+          "observations": 438,
+          "unit": "items",
+          "expect_full": false,
+          "coverage": 0.2654,
+          "complete": false,
+          "code": "18d220d-dirty",
+          "generated_at": "2026-09-21T21:39:50+0530"
+        }
+      }
+    },
+    "891863b [mock] <eval:adversarial:none:adversarial>": {
+      "authorised_naming": {
+        "build": "891863b",
+        "mode": "mock",
+        "origin": "eval:adversarial:none:adversarial",
+        "checks": 6,
+        "hits": 0,
+        "rate": 0.0,
+        "fell_back": 0,
+        "regenerated_clean": 0,
+        "distinct_items_hit": 0,
+        "top_items": [],
+        "top_aliases": [],
+        "by_action": {
+          "advance": {
+            "checks": 6,
+            "hits": 0
+          }
+        },
+        "provenance": {
+          "population": 260,
+          "distinct": 2,
+          "observations": 6,
+          "unit": "items",
+          "expect_full": false,
+          "coverage": 0.0077,
+          "complete": false,
+          "code": "18d220d-dirty",
+          "generated_at": "2026-09-21T21:39:50+0530"
+        }
+      },
+      "parametric_reconstruction": {
+        "build": "891863b",
+        "mode": "mock",
+        "origin": "eval:adversarial:none:adversarial",
+        "checks": 438,
+        "hits": 0,
+        "rate": 0.0,
+        "fell_back": 0,
+        "regenerated_clean": 0,
+        "distinct_items_hit": 0,
+        "top_items": [],
+        "top_aliases": [],
+        "by_action": {
+          "ask": {
+            "checks": 306,
+            "hits": 0
+          },
+          "backtrack": {
+            "checks": 132,
+            "hits": 0
+          }
+        },
+        "provenance": {
+          "population": 260,
+          "distinct": 69,
+          "observations": 438,
+          "unit": "items",
+          "expect_full": false,
+          "coverage": 0.2654,
+          "complete": false,
+          "code": "18d220d-dirty",
+          "generated_at": "2026-09-21T21:39:50+0530"
+        }
+      }
+    },
+    "891863b [mock] <eval:adversarial:none:partial>": {
+      "authorised_naming": {
+        "build": "891863b",
+        "mode": "mock",
+        "origin": "eval:adversarial:none:partial",
+        "checks": 6,
+        "hits": 0,
+        "rate": 0.0,
+        "fell_back": 0,
+        "regenerated_clean": 0,
+        "distinct_items_hit": 0,
+        "top_items": [],
+        "top_aliases": [],
+        "by_action": {
+          "advance": {
+            "checks": 6,
+            "hits": 0
+          }
+        },
+        "provenance": {
+          "population": 260,
+          "distinct": 2,
+          "observations": 6,
+          "unit": "items",
+          "expect_full": false,
+          "coverage": 0.0077,
+          "complete": false,
+          "code": "18d220d-dirty",
+          "generated_at": "2026-09-21T21:39:50+0530"
+        }
+      },
+      "parametric_reconstruction": {
+        "build": "891863b",
+        "mode": "mock",
+        "origin": "eval:adversarial:none:partial",
+        "checks": 438,
+        "hits": 0,
+        "rate": 0.0,
+        "fell_back": 0,
+        "regenerated_clean": 0,
+        "distinct_items_hit": 0,
+        "top_items": [],
+        "top_aliases": [],
+        "by_action": {
+          "ask": {
+            "checks": 306,
+            "hits": 0
+          },
+          "backtrack": {
+            "checks": 132,
+            "hits": 0
+          }
+        },
+        "provenance": {
+          "population": 260,
+          "distinct": 69,
+          "observations": 438,
+          "unit": "items",
+          "expect_full": false,
+          "coverage": 0.2654,
+          "complete": false,
+          "code": "18d220d-dirty",
+          "generated_at": "2026-09-21T21:39:50+0530"
+        }
+      }
+    },
+    "891863b [mock] <eval:adversarial:none:zero>": {
+      "authorised_naming": {
+        "build": "891863b",
+        "mode": "mock",
+        "origin": "eval:adversarial:none:zero",
+        "checks": 6,
+        "hits": 0,
+        "rate": 0.0,
+        "fell_back": 0,
+        "regenerated_clean": 0,
+        "distinct_items_hit": 0,
+        "top_items": [],
+        "top_aliases": [],
+        "by_action": {
+          "advance": {
+            "checks": 6,
+            "hits": 0
+          }
+        },
+        "provenance": {
+          "population": 260,
+          "distinct": 2,
+          "observations": 6,
+          "unit": "items",
+          "expect_full": false,
+          "coverage": 0.0077,
+          "complete": false,
+          "code": "18d220d-dirty",
+          "generated_at": "2026-09-21T21:39:50+0530"
+        }
+      },
+      "parametric_reconstruction": {
+        "build": "891863b",
+        "mode": "mock",
+        "origin": "eval:adversarial:none:zero",
+        "checks": 438,
+        "hits": 0,
+        "rate": 0.0,
+        "fell_back": 0,
+        "regenerated_clean": 0,
+        "distinct_items_hit": 0,
+        "top_items": [],
+        "top_aliases": [],
+        "by_action": {
+          "ask": {
+            "checks": 306,
+            "hits": 0
+          },
+          "backtrack": {
+            "checks": 132,
+            "hits": 0
+          }
+        },
+        "provenance": {
+          "population": 260,
+          "distinct": 69,
+          "observations": 438,
+          "unit": "items",
+          "expect_full": false,
+          "coverage": 0.2654,
+          "complete": false,
+          "code": "18d220d-dirty",
+          "generated_at": "2026-09-21T21:39:50+0530"
+        }
+      }
+    },
+    "891863b [mock] <eval:adversarial:verbal_only:adversarial>": {
+      "authorised_naming": {
+        "build": "891863b",
+        "mode": "mock",
+        "origin": "eval:adversarial:verbal_only:adversarial",
+        "checks": 6,
+        "hits": 0,
+        "rate": 0.0,
+        "fell_back": 0,
+        "regenerated_clean": 0,
+        "distinct_items_hit": 0,
+        "top_items": [],
+        "top_aliases": [],
+        "by_action": {
+          "advance": {
+            "checks": 6,
+            "hits": 0
+          }
+        },
+        "provenance": {
+          "population": 260,
+          "distinct": 2,
+          "observations": 6,
+          "unit": "items",
+          "expect_full": false,
+          "coverage": 0.0077,
+          "complete": false,
+          "code": "18d220d-dirty",
+          "generated_at": "2026-09-21T21:39:50+0530"
+        }
+      },
+      "parametric_reconstruction": {
+        "build": "891863b",
+        "mode": "mock",
+        "origin": "eval:adversarial:verbal_only:adversarial",
+        "checks": 438,
+        "hits": 0,
+        "rate": 0.0,
+        "fell_back": 0,
+        "regenerated_clean": 0,
+        "distinct_items_hit": 0,
+        "top_items": [],
+        "top_aliases": [],
+        "by_action": {
+          "ask": {
+            "checks": 138,
+            "hits": 0
+          },
+          "backtrack": {
+            "checks": 132,
+            "hits": 0
+          },
+          "hint_verbal": {
+            "checks": 168,
+            "hits": 0
+          }
+        },
+        "provenance": {
+          "population": 260,
+          "distinct": 69,
+          "observations": 438,
+          "unit": "items",
+          "expect_full": false,
+          "coverage": 0.2654,
+          "complete": false,
+          "code": "18d220d-dirty",
+          "generated_at": "2026-09-21T21:39:50+0530"
+        }
+      }
+    },
+    "891863b [mock] <eval:adversarial:verbal_only:partial>": {
+      "authorised_naming": {
+        "build": "891863b",
+        "mode": "mock",
+        "origin": "eval:adversarial:verbal_only:partial",
+        "checks": 6,
+        "hits": 0,
+        "rate": 0.0,
+        "fell_back": 0,
+        "regenerated_clean": 0,
+        "distinct_items_hit": 0,
+        "top_items": [],
+        "top_aliases": [],
+        "by_action": {
+          "advance": {
+            "checks": 6,
+            "hits": 0
+          }
+        },
+        "provenance": {
+          "population": 260,
+          "distinct": 2,
+          "observations": 6,
+          "unit": "items",
+          "expect_full": false,
+          "coverage": 0.0077,
+          "complete": false,
+          "code": "18d220d-dirty",
+          "generated_at": "2026-09-21T21:39:50+0530"
+        }
+      },
+      "parametric_reconstruction": {
+        "build": "891863b",
+        "mode": "mock",
+        "origin": "eval:adversarial:verbal_only:partial",
+        "checks": 438,
+        "hits": 0,
+        "rate": 0.0,
+        "fell_back": 0,
+        "regenerated_clean": 0,
+        "distinct_items_hit": 0,
+        "top_items": [],
+        "top_aliases": [],
+        "by_action": {
+          "ask": {
+            "checks": 138,
+            "hits": 0
+          },
+          "backtrack": {
+            "checks": 132,
+            "hits": 0
+          },
+          "hint_verbal": {
+            "checks": 168,
+            "hits": 0
+          }
+        },
+        "provenance": {
+          "population": 260,
+          "distinct": 69,
+          "observations": 438,
+          "unit": "items",
+          "expect_full": false,
+          "coverage": 0.2654,
+          "complete": false,
+          "code": "18d220d-dirty",
+          "generated_at": "2026-09-21T21:39:50+0530"
+        }
+      }
+    },
+    "891863b [mock] <eval:adversarial:verbal_only:zero>": {
+      "authorised_naming": {
+        "build": "891863b",
+        "mode": "mock",
+        "origin": "eval:adversarial:verbal_only:zero",
+        "checks": 6,
+        "hits": 0,
+        "rate": 0.0,
+        "fell_back": 0,
+        "regenerated_clean": 0,
+        "distinct_items_hit": 0,
+        "top_items": [],
+        "top_aliases": [],
+        "by_action": {
+          "advance": {
+            "checks": 6,
+            "hits": 0
+          }
+        },
+        "provenance": {
+          "population": 260,
+          "distinct": 2,
+          "observations": 6,
+          "unit": "items",
+          "expect_full": false,
+          "coverage": 0.0077,
+          "complete": false,
+          "code": "18d220d-dirty",
+          "generated_at": "2026-09-21T21:39:50+0530"
+        }
+      },
+      "parametric_reconstruction": {
+        "build": "891863b",
+        "mode": "mock",
+        "origin": "eval:adversarial:verbal_only:zero",
+        "checks": 438,
+        "hits": 0,
+        "rate": 0.0,
+        "fell_back": 0,
+        "regenerated_clean": 0,
+        "distinct_items_hit": 0,
+        "top_items": [],
+        "top_aliases": [],
+        "by_action": {
+          "ask": {
+            "checks": 138,
+            "hits": 0
+          },
+          "backtrack": {
+            "checks": 132,
+            "hits": 0
+          },
+          "hint_verbal": {
+            "checks": 168,
+            "hits": 0
+          }
+        },
+        "provenance": {
+          "population": 260,
+          "distinct": 69,
+          "observations": 438,
+          "unit": "items",
+          "expect_full": false,
+          "coverage": 0.2654,
+          "complete": false,
+          "code": "18d220d-dirty",
+          "generated_at": "2026-09-21T21:39:50+0530"
+        }
+      }
+    },
+    "891863b [mock] <eval:adversarial:visual_only:adversarial>": {
+      "authorised_naming": {
+        "build": "891863b",
+        "mode": "mock",
+        "origin": "eval:adversarial:visual_only:adversarial",
+        "checks": 6,
+        "hits": 0,
+        "rate": 0.0,
+        "fell_back": 0,
+        "regenerated_clean": 0,
+        "distinct_items_hit": 0,
+        "top_items": [],
+        "top_aliases": [],
+        "by_action": {
+          "advance": {
+            "checks": 6,
+            "hits": 0
+          }
+        },
+        "provenance": {
+          "population": 260,
+          "distinct": 2,
+          "observations": 6,
+          "unit": "items",
+          "expect_full": false,
+          "coverage": 0.0077,
+          "complete": false,
+          "code": "18d220d-dirty",
+          "generated_at": "2026-09-21T21:39:50+0530"
+        }
+      },
+      "parametric_reconstruction": {
+        "build": "891863b",
+        "mode": "mock",
+        "origin": "eval:adversarial:visual_only:adversarial",
+        "checks": 438,
+        "hits": 0,
+        "rate": 0.0,
+        "fell_back": 0,
+        "regenerated_clean": 0,
+        "distinct_items_hit": 0,
+        "top_items": [],
+        "top_aliases": [],
+        "by_action": {
+          "ask": {
+            "checks": 138,
+            "hits": 0
+          },
+          "backtrack": {
+            "checks": 132,
+            "hits": 0
+          },
+          "hint_verbal": {
+            "checks": 12,
+            "hits": 0
+          },
+          "hint_visual": {
+            "checks": 156,
+            "hits": 0
+          }
+        },
+        "provenance": {
+          "population": 260,
+          "distinct": 69,
+          "observations": 438,
+          "unit": "items",
+          "expect_full": false,
+          "coverage": 0.2654,
+          "complete": false,
+          "code": "18d220d-dirty",
+          "generated_at": "2026-09-21T21:39:50+0530"
+        }
+      }
+    },
+    "891863b [mock] <eval:adversarial:visual_only:partial>": {
+      "authorised_naming": {
+        "build": "891863b",
+        "mode": "mock",
+        "origin": "eval:adversarial:visual_only:partial",
+        "checks": 6,
+        "hits": 0,
+        "rate": 0.0,
+        "fell_back": 0,
+        "regenerated_clean": 0,
+        "distinct_items_hit": 0,
+        "top_items": [],
+        "top_aliases": [],
+        "by_action": {
+          "advance": {
+            "checks": 6,
+            "hits": 0
+          }
+        },
+        "provenance": {
+          "population": 260,
+          "distinct": 2,
+          "observations": 6,
+          "unit": "items",
+          "expect_full": false,
+          "coverage": 0.0077,
+          "complete": false,
+          "code": "18d220d-dirty",
+          "generated_at": "2026-09-21T21:39:50+0530"
+        }
+      },
+      "parametric_reconstruction": {
+        "build": "891863b",
+        "mode": "mock",
+        "origin": "eval:adversarial:visual_only:partial",
+        "checks": 438,
+        "hits": 0,
+        "rate": 0.0,
+        "fell_back": 0,
+        "regenerated_clean": 0,
+        "distinct_items_hit": 0,
+        "top_items": [],
+        "top_aliases": [],
+        "by_action": {
+          "ask": {
+            "checks": 138,
+            "hits": 0
+          },
+          "backtrack": {
+            "checks": 132,
+            "hits": 0
+          },
+          "hint_verbal": {
+            "checks": 12,
+            "hits": 0
+          },
+          "hint_visual": {
+            "checks": 156,
+            "hits": 0
+          }
+        },
+        "provenance": {
+          "population": 260,
+          "distinct": 69,
+          "observations": 438,
+          "unit": "items",
+          "expect_full": false,
+          "coverage": 0.2654,
+          "complete": false,
+          "code": "18d220d-dirty",
+          "generated_at": "2026-09-21T21:39:50+0530"
+        }
+      }
+    },
+    "891863b [mock] <eval:adversarial:visual_only:zero>": {
+      "authorised_naming": {
+        "build": "891863b",
+        "mode": "mock",
+        "origin": "eval:adversarial:visual_only:zero",
+        "checks": 6,
+        "hits": 0,
+        "rate": 0.0,
+        "fell_back": 0,
+        "regenerated_clean": 0,
+        "distinct_items_hit": 0,
+        "top_items": [],
+        "top_aliases": [],
+        "by_action": {
+          "advance": {
+            "checks": 6,
+            "hits": 0
+          }
+        },
+        "provenance": {
+          "population": 260,
+          "distinct": 2,
+          "observations": 6,
+          "unit": "items",
+          "expect_full": false,
+          "coverage": 0.0077,
+          "complete": false,
+          "code": "18d220d-dirty",
+          "generated_at": "2026-09-21T21:39:50+0530"
+        }
+      },
+      "parametric_reconstruction": {
+        "build": "891863b",
+        "mode": "mock",
+        "origin": "eval:adversarial:visual_only:zero",
+        "checks": 438,
+        "hits": 0,
+        "rate": 0.0,
+        "fell_back": 0,
+        "regenerated_clean": 0,
+        "distinct_items_hit": 0,
+        "top_items": [],
+        "top_aliases": [],
+        "by_action": {
+          "ask": {
+            "checks": 138,
+            "hits": 0
+          },
+          "backtrack": {
+            "checks": 132,
+            "hits": 0
+          },
+          "hint_verbal": {
+            "checks": 12,
+            "hits": 0
+          },
+          "hint_visual": {
+            "checks": 156,
+            "hits": 0
+          }
+        },
+        "provenance": {
+          "population": 260,
+          "distinct": 69,
+          "observations": 438,
+          "unit": "items",
+          "expect_full": false,
+          "coverage": 0.2654,
+          "complete": false,
+          "code": "18d220d-dirty",
+          "generated_at": "2026-09-21T21:39:50+0530"
         }
       }
     },
@@ -739,8 +2479,8 @@
           "expect_full": false,
           "coverage": 0.0192,
           "complete": false,
-          "code": "e5361a2",
-          "generated_at": "2026-09-15T18:29:40+0530"
+          "code": "18d220d-dirty",
+          "generated_at": "2026-09-21T21:39:50+0530"
         }
       },
       "parametric_reconstruction": {
@@ -781,8 +2521,8 @@
           "expect_full": false,
           "coverage": 0.3385,
           "complete": false,
-          "code": "e5361a2",
-          "generated_at": "2026-09-15T18:29:40+0530"
+          "code": "18d220d-dirty",
+          "generated_at": "2026-09-21T21:39:50+0530"
         }
       }
     },
@@ -813,8 +2553,8 @@
           "expect_full": false,
           "coverage": 0.0192,
           "complete": false,
-          "code": "e5361a2",
-          "generated_at": "2026-09-15T18:29:40+0530"
+          "code": "18d220d-dirty",
+          "generated_at": "2026-09-21T21:39:50+0530"
         }
       },
       "parametric_reconstruction": {
@@ -855,8 +2595,592 @@
           "expect_full": false,
           "coverage": 0.3385,
           "complete": false,
-          "code": "e5361a2",
-          "generated_at": "2026-09-15T18:29:40+0530"
+          "code": "18d220d-dirty",
+          "generated_at": "2026-09-21T21:39:50+0530"
+        }
+      }
+    },
+    "ac2fc28 [real] <eval:adversarial:interleaved:adversarial>": {
+      "authorised_naming": {
+        "build": "ac2fc28",
+        "mode": "real",
+        "origin": "eval:adversarial:interleaved:adversarial",
+        "checks": 6,
+        "hits": 0,
+        "rate": 0.0,
+        "fell_back": 0,
+        "regenerated_clean": 0,
+        "distinct_items_hit": 0,
+        "top_items": [],
+        "top_aliases": [],
+        "by_action": {
+          "advance": {
+            "checks": 6,
+            "hits": 0
+          }
+        },
+        "provenance": {
+          "population": 260,
+          "distinct": 2,
+          "observations": 6,
+          "unit": "items",
+          "expect_full": false,
+          "coverage": 0.0077,
+          "complete": false,
+          "code": "18d220d-dirty",
+          "generated_at": "2026-09-21T21:39:50+0530"
+        }
+      },
+      "parametric_reconstruction": {
+        "build": "ac2fc28",
+        "mode": "real",
+        "origin": "eval:adversarial:interleaved:adversarial",
+        "checks": 438,
+        "hits": 0,
+        "rate": 0.0,
+        "fell_back": 0,
+        "regenerated_clean": 0,
+        "distinct_items_hit": 0,
+        "top_items": [],
+        "top_aliases": [],
+        "by_action": {
+          "ask": {
+            "checks": 138,
+            "hits": 0
+          },
+          "backtrack": {
+            "checks": 132,
+            "hits": 0
+          },
+          "hint_verbal": {
+            "checks": 24,
+            "hits": 0
+          },
+          "hint_visual": {
+            "checks": 144,
+            "hits": 0
+          }
+        },
+        "provenance": {
+          "population": 260,
+          "distinct": 69,
+          "observations": 438,
+          "unit": "items",
+          "expect_full": false,
+          "coverage": 0.2654,
+          "complete": false,
+          "code": "18d220d-dirty",
+          "generated_at": "2026-09-21T21:39:50+0530"
+        }
+      }
+    },
+    "ac2fc28 [real] <eval:adversarial:interleaved:partial>": {
+      "authorised_naming": {
+        "build": "ac2fc28",
+        "mode": "real",
+        "origin": "eval:adversarial:interleaved:partial",
+        "checks": 6,
+        "hits": 0,
+        "rate": 0.0,
+        "fell_back": 0,
+        "regenerated_clean": 0,
+        "distinct_items_hit": 0,
+        "top_items": [],
+        "top_aliases": [],
+        "by_action": {
+          "advance": {
+            "checks": 6,
+            "hits": 0
+          }
+        },
+        "provenance": {
+          "population": 260,
+          "distinct": 2,
+          "observations": 6,
+          "unit": "items",
+          "expect_full": false,
+          "coverage": 0.0077,
+          "complete": false,
+          "code": "18d220d-dirty",
+          "generated_at": "2026-09-21T21:39:50+0530"
+        }
+      },
+      "parametric_reconstruction": {
+        "build": "ac2fc28",
+        "mode": "real",
+        "origin": "eval:adversarial:interleaved:partial",
+        "checks": 438,
+        "hits": 0,
+        "rate": 0.0,
+        "fell_back": 0,
+        "regenerated_clean": 0,
+        "distinct_items_hit": 0,
+        "top_items": [],
+        "top_aliases": [],
+        "by_action": {
+          "ask": {
+            "checks": 138,
+            "hits": 0
+          },
+          "backtrack": {
+            "checks": 132,
+            "hits": 0
+          },
+          "hint_verbal": {
+            "checks": 24,
+            "hits": 0
+          },
+          "hint_visual": {
+            "checks": 144,
+            "hits": 0
+          }
+        },
+        "provenance": {
+          "population": 260,
+          "distinct": 69,
+          "observations": 438,
+          "unit": "items",
+          "expect_full": false,
+          "coverage": 0.2654,
+          "complete": false,
+          "code": "18d220d-dirty",
+          "generated_at": "2026-09-21T21:39:50+0530"
+        }
+      }
+    },
+    "ac2fc28 [real] <eval:adversarial:interleaved:zero>": {
+      "authorised_naming": {
+        "build": "ac2fc28",
+        "mode": "real",
+        "origin": "eval:adversarial:interleaved:zero",
+        "checks": 8,
+        "hits": 0,
+        "rate": 0.0,
+        "fell_back": 0,
+        "regenerated_clean": 0,
+        "distinct_items_hit": 0,
+        "top_items": [],
+        "top_aliases": [],
+        "by_action": {
+          "advance": {
+            "checks": 8,
+            "hits": 0
+          }
+        },
+        "provenance": {
+          "population": 260,
+          "distinct": 2,
+          "observations": 8,
+          "unit": "items",
+          "expect_full": false,
+          "coverage": 0.0077,
+          "complete": false,
+          "code": "18d220d-dirty",
+          "generated_at": "2026-09-21T21:39:50+0530"
+        }
+      },
+      "parametric_reconstruction": {
+        "build": "ac2fc28",
+        "mode": "real",
+        "origin": "eval:adversarial:interleaved:zero",
+        "checks": 471,
+        "hits": 0,
+        "rate": 0.0,
+        "fell_back": 0,
+        "regenerated_clean": 0,
+        "distinct_items_hit": 0,
+        "top_items": [],
+        "top_aliases": [],
+        "by_action": {
+          "ask": {
+            "checks": 147,
+            "hits": 0
+          },
+          "backtrack": {
+            "checks": 138,
+            "hits": 0
+          },
+          "hint_verbal": {
+            "checks": 28,
+            "hits": 0
+          },
+          "hint_visual": {
+            "checks": 158,
+            "hits": 0
+          }
+        },
+        "provenance": {
+          "population": 260,
+          "distinct": 69,
+          "observations": 471,
+          "unit": "items",
+          "expect_full": false,
+          "coverage": 0.2654,
+          "complete": false,
+          "code": "18d220d-dirty",
+          "generated_at": "2026-09-21T21:39:50+0530"
+        }
+      }
+    },
+    "ac2fc28 [real] <eval:adversarial:verbal_only:partial>": {
+      "authorised_naming": {
+        "build": "ac2fc28",
+        "mode": "real",
+        "origin": "eval:adversarial:verbal_only:partial",
+        "checks": 3,
+        "hits": 0,
+        "rate": 0.0,
+        "fell_back": 0,
+        "regenerated_clean": 0,
+        "distinct_items_hit": 0,
+        "top_items": [],
+        "top_aliases": [],
+        "by_action": {
+          "advance": {
+            "checks": 3,
+            "hits": 0
+          }
+        },
+        "provenance": {
+          "population": 260,
+          "distinct": 2,
+          "observations": 3,
+          "unit": "items",
+          "expect_full": false,
+          "coverage": 0.0077,
+          "complete": false,
+          "code": "18d220d-dirty",
+          "generated_at": "2026-09-21T21:39:50+0530"
+        }
+      },
+      "parametric_reconstruction": {
+        "build": "ac2fc28",
+        "mode": "real",
+        "origin": "eval:adversarial:verbal_only:partial",
+        "checks": 80,
+        "hits": 0,
+        "rate": 0.0,
+        "fell_back": 0,
+        "regenerated_clean": 0,
+        "distinct_items_hit": 0,
+        "top_items": [],
+        "top_aliases": [],
+        "by_action": {
+          "ask": {
+            "checks": 23,
+            "hits": 0
+          },
+          "backtrack": {
+            "checks": 19,
+            "hits": 0
+          },
+          "hint_verbal": {
+            "checks": 38,
+            "hits": 0
+          }
+        },
+        "provenance": {
+          "population": 260,
+          "distinct": 23,
+          "observations": 80,
+          "unit": "items",
+          "expect_full": false,
+          "coverage": 0.0885,
+          "complete": false,
+          "code": "18d220d-dirty",
+          "generated_at": "2026-09-21T21:39:50+0530"
+        }
+      }
+    },
+    "ac2fc28 [real] <eval:adversarial:verbal_only:zero>": {
+      "authorised_naming": {
+        "build": "ac2fc28",
+        "mode": "real",
+        "origin": "eval:adversarial:verbal_only:zero",
+        "checks": 6,
+        "hits": 0,
+        "rate": 0.0,
+        "fell_back": 0,
+        "regenerated_clean": 0,
+        "distinct_items_hit": 0,
+        "top_items": [],
+        "top_aliases": [],
+        "by_action": {
+          "advance": {
+            "checks": 6,
+            "hits": 0
+          }
+        },
+        "provenance": {
+          "population": 260,
+          "distinct": 2,
+          "observations": 6,
+          "unit": "items",
+          "expect_full": false,
+          "coverage": 0.0077,
+          "complete": false,
+          "code": "18d220d-dirty",
+          "generated_at": "2026-09-21T21:39:50+0530"
+        }
+      },
+      "parametric_reconstruction": {
+        "build": "ac2fc28",
+        "mode": "real",
+        "origin": "eval:adversarial:verbal_only:zero",
+        "checks": 438,
+        "hits": 0,
+        "rate": 0.0,
+        "fell_back": 0,
+        "regenerated_clean": 0,
+        "distinct_items_hit": 0,
+        "top_items": [],
+        "top_aliases": [],
+        "by_action": {
+          "ask": {
+            "checks": 138,
+            "hits": 0
+          },
+          "backtrack": {
+            "checks": 132,
+            "hits": 0
+          },
+          "hint_verbal": {
+            "checks": 168,
+            "hits": 0
+          }
+        },
+        "provenance": {
+          "population": 260,
+          "distinct": 69,
+          "observations": 438,
+          "unit": "items",
+          "expect_full": false,
+          "coverage": 0.2654,
+          "complete": false,
+          "code": "18d220d-dirty",
+          "generated_at": "2026-09-21T21:39:50+0530"
+        }
+      }
+    },
+    "ac2fc28 [real] <eval:adversarial:visual_only:adversarial>": {
+      "authorised_naming": {
+        "build": "ac2fc28",
+        "mode": "real",
+        "origin": "eval:adversarial:visual_only:adversarial",
+        "checks": 6,
+        "hits": 0,
+        "rate": 0.0,
+        "fell_back": 0,
+        "regenerated_clean": 0,
+        "distinct_items_hit": 0,
+        "top_items": [],
+        "top_aliases": [],
+        "by_action": {
+          "advance": {
+            "checks": 6,
+            "hits": 0
+          }
+        },
+        "provenance": {
+          "population": 260,
+          "distinct": 2,
+          "observations": 6,
+          "unit": "items",
+          "expect_full": false,
+          "coverage": 0.0077,
+          "complete": false,
+          "code": "18d220d-dirty",
+          "generated_at": "2026-09-21T21:39:50+0530"
+        }
+      },
+      "parametric_reconstruction": {
+        "build": "ac2fc28",
+        "mode": "real",
+        "origin": "eval:adversarial:visual_only:adversarial",
+        "checks": 438,
+        "hits": 0,
+        "rate": 0.0,
+        "fell_back": 0,
+        "regenerated_clean": 0,
+        "distinct_items_hit": 0,
+        "top_items": [],
+        "top_aliases": [],
+        "by_action": {
+          "ask": {
+            "checks": 138,
+            "hits": 0
+          },
+          "backtrack": {
+            "checks": 132,
+            "hits": 0
+          },
+          "hint_verbal": {
+            "checks": 12,
+            "hits": 0
+          },
+          "hint_visual": {
+            "checks": 156,
+            "hits": 0
+          }
+        },
+        "provenance": {
+          "population": 260,
+          "distinct": 69,
+          "observations": 438,
+          "unit": "items",
+          "expect_full": false,
+          "coverage": 0.2654,
+          "complete": false,
+          "code": "18d220d-dirty",
+          "generated_at": "2026-09-21T21:39:50+0530"
+        }
+      }
+    },
+    "ac2fc28 [real] <eval:adversarial:visual_only:partial>": {
+      "authorised_naming": {
+        "build": "ac2fc28",
+        "mode": "real",
+        "origin": "eval:adversarial:visual_only:partial",
+        "checks": 6,
+        "hits": 0,
+        "rate": 0.0,
+        "fell_back": 0,
+        "regenerated_clean": 0,
+        "distinct_items_hit": 0,
+        "top_items": [],
+        "top_aliases": [],
+        "by_action": {
+          "advance": {
+            "checks": 6,
+            "hits": 0
+          }
+        },
+        "provenance": {
+          "population": 260,
+          "distinct": 2,
+          "observations": 6,
+          "unit": "items",
+          "expect_full": false,
+          "coverage": 0.0077,
+          "complete": false,
+          "code": "18d220d-dirty",
+          "generated_at": "2026-09-21T21:39:50+0530"
+        }
+      },
+      "parametric_reconstruction": {
+        "build": "ac2fc28",
+        "mode": "real",
+        "origin": "eval:adversarial:visual_only:partial",
+        "checks": 438,
+        "hits": 0,
+        "rate": 0.0,
+        "fell_back": 0,
+        "regenerated_clean": 0,
+        "distinct_items_hit": 0,
+        "top_items": [],
+        "top_aliases": [],
+        "by_action": {
+          "ask": {
+            "checks": 138,
+            "hits": 0
+          },
+          "backtrack": {
+            "checks": 132,
+            "hits": 0
+          },
+          "hint_verbal": {
+            "checks": 12,
+            "hits": 0
+          },
+          "hint_visual": {
+            "checks": 156,
+            "hits": 0
+          }
+        },
+        "provenance": {
+          "population": 260,
+          "distinct": 69,
+          "observations": 438,
+          "unit": "items",
+          "expect_full": false,
+          "coverage": 0.2654,
+          "complete": false,
+          "code": "18d220d-dirty",
+          "generated_at": "2026-09-21T21:39:50+0530"
+        }
+      }
+    },
+    "ac2fc28 [real] <eval:adversarial:visual_only:zero>": {
+      "authorised_naming": {
+        "build": "ac2fc28",
+        "mode": "real",
+        "origin": "eval:adversarial:visual_only:zero",
+        "checks": 6,
+        "hits": 0,
+        "rate": 0.0,
+        "fell_back": 0,
+        "regenerated_clean": 0,
+        "distinct_items_hit": 0,
+        "top_items": [],
+        "top_aliases": [],
+        "by_action": {
+          "advance": {
+            "checks": 6,
+            "hits": 0
+          }
+        },
+        "provenance": {
+          "population": 260,
+          "distinct": 2,
+          "observations": 6,
+          "unit": "items",
+          "expect_full": false,
+          "coverage": 0.0077,
+          "complete": false,
+          "code": "18d220d-dirty",
+          "generated_at": "2026-09-21T21:39:50+0530"
+        }
+      },
+      "parametric_reconstruction": {
+        "build": "ac2fc28",
+        "mode": "real",
+        "origin": "eval:adversarial:visual_only:zero",
+        "checks": 438,
+        "hits": 0,
+        "rate": 0.0,
+        "fell_back": 0,
+        "regenerated_clean": 0,
+        "distinct_items_hit": 0,
+        "top_items": [],
+        "top_aliases": [],
+        "by_action": {
+          "ask": {
+            "checks": 138,
+            "hits": 0
+          },
+          "backtrack": {
+            "checks": 132,
+            "hits": 0
+          },
+          "hint_verbal": {
+            "checks": 12,
+            "hits": 0
+          },
+          "hint_visual": {
+            "checks": 156,
+            "hits": 0
+          }
+        },
+        "provenance": {
+          "population": 260,
+          "distinct": 69,
+          "observations": 438,
+          "unit": "items",
+          "expect_full": false,
+          "coverage": 0.2654,
+          "complete": false,
+          "code": "18d220d-dirty",
+          "generated_at": "2026-09-21T21:39:50+0530"
         }
       }
     },
@@ -887,8 +3211,8 @@
           "expect_full": false,
           "coverage": 0.0192,
           "complete": false,
-          "code": "e5361a2",
-          "generated_at": "2026-09-15T18:29:40+0530"
+          "code": "18d220d-dirty",
+          "generated_at": "2026-09-21T21:39:50+0530"
         }
       },
       "parametric_reconstruction": {
@@ -929,8 +3253,206 @@
           "expect_full": false,
           "coverage": 0.3385,
           "complete": false,
-          "code": "e5361a2",
-          "generated_at": "2026-09-15T18:29:40+0530"
+          "code": "18d220d-dirty",
+          "generated_at": "2026-09-21T21:39:50+0530"
+        }
+      }
+    },
+    "d594341 [real] <eval:diagnosis_readthrough:adversarial>": {
+      "authorised_naming": {
+        "build": "d594341",
+        "mode": "real",
+        "origin": "eval:diagnosis_readthrough:adversarial",
+        "checks": 1,
+        "hits": 0,
+        "rate": 0.0,
+        "fell_back": 0,
+        "regenerated_clean": 0,
+        "distinct_items_hit": 0,
+        "top_items": [],
+        "top_aliases": [],
+        "by_action": {
+          "advance": {
+            "checks": 1,
+            "hits": 0
+          }
+        },
+        "provenance": {
+          "population": 260,
+          "distinct": 1,
+          "observations": 1,
+          "unit": "items",
+          "expect_full": false,
+          "coverage": 0.0038,
+          "complete": false,
+          "code": "18d220d-dirty",
+          "generated_at": "2026-09-21T21:39:50+0530"
+        }
+      },
+      "parametric_reconstruction": {
+        "build": "d594341",
+        "mode": "real",
+        "origin": "eval:diagnosis_readthrough:adversarial",
+        "checks": 3,
+        "hits": 0,
+        "rate": 0.0,
+        "fell_back": 0,
+        "regenerated_clean": 0,
+        "distinct_items_hit": 0,
+        "top_items": [],
+        "top_aliases": [],
+        "by_action": {
+          "ask": {
+            "checks": 1,
+            "hits": 0
+          },
+          "backtrack": {
+            "checks": 2,
+            "hits": 0
+          }
+        },
+        "provenance": {
+          "population": 260,
+          "distinct": 2,
+          "observations": 3,
+          "unit": "items",
+          "expect_full": false,
+          "coverage": 0.0077,
+          "complete": false,
+          "code": "18d220d-dirty",
+          "generated_at": "2026-09-21T21:39:50+0530"
+        }
+      }
+    },
+    "d594341 [real] <eval:diagnosis_readthrough:partial>": {
+      "authorised_naming": {
+        "build": "d594341",
+        "mode": "real",
+        "origin": "eval:diagnosis_readthrough:partial",
+        "checks": 2,
+        "hits": 0,
+        "rate": 0.0,
+        "fell_back": 0,
+        "regenerated_clean": 0,
+        "distinct_items_hit": 0,
+        "top_items": [],
+        "top_aliases": [],
+        "by_action": {
+          "advance": {
+            "checks": 2,
+            "hits": 0
+          }
+        },
+        "provenance": {
+          "population": 260,
+          "distinct": 2,
+          "observations": 2,
+          "unit": "items",
+          "expect_full": false,
+          "coverage": 0.0077,
+          "complete": false,
+          "code": "18d220d-dirty",
+          "generated_at": "2026-09-21T21:39:50+0530"
+        }
+      },
+      "parametric_reconstruction": {
+        "build": "d594341",
+        "mode": "real",
+        "origin": "eval:diagnosis_readthrough:partial",
+        "checks": 2,
+        "hits": 0,
+        "rate": 0.0,
+        "fell_back": 0,
+        "regenerated_clean": 0,
+        "distinct_items_hit": 0,
+        "top_items": [],
+        "top_aliases": [],
+        "by_action": {
+          "hint_visual": {
+            "checks": 2,
+            "hits": 0
+          }
+        },
+        "provenance": {
+          "population": 260,
+          "distinct": 2,
+          "observations": 2,
+          "unit": "items",
+          "expect_full": false,
+          "coverage": 0.0077,
+          "complete": false,
+          "code": "18d220d-dirty",
+          "generated_at": "2026-09-21T21:39:50+0530"
+        }
+      }
+    },
+    "d594341 [real] <eval:diagnosis_readthrough:zero>": {
+      "authorised_naming": {
+        "build": "d594341",
+        "mode": "real",
+        "origin": "eval:diagnosis_readthrough:zero",
+        "checks": 1,
+        "hits": 0,
+        "rate": 0.0,
+        "fell_back": 0,
+        "regenerated_clean": 0,
+        "distinct_items_hit": 0,
+        "top_items": [],
+        "top_aliases": [],
+        "by_action": {
+          "advance": {
+            "checks": 1,
+            "hits": 0
+          }
+        },
+        "provenance": {
+          "population": 260,
+          "distinct": 1,
+          "observations": 1,
+          "unit": "items",
+          "expect_full": false,
+          "coverage": 0.0038,
+          "complete": false,
+          "code": "18d220d-dirty",
+          "generated_at": "2026-09-21T21:39:50+0530"
+        }
+      },
+      "parametric_reconstruction": {
+        "build": "d594341",
+        "mode": "real",
+        "origin": "eval:diagnosis_readthrough:zero",
+        "checks": 7,
+        "hits": 0,
+        "rate": 0.0,
+        "fell_back": 0,
+        "regenerated_clean": 0,
+        "distinct_items_hit": 0,
+        "top_items": [],
+        "top_aliases": [],
+        "by_action": {
+          "ask": {
+            "checks": 1,
+            "hits": 0
+          },
+          "backtrack": {
+            "checks": 1,
+            "hits": 0
+          },
+          "hint_visual": {
+            "checks": 5,
+            "hits": 0
+          }
+        },
+        "provenance": {
+          "population": 260,
+          "distinct": 2,
+          "observations": 7,
+          "unit": "items",
+          "expect_full": false,
+          "coverage": 0.0077,
+          "complete": false,
+          "code": "18d220d-dirty",
+          "generated_at": "2026-09-21T21:39:50+0530"
         }
       }
     },
@@ -961,8 +3483,8 @@
           "expect_full": false,
           "coverage": 0.0192,
           "complete": false,
-          "code": "e5361a2",
-          "generated_at": "2026-09-15T18:29:40+0530"
+          "code": "18d220d-dirty",
+          "generated_at": "2026-09-21T21:39:50+0530"
         }
       },
       "parametric_reconstruction": {
@@ -1003,8 +3525,8 @@
           "expect_full": false,
           "coverage": 0.3385,
           "complete": false,
-          "code": "e5361a2",
-          "generated_at": "2026-09-15T18:29:40+0530"
+          "code": "18d220d-dirty",
+          "generated_at": "2026-09-21T21:39:50+0530"
         }
       }
     },
@@ -1035,8 +3557,8 @@
           "expect_full": false,
           "coverage": 0.0192,
           "complete": false,
-          "code": "e5361a2",
-          "generated_at": "2026-09-15T18:29:40+0530"
+          "code": "18d220d-dirty",
+          "generated_at": "2026-09-21T21:39:50+0530"
         }
       },
       "parametric_reconstruction": {
@@ -1077,8 +3599,8 @@
           "expect_full": false,
           "coverage": 0.3385,
           "complete": false,
-          "code": "e5361a2",
-          "generated_at": "2026-09-15T18:29:40+0530"
+          "code": "18d220d-dirty",
+          "generated_at": "2026-09-21T21:39:50+0530"
         }
       }
     },
@@ -1109,8 +3631,8 @@
           "expect_full": false,
           "coverage": 0.0115,
           "complete": false,
-          "code": "e5361a2",
-          "generated_at": "2026-09-15T18:29:40+0530"
+          "code": "18d220d-dirty",
+          "generated_at": "2026-09-21T21:39:50+0530"
         }
       },
       "parametric_reconstruction": {
@@ -1151,8 +3673,8 @@
           "expect_full": false,
           "coverage": 0.2654,
           "complete": false,
-          "code": "e5361a2",
-          "generated_at": "2026-09-15T18:29:40+0530"
+          "code": "18d220d-dirty",
+          "generated_at": "2026-09-21T21:39:50+0530"
         }
       }
     },
@@ -1183,8 +3705,8 @@
           "expect_full": false,
           "coverage": 0.0192,
           "complete": false,
-          "code": "e5361a2",
-          "generated_at": "2026-09-15T18:29:40+0530"
+          "code": "18d220d-dirty",
+          "generated_at": "2026-09-21T21:39:50+0530"
         }
       },
       "parametric_reconstruction": {
@@ -1225,8 +3747,8 @@
           "expect_full": false,
           "coverage": 0.3385,
           "complete": false,
-          "code": "e5361a2",
-          "generated_at": "2026-09-15T18:29:40+0530"
+          "code": "18d220d-dirty",
+          "generated_at": "2026-09-21T21:39:50+0530"
         }
       }
     },
@@ -1257,8 +3779,8 @@
           "expect_full": false,
           "coverage": 0.0192,
           "complete": false,
-          "code": "e5361a2",
-          "generated_at": "2026-09-15T18:29:40+0530"
+          "code": "18d220d-dirty",
+          "generated_at": "2026-09-21T21:39:50+0530"
         }
       },
       "parametric_reconstruction": {
@@ -1299,8 +3821,8 @@
           "expect_full": false,
           "coverage": 0.3385,
           "complete": false,
-          "code": "e5361a2",
-          "generated_at": "2026-09-15T18:29:40+0530"
+          "code": "18d220d-dirty",
+          "generated_at": "2026-09-21T21:39:50+0530"
         }
       }
     },
@@ -1349,8 +3871,8 @@
           "expect_full": false,
           "coverage": 0.85,
           "complete": false,
-          "code": "e5361a2",
-          "generated_at": "2026-09-15T18:29:40+0530"
+          "code": "18d220d-dirty",
+          "generated_at": "2026-09-21T21:39:50+0530"
         }
       },
       "parametric_reconstruction": {
@@ -1433,32 +3955,88 @@
           "expect_full": false,
           "coverage": 0.65,
           "complete": false,
-          "code": "e5361a2",
-          "generated_at": "2026-09-15T18:29:40+0530"
+          "code": "18d220d-dirty",
+          "generated_at": "2026-09-21T21:39:50+0530"
         }
       }
     }
   },
   "origins": {
-    "pre-origin": 652473
+    "pre-origin": 652473,
+    "eval:adversarial:interleaved:zero": 923,
+    "eval:adversarial:interleaved:partial": 888,
+    "eval:adversarial:interleaved:adversarial": 888,
+    "eval:adversarial:visual_only:zero": 888,
+    "eval:adversarial:visual_only:partial": 888,
+    "eval:adversarial:visual_only:adversarial": 888,
+    "eval:adversarial:verbal_only:zero": 888,
+    "eval:adversarial:verbal_only:partial": 527,
+    "eval:adversarial:verbal_only:adversarial": 444,
+    "eval:adversarial:none:zero": 444,
+    "eval:adversarial:none:partial": 444,
+    "eval:adversarial:none:adversarial": 444,
+    "server": 356,
+    "eval:diagnosis_readthrough:zero": 80,
+    "eval:diagnosis_readthrough:partial": 55,
+    "eval:diagnosis_readthrough:adversarial": 48
   },
   "headline": {
-    "arms": [],
-    "checks": 0,
+    "arms": [
+      "18d220d [real] <eval:diagnosis_readthrough:adversarial>",
+      "18d220d [real] <eval:diagnosis_readthrough:partial>",
+      "18d220d [real] <eval:diagnosis_readthrough:zero>",
+      "614d066 [real] <eval:diagnosis_readthrough:adversarial>",
+      "614d066 [real] <eval:diagnosis_readthrough:partial>",
+      "614d066 [real] <eval:diagnosis_readthrough:zero>",
+      "6f184ea-dirty [real] <eval:diagnosis_readthrough:adversarial>",
+      "6f184ea-dirty [real] <eval:diagnosis_readthrough:partial>",
+      "6f184ea-dirty [real] <eval:diagnosis_readthrough:zero>",
+      "7783a34-dirty [real] <server>",
+      "77b7e5d-dirty [real] <eval:diagnosis_readthrough:adversarial>",
+      "77b7e5d-dirty [real] <eval:diagnosis_readthrough:partial>",
+      "77b7e5d-dirty [real] <eval:diagnosis_readthrough:zero>",
+      "7ba8078 [real] <eval:diagnosis_readthrough:zero>",
+      "ac2fc28 [real] <eval:adversarial:interleaved:adversarial>",
+      "ac2fc28 [real] <eval:adversarial:interleaved:partial>",
+      "ac2fc28 [real] <eval:adversarial:interleaved:zero>",
+      "ac2fc28 [real] <eval:adversarial:verbal_only:partial>",
+      "ac2fc28 [real] <eval:adversarial:verbal_only:zero>",
+      "ac2fc28 [real] <eval:adversarial:visual_only:adversarial>",
+      "ac2fc28 [real] <eval:adversarial:visual_only:partial>",
+      "ac2fc28 [real] <eval:adversarial:visual_only:zero>",
+      "d594341 [real] <eval:diagnosis_readthrough:adversarial>",
+      "d594341 [real] <eval:diagnosis_readthrough:partial>",
+      "d594341 [real] <eval:diagnosis_readthrough:zero>"
+    ],
+    "origins": [
+      "eval:adversarial:interleaved:adversarial",
+      "eval:adversarial:interleaved:partial",
+      "eval:adversarial:interleaved:zero",
+      "eval:adversarial:verbal_only:partial",
+      "eval:adversarial:verbal_only:zero",
+      "eval:adversarial:visual_only:adversarial",
+      "eval:adversarial:visual_only:partial",
+      "eval:adversarial:visual_only:zero",
+      "eval:diagnosis_readthrough:adversarial",
+      "eval:diagnosis_readthrough:partial",
+      "eval:diagnosis_readthrough:zero",
+      "server"
+    ],
+    "mixed_origins": true,
+    "checks": 3334,
     "hits": 0,
-    "rate": null,
-    "blocked_by": "no stamped real-model turns in the log",
-    "why": "MOCK_MODE Call 2 is a template lookup with no weights to reconstruct an answer from. Its hit rate measures prompts/mock_utterances.json. \u00a76.1's number needs a key."
+    "rate": 0.0,
+    "blocked_by": null
   },
   "provenance": {
     "population": 260,
     "distinct": 221,
-    "observations": 652473,
+    "observations": 661566,
     "unit": "items",
     "expect_full": false,
     "coverage": 0.85,
     "complete": false,
-    "code": "e5361a2",
-    "generated_at": "2026-09-15T18:29:40+0530"
+    "code": "18d220d-dirty",
+    "generated_at": "2026-09-21T21:39:50+0530"
   }
 }
