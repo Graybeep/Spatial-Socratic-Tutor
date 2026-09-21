@@ -98,7 +98,17 @@ day-12 and day-18 runs differ in **prompt, history handling and model** at once.
 `eval/diagnostic_calibration.py` was re-run on day 18 to isolate one of the
 three. Same model, same fixed harness, Call 1 prompt swapped for the version
 live on day 12 — which `516795d`'s timestamp shows it was, by an hour and three
-quarters:
+quarters. Both arms ran all five cases at n=2; the instrument withholds the
+comparison unless they do.
+
+**The counter-test comes first, because the other rows flatter the current
+prompt.** See *The cost of the fix* below for what it is and why it was built:
+
+| | current prompt | pre-falsifiability prompt |
+|---|---|---|
+| **`stuck` when `stuck` is the only answer** | **0/2** | **2/2** |
+
+Then the rest:
 
 | | current prompt | pre-falsifiability prompt |
 |---|---|---|
@@ -107,10 +117,13 @@ quarters:
 | separates the two students | **yes** | **no** |
 | `correct` boolean | 6/6 | 6/6 |
 
-**The old prompt reproduces the day-12 degeneracy on a fully fixed harness.** So
-the history fix is neither necessary nor sufficient for the reversal, the model
-change is not isolated at all, and the prompt is the only variable shown to move
-the result.
+**The old prompt reproduces the day-12 degeneracy on a fully fixed harness**, and
+run 1 on day 13 shows the converse: the current prompt reaches for `guessing`
+**on the broken harness**, 2 of 4 turns, where day 12's old prompt managed 1 in
+30. Both directions agree. So the history fix is neither necessary nor sufficient
+for the reversal and the model change is not isolated at all; the prompt is the
+only variable shown to move **state selection**, and the history fix is what
+moves **grounding** — whether the state is about the student at all.
 
 This also re-explains *A sharper instrument, and a worse result* below. Its
 `stuck`-to-everything finding was measured through the old prompt and is
