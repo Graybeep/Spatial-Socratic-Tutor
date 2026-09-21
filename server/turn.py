@@ -93,6 +93,12 @@ class Phase1:
     #: an answer from its weights, and a template has no weights. Such a turn is
     #: logged with mock=false and must not sit in that denominator.
     call2_fallback: bool = False
+    #: "server" (two consecutive failures, §7), "model" (Call 1 asked and the
+    #: target was unmastered), "refused" (Call 1 asked for a target it had
+    #: already mastered, or none existed) or None. The day-18 log could not tell
+    #: a model-initiated backtrack from a coincident two-failure one, which is
+    #: the count §5.6's containment argument needs.
+    backtrack_origin: Optional[str] = None
     #: The item a §6 layer 3 forced reveal CLOSED. Not `item`: routing has
     #: already opened the next one by the time Call 2 runs, and the reveal must
     #: name what was revealed, never what is now being asked.
@@ -688,6 +694,7 @@ def begin_turn(
 
     # --- step 4d: route. Reads the mastery written immediately above. ------
     session_complete = False
+    backtrack_origin = None
     revealed_node = None
     revealed_item = item if resolved_with_support else None
     answered_item = item if graded is True and not resolved_with_support else None
@@ -717,10 +724,48 @@ def begin_turn(
             next_item = _pick_item(store, state, target)
             if next_item is not None:
                 action = "backtrack"
+                backtrack_origin = "server"
                 state.start_item(target, next_item.id)
                 state.consecutive_failures = 0
                 item = next_item
                 hint_level = 0
+
+    # --- a MODEL-requested backtrack needs a gap to close ------------------
+    #
+    # `action` starts life as decision.requested_action, so a Call 1 that asks
+    # for `backtrack` got one for free: the utterance said "let us step back",
+    # `backtrack` drew the prereq node's chunk, and NOTHING MOVED - no
+    # start_item, no new item, the student still on the node they were failing.
+    # The server-initiated branch above is the only one that ever moved the
+    # curriculum.
+    #
+    # §7 backtracks to close a gap. A prerequisite already at or above
+    # MASTERY_THRESHOLD is not a gap, so a request to step back to one is
+    # refused rather than performed. Honouring it would send a student who is
+    # struggling with THIS node to revise something they have already shown they
+    # know, on the model's say-so, which is exactly the kind of curriculum
+    # decision §5 keeps in Python.
+    #
+    # `backtrack_origin` records which of the three happened, because the day-18
+    # log could not distinguish a model-initiated backtrack from a coincident
+    # two-failure one and the containment count needs that.
+    if action == "backtrack" and backtrack_origin is None:
+        mastery_map = _mastery_map(state)
+        target = mastery_mod.backtrack_target(store, item.node_id, mastery_map)
+        next_item = _pick_item(store, state, target) if target else None
+        if (
+            target is not None
+            and next_item is not None
+            and not mastery_mod.is_mastered(mastery_map.get(target, 0.0))
+        ):
+            backtrack_origin = "model"
+            state.start_item(target, next_item.id)
+            state.consecutive_failures = 0
+            item = next_item
+            hint_level = 0
+        else:
+            backtrack_origin = "refused"
+            action = CONFIG.backtrack_refused_action
 
     # --- the circuit breaker, ABOVE §7 -------------------------------------
     #
@@ -794,6 +839,7 @@ def begin_turn(
         session_complete=session_complete or state.session_complete,
         scored=graded,
         call1_fallback=call1_fallback,
+        backtrack_origin=backtrack_origin,
         revealed_item=revealed_item,
         answered_item=answered_item,
     )
@@ -984,6 +1030,9 @@ def _log(phase1: Phase1, response: TurnResponse) -> None:
         # (§6): post-split, a hit means the model reconstructed the answer
         # parametrically, because Call 2 never saw it.
         "leak_note": phase1.leak_note,
+        # Which rule moved the curriculum backwards, if one did. See
+        # Phase1.backtrack_origin.
+        "backtrack_origin": phase1.backtrack_origin,
         # Whether the MODEL wrote `utterance` or a prompts/fallback_*.txt
         # template did. §6.1 screens utterances for parametric reconstruction;
         # a template cannot reconstruct anything, so eval/leak_monitor.py drops
