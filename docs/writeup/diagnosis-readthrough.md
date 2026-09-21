@@ -97,7 +97,7 @@ not one lucky sample.
 ### What caused it — the prompt, and not what we first said
 
 Day 13 found the `role: text` history bug and this file credited the reversal to
-fixing it. That attribution does not survive report.md §5.5's inference table,
+fixing it. That attribution does not survive report.md §5.6's controls,
 which holds the model fixed and varies prompt against history across run 1, arm B
 and arm A — **without using day 12 at all**, since day 12 is withdrawn for cause
 (unreproducible dirty build, model never logged).
@@ -132,12 +132,22 @@ for the reversal and the model change is not isolated at all; the prompt is the
 only variable shown to move **state selection**, and the history fix is what
 moves **grounding** — whether the state is about the student at all.
 
-This also re-explains *A sharper instrument, and a worse result* below. Its
-`stuck`-to-everything finding was measured through the old prompt and is
-reproduced by the old prompt today; it is a property of that prompt, not of the
-model. Its other half — the `correct` boolean wrong on 2 of 6 — does **not**
-reproduce: day 18 scores 6/6 on both prompts, so that claim is withdrawn
-outright rather than reassigned.
+### The day-12 calibration run is withdrawn too
+
+*A sharper instrument, and a worse result* below is the day-12
+`diagnostic_calibration.py` run, and it is **withdrawn on the same grounds as
+the day-12 §9.5 run**: same period, same unreproducible dirty build, model never
+logged. It is kept below as history and is not evidence for anything.
+
+What replaces it is the day-18 A/B, measured on a named build and a named model,
+and the two halves of the old result fare differently:
+
+- its **`stuck`-to-everything** finding *is* reproduced — by the old prompt, on
+  a fixed harness (arm B). The behaviour is real and belongs to that prompt. But
+  the claim now rests on arm B, not on the withdrawn run.
+- its **`correct` boolean wrong on 2 of 6** is **not** reproduced. Day 18 scores
+  6/6 on both prompts. Treat that number as gone, not as superseded by a better
+  one.
 
 ### The cost of the fix, found by a case built to look for it
 
