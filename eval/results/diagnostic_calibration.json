@@ -1,0 +1,424 @@
+{
+  "result": {
+    "call1_model": "openai/gpt-oss-120b",
+    "provider": "groq",
+    "prompts": [
+      "current",
+      "pre-falsifiability"
+    ],
+    "by_prompt": {
+      "current": {
+        "measured": true,
+        "n": 10,
+        "correct_boolean": {
+          "agree": 6,
+          "of": 6
+        },
+        "cases": {
+          "scattered_clicks": {
+            "why": "three clicks on unrelated regions of the graph - no pattern to find",
+            "specific": "guessing",
+            "n": 2,
+            "admissible": 2,
+            "specific_hits": 2,
+            "said": {
+              "guessing": 2
+            }
+          },
+          "all_clicks_are_prereqs": {
+            "why": "every click is a direct prerequisite of the answer",
+            "specific": "confused_prereq",
+            "n": 2,
+            "admissible": 2,
+            "specific_hits": 2,
+            "said": {
+              "confused_prereq": 2
+            }
+          },
+          "answered_correctly": {
+            "why": "the student clicked the answer",
+            "specific": "correct",
+            "n": 2,
+            "admissible": 2,
+            "specific_hits": 2,
+            "said": {
+              "correct": 2
+            }
+          },
+          "no_pattern_to_name": {
+            "why": "three wrong free-text answers and no clicks at all - there is no spatial pattern to read, which is what `stuck` is FOR",
+            "specific": "stuck",
+            "n": 2,
+            "admissible": 2,
+            "specific_hits": 0,
+            "said": {
+              "guessing": 2
+            }
+          },
+          "opening_turn": {
+            "why": "no response exists yet; there is nothing to diagnose",
+            "specific": "on_track",
+            "n": 2,
+            "admissible": 2,
+            "specific_hits": 2,
+            "said": {
+              "on_track": 2
+            }
+          }
+        },
+        "specific_hits_total": 8,
+        "scored_total": 10,
+        "errors": [],
+        "separates_guessing_from_prereq_confusion": true,
+        "provenance": {
+          "population": 2,
+          "distinct": 2,
+          "observations": 10,
+          "unit": "cases",
+          "expect_full": false,
+          "coverage": 1.0,
+          "complete": true,
+          "code": "01d0a22",
+          "generated_at": "2026-09-21T22:20:16+0530"
+        }
+      },
+      "pre-falsifiability": {
+        "measured": true,
+        "n": 10,
+        "correct_boolean": {
+          "agree": 6,
+          "of": 6
+        },
+        "cases": {
+          "scattered_clicks": {
+            "why": "three clicks on unrelated regions of the graph - no pattern to find",
+            "specific": "guessing",
+            "n": 2,
+            "admissible": 2,
+            "specific_hits": 0,
+            "said": {
+              "stuck": 2
+            }
+          },
+          "all_clicks_are_prereqs": {
+            "why": "every click is a direct prerequisite of the answer",
+            "specific": "confused_prereq",
+            "n": 2,
+            "admissible": 2,
+            "specific_hits": 0,
+            "said": {
+              "stuck": 2
+            }
+          },
+          "answered_correctly": {
+            "why": "the student clicked the answer",
+            "specific": "correct",
+            "n": 2,
+            "admissible": 2,
+            "specific_hits": 2,
+            "said": {
+              "correct": 2
+            }
+          },
+          "no_pattern_to_name": {
+            "why": "three wrong free-text answers and no clicks at all - there is no spatial pattern to read, which is what `stuck` is FOR",
+            "specific": "stuck",
+            "n": 2,
+            "admissible": 2,
+            "specific_hits": 2,
+            "said": {
+              "stuck": 2
+            }
+          },
+          "opening_turn": {
+            "why": "no response exists yet; there is nothing to diagnose",
+            "specific": "on_track",
+            "n": 2,
+            "admissible": 2,
+            "specific_hits": 2,
+            "said": {
+              "on_track": 2
+            }
+          }
+        },
+        "specific_hits_total": 6,
+        "scored_total": 10,
+        "errors": [],
+        "separates_guessing_from_prereq_confusion": false,
+        "provenance": {
+          "population": 2,
+          "distinct": 2,
+          "observations": 10,
+          "unit": "cases",
+          "expect_full": false,
+          "coverage": 1.0,
+          "complete": true,
+          "code": "01d0a22",
+          "generated_at": "2026-09-21T22:20:16+0530"
+        }
+      }
+    },
+    "ab": {
+      "arms": [
+        "current",
+        "pre-falsifiability"
+      ],
+      "measurable": true,
+      "specific_hits": {
+        "current": 8,
+        "pre-falsifiability": 6
+      },
+      "of": 10,
+      "discriminates": {
+        "current": true,
+        "pre-falsifiability": false
+      },
+      "stuck_when_stuck_is_right": {
+        "current": 0,
+        "pre-falsifiability": 2
+      }
+    }
+  },
+  "results": [
+    {
+      "case": "scattered_clicks",
+      "prompt": "current",
+      "item_id": "itm_0006",
+      "said": "guessing",
+      "action": "hint_visual",
+      "correct": false,
+      "admissible": true,
+      "specific_hit": true,
+      "diagnosis": "The student clicked Bottleneck Router, Soft State, and Flow Control \u2013 concepts unrelated to Best-Effort Service and not its prerequisites, indicating random guessing.",
+      "error": ""
+    },
+    {
+      "case": "scattered_clicks",
+      "prompt": "current",
+      "item_id": "itm_0011",
+      "said": "guessing",
+      "action": "hint_visual",
+      "correct": false,
+      "admissible": true,
+      "specific_hit": true,
+      "diagnosis": "Clicks span unrelated concepts (Best-Effort Service, Congestion Control, Flow Control) with no clear upstream focus, indicating random guessing.",
+      "error": ""
+    },
+    {
+      "case": "all_clicks_are_prereqs",
+      "prompt": "current",
+      "item_id": "itm_0006",
+      "said": "confused_prereq",
+      "action": "backtrack",
+      "correct": false,
+      "admissible": true,
+      "specific_hit": true,
+      "diagnosis": "Clicks on Packet Flow, Resource Allocation, and Congestion Control indicate the student is searching upstream; they appear to be missing the prerequisite understanding of Resource Allocation (and related congestion control) needed before identifying Best-Effort Service.",
+      "error": ""
+    },
+    {
+      "case": "all_clicks_are_prereqs",
+      "prompt": "current",
+      "item_id": "itm_0011",
+      "said": "confused_prereq",
+      "action": "backtrack",
+      "correct": false,
+      "admissible": true,
+      "specific_hit": true,
+      "diagnosis": "Student is clicking upstream concepts like Packet Flow, Soft State, and Resource Allocation, indicating they lack the queueing aspect needed to identify a Bottleneck Router; missing the prerequisite Queuing Delay (and related Congestion Control).",
+      "error": ""
+    },
+    {
+      "case": "answered_correctly",
+      "prompt": "current",
+      "item_id": "itm_0006",
+      "said": "correct",
+      "action": "advance",
+      "correct": true,
+      "admissible": true,
+      "specific_hit": true,
+      "diagnosis": "Student clicked Best-Effort Service, matching the answer on the first try.",
+      "error": ""
+    },
+    {
+      "case": "answered_correctly",
+      "prompt": "current",
+      "item_id": "itm_0011",
+      "said": "correct",
+      "action": "advance",
+      "correct": true,
+      "admissible": true,
+      "specific_hit": true,
+      "diagnosis": "Student correctly identified the bottleneck router on the first attempt.",
+      "error": ""
+    },
+    {
+      "case": "no_pattern_to_name",
+      "prompt": "current",
+      "item_id": "itm_0006",
+      "said": "guessing",
+      "action": "hint_visual",
+      "correct": false,
+      "admissible": true,
+      "specific_hit": false,
+      "diagnosis": "Student is mentioning sender window and rate reduction, indicating they are thinking about congestion control mechanisms rather than service models, showing no pattern toward the Best-Effort node.",
+      "error": ""
+    },
+    {
+      "case": "no_pattern_to_name",
+      "prompt": "current",
+      "item_id": "itm_0011",
+      "said": "guessing",
+      "action": "hint_visual",
+      "correct": false,
+      "admissible": true,
+      "specific_hit": false,
+      "diagnosis": "Student's textual guesses refer to sender-side mechanisms (congestion control, window sizing) rather than router-side concepts; the attempts are scattered across unrelated parts of the map, showing no upstream pattern toward bottleneck_router.",
+      "error": ""
+    },
+    {
+      "case": "opening_turn",
+      "prompt": "current",
+      "item_id": "itm_0006",
+      "said": "on_track",
+      "action": "ask",
+      "correct": false,
+      "admissible": true,
+      "specific_hit": true,
+      "diagnosis": "Initial turn, awaiting the student's selection of the concept node.",
+      "error": ""
+    },
+    {
+      "case": "opening_turn",
+      "prompt": "current",
+      "item_id": "itm_0011",
+      "said": "on_track",
+      "action": "ask",
+      "correct": false,
+      "admissible": true,
+      "specific_hit": true,
+      "diagnosis": "Student has not responded yet; this is the opening turn and they are expected to identify the Bottleneck Router node.",
+      "error": ""
+    },
+    {
+      "case": "scattered_clicks",
+      "prompt": "pre-falsifiability",
+      "item_id": "itm_0006",
+      "said": "stuck",
+      "action": "hint_visual",
+      "correct": false,
+      "admissible": true,
+      "specific_hit": false,
+      "diagnosis": "Student repeatedly selects unrelated concepts, indicating they do not recognize the definition of the default service model; they need the candidate set narrowed to service-model nodes.",
+      "error": ""
+    },
+    {
+      "case": "scattered_clicks",
+      "prompt": "pre-falsifiability",
+      "item_id": "itm_0011",
+      "said": "stuck",
+      "action": "hint_visual",
+      "correct": false,
+      "admissible": true,
+      "specific_hit": false,
+      "diagnosis": "Student has tried three related but incorrect concepts, indicating they recognize the general area of congestion but cannot pinpoint the specific bottleneck router concept.",
+      "error": ""
+    },
+    {
+      "case": "all_clicks_are_prereqs",
+      "prompt": "pre-falsifiability",
+      "item_id": "itm_0006",
+      "said": "stuck",
+      "action": "hint_visual",
+      "correct": false,
+      "admissible": true,
+      "specific_hit": false,
+      "diagnosis": "Student repeatedly chose unrelated nodes (flow, resource allocation, congestion control) indicating they do not recognize the service model description and need the candidate set narrowed.",
+      "error": ""
+    },
+    {
+      "case": "all_clicks_are_prereqs",
+      "prompt": "pre-falsifiability",
+      "item_id": "itm_0011",
+      "said": "stuck",
+      "action": "hint_visual",
+      "correct": false,
+      "admissible": true,
+      "specific_hit": false,
+      "diagnosis": "Student repeatedly chose unrelated concepts, showing they cannot map the description to the relevant area of the map; they need a visual narrowing to the region containing the bottleneck router concept.",
+      "error": ""
+    },
+    {
+      "case": "answered_correctly",
+      "prompt": "pre-falsifiability",
+      "item_id": "itm_0006",
+      "said": "correct",
+      "action": "advance",
+      "correct": true,
+      "admissible": true,
+      "specific_hit": true,
+      "diagnosis": "Student correctly identified Best-Effort Service for the description.",
+      "error": ""
+    },
+    {
+      "case": "answered_correctly",
+      "prompt": "pre-falsifiability",
+      "item_id": "itm_0011",
+      "said": "correct",
+      "action": "advance",
+      "correct": true,
+      "admissible": true,
+      "specific_hit": true,
+      "diagnosis": "Student identified the Bottleneck Router node correctly on first attempt.",
+      "error": ""
+    },
+    {
+      "case": "no_pattern_to_name",
+      "prompt": "pre-falsifiability",
+      "item_id": "itm_0006",
+      "said": "stuck",
+      "action": "hint_visual",
+      "correct": false,
+      "admissible": true,
+      "specific_hit": true,
+      "diagnosis": "Student is repeatedly guessing about sender/window behavior, showing they do not recognize the description as a service model; they are stuck.",
+      "error": ""
+    },
+    {
+      "case": "no_pattern_to_name",
+      "prompt": "pre-falsifiability",
+      "item_id": "itm_0011",
+      "said": "stuck",
+      "action": "hint_visual",
+      "correct": false,
+      "admissible": true,
+      "specific_hit": true,
+      "diagnosis": "Student is conflating sender-side congestion mechanisms with the router-side bottleneck concept, indicating they have not identified the bottleneck router node.",
+      "error": ""
+    },
+    {
+      "case": "opening_turn",
+      "prompt": "pre-falsifiability",
+      "item_id": "itm_0006",
+      "said": "on_track",
+      "action": "ask",
+      "correct": false,
+      "admissible": true,
+      "specific_hit": true,
+      "diagnosis": "Item just presented, no student response yet; awaiting their click.",
+      "error": ""
+    },
+    {
+      "case": "opening_turn",
+      "prompt": "pre-falsifiability",
+      "item_id": "itm_0011",
+      "said": "on_track",
+      "action": "ask",
+      "correct": false,
+      "admissible": true,
+      "specific_hit": true,
+      "diagnosis": "Item just presented; student has not made any attempt yet.",
+      "error": ""
+    }
+  ]
+}

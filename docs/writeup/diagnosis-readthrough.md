@@ -40,7 +40,9 @@ coverage 1.0. Raw: [`eval/results/diagnosis_readthrough.json`](../../eval/result
 sheet: [`readthrough-sheet.md`](readthrough-sheet.md).*
 
 **The day-12 finding reverses.** Same instrument, same three policies, same
-ground truth, on a build where the model can see what the student clicked:
+ground truth, on a build where the model can see what the student clicked — and,
+as it turns out, on a different Call 1 prompt. Which of those two did the work is
+answered further down, and it is not the one this file originally said:
 
 | true knowledge | `guessing` | `confused_prereq` | `correct` | `on_track` | `stuck` |
 |---|---|---|---|---|---|
@@ -79,18 +81,62 @@ not one lucky sample.
 ### Two things the re-run does not fix
 
 - **`stuck` was used zero times in thirty.** Day 12 had two dead states
-  (`guessing`, `confused_prereq`); this run has one, a different one. The likely
-  cause is the instrument — `--max-turns 3` gives no student time to be stuck —
-  but that is a hypothesis. It is flagged here rather than explained away.
+  (`guessing`, `confused_prereq`); this run has one, a different one. Flagged
+  here as an instrument hypothesis (`--max-turns 3` gives no student time to be
+  stuck), and then **partly answered by the day-18 A/B below**: on a constructed
+  case where `stuck` is the only defensible answer, the current prompt still does
+  not say it. So at least some of this zero is the prompt, not the turn budget.
 - **`partial` → `guessing` on 3 of 9.** A student who knows the region is not
   guessing. This is the one cell that still looks like real miscalibration.
 
-### What is still withdrawn
+### What caused it — the prompt, and not what we first said
 
-**`eval/diagnostic_calibration.py` has not been re-run.** Everything in *A
-sharper instrument, and a worse result* below was measured through the same
-`{"role", "text"}` bug and stays withdrawn. It is a separate instrument on a
-separate token budget, and nothing in this section repairs it.
+Day 13 found the `role: text` history bug and this file credited the reversal to
+fixing it. That attribution does not survive the controls (report.md §5.5): the
+day-12 and day-18 runs differ in **prompt, history handling and model** at once.
+
+`eval/diagnostic_calibration.py` was re-run on day 18 to isolate one of the
+three. Same model, same fixed harness, Call 1 prompt swapped for the version
+live on day 12 — which `516795d`'s timestamp shows it was, by an hour and three
+quarters:
+
+| | current prompt | pre-falsifiability prompt |
+|---|---|---|
+| scattered clicks → `guessing` | 2/2 | **0/2** — said `stuck` |
+| all clicks upstream → `confused_prereq` | 2/2 | **0/2** — said `stuck` |
+| separates the two students | **yes** | **no** |
+| `correct` boolean | 6/6 | 6/6 |
+
+**The old prompt reproduces the day-12 degeneracy on a fully fixed harness.** So
+the history fix is neither necessary nor sufficient for the reversal, the model
+change is not isolated at all, and the prompt is the only variable shown to move
+the result.
+
+This also re-explains *A sharper instrument, and a worse result* below. Its
+`stuck`-to-everything finding was measured through the old prompt and is
+reproduced by the old prompt today; it is a property of that prompt, not of the
+model. Its other half — the `correct` boolean wrong on 2 of 6 — does **not**
+reproduce: day 18 scores 6/6 on both prompts, so that claim is withdrawn
+outright rather than reassigned.
+
+### The cost of the fix, found by a case built to look for it
+
+The current prompt tells the model that `stuck` is the cheap answer and to be
+suspicious of reaching for it. A new case tests the obvious failure mode of that
+instruction: a history where `stuck` is the *only* defensible specific answer —
+three wrong free-text replies and **no clicks at all**, so neither the scatter
+`guessing` needs nor the upstream clustering `confused_prereq` needs exists.
+
+| | current prompt | pre-falsifiability prompt |
+|---|---|---|
+| `stuck` when `stuck` is right | **0/2** — said `guessing` | 2/2 |
+
+The current prompt cannot reach for `stuck` when nothing else fits. Overall it
+still wins on specificity (8/10 against 6/10), and without this case that would
+have been the whole story.
+
+`n=2` per cell. This is a signal worth acting on before the demo, not a
+measurement to quote.
 
 ---
 
@@ -228,9 +274,11 @@ Collapsing them produces either false alarm or false comfort.
 > **Superseded by the day-18 re-run.** This part was the day-12 reading. On the
 > fixed build `student_state` tracks the student (`zero` → `guessing` 12/12) and
 > `correct` agreed with the deterministic grade 30 of 30, not "wrong a third of
-> the time". The forced-answer half rests on `diagnostic_calibration.py`, which
-> has not been re-run and is still withdrawn, so no claim is made either way
-> about constructed cases.
+> the time". The forced-answer half was re-run on day 18 as a prompt A/B: the
+> `stuck`-to-everything behaviour reproduces **under the old prompt on a fully
+> fixed harness**, so it is a property of that prompt rather than of the model;
+> the `correct` boolean scores 6/6 on both prompts, so that half is withdrawn
+> outright rather than reassigned.
 >
 > Parts 2 and 3 below do not depend on the diagnosis being unreliable and are
 > unaffected. That is the point of stating them separately: the architecture was

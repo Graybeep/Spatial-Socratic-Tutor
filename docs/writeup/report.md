@@ -300,6 +300,45 @@ history — every past turn arrived as the literal line `role: text` — so the 
 being monitored had less to reconstruct from than the shipping one does. Fixed in
 `1cfc74a`.
 
+### What changed between the three runs, and what that permits
+
+Every §9.5 and §6.1 number in this report comes from one of three runs. They do
+not differ by one variable each, so most pairwise comparisons between them are
+uncontrolled. The table is here rather than in prose because the confound is not
+obvious until the columns are side by side.
+
+| | day-12 §9.5 | day-13 run 3 | day-18 |
+|---|---|---|---|
+| when | 09-15 20:29–20:49 | 09-16 20:49–20:59 | 09-21 21:18–21:39 |
+| build | `77b7e5d-dirty` | `614d066` | `18d220d` |
+| turns logged | 40 | 20 (OS-killed at field 15) | 40 |
+| Call 1 prompt | **pre-falsifiability** | current | current |
+| history reaches the model (`1cfc74a`) | **no** | yes | yes |
+| layer 1 sees edge answers (`522defc`) | no | **no** | yes |
+| Call 1 model | `qwen3.8-27b` **(asserted, not logged)** | `gpt-oss-120b` | `gpt-oss-120b` |
+
+Two notes on that last row, because it is the weakest cell in the table. The
+`call1_model` stamp postdates the day-12 run, so those 40 turns carry no model
+field at all — the model is taken from `diagnosis-readthrough.md`'s own header
+and **cannot be confirmed from the log**. That gap is itself recorded in
+`docs/schedule.md` as a day-13 finding.
+
+The prompt row is the one that was nearly missed. `516795d` landed at
+**2026-09-15 22:39**, an hour and three quarters *after* the day-12 run finished
+at 20:49. So day 12 ran the old prompt, and the write-up did not say so for six
+days.
+
+**What the columns license.**
+
+- **day-13 run 3 vs day-18 is a controlled replication.** Same prompt, same
+  model, same history fix; only the build and the edge-answer fix differ, and
+  the latter is a `leak_monitor` change that cannot touch a Call 1 diagnosis.
+  They agree (`zero` → `guessing` 6/6, `correct` 15/15 at field 15). This is the
+  one clean comparison of the three.
+- **day-12 vs day-18 controls nothing.** Prompt, history and model all move at
+  once. No property of that pair can be attributed to any one of them from these
+  runs alone.
+
 **Re-measured 2026-09-21 (day 18), build `18d220d`, Call 2 on `gpt-oss-20b`:**
 
 ```
@@ -337,7 +376,7 @@ It also refuses to pool builds *in the table*. The turn log contains 17,433
 `backtrack` hits from before the Call 2 fidelity ceiling landed; pooling the file
 reports 3.94% parametric reconstruction from a bug that is fixed.
 
-### 5.6 §9.5 — the diagnosis tracks the student, once the model can see the student
+### 5.6 §9.5 — the diagnosis tracks the student, and the prompt is why
 
 Full write-up: **[diagnosis-readthrough.md](diagnosis-readthrough.md)**.
 
@@ -354,14 +393,17 @@ build `18d220d`. Ten distinct items, coverage 1.0.
 `correct`, the one boolean the model is allowed to emit, agreed with the
 deterministic grade on **30 of 30**.
 
-**This reverses the day-12 finding, and the reversal is the point.** That run
-reported the opposite table — a zero-knowledge student called `on_track` five
-times in twelve, `guessing` used once in thirty turns on the wrong student, and
-`confused_prereq` never used at all on a graph built entirely out of
-prerequisites. It was withdrawn on day 13 when the first field of the re-run
-revealed that Call 1 had received every past turn as the literal line
-`role: text` (`server/llm.py`, fixed in `1cfc74a`, pinned by
-`tests/test_history_reaches_the_model.py`). The model had never seen a click.
+**This reverses the day-12 finding.** That run reported the opposite table — a
+zero-knowledge student called `on_track` five times in twelve, `guessing` used
+once in thirty turns on the wrong student, and `confused_prereq` never used at
+all on a graph built entirely out of prerequisites.
+
+**What caused the reversal is a separate question from whether it happened, and
+the first answer we gave was wrong.** Day 13 found that Call 1 had received every
+past turn as the literal line `role: text` (`server/llm.py`, fixed in `1cfc74a`,
+pinned by `tests/test_history_reaches_the_model.py`) and this report credited the
+reversal to that fix. It cannot: as §5.5's controls table shows, the day-12 and
+day-18 runs differ in **prompt, history handling and model** simultaneously.
 
 | | day 12 (`role: text`, `qwen3.8-27b`) | day 18 (fixed, `gpt-oss-120b`) |
 |---|---|---|
@@ -370,11 +412,36 @@ revealed that Call 1 had received every past turn as the literal line
 | `confused_prereq` ever used | never, 0 of 30 | 4 |
 | server overrode Call 1 where the curriculum moved | 11 of 12 | 6 of 13 |
 
-So "the diagnosis does not track the student" was a finding about a string
-formatting bug, not about a model. The prose shows it too — the diagnoses now
-name what was clicked: *"Student clicked DCTCP and Expected Rate, both in the
-congestion control region, showing no movement toward Soft State or its
-prerequisites."*
+**The one variable that has been isolated is the prompt**, by
+`eval/diagnostic_calibration.py` on day 18: same model, same fixed harness, the
+Call 1 prompt swapped for the version live on day 12.
+
+| | current prompt | pre-falsifiability prompt |
+|---|---|---|
+| scattered clicks (→ `guessing`) | 2/2 | **0/2** — said `stuck` |
+| all clicks upstream (→ `confused_prereq`) | 2/2 | **0/2** — said `stuck` |
+| separates the two students | **yes** | **no** |
+| specific diagnoses, all cases | 8/10 | 6/10 |
+
+The old prompt answers `stuck` to both contrasting students **on a fully fixed
+harness** — which is the day-12 signature, reproduced without the day-12 bug.
+So the history fix is shown neither necessary nor sufficient for the reversal,
+and the model change (`qwen3.8-27b` → `gpt-oss-120b`) is not isolated at all.
+On the evidence we have, **the prompt is the only variable demonstrated to move
+this result**, and `516795d` — "a diagnosis that cannot be wrong is not a
+diagnosis" — is the change that did it.
+
+The prose moved with it. Day 18's diagnoses name the clicks: *"Student clicked
+DCTCP and Expected Rate, both in the congestion control region, showing no
+movement toward Soft State or its prerequisites."*
+
+**And the same A/B found a cost, on a case built to look for one.** Where the
+evidence supports `stuck` and nothing else — three wrong free-text answers, no
+clicks, so no spatial pattern for either other state to read — the current prompt
+scores **0/2** and says `guessing`; the old prompt scores 2/2. Telling the model
+that `stuck` is the cheap answer made it unable to reach for `stuck` when `stuck`
+is the honest residual. Without that case the A/B would have read as a clean win.
+`n=2` per cell: this is a signal to act on, not a measurement to quote.
 
 **Two things this does not license, and both belong in the same breath.**
 
@@ -388,11 +455,14 @@ prerequisites."*
   for the human read (§9.5 asks for a person, and this file is the evidence that
   person starts from, not a replacement for them).
 
-**`diagnostic_calibration.py` has NOT been re-run and stays withdrawn.** It
-builds its histories in the same `{"role", "text"}` shape, so its day-12 result —
-`stuck` to every constructed history, the `correct` boolean wrong on 2 of 6 — was
-measured through the same bug. It is a separate instrument and a separate token
-budget. Nothing in this section should be read as repairing it.
+**`diagnostic_calibration.py` was re-run on day 18 and its day-12 result is
+now explained rather than merely withdrawn.** That result — `stuck` to every
+constructed history, the `correct` boolean wrong on 2 of 6 — was measured through
+the same `{"role", "text"}` bug AND the same old prompt. On the fixed harness the
+old prompt still answers `stuck` to every contrasting case, so the `stuck`
+degeneracy is the prompt's. The `correct` boolean, by contrast, is now **6/6 on
+both prompts**, so that half of the day-12 result does not survive and is
+withdrawn outright rather than reassigned.
 
 **The architecture half does not depend on any of this, and stands unchanged.**
 
