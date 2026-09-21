@@ -174,9 +174,17 @@ entire claim rests on.
 
 ### 5.1 What the population is
 
-Every §9.1 figure generalises to the **scored** bank: **69 items** — 52
-`node_click` plus 17 `edge_click`. Not the 101 visually-answerable items, and
-not the 260-item bank.
+Three populations, named here once so every count below can say which it
+means:
+
+| population | n | what it is |
+|---|---|---|
+| **full bank** | **260 items** | everything in `items.json` |
+| **click items** | **101 items** | 52 `node_click` + 49 `edge_click`; the visually-answerable ones |
+| **scored bank** | **69 items** | 52 `node_click` + 17 `edge_click`; the only items that move mastery |
+
+Every §9.1 figure generalises to the **scored bank (69 items)**. Not the 101
+click items, and not the 260-item bank.
 
 The other 32 edge items are `scorable: false`. Their named anchor has exactly
 one prerequisite, so naming it names the answer; the guess rate is 1.0 and no
@@ -225,7 +233,8 @@ Every other cell crosses zero, in both directions.
 .038 baseline at zero knowledge. Only the interleaved configuration, which uses
 both channels, separates from baseline at all.
 
-At 52 items the half-widths are 6–7 points, so these arms are underpowered
+At **52 items (the `node_click` stratum of the 69-item scored bank)** the
+half-widths are 6–7 points, so these arms are underpowered
 rather than demonstrated null — but that cuts both ways, and here it cuts
 against us. **We are not claiming the visual arm won.** It did not, on this
 bank, at this *n*.
@@ -267,23 +276,23 @@ poor one, and the two are indistinguishable without this number.
 
 ### 5.4 §9.4 — distractor screen
 
-`python -m eval.distractor_screen` · no key, no chapter, no network · 101 click +
-159 MCQ items, coverage 1.0
+`python -m eval.distractor_screen` · no key, no chapter, no network · the full
+bank: **101 click + 159 MCQ = 260 items**, coverage 1.0
 
 A bad distractor corrupts mastery *more quietly* than a wrong key, because
 nothing downstream flags it. Two screens, because the bank has two kinds of
 option set and one behavioural test is degenerate on the other half:
 
-- **Behavioural**, over the 101 click items: at the terminal rung the mean lit
+- **Behavioural**, over the **101 click items**: at the terminal rung the mean lit
   set is 3.11 nodes but the mean *live* set — candidates a region-filtering
   student would actually consider — is 2.37. Nominal guess probability .322,
   **effective .613**. The interface narrows further than its own policy floor
   believes.
-- **Structural**, over the 159 MCQ items: 3 distinct option sets across 159
-  items, and key-is-longest in 159/159 against a 25% chance rate. That is a
+- **Structural**, over the **159 MCQ items** (all unscored): 3 distinct option
+  sets across 159 items, and key-is-longest in 159/159 against a 25% chance rate. That is a
   generator habit, not a bank.
 
-212 items flagged for human review. The MCQ bank is demoted to unscored rather
+**212 items of the 260-item full bank** flagged for human review. The MCQ bank is demoted to unscored rather
 than deleted, so a real bank is a flag flip.
 
 ### 5.5 §6.1 — the parametric-reconstruction rate, re-measured on a monitor that can see
@@ -300,122 +309,24 @@ is not weak evidence of no leakage — it is no evidence, and on a slide it read
 identically to the real thing. The aggregator returned `rate: null` and printed
 `NOT MEASURABLE` for six days rather than a zero.
 
-**An earlier day-12 figure for this rate was withdrawn on day 13** for two
-instrument defects, both since fixed. Its value is not repeated here: the run is
-inadmissible for the reasons below, and a withdrawn number quoted often enough
-becomes a benchmark the replacement has to argue against. (1) The monitor could not see edge answers: an edge item's answer is an id
-pair with no aliases, and layer 1 caught an utterance naming its FROM endpoint on
-**0 of 49** edge items. Those 49 are the edge half of the **101 click items**
-(§5.1); 17 of them are in the 69-item scored bank, and the monitor screens
-utterances on all 49 regardless of whether the item scores. Fixed in `522defc`
-(49 of 49, no false positive on the anchor). (2) Call 2 was shown no
-history — every past turn arrived as the literal line `role: text` — so the model
-being monitored had less to reconstruct from than the shipping one does. Fixed in
-`1cfc74a`.
+**An earlier day-12 figure for this rate is withdrawn**, on the same grounds as
+every other day-12 number: an unreproducible dirty build and a model that was
+never logged (§5.6). Its value is not repeated, because a withdrawn number
+quoted often enough becomes the benchmark its replacement has to argue against.
 
-### The inference table
+Two instrument defects were live in it, and both are fixed:
 
-Three runs carry the argument. All three are **`openai/gpt-oss-120b`**, so the
-model is held fixed by construction rather than by assumption, and prompt and
-history handling vary across them. Day 12 is **not** in this table: it is
-withdrawn for cause below and is not evidence for anything.
-
-| | run 1 (`7ba8078`) | arm B (day 18) | arm A (day 18) |
-|---|---|---|---|
-| **n (turns / cases)** | **n=4 turns** | **n=10 cases (5 x 2)** | **n=10 cases (5 x 2)** |
-| Call 1 prompt | current | **pre-falsifiability** | current |
-| history reaches the model | **no** | yes | yes |
-| model | `gpt-oss-120b` | `gpt-oss-120b` | `gpt-oss-120b` |
-| reaches a specific state | **yes** — `guessing` 2/4 | **no** — `stuck` on 4/4 contrasting | **yes** — 8/10 specific |
-| separates the two students | not testable at n=4 | **no** (n=4 contrasting) | **yes** (n=4 contrasting) |
-| `stuck` when `stuck` is right | not in this run | **2/2** | **0/2** |
-| `correct` boolean | not scored in this run | 6/6 | 6/6 |
-
-**The two comparisons this licenses, and both are directional.**
-
-- **run 1 vs arm B** — prompt differs, and so does history handling, so this pair
-  alone attributes nothing. Its value is that it puts the current prompt on a
-  *broken* harness: even there it reaches for `guessing` (n=4). That is the one
-  observation on that cell and it exists only because an aborted run happened to
-  log four turns.
-- **arm A vs arm B** — model, harness, cases and n all held fixed; **the prompt
-  is the only variable** (n=10 per arm, n=2 per cell).
-
-Read together they point one way: the prompt tracks whether the model reaches
-for a specific state, on a broken harness and on a fixed one. **This is a
-direction, not a measurement.** n=2 per cell and n=4 on run 1 are far too small
-to quote a rate from, and nothing in this section should be read as one.
-
-What the history fix separately and visibly contributes is **grounding**. Run 1's
-diagnoses are well-reasoned about nothing — *"their recent inputs were text, so
-they have not engaged with the map"*, which is the model accurately reporting our
-own bug, the same pattern as case 1 in
-[instrument-failures.md](instrument-failures.md). Run 2, four minutes later on
-the fixed build, names actual clicked nodes: *"Student clicked Reservation-Based,
-which is unrelated to the target Packet Flow."* Two separable contributions:
-
-- **the prompt** decides whether the model reaches for a specific state or falls
-  back to `stuck`
-- **the history fix** decides whether that state is about the student at all
-
-### The prompt also changes what the tutor does, not only what it logs
-
-`student_state` is inert by design (§5.6). `requested_action` is not — it selects
-the kind of help wherever the curriculum does not move. Across the same A/B, from
-the same logs, no extra calls:
-
-| case (n=2 per arm) | arm A (current) | arm B (pre-falsifiability) |
-|---|---|---|
-| all clicks upstream | **`backtrack` 2/2** | `hint_visual` 2/2 |
-| scattered clicks | `hint_visual` 2/2 | `hint_visual` 2/2 |
-| `stuck`-only case | `hint_visual` 2/2 | `hint_visual` 2/2 |
-| answered correctly | `advance` 2/2 | `advance` 2/2 |
-| opening turn | `ask` 2/2 | `ask` 2/2 |
-
-`confused_prereq` is the state §5 says "earns backtracking", and only the current
-prompt gets there. So the prompt change moves a **behaviour**, not just a label.
-
-**And it closes the concern that motivated the stuck-only case.** The worry was
-that a model told to distrust `stuck` would mislabel a genuinely stuck student
-and thereby under-help them. It does mislabel them — arm A says `guessing` 0/2
-correctly — but it requests `hint_visual` on 2/2, exactly as arm B does. **The
-student gets the same hint rung either way**, so on this case the mislabel is
-inert. `ask` appears nowhere except the opening turn, where no response exists
-yet. No server-side hint floor is warranted by this evidence; if a later run ever
-shows `ask` requested on a failing item, that is when the floor earns its place.
-
-### Day 12 is withdrawn for cause, not merely superseded
-
-Every §9.5 and §6.1 number from `77b7e5d-dirty` is withdrawn, and the reason is
-not that a later run disagreed with it. It is that the run cannot be defended on
-its own terms:
-
-| | day-12 §9.5 |
-|---|---|
-| n | 40 turns / 30 answered |
-| build | `77b7e5d-dirty` — **dirty, unreproducible** |
-| Call 1 prompt | **pre-falsifiability** (established from `516795d`'s timestamp) |
-| history reaches the model | **no** |
-| Call 1 model | `qwen3.8-27b` — **asserted, never logged** |
-
-1. **The build is unreproducible.** A dirty tree with no commit that restores it;
-   `server/build_info.py` states plainly that the stamp cannot distinguish two
-   uncommitted working trees. Nothing can be re-measured against it.
-2. **The model is unrecorded.** The `call1_model` stamp postdates the run, so
-   those 40 turns carry no model field. `qwen3.8-27b` comes from
-   `diagnosis-readthrough.md`'s own header and cannot be confirmed from evidence.
-3. **Two known defects were live in it** — the history bug (`1cfc74a`) and layer
-   1's edge blindness (`522defc`).
-4. **It ran a prompt this system no longer has**, and the write-up did not know
-   that for six days. `516795d` landed 2026-09-15 22:39, an hour and three
-   quarters after the run finished at 20:49.
-
-Any one of 1 and 2 is sufficient alone. A number whose code and model cannot both
-be named is not a result a later run has to beat; it is a result that was never
-admissible. It stays in the repo as history, cited from
-`diagnosis-readthrough.md`, and is quoted as a measurement nowhere — including in
-the inference above, which is why it does not appear there.
-
+1. **The monitor could not see edge answers.** An edge item's answer is an id
+   pair with no aliases, and layer 1 caught an utterance naming its FROM
+   endpoint on **0 of 49 edge_click items** — the edge half of the **101 click
+   items** (§5.1), of which 17 sit in the **69-item scored bank**. The monitor
+   screens all 49 regardless of whether the item scores, because unscored items
+   are still served (`turn.py:_pick_item` prefers scorable and falls back).
+   Fixed in `522defc`: 49 of 49, no false positive on the anchor `ask` is
+   licensed to name.
+2. **Call 2 was shown no history** — every past turn arrived as the literal line
+   `role: text` — so the model being monitored had less to reconstruct from than
+   the shipping one does. Fixed in `1cfc74a`.
 
 **Re-measured 2026-09-21 (day 18), build `18d220d`, Call 2 on `gpt-oss-20b`:**
 
@@ -425,7 +336,10 @@ authorised_naming            0 hits /  6 checks
 canned fallbacks in denominator: 0
 ```
 
-- **n=34, and the 95% upper bound is 8.4%.** That is a loose bound, and the
+- **n=34, and the *one-sided* 95% upper bound is 8.4%.** (Two-sided, it is
+  10.3%; the one-sided figure is the right one for a bound on a rate that
+  cannot go below zero, and it is the smaller of the two, so quoting it is not
+  the flattering choice.) That is a loose bound, and the
   looseness is the honest shape of the result: the only build carrying **both**
   instrument fixes is this one, so the admissible population is 34 screened
   turns and no more. A tighter bound is available only by pooling in builds
@@ -487,131 +401,62 @@ deterministic grade on **30 of 30**.
 scripted policy on one model is a clear signal and a small sample; "12/12" is
 not evidence that the true rate is near 1.
 
-**This supersedes a withdrawn claim rather than winning an argument against it.**
-An earlier version of this section, built on the day-12 run, reported that the
-diagnosis did not track the student at all. That run is withdrawn for cause
-(§5.5) — its build is unreproducible and its model was never logged — so the
-right description is that the day-18 measurement stands on its own and the
-earlier one is gone, not that the two were compared and one won. The day-12
-figures are in [diagnosis-readthrough.md](diagnosis-readthrough.md) as history.
+**One line on day 12.** An earlier version of this section, built on the day-12
+run, reported the opposite. That run is withdrawn for cause — unreproducible
+dirty build, model never logged — so it is not a contrast this section argues
+from, and its figures live in
+[diagnosis-readthrough.md](diagnosis-readthrough.md) as history.
 
-**What produces this behaviour is a separate question from measuring it, and the
-first answer we gave was wrong.** Day 13 found that Call 1 had received every past turn
-as the literal line `role: text` (`server/llm.py`, fixed in `1cfc74a`, pinned by
-`tests/test_history_reaches_the_model.py`), and this report credited the
-improvement to that fix. **That attribution does not survive §5.5's inference
-table**, which holds the model fixed and varies prompt against history across run
-1, arm B and arm A. Note what the argument no longer needs: it does not compare
-against day 12 at all. Day 12 is withdrawn for cause, and the case below stands
-without it.
+**What produces this behaviour is a separate question from measuring it, and our
+first answer was wrong.** Day 13 found that Call 1 had received every past turn
+as the literal line `role: text` (`1cfc74a`), and this report credited the
+improvement to that fix. The controls do not support it. Three runs, all
+`gpt-oss-120b`, so the model is fixed by construction:
 
-**The one variable that has been isolated is the prompt**, by
-`eval/diagnostic_calibration.py` on day 18: same model, same fixed harness, the
-Call 1 prompt swapped for the version live on day 12. Both arms ran all five
-cases at n=2; the comparison is withheld by the instrument unless they do.
+| | n | prompt | history | reaches a specific state |
+|---|---|---|---|---|
+| run 1 (`7ba8078`) | n=4 turns | current | **broken** | **yes** — `guessing` 2/4 |
+| arm B (day 18) | n=10 cases | **pre-falsifiability** | fixed | **no** — `stuck` on 4/4 contrasting |
+| arm A (day 18) | n=10 cases | current | fixed | **yes** — 8/10 specific |
 
-**The counter-test first, because the scores below flatter the current prompt.**
-The current prompt tells the model that `stuck` is the cheap answer and to be
-suspicious of reaching for it. The obvious way that goes wrong is that the model
-can then no longer say `stuck` when `stuck` is true, so a case was built where
-`stuck` is the *only* defensible answer — three wrong free-text replies and no
-clicks at all, leaving neither the scatter `guessing` needs nor the upstream
-clustering `confused_prereq` needs.
+The prompt tracks the outcome on a broken harness and on a fixed one; the
+history fix does not. What the history fix demonstrably moves is **grounding** —
+run 1 reasons well about nothing (*"their recent inputs were text"*), run 2 four
+minutes later names the nodes actually clicked. **Directional, not a rate:** n=2
+per cell, n=4 on an aborted run.
 
-| | n | current prompt | pre-falsifiability prompt |
-|---|---|---|---|
-| **`stuck` when `stuck` is the only answer** | **n=2** | **0/2** — said `guessing` | **2/2** |
+**The counter-test, which comes first because the row above flatters the current
+prompt.** The shipped prompt tells the model `stuck` is the cheap answer. On the
+one constructed case where `stuck` is the *only* defensible answer — three wrong
+free-text replies, no clicks, so nothing for `guessing` or `confused_prereq` to
+read — it scores **0/2** and says `guessing`; the old prompt scores **2/2**. A
+prompt that simply never says `stuck` would win every other row and be worse for
+it. Derivation, all five cases and the day-12 calibration withdrawal:
+[diagnosis-readthrough.md](diagnosis-readthrough.md).
 
-**The shipped prompt fails that case and the old one passes it.** A prompt that
-simply never says `stuck` would score well on everything below and be worse for
-it. That is the finding to carry into the demo.
-
-With that on the table, the rest:
-
-| | n | current prompt | pre-falsifiability prompt |
-|---|---|---|---|
-| scattered clicks (→ `guessing`) | n=2 | 2/2 | **0/2** — said `stuck` |
-| all clicks upstream (→ `confused_prereq`) | n=2 | 2/2 | **0/2** — said `stuck` |
-| separates the two students | n=4 contrasting | **yes** | **no** |
-| specific diagnoses, all cases | n=10 | 8/10 | 6/10 |
-
-The old prompt answers `stuck` to both contrasting students **on a fully fixed
-harness**: the degeneracy needs no bug to produce it. Run 1 (above) shows the
-converse from the other side: the current prompt reaches for `guessing` **on the
-broken harness**. Both directions agree, so the history fix
-is neither necessary nor sufficient for the reversal, and the model change
-(`qwen3.8-27b` → `gpt-oss-120b`) is not isolated at all. On the evidence we have,
-**the prompt is the only variable demonstrated to move state selection**, and
-`516795d` — "a diagnosis that cannot be wrong is not a diagnosis" — is the change
-that did it. What the history fix demonstrably contributes is **grounding**:
-whether the state is about the student at all.
-
-The prose moved with it. Day 18's diagnoses name the clicks: *"Student clicked
-DCTCP and Expected Rate, both in the congestion control region, showing no
-movement toward Soft State or its prerequisites."*
-
-**Every number in this subsection is directional.** n=2 per cell, n=10 per arm,
-one model, one item bank. They are strong enough to act on before the demo and
-far too small to quote as rates, and the text above deliberately says "reaches
-for" and "tracks" rather than giving percentages.
-
-### What is not established, and is not going to be
-
-**The model is not isolated, and we are closing that as a known gap rather than
-leaving it open.** Day 12 ran a different model from every later run — or so its
-write-up says; the log cannot confirm it (§5.5). Isolating it would mean running
-the fixed harness and shipped prompt against `qwen3.8-27b`, which is one command
-and roughly 30,000 tokens.
-
-**We are not running it, and the reason is a decision rather than an oversight.**
-Day 12 is withdrawn for cause (§5.5), so the comparison it would serve is one
-this report no longer makes: nothing here rests on day 12, and a model control
-against an inadmissible run buys an answer to a question that has been dropped.
-The live claims — the prompt A/B and run 1 — are all `gpt-oss-120b` already, so
-the model is held fixed across them by construction and needs no separate control
-to stay fixed.
-
-What that costs, stated plainly: **nothing in this report distinguishes "this
-prompt change helps `gpt-oss-120b`" from "this prompt change helps models of this
-kind".** Only the first is claimed. Every diagnosis claim in §5.6 is scoped to
-`gpt-oss-120b` running the shipped prompt, and a reader should assume it
-transfers no further until someone tests that.
-
-**Two things this does not license, and both belong in the same breath.**
-
-- **`stuck` is used zero times in thirty, and the A/B says why.** The obvious
-  explanation is the instrument — `--max-turns 3` means no student lingers on an
-  item long enough to be stuck — and that is no longer the whole story. On the
-  constructed case where `stuck` is the *only* defensible answer, the shipped
-  prompt still does not say it (0/2, above). So at least part of this zero is
-  the prompt refusing a state it was told to distrust, not the turn budget
-  denying it the chance. **This is the cost side of the same change the rest of
-  the section credits**, and it is the one finding here to act on before the
-  demo.
-- **`partial` → `guessing` on 3 of 9.** A student who knows the region is not
-  guessing. This is the one cell that still looks like miscalibration, and it is
-  for the human read (§9.5 asks for a person, and this file is the evidence that
-  person starts from, not a replacement for them).
-
-**`diagnostic_calibration.py` was re-run on day 18, and its day-12 run is
-withdrawn on the same grounds as the §9.5 one.** It ran in the same period, on
-the same unreproducible dirty build, before the model was logged — so it is not
-evidence and is not cited as any part of the case above. What replaces it is the
-day-18 A/B, which is measured on a named build and a named model: the old prompt
-answers `stuck` to every contrasting case (arm B), and the `correct` boolean is
-**6/6 on both prompts**. Readers who remember the earlier claim that `correct`
-was "wrong on 2 of 6" should treat that number as gone rather than as superseded
-by a better one.
 
 **The architecture half does not depend on any of this, and stands unchanged.**
 
 1. **The judgement fields are inert.** `student_state`, `correct` and
    `focus_nodes` are logged and read by nothing; mastery comes from a string
-   comparison and the lit set from the ladder. Over this run's 40 turns the
-   server overrode Call 1 on **6 of the 13** turns where the curriculum moved.
-   That fraction is not the point and should not be read as a quality score: the
-   guarantee is that the override is available on all 13, whatever the model
-   asks for, which is exactly why it cannot be *that the model is right*.
+   comparison and the lit set from the ladder. Over this run's **40 turns**, the
+   curriculum moved on **13**: 6 `advance` the model also asked for, 6
+   `backtrack` the server performed while the model asked for a hint, and **1
+   `backtrack` the model requested and got**. That fraction is not a quality
+   score; the guarantee is that the override is available on all 13, whatever
+   the model asks for, which is why it cannot be *that the model is right*.
+
+   **That single model-requested backtrack is also the one the log could not
+   account for**, and chasing it found a real hole. `action` begins life as
+   `decision.requested_action`, so a Call 1 asking to step back got the word and
+   the prerequisite chunk while **nothing moved** — no new item, the student
+   still on the node they were failing. Only the two-failure rule ever moved the
+   curriculum. A model-requested backtrack is now honoured **only if the target
+   prerequisite is below `MASTERY_THRESHOLD`** — §7 backtracks to close a gap,
+   and a mastered prerequisite is not one — and is otherwise refused and
+   degraded to help. Both paths are tested and the gate is mutation-tested;
+   turns now log `backtrack_origin` (`server` / `model` / `refused`), which is
+   the field whose absence made that 1 of 13 unattributable.
 2. **That inertness is enforced rather than incidental.** It was true by
    accident first — nothing stopped a later change from branching on the field.
    `tests/test_student_state_is_inert.py` walks the AST of the decision modules
@@ -630,6 +475,40 @@ different in the arm that does not. Both facts are worth keeping: the
 containment is load-bearing exactly when the diagnosis is poor, and
 nothing about it had to change when the diagnosis improved.
 
+**What the mislabel costs the student, checked rather than assumed.** The
+counter-test says the shipped prompt calls a genuinely stuck student
+`guessing`. Re-reading `requested_action` on those turns — from the existing A/B
+logs, no new calls — **both arms requested `hint_visual` on 4 of 4**. The student
+gets the same hint rung whichever label the model picks, so on this case the
+mislabel is inert in exactly the way §5.6 claims the labels are. Across all five
+cases `ask` appears only on the opening turn, where no response exists yet.
+
+**A server-side hint floor was considered and is not built.** The candidate rule
+— two consecutive non-correct turns on an item grant the next rung regardless of
+Call 1 — was motivated by the fear that a mislabelled student would be
+under-helped. The evidence says they are not: a floor would fire on turns that
+are already being hinted. It earns its place the day a run shows `ask` requested
+on a failing item, and not before.
+
+**Two caveats this section does not resolve.** `stuck` is used **0 of 30** times
+in the policy run — partly the prompt, per the counter-test, and partly
+`--max-turns 3` giving no student time to be stuck. And `partial` → `guessing`
+on **3 of 9** is the one cell that still looks like miscalibration. Both are for
+the human read (§9.5 asks for a person), not for this file.
+
+### What is not established, and is not going to be
+
+**The model is not isolated, and that is closed as a known gap rather than left
+open.** Isolating it would mean running the fixed harness and shipped prompt
+against `qwen3.8-27b` — one command, ~30,000 tokens. We are not running it:
+every day-12 number is withdrawn for cause, so the comparison it would serve is
+one this report no longer makes, and the three live runs are all `gpt-oss-120b`
+already, so the model is held fixed across them by construction.
+
+The cost, plainly: **nothing here distinguishes "this prompt change helps
+`gpt-oss-120b`" from "this prompt change helps models of this kind".** Only the
+first is claimed.
+
 ### 5.7 One number nothing asked for
 
 `python -m build.validate` · deterministic, no key · reported as the
@@ -642,7 +521,8 @@ serves the node's own declared `source_sections` **43 of 52 times (83%)**.
 The misses are largely a length effect — cosine over a long chunk is diluted by
 its own vocabulary, so "Slow Start" is served §6.4 (1,301 characters) rather
 than the §6.3.2 section named after it (10,699). BM25 was measured over the same
-52 nodes and scored 45. Two nodes at n=52 is inside the interval and adopting it
+52 nodes and scored 45. Two nodes at **n=52 nodes** (not items) is inside the
+interval and adopting it
 would force recalibrating a measured retrieval floor, so the scorer stays as it
 is and the 83% is reported rather than repaired.
 
@@ -680,8 +560,8 @@ a reviewer would have called adequate.
   what broke it: the Call 1 prompt rewrite landed an hour and three quarters
   after the day-12 run, so day 12 had been using a different prompt all along.
   An A/B that afternoon showed the old prompt reproducing the day-12 degeneracy
-  on a fully fixed harness. §5.5 now carries the inference table; §5.6 carries
-  the corrected attribution. **The lesson is not "check your commits" — it is
+  on a fully fixed harness. §5.6 now carries the controls and the corrected
+  attribution, beside the containment argument they bear on. **The lesson is not "check your commits" — it is
   that a fix you have just shipped is the most attractive available explanation
   for any improvement that follows it.**
 
