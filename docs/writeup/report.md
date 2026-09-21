@@ -300,8 +300,10 @@ is not weak evidence of no leakage — it is no evidence, and on a slide it read
 identically to the real thing. The aggregator returned `rate: null` and printed
 `NOT MEASURABLE` for six days rather than a zero.
 
-**The day-12 reading of 0/60 was withdrawn on day 13** for two defects, both since
-fixed. (1) The monitor could not see edge answers: an edge item's answer is an id
+**An earlier day-12 figure for this rate was withdrawn on day 13** for two
+instrument defects, both since fixed. Its value is not repeated here: the run is
+inadmissible for the reasons below, and a withdrawn number quoted often enough
+becomes a benchmark the replacement has to argue against. (1) The monitor could not see edge answers: an edge item's answer is an id
 pair with no aliases, and layer 1 caught an utterance naming its FROM endpoint on
 **0 of 49** edge items. Those 49 are the edge half of the **101 click items**
 (§5.1); 17 of them are in the 69-item scored bank, and the monitor screens
@@ -423,11 +425,15 @@ authorised_naming            0 hits /  6 checks
 canned fallbacks in denominator: 0
 ```
 
-- **n=34, and the 95% upper bound is 8.4%.** This is a *weaker* bound than the
-  withdrawn 0/60, whose bound was 4.9%. That is the honest shape of the re-run:
-  fixing the instrument shrank the population, because the only build carrying
-  **both** fixes is this one. Reporting the larger, older number would be
-  reporting a bound produced by a half-blind monitor.
+- **n=34, and the 95% upper bound is 8.4%.** That is a loose bound, and the
+  looseness is the honest shape of the result: the only build carrying **both**
+  instrument fixes is this one, so the admissible population is 34 screened
+  turns and no more. A tighter bound is available only by pooling in builds
+  where the monitor was half-blind, which would be a smaller number bought by
+  counting turns on which a hit could not have been detected. **Zero hits in 34
+  screened turns is compatible with a reconstruction rate as high as roughly one
+  turn in twelve.** It is not evidence of a low rate; it is the absence of
+  evidence of a high one, on a small sample.
 - **It is one build and three arms**, the three §9.5 student policies. It is a
   by-product of the §9.5 run, not a measurement designed to answer this.
 - **The tool used to print a different number here, and that is now fixed.**
@@ -530,9 +536,9 @@ With that on the table, the rest:
 | specific diagnoses, all cases | n=10 | 8/10 | 6/10 |
 
 The old prompt answers `stuck` to both contrasting students **on a fully fixed
-harness** — the day-12 signature, reproduced without the day-12 bug. Run 1
-(above) shows the converse from the other side: the current prompt reaches for
-`guessing` **on the broken harness**. Both directions agree, so the history fix
+harness**: the degeneracy needs no bug to produce it. Run 1 (above) shows the
+converse from the other side: the current prompt reaches for `guessing` **on the
+broken harness**. Both directions agree, so the history fix
 is neither necessary nor sufficient for the reversal, and the model change
 (`qwen3.8-27b` → `gpt-oss-120b`) is not isolated at all. On the evidence we have,
 **the prompt is the only variable demonstrated to move state selection**, and
@@ -587,25 +593,27 @@ transfers no further until someone tests that.
   for the human read (§9.5 asks for a person, and this file is the evidence that
   person starts from, not a replacement for them).
 
-**`diagnostic_calibration.py` was re-run on day 18 and its day-12 result is
-now explained rather than merely withdrawn.** That result — `stuck` to every
-constructed history, the `correct` boolean wrong on 2 of 6 — was measured through
-the same `{"role", "text"}` bug AND the same old prompt. On the fixed harness the
-old prompt still answers `stuck` to every contrasting case, so the `stuck`
-degeneracy is the prompt's. The `correct` boolean, by contrast, is now **6/6 on
-both prompts**, so that half of the day-12 result does not survive and is
-withdrawn outright rather than reassigned.
+**`diagnostic_calibration.py` was re-run on day 18, and its day-12 run is
+withdrawn on the same grounds as the §9.5 one.** It ran in the same period, on
+the same unreproducible dirty build, before the model was logged — so it is not
+evidence and is not cited as any part of the case above. What replaces it is the
+day-18 A/B, which is measured on a named build and a named model: the old prompt
+answers `stuck` to every contrasting case (arm B), and the `correct` boolean is
+**6/6 on both prompts**. Readers who remember the earlier claim that `correct`
+was "wrong on 2 of 6" should treat that number as gone rather than as superseded
+by a better one.
 
 **The architecture half does not depend on any of this, and stands unchanged.**
 
 1. **The judgement fields are inert.** `student_state`, `correct` and
    `focus_nodes` are logged and read by nothing; mastery comes from a string
    comparison and the lit set from the ladder. Over this run's 40 turns the
-   server overrode Call 1 on 6 of the 13 turns where the curriculum moved — less
-   often than on day 12, because the model is now more often right, which is
-   exactly why the guarantee cannot be *that the model is right*.
-2. **That inertness is enforced rather than incidental.** It was true on day 12
-   by accident — nothing stopped a later change from branching on the field.
+   server overrode Call 1 on **6 of the 13** turns where the curriculum moved.
+   That fraction is not the point and should not be read as a quality score: the
+   guarantee is that the override is available on all 13, whatever the model
+   asks for, which is exactly why it cannot be *that the model is right*.
+2. **That inertness is enforced rather than incidental.** It was true by
+   accident first — nothing stopped a later change from branching on the field.
    `tests/test_student_state_is_inert.py` walks the AST of the decision modules
    and fails on any read of the three fields. It is **mutation-tested**: planting
    `if decision.student_state == 'guessing': action = 'backtrack'` fails it, as
@@ -613,11 +621,13 @@ withdrawn outright rather than reassigned.
 
 **This is not a claim that the model does not matter.** `requested_action` still
 selects `ask` vs `hint_visual` vs `hint_verbal` wherever the curriculum does not
-move, which is most turns. On day 12 that meant a student got the wrong *flavour*
-of help chosen on a reading that did not track them; on the fixed build the
-reading tracks them, and the architecture that contained the damage is now
-containing a decision that is mostly correct. Both facts are worth keeping: the
-containment was load-bearing precisely while the diagnosis was broken, and
+move, which is most turns. Arm B is the measured case: a prompt that answers
+`stuck` to every contrasting student still drives `requested_action`, so the
+student gets a flavour of help chosen on a reading that does not track them.
+Arm A tracks them. The architecture is unchanged between the two, which is the
+point — it contains the damage in the arm that has damage, and does nothing
+different in the arm that does not. Both facts are worth keeping: the
+containment is load-bearing exactly when the diagnosis is poor, and
 nothing about it had to change when the diagnosis improved.
 
 ### 5.7 One number nothing asked for

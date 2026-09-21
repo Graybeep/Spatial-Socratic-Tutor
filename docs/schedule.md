@@ -144,7 +144,7 @@ much smaller scale.
 | ~~2026-09-22~~ | 19 | **API key cut** — resolved early, on day 12. See below | **MET, with a caveat** |
 | ~~2026-09-18…24~~ | 12 | diagnosis read-through, 30 `diagnosis` fields (§9.5) | ~~**RUN, and it found something**~~ **INVALIDATED on day 13**: Call 1 was sent `role: text` for every past turn, so the model never saw a click. See [diagnosis-readthrough.md](writeup/diagnosis-readthrough.md) |
 | ~~2026-09-16~~ 2026-09-21 | 13 → 18 | **repeat §9.5 on `gpt-oss-120b`**, the model the demo ships — now also the first §9.5 run in which the model can see the dialogue | **RUN AND COMPLETE**, 30/30 fields, five days late. See below |
-| — | 12 → 18 | §6.1 parametric-reconstruction rate | ~~**0/60, reported as a bound.**~~ Withdrawn day 13; **re-measured day 18 as 0/34** (95% bound 8.4%, weaker than the withdrawn one — the fix shrank the population). See below |
+| — | 12 → 18 | §6.1 parametric-reconstruction rate | ~~**0/60, reported as a bound.**~~ Withdrawn day 13, run later ruled inadmissible; **re-measured day 18 as 0/34**, 95% bound 8.4%. See below |
 | ~~2026-09-17~~ | 14 | **dependency freeze** (§1.8), end of week 2 | **MET a day early**, on day 13 — enforced by a test, see below |
 | **2026-09-25 00:00 → 2026-09-26 00:00** | 21–22 | **eval freeze: no eval runs in the 24h before Sat 26** | booked, see below |
 | 2026-09-25 | 22 | **feature freeze.** Tag `feature-freeze` | pending |
@@ -457,8 +457,11 @@ hardware, and week 3 ends 2026-09-24.
 
 - ~~**`eval/diagnostic_calibration.py` has not been re-run.**~~ **Re-run the
   same day**, as a prompt A/B. See the day-18 A/B entry below.
-- **§6.1 is now 0/34, a weaker bound than the withdrawn 0/60** (8.4% vs 4.9%).
-  The only build carrying both instrument fixes is `18d220d`, verified by
+- **§6.1 is now 0/34, a 95% upper bound of 8.4%** — about one turn in twelve,
+  so an absence of evidence rather than evidence of absence. It is not compared
+  against the withdrawn day-12 figure: that run is inadmissible, and a withdrawn
+  number quoted as the benchmark is a withdrawn number still in use. The only
+  build carrying both instrument fixes is `18d220d`, verified by
   `git merge-base`: `614d066` has the history fix but not the edge-answer fix.
 - ~~**`leak_monitor`'s printed HEADLINE pools builds** and must not be quoted;
   documented rather than repaired, per §11's cut-from-the-bottom rule.~~

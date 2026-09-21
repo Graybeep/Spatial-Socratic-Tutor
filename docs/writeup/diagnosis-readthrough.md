@@ -85,12 +85,12 @@ not one lucky sample.
 
 ### Two things the re-run does not fix
 
-- **`stuck` was used zero times in thirty.** Day 12 had two dead states
-  (`guessing`, `confused_prereq`); this run has one, a different one. Flagged
-  here as an instrument hypothesis (`--max-turns 3` gives no student time to be
-  stuck), and then **partly answered by the day-18 A/B below**: on a constructed
-  case where `stuck` is the only defensible answer, the current prompt still does
-  not say it. So at least some of this zero is the prompt, not the turn budget.
+- **`stuck` was used zero times in thirty.** Flagged first as an instrument
+  hypothesis (`--max-turns 3` gives no student time to be stuck), and then
+  **partly answered by the day-18 A/B below**: on a constructed case where
+  `stuck` is the only defensible answer, the current prompt still does not say
+  it. So at least some of this zero is the prompt refusing a state it was told
+  to distrust, not the turn budget denying it the chance.
 - **`partial` → `guessing` on 3 of 9.** A student who knows the region is not
   guessing. This is the one cell that still looks like real miscalibration.
 
