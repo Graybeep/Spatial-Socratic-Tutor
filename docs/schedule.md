@@ -460,10 +460,14 @@ hardware, and week 3 ends 2026-09-24.
 - **§6.1 is now 0/34, a weaker bound than the withdrawn 0/60** (8.4% vs 4.9%).
   The only build carrying both instrument fixes is `18d220d`, verified by
   `git merge-base`: `614d066` has the history fix but not the edge-answer fix.
-- **`leak_monitor`'s printed HEADLINE pools builds** and must not be quoted;
-  the per-build partition is the quotable object. Recorded as case 4 in
-  [instrument-failures.md](writeup/instrument-failures.md), documented rather
-  than repaired, per §11's cut-from-the-bottom rule.
+- ~~**`leak_monitor`'s printed HEADLINE pools builds** and must not be quoted;
+  documented rather than repaired, per §11's cut-from-the-bottom rule.~~
+  **Repaired the same day.** The documentation-only fix was the wrong call: a
+  summary line a reader will quote is not made safe by a caveat elsewhere saying
+  do not. The headline now reports one build, defaults to the current one and
+  names it; `--pool-builds` is opt-in. Case 4 in
+  [instrument-failures.md](writeup/instrument-failures.md) records both the
+  defect and the bad first fix.
 
 **Also observed, worth a line in the writeup:** Call 2 on `gpt-oss-20b` invented
 a tool name (`json`) on 4 of 40 turns; the retry from `71501ac` recovered all but

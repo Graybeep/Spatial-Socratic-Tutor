@@ -201,8 +201,19 @@ What makes this worth a case rather than a bug report:
 - **It would have inflated n by 98×** and tightened a reported bound from 8.4%
   to something near 0.1%, in the direction that flatters the system.
 
-The fix applied here was to quote the per-build partition in §5.5 and say
-explicitly that the headline is not quotable. That is a documentation fix to a
-code defect, chosen because day 18 is inside week 3 and `CLAUDE.md` §11 says a
-week that overruns cuts from the bottom rather than borrowing. The defect is
-recorded rather than repaired, which is the honest version of that trade.
+**The fix, and a note on how it was first made.** The initial response was a
+documentation fix — quote the per-build partition in §5.5, state that the
+headline is not quotable — chosen because day 18 is inside week 3 and
+`CLAUDE.md` §11 says a week that overruns cuts from the bottom rather than
+borrowing. That was the wrong call for this defect, and it lasted a few hours.
+A summary line that a reader will quote is not made safe by a caveat elsewhere
+telling them not to; the whole failure here is that the safe-looking table is
+what licenses trust in the unsafe line.
+
+`leak_monitor.headline` now reports **one build**, defaulting to the current one,
+and names it in the output. Pooling still exists behind `--pool-builds`, because
+the pooled figure is occasionally what you want and hiding it would just move the
+problem. Three tests pin it, including a regression for a bug found while making
+the change: `measure()` reuses the name `build` for each record's own stamp, so
+the parameter was clobbered and the headline silently scoped itself to whatever
+the last line of the file happened to be.
