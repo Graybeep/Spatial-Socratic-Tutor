@@ -391,6 +391,35 @@ floor would fire on turns that are already being hinted. If a future run shows
 
 ---
 
+### 2026-09-22 (day 19) — a backtrack that never backtracked
+
+Found while counting curriculum moves for §5.6's containment argument, from the
+day-18 log, no new calls. Of **13 moves in 40 turns**: 6 `advance` the model also
+asked for, 6 `backtrack` the server performed while the model asked for a hint,
+and **1 `backtrack` the model requested and got**.
+
+That last one could not be attributed, and chasing it found a hole.
+`action = decision.requested_action`, so a Call 1 asking to step back got the
+word and the prerequisite chunk while **nothing moved** — no `start_item`, no new
+item, the student still on the node they were failing. Only the two-failure rule
+(§7) ever moved the curriculum.
+
+**Now:** a model-requested backtrack is honoured only if the target prerequisite
+is below `MASTERY_THRESHOLD` — §7 backtracks to close a gap, and a mastered
+prerequisite is not one. Otherwise it is refused and degraded to
+`BACKTRACK_REFUSED_ACTION` (default `hint_visual`; the student is still on the
+item and the rung has already been spent). The two-failure path is untouched.
+Both paths tested, gate mutation-tested, and turns now log `backtrack_origin`
+(`server` / `model` / `refused`) so the next count is attributable.
+
+**No eval re-run is needed for this** and none was done: the day-18 §9.5 and §6.1
+figures are diagnosis and utterance measurements, and neither depends on which
+rule moved the curriculum. The change is in the demo path, so it wants a manual
+pass before the walkthrough — added to the projector-test session, which is still
+unbooked.
+
+---
+
 ### Eval freeze: no eval runs in the 24 hours before Saturday 2026-09-26
 
 **The window is Friday 2026-09-25 00:00 to Saturday 2026-09-26 00:00.** Nothing
