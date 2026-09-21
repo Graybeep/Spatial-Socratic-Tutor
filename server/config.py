@@ -242,6 +242,14 @@ class Config:
     prereq_decay: float = field(default_factory=lambda: _float("PREREQ_DECAY", 0.05))
     consecutive_failures_before_backtrack: int = field(
         default_factory=lambda: _int("CONSECUTIVE_FAILURES_BEFORE_BACKTRACK", 2))
+    #: What a REFUSED model-requested backtrack degrades to. Call 1 may ask to
+    #: step back to a prerequisite the student has already mastered; the server
+    #: refuses that (§7 backtracks to close a gap, and there is no gap), and the
+    #: student is still on the item, so the turn becomes ordinary help rather
+    #: than nothing. Not `ask`: the hint counter has already been bumped this
+    #: turn and asking afresh would waste the rung.
+    backtrack_refused_action: str = field(
+        default_factory=lambda: _str("BACKTRACK_REFUSED_ACTION", "hint_visual"))
 
     # --- narrowing ladder (CLAUDE.md §9.1, §9.2) -----------------------------
     # THE NARROWING SCHEDULE IS A RESEARCH VARIABLE, NOT A CONSTANT.
