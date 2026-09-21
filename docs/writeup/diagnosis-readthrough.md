@@ -2,7 +2,7 @@
 
 *Run on day 12 (2026-09-15), the day a key first made it possible. Call 1:
 `qwen/qwen3.8-27b` via Groq. 30 answered turns over the scored bank, three
-student policies. Raw: [`eval/results/diagnosis_readthrough.json`](../../eval/results/diagnosis_readthrough.json);
+student policies. Raw: [`eval/results/diagnosis_readthrough_day12_invalidated.json`](../../eval/results/diagnosis_readthrough_day12_invalidated.json);
 instrument: `eval/diagnosis_readthrough.py`.*
 
 > **INVALIDATED 2026-09-16 (day 13) — read this before anything below.** Every
