@@ -167,19 +167,34 @@ def test_an_empty_ledger_warns_rather_than_passing_silently():
     assert check.undecided, "an empty ledger was reported as a verified pass"
 
 
-# --- the freeze ------------------------------------------------------------
+# --- the freeze, which is deliberately NOT a check ------------------------
 
-def test_a_model_call_inside_the_window_fails_the_freeze_check():
+def test_there_is_no_recent_call_veto():
+    """An earlier version failed the run if any model call appeared in the
+    trailing 24h. That conflated a calendar rule with the only question a
+    pre-flight can answer - is there budget for this take. A run the night
+    before is harmless if it left headroom and fatal if it did not, and
+    `check_token_budget` already decides that.
+    """
+    assert not hasattr(PF, "check_no_recent_eval"), (
+        "the 24h veto is back; headroom is the gate")
     now = time.time()
-    check = PF.check_no_recent_eval([_row(now - 3600, "any", 10)], now=now)
-    assert not check.ok
-    assert "1.0h ago" in check.detail
+    model = CONFIG.call1.model
+    with config_override(tpd_limit=200_000, take_budget=90_000):
+        # A call a minute ago that left plenty of headroom must not fail.
+        checks = [c for c in PF.run(expect_mock=bool(CONFIG.mock_mode))
+                  if not c.ok and not c.undecided]
+        recent_only = PF.check_token_budget([_row(now - 60, model, 1_000)], now=now)
+        assert recent_only.ok, "a recent call with headroom left failed the run"
 
 
-def test_an_old_model_call_does_not_fail_the_freeze_check():
+def test_headroom_is_the_gate_not_recency():
+    """Same recency, opposite verdict, decided only by what was spent."""
     now = time.time()
-    check = PF.check_no_recent_eval([_row(now - PF.WINDOW_S - 1, "any", 10)], now=now)
-    assert check.ok
+    model = CONFIG.call1.model
+    with config_override(tpd_limit=200_000, take_budget=90_000):
+        assert PF.check_token_budget([_row(now - 60, model, 1_000)], now=now).ok
+        assert not PF.check_token_budget([_row(now - 60, model, 150_000)], now=now).ok
 
 
 # --- the declared mode -----------------------------------------------------

@@ -61,21 +61,44 @@ rather than a footnote.
 
 ## Run the mock
 
-```bash
-pip install -r requirements.txt
-python -m build.validate         # strict; must be clean
-python -m pytest
-python -m server.main            # http://127.0.0.1:8000
-```
+**No API key, no network, no `.env`.** `MOCK_MODE=true` is the default, so a
+fresh clone runs as-is. Verified from an empty directory on 2026-09-22
+(Python 3.11.9, Node 20): **~90 seconds from `git clone` to a served page**, or
+about 2.5 minutes including the test suite.
 
-Then the client, in a second terminal:
+Terminal 1 — the server:
 
 ```bash
-cd client && npm ci        # the lockfile, exactly (§1.8 freeze)
-npm run dev                      # http://localhost:5173
+python -m venv .venv
+source .venv/Scripts/activate      # Windows; use .venv/bin/activate elsewhere
+pip install -r requirements.txt    # ~40s
+
+python -m build.validate           # expect: 0 error(s), 8 warning(s)
+python -m pytest                   # expect: 537 passed
+python -m server.main              # http://127.0.0.1:8000
 ```
 
-No API key and no network needed — `MOCK_MODE=true` is the default.
+Terminal 2 — the client:
+
+```bash
+cd client
+npm ci                             # the lockfile, exactly (§1.8 freeze)
+npm run dev                        # http://localhost:5173
+```
+
+Open **http://localhost:5173**. The client finds the API at
+`http://127.0.0.1:8000` by default, so no client `.env` is needed either.
+
+Two things worth knowing before you read the output:
+
+- **`build.validate` prints warnings and that is the expected result.** It exits
+  **0** with **8 warnings**, each naming a known property of the item bank —
+  MCQ option sets that repeat, edge items determined by their anchor, nine nodes
+  whose served chunk disagrees with their declared section. They are findings
+  the writeup discusses, not a broken install. **Only `0 error(s)` matters.**
+- **The venv is not optional advice.** §1.8 pins every dependency to the exact
+  version the suite passed against, and `pip install` into a populated
+  environment will not downgrade what is already there.
 
 To use a real model, put a key in `.env` and set `MOCK_MODE=false`. Without a
 key it still runs: Call 1 falls back to the mock's deterministic decision and

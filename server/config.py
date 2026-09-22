@@ -292,12 +292,17 @@ class Config:
 
     #: Tokens one recording take is expected to cost, end to end.
     #:
-    #: PROVISIONAL. 40,000 is a working figure, not a measurement: nothing has
-    #: yet counted a take. `python -m server.preflight --report` reads the token
-    #: ledger and prints per-turn mean and max, and this default should be
-    #: replaced with that number after the rehearsal rather than left as a
-    #: guess that a pre-flight is trusted against.
-    take_budget: int = field(default_factory=lambda: _int("TAKE_BUDGET", 40_000))
+    #: PROVISIONAL, and deliberately generous. 90,000 is a working figure, not a
+    #: measurement: nothing has counted a take yet. One real local turn measured
+    #: 5,353 tokens end to end (Call 1 3,406 + Call 2 1,947), so a 20-turn take
+    #: is on the order of 107,000 - the previous 40,000 would have passed a
+    #: pre-flight for a take the budget could not actually hold.
+    #:
+    #: `python -m server.preflight --report` reads the ledger and prints
+    #: per-turn mean and max. **Replace this with the first take's measured
+    #: figure**; a threshold a pre-flight is trusted against should not stay a
+    #: guess.
+    take_budget: int = field(default_factory=lambda: _int("TAKE_BUDGET", 90_000))
 
     #: Whether a model-requested backtrack may move the curriculum AT ALL.
     #:
