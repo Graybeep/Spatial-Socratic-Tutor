@@ -242,6 +242,23 @@ class Config:
     prereq_decay: float = field(default_factory=lambda: _float("PREREQ_DECAY", 0.05))
     consecutive_failures_before_backtrack: int = field(
         default_factory=lambda: _int("CONSECUTIVE_FAILURES_BEFORE_BACKTRACK", 2))
+    #: --- demo pre-flight budget (docs/demo-preflight.md) --------------------
+    #:
+    #: Tokens per day the provider allows on the Call 1 model. Groq's free tier
+    #: is 200,000 TPD, and it is the binding limit for a recording session: the
+    #: per-minute limit (8,000 TPM) only paces a take, while TPD decides whether
+    #: there is a take left at all.
+    tpd_limit: int = field(default_factory=lambda: _int("TPD_LIMIT", 200_000))
+
+    #: Tokens one recording take is expected to cost, end to end.
+    #:
+    #: PROVISIONAL. 40,000 is a working figure, not a measurement: nothing has
+    #: yet counted a take. `python -m server.preflight --report` reads the token
+    #: ledger and prints per-turn mean and max, and this default should be
+    #: replaced with that number after the rehearsal rather than left as a
+    #: guess that a pre-flight is trusted against.
+    take_budget: int = field(default_factory=lambda: _int("TAKE_BUDGET", 40_000))
+
     #: Whether a model-requested backtrack may move the curriculum AT ALL.
     #:
     #: Default FALSE, which is the shipped demo behaviour: only §7's two-failure
