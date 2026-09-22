@@ -780,6 +780,49 @@ the graph still moves on Call 1's return, before any utterance exists — but th
 - **3D, simulation, visualization agents, arbitrary PDF upload, misconception
   taxonomies, auth and deployment** — never built, not deferred.
 
+### Future work: learner choice, as a mastery prior
+
+The obvious complaint about this demo is that the student does not choose what to
+study. The obvious fix — a picker on the opening screen that starts the session
+in a chosen section — **does not work, and the reason is worth stating because it
+is not obvious from the outside.**
+
+`mastery.next_node` returns the lowest-mastery node whose prerequisites are *all*
+mastered. On a fresh session nothing is mastered, so the ready set is exactly the
+graph's **3 root nodes — and all three sit in §6.1.** A student who picks §6.3 is
+placed on a §6.3 item, answers it, and the first `advance` hands them straight
+back to §6.1. The picker would not be a weak feature; it would be an illusion of
+choice, silently discarded on turn one.
+
+**The version that works treats the choice as a prior on mastery rather than a
+starting position.** Picking §6.3 initialises the prerequisite ancestors of that
+section at `MASTERY_THRESHOLD`, which makes its nodes *ready* and lets
+`next_node` select inside the chosen region without special-casing anything. The
+claim it encodes — *"I already know what leads up to this"* — is then checked
+rather than trusted: §7's prerequisite back-decay (0.05 per failed item) and the
+two-failure backtrack are already the machinery for an overclaimed prerequisite,
+and they pull the student back into the skipped material as soon as the claim
+fails. No new rule, no change to the selection function, and the correction path
+already exists and is tested.
+
+**Upload-driven graphs are a different matter and stay cut**, on measurements
+rather than on taste:
+
+- Candidate generation passes **30 of 66** true prerequisite edges — a recall
+  ceiling of **45%** at the shipped window, before any classifier runs.
+- **17 of the missed edges** are missed because the chapter names a concept
+  *before* its prerequisite. The co-occurrence window is a knob; the ordering
+  assumption is a wall.
+- The item half fares worse. Skipping §4's human correction pass is already
+  visible in this repo: the MCQ key is **the longest option in 159 of 159**
+  items, against a 25% chance rate, and all 159 are marked unscorable as a
+  result.
+
+Prerequisite edges drive next-node selection, backtracking and prereq decay, so a
+graph missing over half of them does not degrade the tutor gracefully — it
+disables the adaptive path. That is why §10 lists upload as deleted rather than
+deferred, and why this section proposes the prior and not the picker.
+
 ---
 
 *Reproduce the keyless half: `pip install -r requirements.txt && python -m
