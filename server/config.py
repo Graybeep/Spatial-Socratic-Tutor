@@ -53,12 +53,12 @@ def _path(name: str, default: str) -> Path:
 #: Providers that speak the OpenAI chat-completions wire format. They differ
 #: from one another only in URL, auth and how `tool_choice` may be spelled - the
 #: request body and the extraction are shared.
-OPENAI_SHAPED = ("groq", "lmstudio")
+OPENAI_SHAPED = ("groq", "local")
 
 #: Providers served from this machine. They have no quota and no per-minute
 #: window, so the demo pre-flight's daily-token check does not apply to them,
 #: and `_invoke` does not demand a key.
-LOCAL_PROVIDERS = ("lmstudio",)
+LOCAL_PROVIDERS = ("local",)
 
 
 def _by_provider(anthropic, groq, local=None):
@@ -127,8 +127,8 @@ class Config:
 
     #: A local OpenAI-compatible server (LM Studio's default port). No key: it
     #: is this machine. See LOCAL_PROVIDERS.
-    lmstudio_base_url: str = field(
-        default_factory=lambda: _str("LMSTUDIO_BASE_URL", "http://127.0.0.1:1234"))
+    local_base_url: str = field(
+        default_factory=lambda: _str("LOCAL_BASE_URL", "http://127.0.0.1:1234"))
 
     # --- the two calls (CLAUDE.md 5) ----------------------------------------
     # Call 1 diagnoses. Its `diagnosis` field is what a human hand-reads thirty of
@@ -202,8 +202,8 @@ class Config:
     @property
     def llm_base_url(self) -> str:
         """The base URL for the ACTIVE provider. See `llm_key`."""
-        if self.llm_provider == "lmstudio":
-            return self.lmstudio_base_url
+        if self.llm_provider == "local":
+            return self.local_base_url
         return self.groq_base_url if self.llm_provider == "groq" else self.base_url
 
     @property

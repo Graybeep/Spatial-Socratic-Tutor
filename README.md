@@ -77,13 +77,57 @@ npm run dev                      # http://localhost:5173
 
 No API key and no network needed — `MOCK_MODE=true` is the default.
 
-To use the real model, put a key in `.env` and set `MOCK_MODE=false`. Without a
+To use a real model, put a key in `.env` and set `MOCK_MODE=false`. Without a
 key it still runs: Call 1 falls back to the mock's deterministic decision and
 Call 2 to the canned per-action line, and both fallbacks are logged. `main`
 always runs (§13.2).
 
 ```bash
-cp .env.example .env   # only needed once real LLM calls go in (week 2)
+cp .env.example .env
+```
+
+## Choose a provider
+
+`LLM_PROVIDER` picks one of three. The **schema does not move between them**:
+all three are handed the same pydantic model under a forced tool call, and a
+response that fails validation fails identically on each. Only the wire format
+differs — URL, auth header, body shape, and where the tool call lands.
+
+| `LLM_PROVIDER` | needs | Call 1 default | notes |
+|---|---|---|---|
+| *(unset)* | nothing | — | `MOCK_MODE=true`, no key, no network. **Start here.** |
+| `anthropic` | `ANTHROPIC_API_KEY` | `claude-opus-5` | |
+| `groq` | `GROQ_API_KEY` | `openai/gpt-oss-120b` | what every number in the report was measured on |
+| `local` | nothing | `qwen/qwen3.5-9b` | any OpenAI-compatible local server |
+
+### Running against a local model
+
+No key, no network, no quota. Point `LOCAL_BASE_URL` at whatever is serving
+`/v1/chat/completions` — LM Studio, Ollama, `llama.cpp`'s server, vLLM:
+
+```bash
+LLM_PROVIDER=local MOCK_MODE=false LOCAL_BASE_URL=http://127.0.0.1:1234 CALL1_MODEL=your/model CALL2_MODEL=your/other-model python -m server.main
+```
+
+**Set `CALL1_MODEL` and `CALL2_MODEL` explicitly.** The defaults name the two
+models this was developed against and will not exist on your machine. A model
+id the server does not serve comes back as a 400, not as a fallback.
+
+Two things to expect, both measured here on 2026-09-22, n=1 per model:
+
+- **It is slow.** One turn end to end took **~81s** — 56.8s for Call 1
+  (`qwen/qwen3.5-9b`) and 24.3s for Call 2 (`google/gemma-4-e4b`), against
+  Groq's 2.3s p50 on Call 1. Hence the 180s default timeouts on this provider;
+  a 10s cloud timeout fails every local call before it finishes thinking.
+- **Your model must do tool calls.** The whole architecture rests on a forced
+  tool call with a validated schema. `tool_choice` is sent as the string
+  `required` here, because LM Studio rejects the object form outright; that is
+  equivalent only because each call defines exactly one tool.
+
+Check what a server is offering before pointing at it:
+
+```bash
+curl http://127.0.0.1:1234/v1/models
 ```
 
 Measure leakage (§9.1) — three student conditions, arms labelled:

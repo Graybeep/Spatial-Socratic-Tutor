@@ -207,8 +207,13 @@ def _groq_request(cfg: LLMCallConfig, system: str, user: str, tool: _Tool) -> di
     }
 
 
-def _lmstudio_request(cfg: LLMCallConfig, system: str, user: str, tool: _Tool) -> dict:
+def _local_request(cfg: LLMCallConfig, system: str, user: str, tool: _Tool) -> dict:
     """`_groq_request` with the one spelling a local server will accept.
+
+    Measured against LM Studio; the same body works for any server exposing an
+    OpenAI-compatible `/v1/chat/completions` (Ollama, llama.cpp's server, vLLM),
+    which is why the provider is named for what it is rather than for one of
+    them. Point `LOCAL_BASE_URL` at whichever is running.
 
     LM Studio rejects the OBJECT form of `tool_choice` outright -
     `Invalid tool_choice type: 'object'. Supported string values: none, auto,
@@ -278,11 +283,11 @@ _PROVIDERS = {
     ),
     #: A local OpenAI-compatible server. Different path from Groq's, no auth
     #: header, and `tool_choice` spelled as a string. Same body, same schema,
-    #: same extraction - see `_lmstudio_request`.
-    "lmstudio": (
+    #: same extraction - see `_local_request`.
+    "local": (
         "/v1/chat/completions",
         lambda key: {},
-        _lmstudio_request,
+        _local_request,
         _groq_extract,
     ),
 }
