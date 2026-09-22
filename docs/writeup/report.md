@@ -20,6 +20,68 @@ a key even though they cannot be **regenerated** without one.*
 
 ---
 
+# At a glance
+
+*Everything a reader needs to judge this project, before any of the argument.
+Each line links to the section that earns it.*
+
+## What we claim
+
+| # | claim | kind | status |
+|---|---|---|---|
+| 1 | The tutor **cannot** name the answer while hinting | architectural | holds by construction ([§2.1](#21-claim-1-it-cannot-name-the-answer-while-hinting)) |
+| 2 | Narrowing performs reductions **not expressible in one utterance** | architectural | holds by construction ([§2.2](#22-claim-2-some-reductions-do-not-fit-in-a-sentence)) |
+| 3 | A non-verbal channel creates a non-verbal **leak** channel that text metrics cannot see | demonstrated on our own system | holds; generalisation is by analogy ([§2.3](#23-claim-3-identity-leakage)) |
+| 4 | Visual narrowing **beats** a verbal hint | empirical | **not supported** ([§5.2](#52-91-effective-leakage)) |
+
+**Claim 4 is the one a reader expects and we are not making it.** Claims 1–3 are
+properties of the wiring, which is why they are stated that way.
+
+## The headline number
+
+**The shipped configuration hands a zero-knowledge simulated student
++8.6 points of post-hint solve rate over no hints at all — 95% CI
+[+1.9, +16.4].**
+
+That is **one cell in a grid of nine**. Every other arm × condition crosses
+zero, in both directions. At 52 items the half-widths are 6–7 points, so the
+null cells are **underpowered rather than demonstrated null** — and that cuts
+against us, not for us.
+
+The direction was also not what we predicted: the measurable leakage is to the
+student who knows *nothing*, for whom narrowing fifty candidates to five is a
+real reduction. A partially knowledgeable student has already narrowed the field
+themselves. We did not predict that and do not present it as though we had.
+
+Two supporting figures, both bounded rather than estimated:
+
+- **Graph extraction recall has a ceiling of 45%** at the shipped window, and
+  **74.2%** at an infinite one. Report the ceiling beside any recall figure:
+  0.41 against a ceiling of 0.45 is a good classifier, against 1.0 a poor one,
+  and they are indistinguishable without it ([§5.3](#53-93-graph-extraction-reported-as-a-ceiling)).
+- **Parametric reconstruction: 0 of 34**, one-sided 95% upper bound **8.4%**.
+  Absence of evidence, and see the metric caveat below ([§5.5](#55-61-the-parametric-reconstruction-rate-re-measured-on-a-monitor-that-can-see)).
+
+## What would make a reader distrust all of it
+
+Stated here rather than at the end, because a limitations section a reader
+reaches on page nine has already done its damage.
+
+| | |
+|---|---|
+| **One chapter** | Every number comes from a single ~50-node graph of one networking chapter. Nothing here shows the approach transfers to a second one. |
+| **Curated graph, no extraction run** | The graph is hand-authored. §4 permits it and comparable published systems do the same, but **we have not run the pipeline on an arbitrary chapter — we have not run it on one at all.** The gold annotation was frozen before any extractor existed, so it could not have been contaminated by one; that was luck, not foresight. |
+| **Simulated students, not people** | Every leakage figure comes from three scripted policies. **No human has used this system and no learning outcome is measured or claimed.** |
+| **The baseline is not silent** | The `none` arm still has the tutor speaking an `ask` utterance. Whatever that gives away is subtracted out of every marginal, so the marginals are conservative — but the baseline is not a zero-information control. Changing which arm is subtracted moves the figure ~2 points here; on a leakier verbal channel it would move more. |
+| **The leak metric is a floor, not an estimate** | §6 specifies embedding cosine; embeddings are a dependency we do not have, so the implemented metric is token cosine and trigram containment. It misses synonym paraphrase — a restatement in different words scores 0.06 against the answer it paraphrases. Reconstruction *means* restating in the model's own words, so **the metric is weakest exactly where the phenomenon is strongest.** Biased downward, not merely approximate. |
+| **Confirm-or-undo is untested by a stranger** | §8 calls it the only gate between a stray click and a permanent mastery penalty. It has been watched by nobody who did not design it. Booked three times, never run. **An assumption with a UI on it.** |
+| **Latency figures come from a mock** | The two-call timing profile the interface argument rests on was measured against mock utterances, not a live model. |
+
+Full list, including the ones that only matter to a reimplementer:
+[limitations.md](limitations.md).
+
+---
+
 ## 1. The claim
 
 LLM tutors leak answers because their only way to help is to say more. Every
@@ -39,20 +101,14 @@ not seek it.
 
 ## 2. What we actually claim, in order of how well it is supported
 
-We put this second, before the architecture, because the ordering is the
-honest part. Two of these are properties of the construction and hold whatever
-model is behind the API. Two are measurements, and one of those went against us.
+The four claims are tabled on the first page. They come second in the body,
+before the architecture, because the ordering is the honest part: **two are
+properties of the construction** and hold whatever model is behind the API, and
+**two are measurements, one of which went against us.**
 
-| # | claim | kind | status |
-|---|---|---|---|
-| 1 | The tutor **cannot** name the answer while hinting | architectural | holds by construction |
-| 2 | Narrowing performs reductions **not expressible in one utterance** | architectural | holds by construction |
-| 3 | A non-verbal channel creates a non-verbal **leak** channel that text metrics cannot see | demonstrated on our own system | holds, generalisation is by analogy |
-| 4 | Visual narrowing beats a verbal hint | empirical | **not supported.** See §5.2 |
-
-**Claim 4 is the one a reader expects a project like this to make, and we are
-not making it.** The demo's value does not rest on it, which is why claims 1–3
-are stated as properties of the wiring rather than as observed behaviour.
+That split is why claims 1-3 are stated as properties of the wiring rather than
+as observed behaviour, and why the demo's value does not rest on claim 4 - the
+one a reader expects a project like this to make, and the one we are not making.
 
 ### 2.1 Claim 1 — it cannot name the answer while hinting
 
@@ -538,59 +594,92 @@ is and the 83% is reported rather than repaired.
 
 ## 6. What we got wrong, and why that is in the report
 
-Seven failures in the system, in four weeks, found by the people who wrote the
-code. We include them because in every case the *intuitive* fix would have hidden
-the problem rather than surfaced it, and because all of them survived a test suite
-a reviewer would have called adequate.
+Grouped by **mechanism**, not by count. The count was never the interesting part
+and a running tally invites the wrong question — *how many?* — instead of the
+one that transfers: *what kind, and would it have happened to you?*
 
-- **[representation-blindness.md](representation-blindness.md)** — four
-  instances of one mechanism: two fields that are different things in the schema
-  and the same thing in the domain. Includes the one we would flag hardest: a
-  leak the dedicated leak suite *measured*, *saw*, and filed under "legitimate".
-- **[numbers-that-looked-fine.md](numbers-that-looked-fine.md)** — evaluation
-  code that ran, passed, and produced well-formed numbers over nothing. A
-  leakage rate computed over one item out of 101 for four days. A drift test
-  blind to exactly the kind of drift it existed to catch.
-- **[diagnosis-readthrough.md](diagnosis-readthrough.md)** — the tutor's model
-  of the student, measured against a ground truth it could not see. Found not to
-  track it on day 12, found to track it on day 18. Both readings are in the file,
-  because the first is the reason the second is believable — and because the
-  *explanation* we gave for the difference on the morning of day 18 was wrong,
-  which is the sixth failure below.
-- **[limitations.md](limitations.md)** — everything above plus the rest,
-  including two figures in this report's own source that were stale prose until
-  day 8 because they had been typed rather than derived.
+Every failure below was found by the people who wrote the code, and in every
+case the *intuitive* fix would have hidden the problem rather than surfaced it.
+All of them survived a test suite a reviewer would have called adequate.
 
-- **The sixth is an attribution, not a bug, and it is ours from day 18.** The
-  §9.5 re-run reversed the day-12 finding, and we wrote up the reversal as the
-  history fix (`1cfc74a`) doing the work. It was a single-cause story for a
-  change that moved three variables — prompt, history handling and model — and
-  it was written *the same morning*, into a report whose entire argument is that
-  you must ask what a number was computed over. Checking commit timestamps is
-  what broke it: the Call 1 prompt rewrite landed an hour and three quarters
-  after the day-12 run, so day 12 had been using a different prompt all along.
-  An A/B that afternoon showed the old prompt reproducing the day-12 degeneracy
-  on a fully fixed harness. §5.6 now carries the controls and the corrected
-  attribution, beside the containment argument they bear on. **The lesson is not "check your commits" — it is
-  that a fix you have just shipped is the most attractive available explanation
-  for any improvement that follows it.**
+### Mechanism 1 — two fields that are different in the schema and identical in the domain
 
-- **The seventh is a number that contradicted itself in its own paragraph, and
-  it is ours from day 19 — written and caught the same day.** §5.6's containment
-  count said the curriculum moved on 13 and then, two sentences later, that one
-  of those 13 moved nothing. Both sentences came from one hand pass over one log,
-  and no committed code could reproduce either — the same standing this report
-  withdrew a day-12 number for. The correct split is **13 emitted, 12 moved**.
-  It was caught about ten hours later by building the tool that should have
-  produced it in the first place:
-  `eval/curriculum_moves.py` decides movement by testing whether `item_id`
-  changed, rather than trusting the action label, which is precisely what makes
-  the two numbers different. **The lesson is this section's closing question
-  turned inward** — we asked what every number was computed over, and did not
-  ask it of a number we had computed by hand, once, with nothing able to
-  disagree.
+The schema says `node_id` and `answer` are different things. The domain says
+that for a `node_click` item they are the same string. Every guard we wrote
+compared *text*, so none of them could see it.
 
-If that pattern generalises even weakly, published leakage and learning-gain
+This shipped the answer in the clear on **101 of 260 items** while a whitelist
+serializer and a suite asserting that no answer string, alias, prompt or span
+appears in any response were **green throughout**. It took four attempts to fix,
+and one instance is the one we would flag hardest: a leak the dedicated leak
+suite *measured*, *saw*, and filed under "legitimate".
+
+Four instances of the one mechanism:
+**[representation-blindness.md](representation-blindness.md)**. Why any tutor
+that can *point* has this failure mode:
+**[identity-leakage.md](identity-leakage.md)**.
+
+**The transferable form:** a guard that compares representations cannot catch a
+leak of identity. Ask what your payload *means*, not what it *says*.
+
+### Mechanism 2 — a well-formed number computed over the wrong population
+
+The signature is always the same: the value has the right shape, the right type,
+the right key, and describes something other than what its label claims. Nothing
+downstream can tell the difference, which is why these survive longest.
+
+- **A leakage rate over one item out of 101**, for four days. 60 dialogues drew
+  from an identical initial state, so 360 probes covered a single item. All 179
+  tests passed — a rate over one item has exactly the same shape as a rate over
+  a hundred.
+- **A containment count that contradicted itself in its own paragraph.** §5.6
+  said the curriculum moved on 13 and, two sentences later, that one of those 13
+  moved nothing. Both came from one hand pass over one log, and no committed
+  code could reproduce either. The correct split is **13 emitted, 12 moved**.
+- **Two columns of one comparison using different denominators** — 12 moved
+  against 13 emitted — in a table read as a before/after.
+- **A guard-trip rate that pooled builds**, reporting 24% parametric
+  reconstruction from a bug that was already fixed.
+- **A summary line that pooled builds while its own per-build table did not**,
+  which is how the defect was eventually caught.
+
+Worked examples: **[numbers-that-looked-fine.md](numbers-that-looked-fine.md)**.
+The structural fix is `eval/provenance.py`: every result embeds what it sampled,
+so `distinct == population` becomes assertable. Either of the first two would
+have been caught on day one by that one check.
+
+**The transferable form:** a result that carries its value but not its sampling
+cannot be trusted, and cannot be *checked*. Ask not "what is the number" but
+"what was it computed over, and how would you know."
+
+### Mechanism 3 — the fix you just shipped is the most attractive explanation for what follows
+
+The §9.5 re-run reversed a day-12 finding, and we wrote the reversal up as the
+history fix doing the work — a single-cause story for a change that moved
+**three** variables at once (prompt, history handling, model), written the same
+morning, into a report whose entire argument is that you must ask what a number
+was computed over.
+
+Commit timestamps broke it: the Call 1 prompt rewrite landed an hour and three
+quarters *after* the day-12 run, so day 12 had been using a different prompt all
+along. An A/B that afternoon showed the old prompt reproducing the day-12
+degeneracy on a fully fixed harness. §5.6 now carries the controls and the
+corrected attribution.
+
+**The transferable form:** the lesson is not "check your commits". It is that
+recency is not causation, and a fix you are proud of is the explanation you will
+reach for first.
+
+### Mechanism 4 — the instrument was broken, and reported confidently about the tutor
+
+Kept in **[§7](#7-the-harness-was-wrong-four-times-and-said-so-confidently)**
+because it is a different failure and, we think, the more transferable one:
+faults in the code doing the *measuring*, each producing a specific, plausible
+verdict **about the tutor** while the fault was in the harness.
+
+---
+
+If these patterns generalise even weakly, published leakage and learning-gain
 figures from systems of this shape deserve a question rarely asked of them:
 **not "what is the number" but "what was it computed over, and how would you
 know."**
@@ -600,7 +689,8 @@ know."**
 **[instrument-failures.md](instrument-failures.md)** — kept separate from §6
 because it is a different failure and, we think, the more transferable one.
 
-The seven above are faults in the tutor, or in how we read and reported it. These are faults in the code doing
+§6's mechanisms are faults in the tutor, or in how we read and reported it.
+These are faults in the code doing
 the *measuring*, and each produced a confident, specific, plausible verdict **about
 the tutor** while the fault was in the harness. Two of them were plausible
 enough that we acted on them before noticing, and the fourth was caught only
