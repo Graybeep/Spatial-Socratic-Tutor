@@ -839,6 +839,34 @@ longer promises a measurement it cannot produce.
 
 ---
 
+### 2026-09-22 (day 19) — two documents caught up to the project
+
+**`limitations.md` did not carry confirm-or-undo.** This file committed to it on
+day 12 — *"if nobody is watching by the end of week 3, it goes into
+`limitations.md` as untested"* — and week 3 ends 09-24 with the recording on
+09-23, so it will not happen. The entry now exists, under *Narrower ones worth
+stating* rather than the headline four, because this file said it belongs beside
+the human pilot **at a much smaller scale** and the four-item heading carries a
+count that must stay true. It states what is built (the client sends only
+confirmed clicks, so an unconfirmed misclick never reaches `/turn`) and what is
+untested (whether a first-time user reads the step as a gate at all).
+
+**The README's Status block was stale by a week.** It opened *"Schemas frozen,
+mock server running, client rendering the graph against it"* — true in week 2 —
+and said nothing about feature freeze, the three providers, the writeup or any
+result. It still named the projector test as the next dated commitment. This is
+the page a grader reads first, and the fresh-clone test established they will
+reach it before anything else.
+
+Rewritten to carry the freeze and its tag, a five-row fact table, what the system
+does, the headline number **with its interval and the grid-of-nine caveat**, the
+two bounded figures, and what it is not — one chapter, hand-authored graph, no
+human study, mock latency, confirm-or-undo unwatched. It links into the report's
+first page rather than restating it. One duplicated *Read CLAUDE.md* paragraph
+introduced by the rewrite was removed; all links verified.
+
+---
+
 ### Eval freeze: no eval runs in the 24 hours before Saturday 2026-09-26
 
 **The window is Friday 2026-09-25 00:00 to Saturday 2026-09-26 00:00.** Nothing
