@@ -4,14 +4,22 @@ Edge items had unit coverage (`test_edge_item_anchors.py` and the eval-side
 tests) and none of it went through the endpoint: only `test_session_exit.py` and
 `test_response_pairing.py` use the client fixture, and neither answers with an
 edge. So grading an edge, the reversed-edge case and the `from`/`to` wire alias
-had never been exercised end to end. A 60-turn smoke drive did not reach the
-path either - selection served only `node_click` and `mcq` - which is exactly
-why it needs a test rather than a drive.
+had never been exercised end to end.
 
-**Selection is bypassed on purpose.** `next_node` picks a node and `_pick_item`
-picks its item; neither can be steered to an edge item from outside, so these
-tests seed `start_item` and then use real requests for everything that matters -
-grading, mastery, the response contract. Only the choice of item is forced.
+**Selection is bypassed on purpose, and the reason is not that edge items are
+unreachable.** A correct-answer drive does reach one - measured at turn 22 of 25
+- but the item it reaches is `scorable: false`, which is the common case: 32 of
+the 49 edge items are determined by their anchor and score nothing. Driving to a
+*scorable* edge item is what cannot be arranged from outside, because
+`next_node` picks a node and `_pick_item` picks its item and neither takes a
+request. So these tests seed `start_item` on a scorable edge item and then use
+real requests for everything that matters - grading, mastery, the response
+contract. Only the choice of item is forced.
+
+(An earlier version of this docstring said a drive never reaches the path at
+all. That came from a wrong-answer drive, which keeps the student on early nodes
+and never gets there. The claim was wrong and the conclusion happened to be
+right, which is the more dangerous shape of the two.)
 
 The alias matters more than it looks: `from` is a Python keyword, so `EdgeRef`
 declares `from_` with `alias="from"`. The client sends `{from, to}`. If that
