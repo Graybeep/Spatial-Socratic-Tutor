@@ -651,6 +651,51 @@ identical in a trace.
 
 ---
 
+### 2026-09-22 (day 19) — FEATURE FREEZE, tagged. Demo-path fixes only from here.
+
+Brought forward from day 22. Tag `feature-freeze` at `e71c6c5`. **No eval runs
+from here on: the numbers are final.**
+
+**Fresh-clone test, because a grader will try that path first.** Cloned to an
+empty directory, no `.env`, no key, README followed verbatim in a clean venv:
+
+| step | time |
+|---|---|
+| `git clone` | 2s |
+| `python -m venv` + `pip install -r requirements.txt` | 55s |
+| `python -m build.validate` | 5s (0 errors, 8 warnings) |
+| `python -m pytest` | 59s (537 passed) |
+| `python -m server.main` → serving | 8s |
+| `npm ci` + `npm run dev` | 18s |
+
+**~90 seconds from clone to a served page**, 2.5 minutes including the suite.
+It ran first try: `/health` 200, `/session` and `/turn` 200, the client shell
+served on 5173, and **CORS preflight from `http://localhost:5173` accepted** —
+the two-server dev setup's classic failure, checked rather than assumed. The
+client falls back to `http://127.0.0.1:8000` with no client `.env`.
+
+**Three README fixes it forced**, all because the text was accurate for someone
+who already had the repo working:
+
+- **No venv step.** §1.8 pins exact versions, and `pip install` into a populated
+  environment will not downgrade what is there. Now the first instruction.
+- **`build.validate` was described as "strict; must be clean".** It exits 0 and
+  prints 8 warnings. A grader reads "must be clean", sees eight warnings, and
+  concludes the install is broken. The README now states the expected output
+  verbatim and says only `0 error(s)` matters.
+- **No expected outputs at all.** Each command now says what success looks like.
+
+**Pre-flight: the 24h eval-freeze veto is removed.** It conflated a calendar rule
+with the only question a pre-flight can answer — *is there budget for this take*.
+A run the night before is harmless if it left headroom and fatal if it did not,
+and the headroom check already decides that. `TAKE_BUDGET` is now the single
+gate, raised **40,000 → 90,000**: one measured turn cost 5,353 tokens, so a
+20-turn take is ~107,000 and the old figure would have passed a pre-flight for a
+take the budget could not hold. Still provisional — replace it with the first
+take's measured figure.
+
+---
+
 ### Eval freeze: no eval runs in the 24 hours before Saturday 2026-09-26
 
 **The window is Friday 2026-09-25 00:00 to Saturday 2026-09-26 00:00.** Nothing

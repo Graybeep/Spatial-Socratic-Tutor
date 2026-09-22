@@ -26,6 +26,14 @@ silent at the moment it matters:
   invisible: the provider reports a per-MINUTE remaining figure in response
   headers and nothing at all about the day.
 
+**There is no 24-hour eval-freeze check, by design.** An earlier version failed
+the run if any model call appeared in the trailing 24 hours. That conflated two
+different things: a calendar rule about when evals may run, and the only
+question a pre-flight can actually answer - **is there budget left for this
+take**. A run the night before is harmless if it left headroom and fatal if it
+did not, and the headroom check already says which. Recent calls are reported by
+`--report`, where they are information rather than a veto.
+
 Each check below is a thing that has a definite answer locally, printed whether
 it passes or fails, because a pre-flight that only speaks up on failure teaches
 nobody what it actually verified.
@@ -185,25 +193,6 @@ def check_token_budget(rows: list, now: Optional[float] = None) -> Check:
     return Check("tokens", True, detail)
 
 
-def check_no_recent_eval(rows: list, now: Optional[float] = None) -> Check:
-    """`docs/schedule.md` books an eval freeze in the 24h before the recording.
-
-    Decided from the ledger rather than from `turns.jsonl`: an eval run that
-    touched the model is exactly a run that spent tokens, and an offline eval
-    (`leak_monitor`, `graph_quality`, `distractor_screen`) makes no call and is
-    correctly invisible here.
-    """
-    now = time.time() if now is None else now
-    recent = [r for r in rows if (now - (r.get("ts") or 0)) < WINDOW_S]
-    if not recent:
-        return Check("eval freeze", True, "no model call in the last 24h")
-    newest = max(r.get("ts") or 0 for r in recent)
-    ago = (now - newest) / 3600.0
-    return Check("eval freeze", False,
-                 f"{len(recent)} model call(s) in the last 24h, most recent "
-                 f"{ago:.1f}h ago")
-
-
 def probe() -> Check:
     """A 1-token request. Pass/fail on credentials and connectivity only."""
     if CONFIG.mock_mode:
@@ -275,7 +264,6 @@ def run(expect_mock: Optional[bool], with_probe: bool = False) -> list:
         check_fresh_state(),
         check_mock_mode(expect_mock),
         check_token_budget(rows),
-        check_no_recent_eval(rows),
     ]
     if with_probe:
         checks.append(probe())
