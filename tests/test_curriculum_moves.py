@@ -165,8 +165,13 @@ def test_the_inference_cannot_separate_a_coincident_two_failure_backtrack():
     """The documented bound, pinned so the docstring cannot quietly become
     false. A §7 two-failure backtrack on a turn where Call 1 also asked to step
     back reads as the model's, because `requested_action` is all there is to
-    read. This is the ambiguity `backtrack_origin` was added to remove, and on
-    pre-day-19 records it makes `backtrack:model` an upper bound."""
+    read. This is the ambiguity `backtrack_origin` was added to remove.
+
+    It bounds the REQUEST count only. On pre-day-19 builds a model request could
+    not move the curriculum at all - the sole `start_item` on a backtrack sat
+    inside the two-failure branch - so model-initiated MOVES are zero by
+    construction there. A pre-day-19 `backtrack:model` turn that moved was the
+    two-failure rule moving it with the model agreeing by coincidence."""
     coincident = _turn(server_action="backtrack",
                        call1={"requested_action": "backtrack"})
     assert CM.infer_origin(coincident) == "model"
