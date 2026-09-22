@@ -412,6 +412,16 @@ item and the rung has already been spent). The two-failure path is untouched.
 Both paths tested, gate mutation-tested, and turns now log `backtrack_origin`
 (`server` / `model` / `refused`) so the next count is attributable.
 
+**The log end is held too, later the same day.** The gate tests assert on
+`Phase1`, which is the deciding end of the wire; the count will read
+`logs/turns.jsonl`. `_log` could have stopped writing the field, or written it
+for the wrong turns, with every gate test still green — the day-18 problem
+repeating silently in the place it was found. `tests/test_backtrack_origin_reaches_the_log.py`
+drives complete turns and asserts on the written record: one case per origin,
+`None` on a turn that moved nothing backwards, and the vocabulary pinned to those
+four values so a fourth spelling is not a silent new bucket. Mutation-checked
+both ways — field always `None`, and a refusal mislabelled as the model's.
+
 **No eval re-run is needed for this** and none was done: the day-18 §9.5 and §6.1
 figures are diagnosis and utterance measurements, and neither depends on which
 rule moved the curriculum. The change is in the demo path, so it wants a manual
