@@ -394,9 +394,13 @@ floor would fire on turns that are already being hinted. If a future run shows
 ### 2026-09-22 (day 19) — a backtrack that never backtracked
 
 Found while counting curriculum moves for §5.6's containment argument, from the
-day-18 log, no new calls. Of **13 moves in 40 turns**: 6 `advance` the model also
-asked for, 6 `backtrack` the server performed while the model asked for a hint,
-and **1 `backtrack` the model requested and got**.
+day-18 log, no new calls. Of 40 turns, **13 emitted a curriculum action and 12
+moved the curriculum**: 6 `advance` the model also asked for, 6 `backtrack` the
+server performed while the model asked for a hint, and **1 `backtrack` the model
+requested, which moved nothing**.
+
+*(This sentence said "13 moves" until later on day 19, which was the same
+conflation the rest of the entry is about. See the day-19 recount entry below.)*
 
 That last one could not be attributed, and chasing it found a hole.
 `action = decision.requested_action`, so a Call 1 asking to step back got the
@@ -427,6 +431,48 @@ figures are diagnosis and utterance measurements, and neither depends on which
 rule moved the curriculum. The change is in the demo path, so it wants a manual
 pass before the walkthrough — added to the projector-test session, which is still
 unbooked.
+
+---
+
+### 2026-09-22 (day 19, later) — the recount, and a number that argued with itself
+
+The day-19 entry above was written from a hand pass over the day-18 log. Writing
+the tool that should have produced it found that the pass had made, in its own
+reporting, the same conflation the bug was about: it counted turns that **emitted**
+a curriculum action and called them turns on which the curriculum **moved**, then
+said two sentences later that one of them moved nothing.
+
+`eval/curriculum_moves.py` derives the split from `logs/turns.jsonl` — no key, no
+network, no model call, so the eval freeze does not apply. It decides movement by
+testing whether `item_id` changed within a session, rather than trusting the
+action label, which is what makes the two numbers different at all.
+
+| build | turns | emitted | moved | server overrode Call 1 |
+|---|---|---|---|---|
+| `18d220d` (day 18) | 40 | **13** | **12** | 6 of 12 moved |
+| `77b7e5d-dirty` (day 12, withdrawn) | 40 | 12 | 12 | 11 of 12 moved |
+
+The stationary turn is named rather than merely subtracted: `sess_88764468ce90`
+turn 4, item stayed `itm_0021`. Results are committed under `eval/results/`.
+
+**Three documents carried the old figure and now do not:** `report.md` §5.6 (the
+containment argument), this file's day-19 entry, and
+[diagnosis-readthrough.md](writeup/diagnosis-readthrough.md), whose override row
+was the worst of the three — its two columns used *different denominators*, 12
+moved against 13 emitted, in one side-by-side comparison. They coincide for day
+12 and diverge for day 18, which is how it survived being read.
+
+**It is recorded in `report.md` §6 as the seventh failure**, because the lesson
+is that section's own closing question turned inward: the report asks what every
+number was computed over, and did not ask it of a number computed by hand, once,
+with nothing able to disagree.
+
+**One limitation is stated rather than fixed.** On records predating day 19, a
+§7 two-failure backtrack landing on a turn where Call 1 also asked to step back
+is indistinguishable from a model-initiated one, so `backtrack:model` is an
+upper bound there. That case is in the corpus (day 12, `sess_2acfcff9b419`).
+The day-18 reading does not rest on it: its one `backtrack:model` turn was
+stationary, and a two-failure backtrack always moves the item.
 
 ---
 

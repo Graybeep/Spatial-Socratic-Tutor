@@ -226,6 +226,7 @@ NARROW_SCHEDULE=0,25,18,12,8 python -m server.main
 | `eval/graph_quality.py` | §9.3 extraction recall ceiling; deterministic, no key |
 | `eval/leak_monitor.py` | §6.1 layer-1 rate from the log; refuses to pool builds, origins or report a mock |
 | `eval/diagnosis_readthrough.py` | §9.5 — 30 diagnoses against ground truth; refuses to run on the mock |
+| `eval/curriculum_moves.py` | §5.6's containment count from the log; separates actions *emitted* from curriculum *moved* |
 | **`docs/writeup/report.md`** | **the assembled report — start here** |
 | `docs/writeup/diagnosis-readthrough.md` | §9.5 — the tutor's model of the student, against a truth it could not see |
 | `docs/writeup/instrument-failures.md` | the harness producing confident verdicts while itself broken; the fix generalises |

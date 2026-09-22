@@ -1,0 +1,37 @@
+{
+  "77b7e5d-dirty:real": {
+    "build": "77b7e5d-dirty",
+    "mode": "real",
+    "turns": 40,
+    "sessions": 10,
+    "emitted_total": 12,
+    "moved_total": 12,
+    "overrode_emitted": 11,
+    "overrode_moved": 11,
+    "emitted": {
+      "advance": 7,
+      "backtrack:model": 1,
+      "backtrack:server": 4
+    },
+    "moved": {
+      "advance": 7,
+      "backtrack:model": 1,
+      "backtrack:server": 4
+    },
+    "stationary": [],
+    "first_turn_moves": 0,
+    "origin_disagreements": [],
+    "provenance": {
+      "population": 10,
+      "distinct": 10,
+      "observations": 40,
+      "unit": "sessions",
+      "expect_full": true,
+      "coverage": 1.0,
+      "complete": true,
+      "code": "7bdd303",
+      "generated_at": "2026-09-22T10:58:27+0530"
+    },
+    "provenance_problem": null
+  }
+}

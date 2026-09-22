@@ -65,7 +65,24 @@ Set against the table below, which is the same measurement through the
 | `zero` → `guessing` | 0 of 12 | **12 of 12** |
 | `zero` → `on_track` | 5 of 12 | 0 |
 | `confused_prereq` ever used | never, 0 of 30 | 4 |
-| server overrode Call 1 where the curriculum moved | 11 of 12 | 6 of 13 |
+| server overrode Call 1 where the curriculum moved | 11 of 12 | **6 of 12** |
+
+**The last row was wrong until day 19, and in a way worth naming.** It read
+`6 of 13`: the day-12 cell used a count of turns on which the curriculum *moved*
+and the day-18 cell a count of turns that *emitted* a curriculum action, so the
+two columns of one comparison had different denominators. They coincide for day
+12 (all 12 of its curriculum actions moved) and diverge for day 18 (13 emitted,
+12 moved), which is exactly why the mismatch survived being read. Both cells are
+now the moved count, and both are re-derivable:
+
+```bash
+python -m eval.curriculum_moves --build 77b7e5d-dirty   # 11 of 12 moved
+python -m eval.curriculum_moves --build 18d220d         #  6 of 12 moved
+```
+
+Day 12's run stays withdrawn for cause and is not a comparator for any claim
+about the prompt; this row describes what the `role: text` bug did, which is a
+statement about the bug and not a result.
 
 The prose changed with it. Day 12's diagnoses were specific about the *item* and
 silent about the person; day 18's name the clicks:
