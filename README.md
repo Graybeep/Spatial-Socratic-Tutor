@@ -309,6 +309,7 @@ NARROW_SCHEDULE=0,25,18,12,8 python -m server.main
 | `server/preflight.py` | demo pre-flight — clean main, fresh state.db, declared MOCK_MODE, 24h token budget |
 | `server/llm.py` | three providers behind one seam: Anthropic, Groq, and a local OpenAI-compatible server |
 | `docs/human-tests.md` | one page for the two tests that need a room, a projector and a person |
+| `docs/walkthrough-script.md` | the three-minute demo script, and what not to promise on camera |
 | `docs/dim-values.md` | the shipped dim tokens, and where the projector test's outcome gets recorded |
 | `docs/schedule.md` | dated commitments and their pass/fail — next: projector test, week 3 (slipped from 09-14) |
 | `client/src/Chat.tsx` | the rail — transcript, composer, turn budget, node panel |

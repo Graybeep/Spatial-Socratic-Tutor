@@ -146,12 +146,13 @@ much smaller scale.
 | ~~2026-09-16~~ 2026-09-21 | 13 → 18 | **repeat §9.5 on `gpt-oss-120b`**, the model the demo ships — now also the first §9.5 run in which the model can see the dialogue | **RUN AND COMPLETE**, 30/30 fields, five days late. See below |
 | — | 12 → 18 | §6.1 parametric-reconstruction rate | ~~**0/60, reported as a bound.**~~ Withdrawn day 13, run later ruled inadmissible; **re-measured day 18 as 0/34**, one-sided 95% bound 8.4%. See below |
 | ~~2026-09-17~~ | 14 | **dependency freeze** (§1.8), end of week 2 | **MET a day early**, on day 13 — enforced by a test, see below |
-| **2026-09-25 00:00 → 2026-09-26 00:00** | 21–22 | **eval freeze: no eval runs in the 24h before Sat 26** | booked, see below |
-| 2026-09-25 (Fri) | 22 | **feature freeze.** Tag `feature-freeze` | pending |
-| ~~2026-09-29~~ **2026-09-26 (Sat)** | ~~26~~ 23 | **video walkthrough recorded.** Tag `demo` **after** the recording, not before | pending — **script it around narrowing, not mastery.** See below |
-| 2026-09-24 (Thu) | 21 | **rehearsal**, last day the live model may be used | pending — run `python -m server.preflight --report` after it and replace `TAKE_BUDGET` |
+| ~~2026-09-25 → 09-26~~ **from day 19** | 19→ | ~~eval freeze: 24h before Sat 26~~ **SUPERSEDED: no eval runs at all from day 19. The numbers are final.** | in force |
+| ~~2026-09-25~~ **2026-09-22** | ~~22~~ **19** | **feature freeze.** Tag `feature-freeze` | **DONE, three days early**, at `e71c6c5`. Demo-path fixes only from here |
+| ~~2026-09-29~~ **2026-09-26 (Sat)** | ~~26~~ 23 | **video walkthrough recorded.** Tag `demo` **after** the recording, not before | pending — **script written**: [walkthrough-script.md](walkthrough-script.md) |
+| 2026-09-24 (Thu) | 21 | **rehearsal**: pick the provider on measured turns, then `python -m server.preflight --report` and replace `TAKE_BUDGET` | pending |
 
-Tags cut so far: `schemas-frozen`, `graph-frozen`, `loop-working`.
+Tags cut so far: `schemas-frozen`, `graph-frozen`, `loop-working`, `feature-freeze`.
+Left: `demo`, after Saturday's recording and not before.
 
 ### 2026-09-15 (day 12) — a key arrived, and it is not an Anthropic key
 
@@ -731,6 +732,40 @@ verbatim eighty lines later, so it now carries only the ordering argument; §7's
 "the seven above" became a reference to §6's mechanisms; six in-page anchors
 were wrong because `§` and em-dashes do not slugify the way I assumed. All
 links, in-page and file, now resolve.
+
+---
+
+### 2026-09-22 (day 19) — the walkthrough script
+
+Day 13 said *"script it around narrowing, not mastery"* and left it as a
+checkbox. [walkthrough-script.md](walkthrough-script.md) is the script: three
+beats over three minutes, every number in it measured rather than estimated.
+
+**Three beats.** The frozen map (52 lit, and why the layout never moves); the
+narrowing, which lands on **turn two** at 52 → 12 and again at 12 → 9, held in
+silence so the camera sees the graph move *before* the sentence exists; and
+pointing as the answer, which is §12's actual contribution.
+
+**Three things it forbids on camera**, each because the measurement says so:
+
+- **Not** *"watch the graph light up as they learn"* — a flawless student
+  masters 0 nodes in 15 turns and 1 in 20. Mastery colour is invisible at demo
+  length. Open from a returning student if it must appear.
+- **Not** any claim the visual arm won. One cell in nine: +8.6, CI [+1.9, +16.4].
+- **Not** any implication the graph was extracted. It is hand-authored.
+
+**One thing found while writing it, and it is a scripting problem rather than a
+bug.** `ItemPublic` carries `id`, `difficulty` and `scorable` and **no prompt**:
+§1.6 renders exactly one text field, and Call 2 is deliberately denied the item,
+so the item's actual question never reaches the screen. The opening line is
+therefore generic — *"Have a look at the map. Which node fits?"* The presenter
+narrates the real question. Worth knowing before Saturday rather than during it.
+
+**A latency row was left deliberately empty.** Groq's Call 1 p50 is 2.3s from
+day 12 and **its Call 2 has never been timed**, so the script gives no cloud
+turn total and says to measure it Thursday. The local pair is timed end to end
+(56.8s + 24.3s = ~81s/turn, n=1), so only the local figure carries a
+20-turn estimate: ~27 minutes.
 
 ---
 
