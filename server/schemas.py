@@ -18,7 +18,7 @@ from __future__ import annotations
 
 from typing import Literal, Optional
 
-from pydantic import BaseModel, computed_field, ConfigDict, Field
+from pydantic import BaseModel, computed_field, ConfigDict, Field, model_validator
 
 SCHEMA_VERSION = "1.0"
 
@@ -179,6 +179,17 @@ class EdgeRef(Strict):
     to: str
 
 
+#: Which payload field each `type` must carry, and must carry alone. Module
+#: level so a test can assert against the same mapping the validator uses
+#: rather than restating it.
+PAYLOAD_FIELD = {
+    "node_click": "node_id",
+    "edge_click": "edge",
+    "mcq": "choice_id",
+    "text": "text",
+}
+
+
 class StudentResponse(Strict):
     """What the student did. Null on session open.
 
@@ -196,6 +207,38 @@ class StudentResponse(Strict):
     node_id: Optional[str] = None
     edge: Optional[EdgeRef] = None
     choice_id: Optional[str] = None
+
+    @model_validator(mode="after")
+    def _pairing_is_enforced(self):
+        """Reject a mismatch rather than guessing, which is what the docstring
+        above always claimed and what the code did not do.
+
+        Every payload field is Optional because one `type` uses each, so a
+        response could arrive naming `node_click` and carrying no `node_id` and
+        still be schema-valid. It was then graded like any other answer - as a
+        WRONG one - which decays theta and increments the failure count toward a
+        backtrack. CLAUDE.md §8 exists to stop a misclick corrupting mastery; a
+        malformed click corrupted it the same way through a different door.
+
+        Rejecting at the model boundary means FastAPI answers 422 and `turn.py`
+        never sees it, so there is no second place this can be got wrong.
+        """
+        required = PAYLOAD_FIELD[self.type]
+        value = getattr(self, required)
+        if value is None or (isinstance(value, str) and not value.strip()):
+            raise ValueError(
+                f"{self.type!r} must carry a non-empty {required!r}"
+            )
+        extra = [
+            f for f in PAYLOAD_FIELD.values()
+            if f != required and getattr(self, f) is not None
+        ]
+        if extra:
+            raise ValueError(
+                f"{self.type!r} carries {required!r}, not {sorted(extra)!r} - "
+                f"a response that names two answers names none"
+            )
+        return self
 
 
 class TurnRequest(Strict):
