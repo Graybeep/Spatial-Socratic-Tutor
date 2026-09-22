@@ -467,11 +467,21 @@ is that section's own closing question turned inward: the report asks what every
 number was computed over, and did not ask it of a number computed by hand, once,
 with nothing able to disagree.
 
-**One limitation is stated rather than fixed.** On records predating day 19, a
-§7 two-failure backtrack landing on a turn where Call 1 also asked to step back
-is indistinguishable from a model-initiated one, so `backtrack:model` is an
-upper bound there. That case is in the corpus (day 12, `sess_2acfcff9b419`).
-The day-18 reading does not rest on it: its one `backtrack:model` turn was
+**One limitation is stated rather than fixed, and it is narrower than first
+written.** On records predating day 19, a §7 two-failure backtrack landing on a
+turn where Call 1 also asked to step back is indistinguishable from a
+model-initiated one, so `backtrack:model` is an upper bound **as a count of
+requests**. That case is in the corpus (day 12, `sess_2acfcff9b419` turn 2).
+
+It does **not** bound the move count. On pre-day-19 builds the only `start_item`
+on a backtrack sits inside the two-failure branch behind a `consecutive_failures`
+guard, so a model request moved nothing at all: **model-initiated moves are zero
+by construction there, not bounded.** Any pre-day-19 move labelled `model` was
+the server's two-failure rule with the model agreeing by coincidence. The first
+version of this entry applied the bound to both counts, which was too weak in
+the direction that matters.
+
+The day-18 reading does not rest on either: its one `backtrack:model` turn was
 stationary, and a two-failure backtrack always moves the item.
 
 ---

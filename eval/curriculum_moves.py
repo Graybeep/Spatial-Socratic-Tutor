@@ -73,17 +73,27 @@ request `backtrack`, the server moved the curriculum and the model merely agreed
 `77b7e5d-dirty`, `sess_2acfcff9b419` turn 2, where the preceding two turns both
 scored false and the item moved `itm_0026 -> itm_0021`.
 
-So on pre-day-19 records **`backtrack:model` is an upper bound on
-model-initiated backtracks, not a count of them.** This is not a defect in the
-inference; it is the ambiguity that made `backtrack_origin` worth adding, stated
-where a reader of the number will meet it. On day-19-and-later records the field
-is authoritative and the bound is exact.
+The ambiguity is in the **request label only, and it does not reach the move
+count.** On pre-day-19 builds the sole `start_item` call on a backtrack sits
+inside the two-failure branch, guarded by `consecutive_failures`; a model
+request reached `action = decision.requested_action` and touched no state
+(`18d220d:server/turn.py` lines 687-701, against current `server/turn.py:676`).
+So:
 
-Note that the day-18 reading survives this caveat rather than depending on it:
-its one `backtrack:model` turn was *stationary*, and a two-failure backtrack
-always moves the item. So that turn cannot have been a coincident server
-backtrack, which is what makes it evidence of the hole rather than of the
-ambiguity.
+- **`backtrack:model` as a request count is an upper bound**, because a
+  coincident two-failure backtrack is labelled `model` whenever Call 1 also
+  asked for one.
+- **`backtrack:model` as a move count is exactly zero, by construction**, not a
+  bound. Every pre-day-19 move labelled `model` was the two-failure rule moving
+  the curriculum with the model agreeing by coincidence.
+
+On day-19-and-later records `backtrack_origin` is authoritative and neither
+caveat applies.
+
+The day-18 reading does not rest on any of this: its one `backtrack:model` turn
+was *stationary*, and a two-failure backtrack always moves the item. So that
+turn cannot have been a coincident server backtrack, which is what makes it
+evidence of the hole.
 
 THE OVERRIDE COUNT
 ------------------
