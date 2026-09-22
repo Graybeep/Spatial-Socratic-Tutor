@@ -54,6 +54,59 @@ log = logging.getLogger("tutor.llm")
 STATS = {"call1": 0, "call2": 0, "retries": 0, "parse_failures": 0,
          "timeouts": 0, "rate_limited": 0}
 
+#: The token ledger. One line per PROVIDER RESPONSE, beside `turns.jsonl`.
+#:
+#: STATS counts calls, which is not what a quota is denominated in. The demo
+#: pre-flight has to answer "does the trailing 24h leave room for one more
+#: take", and that question needs tokens, not call counts - a Call 1 on
+#: gpt-oss-120b costs ~2,750 because the model emits reasoning before the tool
+#: call, and a Call 2 costs a fraction of that. Multiplying calls by a guessed
+#: average is how a pre-flight passes a machine that is out of budget.
+#:
+#: Written per RESPONSE rather than per successful call, because a parse failure
+#: and a refusal both cost their tokens in full. A ledger that only recorded
+#: successes would under-report exactly the days that went badly.
+LEDGER_NAME = "tokens.jsonl"
+
+
+def _usage(payload: dict) -> tuple:
+    """(prompt, completion) tokens, normalised across the two wire formats.
+
+    Anthropic says `input_tokens`/`output_tokens`; Groq's OpenAI-compatible
+    endpoint says `prompt_tokens`/`completion_tokens`. Missing is 0 rather than
+    None - a provider that stops reporting usage should show as zero spend in
+    the ledger and be caught by the reconciliation, not crash a turn.
+    """
+    usage = payload.get("usage") or {}
+    prompt = usage.get("prompt_tokens", usage.get("input_tokens")) or 0
+    completion = usage.get("completion_tokens", usage.get("output_tokens")) or 0
+    return int(prompt), int(completion)
+
+
+def _write_ledger(cfg: LLMCallConfig, label: str, payload: dict) -> None:
+    """Append one response's token spend. NEVER raises.
+
+    A ledger write must not be able to fail a turn - the same rule the build
+    stamp in `server/turn.py` follows. A machine with a read-only logs directory
+    still serves; it just cannot pre-flight.
+    """
+    try:
+        prompt_tokens, completion_tokens = _usage(payload)
+        record = {
+            "ts": time.time(),
+            "call": label,
+            "provider": CONFIG.llm_provider,
+            "model": cfg.model,
+            "prompt_tokens": prompt_tokens,
+            "completion_tokens": completion_tokens,
+            "total_tokens": prompt_tokens + completion_tokens,
+        }
+        CONFIG.log_dir.mkdir(parents=True, exist_ok=True)
+        with (CONFIG.log_dir / LEDGER_NAME).open("a", encoding="utf-8") as fh:
+            fh.write(json.dumps(record, ensure_ascii=False) + "\n")
+    except Exception:  # noqa: BLE001 - see docstring
+        log.warning("token ledger write failed", exc_info=True)
+
 
 class LLMError(RuntimeError):
     """Raised when a call cannot produce a valid object after its retries.
@@ -410,6 +463,10 @@ def _invoke(cfg: LLMCallConfig, system: str, user: str, tool: _Tool, label: str)
             continue
 
         payload = r.json()
+
+        # Before extraction: these tokens are spent whether or not the tool call
+        # parses. See LEDGER_NAME.
+        _write_ledger(cfg, label, payload)
 
         # A refusal is a 200 with no tool call. Do not read content blindly.
         args, complaint = extract(payload)
