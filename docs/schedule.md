@@ -147,8 +147,9 @@ much smaller scale.
 | — | 12 → 18 | §6.1 parametric-reconstruction rate | ~~**0/60, reported as a bound.**~~ Withdrawn day 13, run later ruled inadmissible; **re-measured day 18 as 0/34**, one-sided 95% bound 8.4%. See below |
 | ~~2026-09-17~~ | 14 | **dependency freeze** (§1.8), end of week 2 | **MET a day early**, on day 13 — enforced by a test, see below |
 | **2026-09-25 00:00 → 2026-09-26 00:00** | 21–22 | **eval freeze: no eval runs in the 24h before Sat 26** | booked, see below |
-| 2026-09-25 | 22 | **feature freeze.** Tag `feature-freeze` | pending |
-| 2026-09-29 | 26 | **video walkthrough recorded.** Tag `demo` | pending — **script it around narrowing, not mastery.** See below |
+| 2026-09-25 (Fri) | 22 | **feature freeze.** Tag `feature-freeze` | pending |
+| ~~2026-09-29~~ **2026-09-26 (Sat)** | ~~26~~ 23 | **video walkthrough recorded.** Tag `demo` **after** the recording, not before | pending — **script it around narrowing, not mastery.** See below |
+| 2026-09-24 (Thu) | 21 | **rehearsal**, last day the live model may be used | pending — run `python -m server.preflight --report` after it and replace `TAKE_BUDGET` |
 
 Tags cut so far: `schemas-frozen`, `graph-frozen`, `loop-working`.
 
@@ -486,13 +487,75 @@ stationary, and a two-failure backtrack always moves the item.
 
 ---
 
+### 2026-09-22 (day 19, later still) — the demo path gets a flag, a ledger and a pre-flight
+
+Three things, all on the demo path, all before Friday's feature freeze.
+
+**`MODEL_BACKTRACK`, and it did not exist.** It was assumed to be on `main`
+already; `git log --all -S MODEL_BACKTRACK` returns nothing, so the day-19 gate
+had been shipping unconditional. It now exists and **defaults to false**: with
+it off, every `backtrack` Call 1 requests degrades to `BACKTRACK_REFUSED_ACTION`
+and only §7's two-failure rule moves the student backwards. The finer mastery
+gate is still underneath and only runs when the lever is on.
+
+Off is also the honest default for the report: **before day 19 a model request
+moved nothing in any case**, so `false` is the behaviour every measurement was
+taken under. Both settings are tested, and the gate is mutation-tested in both
+directions (default flipped on; flag not consulted).
+
+**A token ledger, because `STATS` counts calls and a quota counts tokens.**
+`server/llm.py` now appends one line per provider response to
+`logs/tokens.jsonl` — model, timestamp, prompt and completion tokens —
+normalised across both wire formats. It is written **before** extraction, so a
+refusal or an unparseable tool call is recorded at full cost; a ledger that only
+recorded successes would under-report exactly the days that went badly. The
+write can never raise.
+
+**A pre-flight that fails loudly.** `python -m server.preflight` checks clean
+`main` (not `-dirty`), absent `state.db`, `MOCK_MODE` against a *declared*
+expectation, trailing-24h spend on the Call 1 model against `TPD_LIMIT` leaving
+at least `TAKE_BUDGET`, and no model call in the last 24 hours. Each check
+prints whether it passed or failed, because a pre-flight that only speaks up on
+failure teaches nobody what it verified.
+
+**The provider probe was considered and is not the budget check.** Groq's
+`x-ratelimit-remaining-tokens` is the *per-minute* window and there is no daily
+equivalent in the headers, so a probe would report a number that refills in
+sixty seconds and say nothing about the limit that ends the day. `--probe`
+exists, sends one token, and claims only that credentials and connectivity work.
+
+**`TAKE_BUDGET=40000` is provisional and nothing has measured a take.** After
+Thursday's rehearsal, `python -m server.preflight --report` gives per-turn mean
+and max from the ledger, takes-per-day at `TPD_LIMIT`, and the minimum seconds
+per turn at 8,000 TPM. Replace the default with the measured figure — a
+pre-flight trusted against a guess is worse than no pre-flight.
+
+**Kit for the human tests** is [human-tests.md](human-tests.md) (one page, both
+tests, the reset commands, and the day-19 backtrack path to watch) and
+[dim-values.md](dim-values.md) (the shipped tokens, and where to record what the
+projector said). The dim tokens live in **two** files — `client/src/tokens.css`
+drives the demo, `client/contrast-check.html` is what you tune against — and
+nothing syncs them. They agree as of today; if the test moves a value and only
+the test page changes, the finding is lost and the demo ships the old number.
+
+---
+
 ### Eval freeze: no eval runs in the 24 hours before Saturday 2026-09-26
 
 **The window is Friday 2026-09-25 00:00 to Saturday 2026-09-26 00:00.** Nothing
 in `eval/` that touches the model runs inside it.
 
-This is a standing instruction recorded on day 18; the reason for the Saturday
-date is not written down here, and whoever reads this later should not infer one.
+**The reason for the Saturday date is now known: the recording is Saturday
+2026-09-26.** This was recorded on day 18 as a bare instruction with its purpose
+missing, and this file said so rather than guessing. The window is the 24 hours
+before the take, and it exists so the recording does not open on a machine whose
+daily token budget was spent on an eval the night before. `TAKE_BUDGET` and the
+pre-flight's trailing-24h check are the same constraint made checkable.
+
+That also moves the walkthrough **earlier**, from 2026-09-29 to 2026-09-26.
+CLAUDE.md §11 asks for the video *by* day 26, which is a deadline and not a
+date; Saturday is day 23 and comfortably inside it.
+
 What matters operationally is the deadline it creates:
 
 - **Anything needing the live model must finish by end of Thursday
