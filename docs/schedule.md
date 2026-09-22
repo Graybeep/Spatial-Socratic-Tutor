@@ -431,9 +431,12 @@ What matters operationally is the deadline it creates:
 
 - **Anything needing the live model must finish by end of Thursday
   2026-09-24.** That is inside week 3, which ends the same day.
-- The still-open model-dependent work is listed under day 18 below: the §9.5
-  model control on `qwen3.8-27b`, and any re-run of §6.1 or §9.5 on a later
-  build. If they do not happen by Thursday they do not happen before Saturday.
+- **Nothing model-dependent is open against this deadline.** When this was
+  written, the §9.5 model control on `qwen3.8-27b` was the last item under it;
+  it was closed the same day, not run — see the day-18 prompt A/B entry above.
+  What remains possible rather than planned is a re-run of §6.1 or §9.5 on a
+  later build. If one becomes necessary it has to happen by Thursday; as of
+  day 19 none is.
 - It collides with the **feature freeze on 2026-09-25** (day 22), which is the
   first day of the window. A feature freeze normally invites one last
   verification run; here it cannot have one. So the last full verification has
