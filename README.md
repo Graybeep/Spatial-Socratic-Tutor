@@ -12,52 +12,56 @@ schedule. Do not re-litigate decisions in it mid-implementation.
 
 ## Status
 
-Schemas frozen, mock server running, client rendering the graph against it.
+**Feature freeze cut on 2026-09-22 (day 19), three days early, at `e71c6c5`.**
+Demo-path fixes only from here; no eval runs — the numbers are final. The
+walkthrough is recorded 2026-09-23 and tagged `demo` after, not before.
 
-The chapter graph has landed: 52 hand-authored nodes over Peterson & Davie
-ch. 6 (Congestion Control), CC BY 4.0 — see `data/SOURCE.md` for attribution and
-for why it is hand-authored and why `gold_graph.json` was frozen *before* any
-extractor exists.
+Tags so far: `schemas-frozen`, `graph-frozen`, `loop-working`, `feature-freeze`.
 
-**The tutor loop now runs against a real model.** `MOCK_MODE=true` is still the
-committed default — the whole demo runs with no key and no network — but a key
-arrived on day 12, seven days before the cut, and it is a **Groq** key rather
-than an Anthropic one. `server/llm.py` speaks both wire formats behind
-`LLM_PROVIDER`; the schema does not move between them. The tutor runs
-`openai/gpt-oss-120b` on Call 1 and `gpt-oss-20b` on Call 2, **not Claude**, and
-the writeup says so. What that cost and what it still constrains is in
-`docs/schedule.md` under *day 12*.
+| | |
+|---|---|
+| Tests | **537** green |
+| Graph | **52** hand-authored nodes, 66 prereq edges, one chapter |
+| Item bank | **260** items, **69** scorable |
+| Providers | **3** — Anthropic, Groq, any OpenAI-compatible local server |
+| Fresh clone to a served page | **~90s**, no key, no network |
 
-**The chapter itself has now landed too.** `python -m build.fetch_chapter &&
-python -m build.chunk --html` produces `data/chunks.json` — 15 section-aligned
-chunks, sections 6.1–6.4 — and retrieval runs over it with no key and no model
-call, so `advance` and `explain` cite the chapter even in `MOCK_MODE`.
+### What it does
 
-**And §5's answer masking is no longer inert.** `answer_spans` was `[]` for all
-260 items while there was no chunk to offset into; once there was one, that
-absence became a live leak on `advance` and `explain` and nothing failed.
-`python -m build.annotate_spans` populates the offsets against the chunk
-retrieval actually serves, `build/validate.py` re-derives every one of them, and
-layer-1 hits on `advance` went from 6 in a 258-turn session to 0. The same pass
-produced a number nothing had computed: retrieval serves the node's declared
-section **43 of 52 times (83%)**. BM25 scored 45 and was not adopted — see
-`docs/writeup/limitations.md` for why two nodes at n=52 does not buy a
-recalibration of the gate.
+One endpoint, `POST /turn`, and two hand-written model calls per turn. Call 1
+sees the answer and decides; Call 2 writes the sentence and is **never given the
+answer**, so it cannot name what it was never told. The graph reacts on Call 1's
+return, before any utterance exists. Seven guard layers sit over that, mastery is
+Rasch-form arithmetic in Python, and only clicks are ever scored.
 
-**Next dated commitment: projector contrast test, rebooked into week 3
-(2026-09-18…24)** — it was booked for Monday 2026-09-14 and did not happen; see
-`docs/schedule.md` for what the slip costs.
+Measured against the running server: narrowing lands on **turn two** (52 lit to
+12), the shipped `interleaved` ladder bottoms out at **9 lit, not the 5 the floor
+implies**, hints cap at 4, and an 8-turn budget forces a reveal worth zero
+mastery.
 
-**The day-19 key cut is met.** §9.5 and §6.1 are unblocked and no longer on the
-cut list. `docs/writeup/no-key-plan.md` stays exactly as written: it is still the
-report if the key is revoked, and having had it ready cost nothing.
+### What the numbers say
 
-One limit the key does *not* lift. The free tier is 8,000 tokens/minute and one
-Call 1 costs ~2,750 — about two full turns a minute. §9.5 and §6.1 fit; a real-
-model re-run of §9.1 (12 arms × 138 dialogues) does not, so **§9.1 stays a
-mock-utterance result**. That is defensible because the visual arm's narrowing is
-deterministic and does not depend on what Call 2 writes, but it is a limitation
-rather than a footnote.
+The headline is **+8.6 points** of post-hint solve rate for the shipped
+configuration against a zero-knowledge simulated student, 95% CI
+**[+1.9, +16.4]** — and it is **one cell in a grid of nine**; every other arm
+crosses zero. **We do not claim visual narrowing beat the verbal channel.** It
+did not, on this bank, at this *n*.
+
+Two supporting figures are bounds rather than estimates: graph-extraction recall
+has a **45%** ceiling at the shipped window, and parametric reconstruction is
+**0 of 34**, one-sided 95% upper bound 8.4%.
+
+Start with [`docs/writeup/report.md`](docs/writeup/report.md) — its first page
+carries the claims, the number with its interval, and the seven things that
+should make a reader distrust all of it.
+
+### What it is not
+
+One chapter. A hand-authored graph, with no extraction run on an arbitrary
+document. Simulated students, **no human study, and no learning outcome measured
+or claimed**. Latency figures come from a mock. Confirm-or-undo has never been
+watched by anyone who did not design it. All of it is argued in
+[`docs/writeup/limitations.md`](docs/writeup/limitations.md).
 
 ## Run the mock
 

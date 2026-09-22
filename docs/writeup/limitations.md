@@ -48,6 +48,26 @@ interface gives away, and how that compares to giving nothing away at all.
 
 ## Narrower ones worth stating
 
+**Confirm-or-undo has never been watched by a stranger, and it is the one gate
+between a misclick and a permanent penalty.** §8 requires a confirm step on click
+answers because a misclick scored as wrong corrupts mastery, and the step is
+built: the client sends only confirmed clicks, so an unconfirmed misclick never
+reaches `/turn`.
+
+What is untested is whether it *reads* as a gate. The question is whether
+someone who did not design the gesture understands what a click commits to
+**before** they commit to it — and that question is unanswerable from the
+inside, because we already know what a click means and that knowledge is exactly
+the variable under test. If a first-time user treats the click itself as the
+answer and the confirm as an acknowledgement, the gate is decorative and the fix
+is in the wording rather than the logic.
+
+It was booked for day 11, rebooked into week 3, and never run; it needed one
+person who had not seen the interface and ten minutes, and that person was never
+found. Week 3 ends 2026-09-24 and the recording is 09-23, so it will not happen
+before submission. Recorded here rather than left as an implicit assumption: an
+assumption honestly labelled is worth more than a booking that keeps sliding.
+
 **The partial-knowledge student is our construct.** It is operationalised as
 "restricts to lit nodes in the answer's graph neighbourhood, then guesses". That
 is one reasonable formalisation of partial knowledge and the headline gap between
