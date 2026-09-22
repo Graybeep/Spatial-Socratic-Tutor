@@ -46,6 +46,46 @@ directly dirties the tree, and the *next* eval in the sequence then stamps itsel
 four files claiming an uncommitted build and one that did not. Generate against a
 clean tree, copy in, commit once.
 
+## `real_turns.jsonl.gz` — the raw evidence, archived
+
+CLAUDE.md §13.2: *"Logs are gitignored but they are evidence for §9.1, §9.4 and
+§9.5 — do not delete them, and archive the 60 eval dialogues somewhere durable
+before the week-4 writeup."* This is that archive.
+
+**Every real-model turn this project ever made: 3,411 of them, 0.17 MB gzipped.**
+`logs/turns.jsonl` is 655 MB and gitignored; the evidence behind the published
+numbers is **0.7%** of it, and the rest is mock and test traffic. Extracted on
+`mock: false`, scanned for credentials before committing (zero hits — the log
+never contained a key).
+
+| build | turns | what it backs |
+|---|---|---|
+| `ac2fc28` | 3,226 | §9.1 adversarial arms |
+| `6f184ea-dirty` | 63 | early §9.5 runs |
+| `18d220d` | 40 | **§5.5's `0/34` and every §5.6 figure** |
+| `77b7e5d-dirty` | 40 | day 12, withdrawn for cause, kept because the report cites it |
+| `614d066`, `d594341`, `7ba8078`, `7783a34-dirty` | 42 | intermediate runs |
+
+### Reproducing the key-only numbers without a key
+
+The report says §5.5 and §5.6 *"need an API key... and the raw outputs are
+committed so the figures can be checked without one."* This is what makes that
+true:
+
+```bash
+gunzip -c eval/results/real_turns.jsonl.gz > /tmp/turns.jsonl
+
+python -m eval.leak_monitor     --log /tmp/turns.jsonl --build 18d220d
+# -> parametric reconstruction: 0 / 34 = 0.00%      (§5.5)
+
+python -m eval.curriculum_moves --log /tmp/turns.jsonl --build 18d220d
+# -> 13 emitted, 12 moved; override 6 of 12          (§5.6)
+```
+
+Both verified against this archive before it was committed. **Do not regenerate
+this file from a later log** — it is a record of runs that happened, and no eval
+has run since the day-19 freeze.
+
 Do not pass `--n 60`. §9.1 asks for 60 dialogues, but that was written when a
 dialogue was the unit; the unit is the item, and the default (two dialogues per
 item, 138 over the scored bank) is what covers it. `--n 60` silently samples 60

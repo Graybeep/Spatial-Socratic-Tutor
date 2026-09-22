@@ -898,6 +898,40 @@ worksheet for the §9.5 human read, not prose.
 
 ---
 
+### 2026-09-22 (day 19) — the evidence is archived, and §13.2 is finally met
+
+CLAUDE.md §13.2 has said since day 1: *"archive the 60 eval dialogues somewhere
+durable before the week-4 writeup."* It had never been done, and the writeup goes
+out tomorrow. `logs/turns.jsonl` is **655 MB and gitignored** — one laptop, one
+copy, holding the only raw evidence behind §5.5 and §5.6.
+
+**The evidence is 0.7% of that file.** 3,411 real-model turns out of 668,087
+lines; the rest is mock and test traffic. Extracted on `mock: false`, scanned for
+credentials first (**zero hits** — no key ever reached the log), and committed at
+`eval/results/real_turns.jsonl.gz`: **0.17 MB gzipped.**
+
+| build | turns | backs |
+|---|---|---|
+| `ac2fc28` | 3,226 | §9.1 adversarial arms |
+| `18d220d` | 40 | **§5.5's `0/34` and every §5.6 figure** |
+| `77b7e5d-dirty` | 40 | day 12, withdrawn for cause, kept because the report cites it |
+| five others | 105 | intermediate runs |
+
+**Both published numbers were reproduced from the archive alone before it was
+committed**, with no key and no network: `leak_monitor --log ... --build 18d220d`
+returns `0 / 34`, and `curriculum_moves` returns 13 emitted / 12 moved with the
+override at 6 of 12. Exact matches.
+
+That upgrades a claim the report was making loosely. Its opening note said the
+raw outputs were committed so the figures could be **checked**; they can now be
+**recomputed**, and the note gives the two keyless commands. The distinction
+matters for a reader deciding whether to believe a number they cannot rerun.
+
+One rule recorded with it: **do not regenerate this file from a later log.** It
+is a record of runs that happened, and no eval has run since the day-19 freeze.
+
+---
+
 ### Eval freeze: no eval runs in the 24 hours before Saturday 2026-09-26
 
 **The window is Friday 2026-09-25 00:00 to Saturday 2026-09-26 00:00.** Nothing

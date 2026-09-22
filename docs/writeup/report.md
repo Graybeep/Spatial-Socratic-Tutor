@@ -11,12 +11,22 @@ regenerate from a clean clone with no API key** — §5.2, §5.3, §5.4 and §5.
 deterministic or mock-driven and need neither key nor network.*
 
 ***Two do not, and it would be a poor report that blurred the difference.***
-*§5.5's `0/34` and every figure in §5.6 come from live `gpt-oss-120b` runs. They
-need an API key, and §5.5's also needs `logs/turns.jsonl`, which is gitignored —
-on a clean clone `eval.leak_monitor` correctly reports `NOT MEASURABLE` rather
-than inventing a number. The raw outputs of those runs are committed under
-[`eval/results/`](../../eval/results/) so the figures can be **checked** without
-a key even though they cannot be **regenerated** without one.*
+*§5.5's `0/34` and every figure in §5.6 come from live `gpt-oss-120b` runs, so
+they cannot be **regenerated** without an API key. They can be **recomputed**
+without one: every real-model turn this project ever made — 3,411 of them,
+0.17 MB — is archived at
+[`eval/results/real_turns.jsonl.gz`](../../eval/results/real_turns.jsonl.gz),
+and both figures are derived from it by a keyless command:*
+
+```bash
+gunzip -c eval/results/real_turns.jsonl.gz > /tmp/turns.jsonl
+python -m eval.leak_monitor     --log /tmp/turns.jsonl --build 18d220d   # §5.5
+python -m eval.curriculum_moves --log /tmp/turns.jsonl --build 18d220d   # §5.6
+```
+
+*Point those at the live `logs/turns.jsonl` instead and it is gitignored, so on a
+clean clone `eval.leak_monitor` reports `NOT MEASURABLE` rather than inventing a
+number — which is the correct answer, and the reason the archive exists.*
 
 ---
 
