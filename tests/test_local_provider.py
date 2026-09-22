@@ -33,14 +33,14 @@ from .conftest import config_override
 
 @pytest.fixture()
 def _local():
-    with config_override(llm_provider="lmstudio", mock_mode=False):
+    with config_override(llm_provider="local", mock_mode=False):
         yield
 
 
 # --- the seam --------------------------------------------------------------
 
-def test_lmstudio_is_registered_and_needs_no_auth_header():
-    path, auth, build, extract = llm_mod._PROVIDERS["lmstudio"]
+def test_the_local_provider_is_registered_and_needs_no_auth_header():
+    path, auth, build, extract = llm_mod._PROVIDERS["local"]
     assert path == "/v1/chat/completions", (
         "LM Studio serves /v1/..., not Groq's /openai/v1/...")
     assert auth("") == {}, "a local server was sent an Authorization header"
@@ -53,7 +53,7 @@ def test_the_body_is_groqs_with_one_field_changed():
     one provider stops validating on the other and nothing would say so."""
     args = (CONFIG.call1, "sys", "user", llm_mod.CALL1_TOOL)
     groq = llm_mod._groq_request(*args)
-    local = llm_mod._lmstudio_request(*args)
+    local = llm_mod._local_request(*args)
 
     assert local["tool_choice"] == "required"
     assert groq["tool_choice"] != local["tool_choice"]
@@ -67,14 +67,14 @@ def test_required_is_unambiguous_because_there_is_one_tool():
     added, this stops being true and the model starts choosing."""
     for cfg, tool in ((CONFIG.call1, llm_mod.CALL1_TOOL),
                       (CONFIG.call2, llm_mod.CALL2_TOOL)):
-        body = llm_mod._lmstudio_request(cfg, "s", "u", tool)
+        body = llm_mod._local_request(cfg, "s", "u", tool)
         assert len(body["tools"]) == 1
 
 
 # --- config ----------------------------------------------------------------
 
 def test_the_active_url_and_key_follow_the_provider(_local):
-    assert CONFIG.llm_base_url == CONFIG.lmstudio_base_url
+    assert CONFIG.llm_base_url == CONFIG.local_base_url
     assert CONFIG.llm_key == "", "a local provider was given a credential"
     assert CONFIG.llm_is_local is True
 
@@ -91,7 +91,7 @@ def test_the_provider_groups_agree_with_the_registry():
     that the registry does not serve is a config that cannot be run."""
     for name in OPENAI_SHAPED + LOCAL_PROVIDERS:
         assert name in llm_mod._PROVIDERS, f"{name!r} is not a registered provider"
-    assert "lmstudio" in OPENAI_SHAPED and "lmstudio" in LOCAL_PROVIDERS
+    assert "local" in OPENAI_SHAPED and "local" in LOCAL_PROVIDERS
 
 
 def _defaults_for(monkeypatch, provider):
@@ -158,7 +158,7 @@ def test_the_call_sites_resolve_local_defaults_through_by_provider():
 def test_the_local_timeout_default_is_not_the_cloud_default(monkeypatch):
     """40.3s measured for one Call 1 on this machine. A 10s default would fail
     every local call before it finished thinking."""
-    by = _defaults_for(monkeypatch, "lmstudio")
+    by = _defaults_for(monkeypatch, "local")
     assert by(10.0, 10.0, 180.0) == 180.0
 
     by = _defaults_for(monkeypatch, "groq")
@@ -168,7 +168,7 @@ def test_the_local_timeout_default_is_not_the_cloud_default(monkeypatch):
 def test_the_local_model_defaults_are_not_groqs(monkeypatch):
     """LM Studio does not serve gpt-oss-120b. Falling through to Groq's ids
     would default the local provider to models it cannot load."""
-    by = _defaults_for(monkeypatch, "lmstudio")
+    by = _defaults_for(monkeypatch, "local")
     assert by("claude-opus-5", "openai/gpt-oss-120b", "qwen/qwen3.5-9b") == "qwen/qwen3.5-9b"
 
 
@@ -176,7 +176,7 @@ def test_a_shared_value_still_falls_through_to_groq(monkeypatch):
     """The completion budget is the same on both OpenAI-shaped providers: local
     models emit reasoning before the tool call exactly as gpt-oss does (measured
     252 and 625 reasoning tokens). Only ids and timeouts needed a third value."""
-    by = _defaults_for(monkeypatch, "lmstudio")
+    by = _defaults_for(monkeypatch, "local")
     assert by(300, 1500) == 1500
     assert by(300, 1500, None) == 1500
 
@@ -202,7 +202,7 @@ def test_a_local_call_does_not_demand_a_key(monkeypatch, _local):
 
         def post(self, url, headers=None, json=None):
             assert "Authorization" not in (headers or {})
-            assert url.startswith(CONFIG.lmstudio_base_url)
+            assert url.startswith(CONFIG.local_base_url)
             return httpx.Response(200, json=body, request=httpx.Request("POST", url))
 
     monkeypatch.setattr(llm_mod.httpx, "Client", FakeClient)
@@ -216,3 +216,37 @@ def test_a_remote_provider_still_demands_a_key():
         with pytest.raises(llm_mod.LLMError, match="GROQ_API_KEY"):
             llm_mod.call2(action="ask", hint_level=0, focus_labels=[], n_lit=52,
                           recent=[])
+
+
+# --- the shipped example ---------------------------------------------------
+
+def test_the_env_example_does_not_pin_provider_specific_values():
+    """`.env.example` is what a new user copies, and `_load_dotenv` uses
+    `os.environ.setdefault` - so anything set there beats the provider default
+    for good. A pinned `CALL1_MODEL=claude-opus-5` is sent verbatim to a local
+    server and comes back a 400, which is the opposite of letting someone pick
+    a provider.
+    """
+    import pathlib
+
+    pinned = []
+    for raw in pathlib.Path(".env.example").read_text(encoding="utf-8").splitlines():
+        line = raw.strip()
+        if not line or line.startswith("#") or "=" not in line:
+            continue
+        key = line.split("=", 1)[0].strip()
+        if key in {"CALL1_MODEL", "CALL2_MODEL", "CALL1_MAX_TOKENS",
+                   "CALL2_MAX_TOKENS", "CALL1_TIMEOUT_S", "CALL2_TIMEOUT_S"}:
+            pinned.append(line)
+    assert not pinned, (
+        "these resolve from LLM_PROVIDER and must stay commented in the "
+        f"example: {pinned}")
+
+
+def test_the_env_example_names_every_registered_provider():
+    """A provider nobody can find is a provider nobody uses."""
+    import pathlib
+
+    text = pathlib.Path(".env.example").read_text(encoding="utf-8")
+    for name in llm_mod._PROVIDERS:
+        assert name in text, f"{name!r} is registered but absent from .env.example"

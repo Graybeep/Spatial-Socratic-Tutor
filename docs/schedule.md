@@ -578,6 +578,22 @@ The body, schema and extraction are Groq's, shared deliberately: a response that
 validates on one validates on the other, so the two cannot drift into being
 different contracts.
 
+**Both providers ship, and the choice is the user's.** The repo goes to GitHub
+with three providers behind `LLM_PROVIDER` — `anthropic`, `groq`, `local` — and
+README's *Choose a provider* section is the entry point. The provider is named
+`local`, not `lmstudio`: the same body works against any server exposing an
+OpenAI-compatible `/v1/chat/completions` (Ollama, llama.cpp, vLLM), and
+`LOCAL_BASE_URL` points at whichever is running. Renamed the same day it was
+added, while no one outside this repo had used the old name.
+
+**One trap found while documenting it.** `.env.example` pinned
+`CALL1_MODEL=claude-opus-5` and five siblings. `_load_dotenv` uses
+`os.environ.setdefault`, so anything set there beats the provider default
+permanently — a user copying the example and switching to `local` would have
+sent a Claude model id to their own server and got a 400, which is exactly the
+opposite of being able to choose a provider. Those six are now commented, the
+defaults resolve from `LLM_PROVIDER`, and a test fails if any is re-pinned.
+
 **What this does NOT settle, and Thursday must.** ~81s/turn is the blocker, not
 tokens. A 15–25 turn take is 20+ minutes of wall clock, most of it the viewer
 watching nothing. §5's architecture claim survives — the graph still moves on
