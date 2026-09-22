@@ -867,6 +867,37 @@ introduced by the rewrite was removed; all links verified.
 
 ---
 
+### 2026-09-22 (day 19) — cold consistency pass over the writeup
+
+The report gained a first page, a regrouped §6 and a future-work section today,
+all by edit rather than rewrite, so it was read cold and checked mechanically
+rather than by eye. Four classes, three clean:
+
+- **Links:** every cross-file link and every in-page anchor across `docs/` and
+  `README.md` resolves. Clean.
+- **Section references:** every `§N.N` pointing at a report section resolves to a
+  section that exists. Clean.
+- **Figures:** the headline (+8.6, CI [+1.9, +16.4]), the extraction ceiling
+  (30 of 66, 45%), the reconstruction bound (0 of 34, 8.4%) and the bank counts
+  (260 / 101 / 69) agree in every file that states them. Test counts agree too;
+  the 364, 249 and 179 in the writeup are deliberate historical statements about
+  specific past moments, not stale figures.
+- **Headings: two defects, both mine, both fixed.** `At a glance` was an `H1`, so
+  the report had two top-level titles; and its three subsections were `H2`, which
+  put *What we claim* at the same level as *1. The claim* and made the numbered
+  spine look like it began at item four. The whole block is demoted one level.
+  Anchors re-verified afterwards — nothing pointed at the moved headings.
+
+Also made exact: the limitations line said *"a single ~50-node graph"* in two
+places while the precise figure, 52, is given elsewhere. On a page that otherwise
+quotes exact counts an approximation reads as a different number rather than the
+same one rounded.
+
+`readthrough-sheet.md` has no `H1` and that is correct — it is the generated
+worksheet for the §9.5 human read, not prose.
+
+---
+
 ### Eval freeze: no eval runs in the 24 hours before Saturday 2026-09-26
 
 **The window is Friday 2026-09-25 00:00 to Saturday 2026-09-26 00:00.** Nothing

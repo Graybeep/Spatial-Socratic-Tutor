@@ -20,12 +20,12 @@ a key even though they cannot be **regenerated** without one.*
 
 ---
 
-# At a glance
+## At a glance
 
 *Everything a reader needs to judge this project, before any of the argument.
 Each line links to the section that earns it.*
 
-## What we claim
+### What we claim
 
 | # | claim | kind | status |
 |---|---|---|---|
@@ -37,7 +37,7 @@ Each line links to the section that earns it.*
 **Claim 4 is the one a reader expects and we are not making it.** Claims 1–3 are
 properties of the wiring, which is why they are stated that way.
 
-## The headline number
+### The headline number
 
 **The shipped configuration hands a zero-knowledge simulated student
 +8.6 points of post-hint solve rate over no hints at all — 95% CI
@@ -62,14 +62,14 @@ Two supporting figures, both bounded rather than estimated:
 - **Parametric reconstruction: 0 of 34**, one-sided 95% upper bound **8.4%**.
   Absence of evidence, and see the metric caveat below ([§5.5](#55-61-the-parametric-reconstruction-rate-re-measured-on-a-monitor-that-can-see)).
 
-## What would make a reader distrust all of it
+### What would make a reader distrust all of it
 
 Stated here rather than at the end, because a limitations section a reader
 reaches on page nine has already done its damage.
 
 | | |
 |---|---|
-| **One chapter** | Every number comes from a single ~50-node graph of one networking chapter. Nothing here shows the approach transfers to a second one. |
+| **One chapter** | Every number comes from a single 52-node graph of one networking chapter. Nothing here shows the approach transfers to a second one. |
 | **Curated graph, no extraction run** | The graph is hand-authored. §4 permits it and comparable published systems do the same, but **we have not run the pipeline on an arbitrary chapter — we have not run it on one at all.** The gold annotation was frozen before any extractor existed, so it could not have been contaminated by one; that was luck, not foresight. |
 | **Simulated students, not people** | Every leakage figure comes from three scripted policies. **No human has used this system and no learning outcome is measured or claimed.** |
 | **The baseline is not silent** | The `none` arm still has the tutor speaking an `ask` utterance. Whatever that gives away is subtracted out of every marginal, so the marginals are conservative — but the baseline is not a zero-information control. Changing which arm is subtracted moves the figure ~2 points here; on a leakier verbal channel it would move more. |
@@ -735,7 +735,7 @@ became a document.
 The four we would ask about first, in full at
 **[limitations.md](limitations.md)**:
 
-- **One chapter.** Every number here comes from a single ~50-node graph.
+- **One chapter.** Every number here comes from a single 52-node graph.
 - **Curated graph, no extraction run in the shipped artefact.**
 - **Simulated students, not people.** All leakage figures come from three
   scripted policies.
