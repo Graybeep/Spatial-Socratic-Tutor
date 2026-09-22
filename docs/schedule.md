@@ -540,6 +540,66 @@ the test page changes, the finding is lost and the demo ships the old number.
 
 ---
 
+### 2026-09-22 (day 19, evening) — a third provider, local, and the number that decides Thursday
+
+Two offline models are on the demo machine, served by LM Studio on port 1234:
+`qwen/qwen3.5-9b` and `google/gemma-4-e4b`. They remove the token constraint
+entirely for offline work. **No default changed** — `LLM_PROVIDER` is still
+`groq`, and the decision is Thursday's on measured numbers, not tonight's.
+
+**It works, and the architecture did not have to bend.** Both models return a
+valid `Call1Decision` under a forced tool call. One real turn, end to end,
+against the live server:
+
+| | model | latency | tokens |
+|---|---|---|---|
+| Call 1 | `qwen/qwen3.5-9b` | **56.8s** | 3,406 |
+| Call 2 | `google/gemma-4-e4b` | **24.3s** | 1,947 |
+| | | **~81s/turn** | 5,353 |
+
+Against Groq's **2.3s** p50 on Call 1. No parse failures, no retries. Call 2
+wrote *"Twelve are left; what do they have in common?"* — the count, not the
+answer, which is what §5's split is for.
+
+**§1.8 holds: no new dependency.** `httpx` already covers it. Three differences,
+all small and all config:
+
+- LM Studio **rejects the object form of `tool_choice`** (*"Supported string
+  values: none, auto, required"*). `required` is equivalent here because each
+  call defines exactly one tool — pinned by a test, because it stops being true
+  the day a second tool is added.
+- Path is `/v1/chat/completions`, not Groq's `/openai/v1/...`.
+- No key, so `_invoke`'s credential guard is skipped for `LOCAL_PROVIDERS` and
+  the pre-flight's daily-token check reports **"not applicable"** rather than
+  passing — a local server has no quota to be short of, and "does not apply" and
+  "passed" are different things.
+
+The body, schema and extraction are Groq's, shared deliberately: a response that
+validates on one validates on the other, so the two cannot drift into being
+different contracts.
+
+**What this does NOT settle, and Thursday must.** ~81s/turn is the blocker, not
+tokens. A 15–25 turn take is 20+ minutes of wall clock, most of it the viewer
+watching nothing. §5's architecture claim survives — the graph still moves on
+Call 1's return, before any utterance exists — but it moves 57 seconds in. And
+every figure in §5.5, §5.6 and §9.5 is `gpt-oss-120b`/`gpt-oss-20b`: shipping
+the demo on a model the report never measured is a documentation problem at
+minimum. Rehearse both back to back and decide on that.
+
+**Two caveats on tonight's numbers.** They are **n=1 per model**, on one
+machine, with nothing else loaded — directional, not a benchmark. And an earlier
+synthetic probe without graph context had qwen emitting focus ids that are not
+real nodes; with the digest supplied it returned `tcp_slow_start` correctly, so
+read nothing into the first result.
+
+**One consequence for the freeze.** Its recorded purpose is that the recording
+must not open on a machine whose daily budget went to an eval the night before.
+A local provider has no daily budget, so if Saturday runs local that rationale
+does not apply. The window is left as booked — it is a standing instruction and
+not mine to void — but it should be revisited once the provider is chosen.
+
+---
+
 ### Eval freeze: no eval runs in the 24 hours before Saturday 2026-09-26
 
 **The window is Friday 2026-09-25 00:00 to Saturday 2026-09-26 00:00.** Nothing
