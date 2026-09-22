@@ -140,7 +140,7 @@ much smaller scale.
 |---|---|---|---|
 | ~~2026-09-14~~ | 11 | projector contrast test (§8) | **SLIPPED — not run.** Rebooked into week 3, above |
 | ~~2026-09-14~~ | 11 | confirm-or-undo watched by a non-author | **SLIPPED — never booked.** Last slot is week 3, then it becomes a limitation, above |
-| 2026-09-18…24 | week 3 | both of the above, at the projector, contrast check first | rebooked |
+| ~~2026-09-18…24~~ | ~~week 3~~ | ~~projector contrast test + confirm-or-undo~~ | **CLOSED UNRUN on day 19.** Both are now stated limitations, not open items. Reopen only if a live presentation is scheduled |
 | ~~2026-09-22~~ | 19 | **API key cut** — resolved early, on day 12. See below | **MET, with a caveat** |
 | ~~2026-09-18…24~~ | 12 | diagnosis read-through, 30 `diagnosis` fields (§9.5) | ~~**RUN, and it found something**~~ **INVALIDATED on day 13**: Call 1 was sent `role: text` for every past turn, so the model never saw a click. See [diagnosis-readthrough.md](writeup/diagnosis-readthrough.md) |
 | ~~2026-09-16~~ 2026-09-21 | 13 → 18 | **repeat §9.5 on `gpt-oss-120b`**, the model the demo ships — now also the first §9.5 run in which the model can see the dialogue | **RUN AND COMPLETE**, 30/30 fields, five days late. See below |
@@ -929,6 +929,36 @@ matters for a reader deciding whether to believe a number they cannot rerun.
 
 One rule recorded with it: **do not regenerate this file from a later log.** It
 is a record of runs that happened, and no eval has run since the day-19 freeze.
+
+---
+
+### 2026-09-22 (day 19) — the projector test is closed unrun, and says so
+
+Dropped from the open list rather than carried into the recording as a pending
+item. It was booked for day 11, slipped, rebooked into week 3, and never run;
+week 3 ends 09-24 and the recording is 09-23. It needed a projector and a room,
+and neither was ever available.
+
+**It is recorded in `limitations.md`**, and the entry is careful about which
+half is untested. Per-node contrast is **measured** and is not the worry — a lit
+outline is 17.19:1 at 3px against a dimmed 1.53:1 at 1px, the 3px ink carries
+the signal, and those ratios are count-independent. What was never tested is
+whether the lit **set** reads as one place to look from the back of a room: the
+shipped ladder bottoms out at **9 lit, not 5**, and nine nodes span **52% of the
+canvas** with 25 dimmed nodes interleaved.
+
+The consequence is bounded and stated: if it read as scatter, the fix would be
+`NARROW_SCHEDULE` or the turn budget — configuration, not palette — and both are
+§9.1 research variables, so either change would require re-running the leakage
+sweep. That is precisely why it is not a change to make untested on the day.
+
+**Reopen only if a live presentation is scheduled.** For a recorded walkthrough
+the display is the camera's, not a projector's, so the question does not arise.
+
+Both human-dependent items are now closed the same way: written down as
+assumptions with the evidence that bounds them, rather than left as bookings
+that kept sliding. An assumption honestly labelled is worth more than a booking
+nobody kept.
 
 ---
 
