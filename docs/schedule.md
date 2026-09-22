@@ -1046,9 +1046,29 @@ Eight tests in `tests/test_response_pairing.py`, including the accept case
 that `PAYLOAD_FIELD` covers every `Expects` value. Both halves mutation-tested.
 Suite 537 → 545, client typecheck and build clean.
 
-**One gap this smoke test did not close:** `edge_click` never came up in 60 turns
-of driving — selection kept serving `node_click` and `mcq` — so that path is
-covered by unit tests but was not exercised end to end here.
+**The gap this smoke test opened is now closed.** `edge_click` never came up in
+60 turns of driving — selection kept serving `node_click` and `mcq` — so the path
+had unit coverage and no end-to-end coverage at all: only `test_session_exit.py`
+used the client fixture, and it never answers with an edge. Grading an edge, the
+reversed-edge case and the `from`/`to` wire alias had never crossed the endpoint.
+
+`tests/test_edge_click_end_to_end.py` drives all five over HTTP:
+
+| | |
+|---|---|
+| correct edge | `advance`, theta 0.0 → 0.205 |
+| **reversed** edge | graded wrong — direction is the whole content of a prereq edge |
+| `{from, to}` alias | accepted; `from` is a Python keyword and `EdgeRef` aliases `from_` to it, so a break here would 422 every edge answer and read as a client bug |
+| `focus_edges` | 7 lit, answer among them — clickable without being the payload |
+| two failures | backtrack on the **second**, landing on a real prerequisite |
+
+Selection is bypassed deliberately: `next_node` and `_pick_item` cannot be
+steered to an edge item from outside, so the tests seed `start_item` and use real
+requests for everything that matters. Only the choice of item is forced.
+
+**Mutation-tested, three ways.** Grading an edge by endpoint *set* instead of
+direction fails 2; backtracking after one failure instead of two fails 1;
+narrowing `focus_edges` to the answer alone fails the leak guard. Suite 545 → 550.
 
 ---
 
