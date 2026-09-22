@@ -48,6 +48,31 @@ interface gives away, and how that compares to giving nothing away at all.
 
 ## Narrower ones worth stating
 
+**The dimming was never tested on a projector, and the untested question is
+coverage rather than contrast.** §8 requires the narrowing to survive a bad
+display, which is why it uses three channels rather than one: opacity **plus**
+desaturation **plus** stroke width. The per-node contrast is measured and is not
+the worry — composited against paper, a lit node's outline is 17.19:1 at 3px
+against a dimmed node's 1.53:1 at 1px, and the 3px ink outline carries the
+signal while the fill contributes almost nothing (2.52:1 lit against 1.18:1
+dim). Those ratios are count-independent, so nothing about the number of lit
+nodes changes them.
+
+What is untested is whether the lit **set** reads as one place to look from the
+back of a room. The shipped `interleaved` ladder bottoms out at **9 lit, not the
+5 the floor implies** — alternating visual and verbal rungs meet the 8-turn
+budget first — and nine nodes span **52% of the canvas** with 25 dimmed nodes
+interleaved among them. Whether that reads as a narrowing or as scatter is a
+question about a specific projector in a specific room, and we did not have
+either. `client/contrast-check.html` exists to answer it in about fifteen
+minutes; it was booked for day 11, rebooked into week 3, and never run.
+
+The consequence if it fails is bounded and known: the fix would be the ladder
+rather than the palette — narrow faster via `NARROW_SCHEDULE`, or let
+`interleaved` reach its floor — and both are configuration. Both are also §9.1
+research variables, so either change would require re-running the leakage sweep,
+which is why it is not a change to make untested on the day.
+
 **Confirm-or-undo has never been watched by a stranger, and it is the one gate
 between a misclick and a permanent penalty.** §8 requires a confirm step on click
 answers because a misclick scored as wrong corrupts mastery, and the step is
