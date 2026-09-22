@@ -1001,6 +1001,57 @@ entirely layer B.
 
 ---
 
+### 2026-09-22 (day 19) — smoke test, and a validation bug it found
+
+Run against the demo path before the recording. Everything on that path passed:
+malformed sessions 404, oversized input survives, no `diagnosis` or answer field
+in any payload, a failing student reaches `concluded / support_ceiling` in 24
+turns, a turn *after* the end returns a closing line rather than crashing, 40
+correct turns master 3 nodes (matching day 13 exactly), MCQ serves 4 options, and
+the server log carries no error, traceback or 500.
+
+**One real bug, and the demo could not reach it.**
+
+`StudentResponse` carries one optional payload field per `type`, because each
+type uses a different one. That made a *mismatched* response schema-valid: a body
+naming `node_click` and carrying no `node_id` parsed cleanly, reached `turn.py`,
+and was graded like any other answer — as a **wrong** one.
+
+```
+POST /turn  {"type": "node_click"}     -> HTTP 200
+theta 0.0 -> -0.2395 ; consecutive_failures 0 -> 1
+```
+
+§8 requires confirm-or-undo precisely because *"a misclick scored as wrong
+corrupts mastery"*. A malformed click corrupted it the same way through a
+different door — and `schemas.py` had claimed the opposite all along:
+*"The server validates the pairing and rejects a mismatch rather than guessing."*
+It did not validate. It guessed, and guessed wrong.
+
+**Why it survived:** the shipped client cannot produce one. Every send site
+supplies its payload unconditionally (`node_click` only inside
+`if (pendingNode)`, text behind `if (!value) return`), so nothing in the demo
+path exercises it. Reachable by curl only.
+
+**The fix is not a schema change.** No field was added, removed or retyped; the
+wire shape is identical and `types.ts` is untouched. A `model_validator` now
+enforces the pairing the docstring already promised — the named field present
+and non-blank, and no other payload field set, because a response naming two
+answers names none. Rejection at the model boundary means FastAPI answers 422
+and the orchestrator never sees a malformed response, so there is no second
+place to get it right.
+
+Eight tests in `tests/test_response_pairing.py`, including the accept case
+(a validator that only rejects is as wrong as one that never does) and a check
+that `PAYLOAD_FIELD` covers every `Expects` value. Both halves mutation-tested.
+Suite 537 → 545, client typecheck and build clean.
+
+**One gap this smoke test did not close:** `edge_click` never came up in 60 turns
+of driving — selection kept serving `node_click` and `mcq` — so that path is
+covered by unit tests but was not exercised end to end here.
+
+---
+
 ### Eval freeze: no eval runs in the 24 hours before Saturday 2026-09-26
 
 **The window is Friday 2026-09-25 00:00 to Saturday 2026-09-26 00:00.** Nothing
