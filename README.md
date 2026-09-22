@@ -239,6 +239,9 @@ NARROW_SCHEDULE=0,25,18,12,8 python -m server.main
 | `client/src/types.ts` | reconciled against `/schemas`; supersedes `templates/` |
 | `client/src/Graph.tsx` | the frozen-layout SVG and the two dimming channels |
 | `client/contrast-check.html` | §8 projector test, at the 9-lit rung the demo really reaches |
+| `server/preflight.py` | demo pre-flight — clean main, fresh state.db, declared MOCK_MODE, 24h token budget |
+| `docs/human-tests.md` | one page for the two tests that need a room, a projector and a person |
+| `docs/dim-values.md` | the shipped dim tokens, and where the projector test's outcome gets recorded |
 | `docs/schedule.md` | dated commitments and their pass/fail — next: projector test, week 3 (slipped from 09-14) |
 | `client/src/Chat.tsx` | the rail — transcript, composer, turn budget, node panel |
 
