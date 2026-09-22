@@ -63,6 +63,36 @@ for the historical corpus - which is what the hand count did. Where the field IS
 present it is used, and the two are cross-checked: a disagreement is reported
 rather than silently resolved, because a field that has drifted from the
 behaviour it names is worth more as a visible complaint than as a quiet default.
+
+WHAT THE INFERENCE CANNOT DO, AND WHY THE FIELD HAD TO EXIST
+------------------------------------------------------------
+`infer_origin` reads a backtrack as the model's whenever Call 1 asked for one.
+When the two-failure rule (§7) fires on the *same* turn that Call 1 happens to
+request `backtrack`, the server moved the curriculum and the model merely agreed
+- and the inference calls it `model` anyway. That case is in the corpus: build
+`77b7e5d-dirty`, `sess_2acfcff9b419` turn 2, where the preceding two turns both
+scored false and the item moved `itm_0026 -> itm_0021`.
+
+So on pre-day-19 records **`backtrack:model` is an upper bound on
+model-initiated backtracks, not a count of them.** This is not a defect in the
+inference; it is the ambiguity that made `backtrack_origin` worth adding, stated
+where a reader of the number will meet it. On day-19-and-later records the field
+is authoritative and the bound is exact.
+
+Note that the day-18 reading survives this caveat rather than depending on it:
+its one `backtrack:model` turn was *stationary*, and a two-failure backtrack
+always moves the item. So that turn cannot have been a coincident server
+backtrack, which is what makes it evidence of the hole rather than of the
+ambiguity.
+
+THE OVERRIDE COUNT
+------------------
+`overrode_*` counts curriculum actions where `server_action` differs from
+`call1.requested_action` - the server doing something other than what the model
+asked. `diagnosis-readthrough.md` quotes this as "server overrode Call 1 where
+the curriculum moved", and it was hand-derived too, with the day-12 and day-18
+columns silently using different denominators (12 moved against 13 emitted). It
+is reported here against both so the two can never drift apart again.
 """
 from __future__ import annotations
 
@@ -128,6 +158,8 @@ def measure(path: Optional[Path] = None, build: Optional[str] = None,
         "stationary": [],
         "origin_disagreements": [],
         "first_turn_moves": 0,
+        "overrode_emitted": 0,
+        "overrode_moved": 0,
     })
     #: Last item seen per (partition, session). A session cannot span builds -
     #: the server does not change mid-run - so this is keyed by both anyway.
@@ -162,6 +194,12 @@ def measure(path: Optional[Path] = None, build: Optional[str] = None,
         label = "advance" if action == "advance" else f"backtrack:{logged or inferred}"
         part["emitted"][label] += 1
 
+        #: The server doing something other than what Call 1 asked for. This is
+        #: the figure diagnosis-readthrough.md quotes; see the module docstring.
+        overrode = action != (record.get("call1") or {}).get("requested_action")
+        if overrode:
+            part["overrode_emitted"] += 1
+
         if previous is None:
             #: The first turn of a session has nothing to compare against, so
             #: whether it moved is undefined rather than false.
@@ -169,6 +207,8 @@ def measure(path: Optional[Path] = None, build: Optional[str] = None,
             continue
         if item != previous:
             part["moved"][label] += 1
+            if overrode:
+                part["overrode_moved"] += 1
         else:
             part["stationary"].append({
                 "session_id": session, "turn_id": record.get("turn_id"),
@@ -192,6 +232,8 @@ def measure(path: Optional[Path] = None, build: Optional[str] = None,
             "sessions": len(part["sessions"]),
             "emitted_total": emitted,
             "moved_total": moved,
+            "overrode_emitted": part["overrode_emitted"],
+            "overrode_moved": part["overrode_moved"],
             "emitted": dict(sorted(part["emitted"].items())),
             "moved": dict(sorted(part["moved"].items())),
             "stationary": part["stationary"],
@@ -217,6 +259,9 @@ def render(result: dict) -> str:
         for label in sorted(set(arm["emitted"]) | set(arm["moved"])):
             lines.append(f"    {label:<22} emitted {arm['emitted'].get(label, 0):>3}"
                          f"   moved {arm['moved'].get(label, 0):>3}")
+        lines.append(f"  server overrode Call 1 on {arm['overrode_moved']} of "
+                     f"{arm['moved_total']} moved "
+                     f"({arm['overrode_emitted']} of {arm['emitted_total']} emitted)")
         for row in arm["stationary"]:
             lines.append(f"  STATIONARY  {row['label']} on {row['session_id']} "
                          f"turn {row['turn_id']}: item stayed {row['item_id']}")

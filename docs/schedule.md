@@ -394,9 +394,13 @@ floor would fire on turns that are already being hinted. If a future run shows
 ### 2026-09-22 (day 19) — a backtrack that never backtracked
 
 Found while counting curriculum moves for §5.6's containment argument, from the
-day-18 log, no new calls. Of **13 moves in 40 turns**: 6 `advance` the model also
-asked for, 6 `backtrack` the server performed while the model asked for a hint,
-and **1 `backtrack` the model requested and got**.
+day-18 log, no new calls. Of 40 turns, **13 emitted a curriculum action and 12
+moved the curriculum**: 6 `advance` the model also asked for, 6 `backtrack` the
+server performed while the model asked for a hint, and **1 `backtrack` the model
+requested, which moved nothing**.
+
+*(This sentence said "13 moves" until later on day 19, which was the same
+conflation the rest of the entry is about. See the day-19 recount entry below.)*
 
 That last one could not be attributed, and chasing it found a hole.
 `action = decision.requested_action`, so a Call 1 asking to step back got the

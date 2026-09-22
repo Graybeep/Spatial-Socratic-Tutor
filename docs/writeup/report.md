@@ -439,12 +439,22 @@ it. Derivation, all five cases and the day-12 calibration withdrawal:
 
 1. **The judgement fields are inert.** `student_state`, `correct` and
    `focus_nodes` are logged and read by nothing; mastery comes from a string
-   comparison and the lit set from the ladder. Over this run's **40 turns**, the
-   curriculum moved on **13**: 6 `advance` the model also asked for, 6
-   `backtrack` the server performed while the model asked for a hint, and **1
-   `backtrack` the model requested and got**. That fraction is not a quality
-   score; the guarantee is that the override is available on all 13, whatever
-   the model asks for, which is why it cannot be *that the model is right*.
+   comparison and the lit set from the ladder. Over this run's **40 turns**, **13
+   emitted a curriculum action and 12 moved the curriculum**: 6 `advance` the
+   model also asked for, 6 `backtrack` the server performed while the model asked
+   for a hint, and **1 `backtrack` the model requested, which moved nothing**.
+   That fraction is not a quality score; the guarantee is that the override is
+   available on all 13, whatever the model asks for, which is why it cannot be
+   *that the model is right*.
+
+   **The 13/12 gap is not a rounding of the same number.** An earlier version of
+   this paragraph said the curriculum moved on 13 and then, two sentences later,
+   that one of the 13 moved nothing — both from the same hand pass over the same
+   log. `python -m eval.curriculum_moves --build 18d220d` now derives the split
+   from `logs/turns.jsonl` and names the stationary turn
+   (`sess_88764468ce90` turn 4, item stayed `itm_0021`), because it tests whether
+   `item_id` changed rather than trusting the action label. Result:
+   [curriculum_moves.json](../../eval/results/curriculum_moves.json).
 
    **That single model-requested backtrack is also the one the log could not
    account for**, and chasing it found a real hole. `action` begins life as
@@ -528,7 +538,7 @@ is and the 83% is reported rather than repaired.
 
 ## 6. What we got wrong, and why that is in the report
 
-Six failures in the system, in four weeks, found by the people who wrote the
+Seven failures in the system, in four weeks, found by the people who wrote the
 code. We include them because in every case the *intuitive* fix would have hidden
 the problem rather than surfaced it, and because all of them survived a test suite
 a reviewer would have called adequate.
@@ -565,6 +575,20 @@ a reviewer would have called adequate.
   that a fix you have just shipped is the most attractive available explanation
   for any improvement that follows it.**
 
+- **The seventh is a number that contradicted itself in its own paragraph, and
+  it is ours from day 18.** §5.6's containment count said the curriculum moved
+  on 13 and then, two sentences later, that one of those 13 moved nothing. Both
+  sentences came from one hand pass over one log, and no committed code could
+  reproduce either — the same standing this report withdrew a day-12 number for.
+  The correct split is **13 emitted, 12 moved**. It was found on day 19 by
+  building the tool that should have produced it in the first place:
+  `eval/curriculum_moves.py` decides movement by testing whether `item_id`
+  changed, rather than trusting the action label, which is precisely what makes
+  the two numbers different. **The lesson is this section's closing question
+  turned inward** — we asked what every number was computed over, and did not
+  ask it of a number we had computed by hand, once, with nothing able to
+  disagree.
+
 If that pattern generalises even weakly, published leakage and learning-gain
 figures from systems of this shape deserve a question rarely asked of them:
 **not "what is the number" but "what was it computed over, and how would you
@@ -575,7 +599,7 @@ know."**
 **[instrument-failures.md](instrument-failures.md)** — kept separate from §6
 because it is a different failure and, we think, the more transferable one.
 
-The six above are faults in the tutor, or in how we read it. These are faults in the code doing
+The seven above are faults in the tutor, or in how we read and reported it. These are faults in the code doing
 the *measuring*, and each produced a confident, specific, plausible verdict **about
 the tutor** while the fault was in the harness. Two of them were plausible
 enough that we acted on them before noticing, and the fourth was caught only

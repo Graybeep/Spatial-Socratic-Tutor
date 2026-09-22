@@ -1,0 +1,42 @@
+{
+  "18d220d:real": {
+    "build": "18d220d",
+    "mode": "real",
+    "turns": 40,
+    "sessions": 10,
+    "emitted_total": 13,
+    "moved_total": 12,
+    "emitted": {
+      "advance": 6,
+      "backtrack:model": 1,
+      "backtrack:server": 6
+    },
+    "moved": {
+      "advance": 6,
+      "backtrack:server": 6
+    },
+    "stationary": [
+      {
+        "session_id": "sess_88764468ce90",
+        "turn_id": 4,
+        "action": "backtrack",
+        "label": "backtrack:model",
+        "item_id": "itm_0021"
+      }
+    ],
+    "first_turn_moves": 0,
+    "origin_disagreements": [],
+    "provenance": {
+      "population": 10,
+      "distinct": 10,
+      "observations": 40,
+      "unit": "sessions",
+      "expect_full": true,
+      "coverage": 1.0,
+      "complete": true,
+      "code": "6a9d954",
+      "generated_at": "2026-09-22T10:51:14+0530"
+    },
+    "provenance_problem": null
+  }
+}

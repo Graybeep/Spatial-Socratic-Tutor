@@ -161,6 +161,28 @@ def test_a_pre_day_19_record_still_gets_an_origin():
     assert CM.infer_origin(record) == "server"
 
 
+def test_the_inference_cannot_separate_a_coincident_two_failure_backtrack():
+    """The documented bound, pinned so the docstring cannot quietly become
+    false. A §7 two-failure backtrack on a turn where Call 1 also asked to step
+    back reads as the model's, because `requested_action` is all there is to
+    read. This is the ambiguity `backtrack_origin` was added to remove, and on
+    pre-day-19 records it makes `backtrack:model` an upper bound."""
+    coincident = _turn(server_action="backtrack",
+                       call1={"requested_action": "backtrack"})
+    assert CM.infer_origin(coincident) == "model"
+
+    # With the field present the server's move is attributed correctly, and the
+    # disagreement is surfaced rather than hidden.
+    coincident["backtrack_origin"] = "server"
+    log = _log(_tmp(), [
+        _turn(turn_id=1, item_id="itm_0026"),
+        dict(coincident, turn_id=2, item_id="itm_0021"),
+    ])
+    arm = _only(CM.measure(path=log, build="abc1234"))
+    assert arm["emitted"]["backtrack:server"] == 1
+    assert len(arm["origin_disagreements"]) == 1
+
+
 def test_a_turn_that_did_not_backtrack_has_no_origin():
     assert CM.infer_origin(_turn(server_action="advance")) is None
     assert CM.infer_origin(_turn(server_action="hint_verbal")) is None
@@ -176,6 +198,43 @@ def test_the_origin_vocabulary_matches_the_server_s():
     for origin in CM.ORIGINS:
         assert f'backtrack_origin = "{origin}"' in source, (
             f"eval names an origin {origin!r} that server/turn.py never writes")
+
+
+# --- the override count ----------------------------------------------------
+
+def test_the_override_count_is_reported_against_both_denominators():
+    """`diagnosis-readthrough.md` quoted this with the day-12 and day-18 columns
+    using different denominators - 12 moved against 13 emitted - and the two
+    coincide often enough that the mismatch survived being read. Reporting both
+    is what stops them drifting apart again."""
+    log = _log(_tmp(), [
+        _turn(turn_id=1, item_id="itm_0021"),
+        # server overrode: asked for a hint, got a backtrack, and it moved.
+        _turn(turn_id=2, item_id="itm_0001", server_action="backtrack",
+              call1={"requested_action": "hint_visual"}),
+        # server agreed: asked to advance, advanced.
+        _turn(turn_id=3, item_id="itm_0002", server_action="advance",
+              call1={"requested_action": "advance"}),
+        # emitted but stationary, and an override.
+        _turn(turn_id=4, item_id="itm_0002", server_action="backtrack",
+              call1={"requested_action": "hint_verbal"}),
+    ])
+    arm = _only(CM.measure(path=log, build="abc1234"))
+    assert arm["emitted_total"] == 3 and arm["moved_total"] == 2
+    assert arm["overrode_emitted"] == 2
+    assert arm["overrode_moved"] == 1, (
+        "a stationary override was counted against the moved denominator")
+
+
+def test_agreement_is_not_counted_as_an_override():
+    log = _log(_tmp(), [
+        _turn(turn_id=1, item_id="itm_0021"),
+        _turn(turn_id=2, item_id="itm_0001", server_action="advance",
+              call1={"requested_action": "advance"}),
+    ])
+    arm = _only(CM.measure(path=log, build="abc1234"))
+    assert arm["moved_total"] == 1
+    assert arm["overrode_moved"] == 0 and arm["overrode_emitted"] == 0
 
 
 # --- the refusals ----------------------------------------------------------

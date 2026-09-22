@@ -27,6 +27,19 @@ python -m eval.leak_monitor                     --json $T/leak_monitor.json
 cp $T/*.json eval/results/
 ```
 
+`curriculum_moves.json` is generated separately, because it is the one result
+here that is **not** a mock-utterance run and does not regenerate with the
+others:
+
+```bash
+python -m eval.curriculum_moves --build 18d220d --json $T/curriculum_moves.json
+```
+
+It counts a specific historical run — the day-18 real-model policy run, 40 turns
+over 10 sessions — so the build is named rather than defaulted. Re-running it
+without `--build` counts the current build and will report nothing until the
+current build has logged turns of its own.
+
 The temp path is not fussiness. These files are committed, so writing one
 directly dirties the tree, and the *next* eval in the sequence then stamps itself
 `<sha>-dirty` over code that has not changed — the first attempt at this produced
