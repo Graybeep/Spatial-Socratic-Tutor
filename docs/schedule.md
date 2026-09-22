@@ -962,6 +962,45 @@ nobody kept.
 
 ---
 
+### 2026-09-22 (day 19) — a landing screen, and a deliberate freeze exception
+
+**This is a feature added after `feature-freeze` was tagged**, on an explicit
+call, and it is recorded here so the tag does not quietly stop meaning anything.
+The freeze stands for everything else.
+
+**The gap it closes.** The app opened straight onto 52 lit nodes. A student who
+has not read the report cannot place the question: they do not know the map is a
+chapter, that a click is an answer, or that being wrong is what makes the map
+work. The first thing the interface did was ask a question its user could not
+situate.
+
+`client/src/Landing.tsx` comes first now. Three steps in plain language — you get
+a map / you answer by pointing / stuck, and it shrinks — and no jargon the tutor
+does not itself use: no "nodes", no "hint ladder", no "narrowing schedule".
+
+**What it deliberately does not do: preview the narrowing.** `App.tsx` already
+carried the rule — *"The only motion in this app is the dim transition. No
+entrance animations … that is what makes the narrowing the memorable moment."* An
+animated 52 → 12 teaser here would spend that moment before the student reaches
+the real one, on their own wrong answer. So the narrowing is described in one
+line and shown for the first time when it happens.
+
+**Visual language is the app's, not the mock-up's.** The design brief was a dark
+glassmorphic page; the client is light paper, teal off the mastery ramp, IBM Plex
+Sans. Dropping a dark page in front of a light app would read as two products, so
+the structure was kept and the palette taken from `tokens.css`.
+
+**The session no longer opens on mount.** It opens when the student presses
+Start. Verified: loading the page writes **0 session rows**, and the Start path
+(`/graph` + `/session` + first `/turn`) works. A failed start returns to Landing
+with the reason on it rather than a dead screen, so there is somewhere to press
+again.
+
+Typecheck and build clean; 537 tests still pass. No server change — this is
+entirely layer B.
+
+---
+
 ### Eval freeze: no eval runs in the 24 hours before Saturday 2026-09-26
 
 **The window is Friday 2026-09-25 00:00 to Saturday 2026-09-26 00:00.** Nothing

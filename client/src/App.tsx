@@ -1,6 +1,7 @@
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { Graph } from "./Graph";
 import { Chat, NodePanel, type Line } from "./Chat";
+import { Landing } from "./Landing";
 import { createSession, loadGraph, streamTurn } from "./api";
 import type {
   EdgeRef,
@@ -59,21 +60,28 @@ export default function App() {
   // tutor line duplicated - which reads as a server bug and is not one.
   const started = useRef(false);
 
-  useEffect(() => {
+  // The session no longer opens on mount. A student who lands on 52 lit nodes
+  // with no framing cannot place the question they are being asked, so Landing
+  // comes first and this runs when they choose to begin. See Landing.tsx.
+  const [entered, setEntered] = useState(false);
+
+  async function enter() {
     if (started.current) return;
     started.current = true;
-    (async () => {
-      try {
-        const [g, sid] = await Promise.all([loadGraph(), createSession()]);
-        setGraph(g);
-        session.current = sid;
-        void send(null);
-      } catch {
-        setErr("Could not reach the tutor.");
-      }
-    })();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+    setEntered(true);
+    try {
+      const [g, sid] = await Promise.all([loadGraph(), createSession()]);
+      setGraph(g);
+      session.current = sid;
+      void send(null);
+    } catch {
+      // Back to Landing rather than a dead screen: the student has somewhere
+      // to press again, and the reason is on the surface they pressed from.
+      started.current = false;
+      setEntered(false);
+      setErr("Could not reach the tutor. Is the server running on port 8000?");
+    }
+  }
 
   async function send(response: StudentResponse | null) {
     if (!session.current) return;
@@ -143,6 +151,10 @@ export default function App() {
   function answerText(value: string) {
     setLines((l) => [...l, { who: "you", text: value }]);
     void send({ type: "text", text: value });
+  }
+
+  if (!entered) {
+    return <Landing onStart={() => void enter()} error={err} />;
   }
 
   if (!graph) {

@@ -308,6 +308,7 @@ NARROW_SCHEDULE=0,25,18,12,8 python -m server.main
 | `docs/writeup/no-key-plan.md` | **the report that stands without a key**, and the day-19 decision |
 | `build/fetch_chapter.py` | downloads the chapter into a gitignored dir; URLs in `build/config.py` |
 | `client/src/types.ts` | reconciled against `/schemas`; supersedes `templates/` |
+| `client/src/Landing.tsx` | the screen before the map: what it is, how to answer, why it dims |
 | `client/src/Graph.tsx` | the frozen-layout SVG and the two dimming channels |
 | `client/contrast-check.html` | §8 projector test, at the 9-lit rung the demo really reaches |
 | `server/preflight.py` | demo pre-flight — clean main, fresh state.db, declared MOCK_MODE, 24h token budget |
