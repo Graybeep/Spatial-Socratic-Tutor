@@ -696,6 +696,44 @@ take's measured figure.
 
 ---
 
+### 2026-09-22 (day 19) — writeup: first page, and §6 regrouped by mechanism
+
+**§6 no longer counts.** It ran "six failures... the sixth is... the seventh
+is...", and a running tally invites the wrong question — *how many?* — instead
+of the one that transfers: *what kind, and would it have happened to you?* It is
+now four mechanisms, each with the instances under it and a **transferable
+form** line:
+
+1. **Two fields that differ in the schema and are identical in the domain** —
+   101 of 260 items shipped the answer in the clear with the suite green.
+2. **A well-formed number over the wrong population** — the one-item leakage
+   rate, the 13-emitted/12-moved conflation, the mismatched denominators, the
+   pooled builds. `eval/provenance.py` is the structural fix.
+3. **The fix you just shipped is the most attractive explanation** — the day-18
+   attribution error.
+4. **The instrument was broken and reported confidently about the tutor** —
+   cross-referenced to §7, which keeps its own count because "the harness was
+   wrong four times" is a fact about the harness, not a way of grouping.
+
+**A first page, before any argument.** Claims table with per-claim links; the
+headline number **+8.6 points, 95% CI [+1.9, +16.4]**, stated immediately as
+*one cell in a grid of nine* with the rest crossing zero; and the seven things
+that would make a reader distrust the whole report — one chapter, curated graph
+with no extraction run, simulated students, a baseline that is not silent, a
+similarity metric biased downward exactly where the phenomenon is strongest,
+**confirm-or-undo untested by any stranger**, and mock latency figures.
+
+Limitations go on page one deliberately. A limitations section a reader reaches
+on page nine has already done its damage.
+
+Housekeeping the rewrite forced: §2 had repeated the first page's claims table
+verbatim eighty lines later, so it now carries only the ordering argument; §7's
+"the seven above" became a reference to §6's mechanisms; six in-page anchors
+were wrong because `§` and em-dashes do not slugify the way I assumed. All
+links, in-page and file, now resolve.
+
+---
+
 ### Eval freeze: no eval runs in the 24 hours before Saturday 2026-09-26
 
 **The window is Friday 2026-09-25 00:00 to Saturday 2026-09-26 00:00.** Nothing
