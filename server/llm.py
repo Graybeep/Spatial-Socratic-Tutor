@@ -207,6 +207,24 @@ def _groq_request(cfg: LLMCallConfig, system: str, user: str, tool: _Tool) -> di
     }
 
 
+def _lmstudio_request(cfg: LLMCallConfig, system: str, user: str, tool: _Tool) -> dict:
+    """`_groq_request` with the one spelling a local server will accept.
+
+    LM Studio rejects the OBJECT form of `tool_choice` outright -
+    `Invalid tool_choice type: 'object'. Supported string values: none, auto,
+    required` - so naming the tool is not available. `required` forces a tool
+    call without saying which, and that is equivalent here because each call
+    defines exactly ONE tool: there is nothing else for the model to pick.
+
+    Everything else is shared, deliberately. The body, the schema and the
+    extraction are `_groq_request`'s, so a response that validates on Groq
+    validates here and the two cannot drift into being different contracts.
+    """
+    body = _groq_request(cfg, system, user, tool)
+    body["tool_choice"] = "required"
+    return body
+
+
 def _anthropic_extract(payload: dict):
     """(arguments, complaint). Exactly one is None."""
     if payload.get("stop_reason") == "refusal":
@@ -256,6 +274,15 @@ _PROVIDERS = {
         "/openai/v1/chat/completions",
         lambda key: {"Authorization": f"Bearer {key}"},
         _groq_request,
+        _groq_extract,
+    ),
+    #: A local OpenAI-compatible server. Different path from Groq's, no auth
+    #: header, and `tool_choice` spelled as a string. Same body, same schema,
+    #: same extraction - see `_lmstudio_request`.
+    "lmstudio": (
+        "/v1/chat/completions",
+        lambda key: {},
+        _lmstudio_request,
         _groq_extract,
     ),
 }
@@ -367,7 +394,8 @@ def _invoke(cfg: LLMCallConfig, system: str, user: str, tool: _Tool, label: str)
     """POST, force the tool call, validate. Retries are counted and logged."""
     path, auth, build_body, extract = provider()
 
-    if not CONFIG.llm_key:
+    # A local provider is this machine and has no credential to be missing.
+    if not CONFIG.llm_key and not CONFIG.llm_is_local:
         env_var = "GROQ_API_KEY" if CONFIG.llm_provider == "groq" else "ANTHROPIC_API_KEY"
         raise LLMError(
             f"{label}: no {env_var} (LLM_PROVIDER={CONFIG.llm_provider}). Set one "

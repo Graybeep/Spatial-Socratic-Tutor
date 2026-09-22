@@ -50,8 +50,26 @@ def _path(name: str, default: str) -> Path:
     return value if value.is_absolute() else ROOT / value
 
 
-def _by_provider(anthropic, groq):
+#: Providers that speak the OpenAI chat-completions wire format. They differ
+#: from one another only in URL, auth and how `tool_choice` may be spelled - the
+#: request body and the extraction are shared.
+OPENAI_SHAPED = ("groq", "lmstudio")
+
+#: Providers served from this machine. They have no quota and no per-minute
+#: window, so the demo pre-flight's daily-token check does not apply to them,
+#: and `_invoke` does not demand a key.
+LOCAL_PROVIDERS = ("lmstudio",)
+
+
+def _by_provider(anthropic, groq, local=None):
     """A default that differs by provider.
+
+    `local` is optional and falls back to the `groq` value, because the two
+    OpenAI-shaped providers agree about everything except which models exist:
+    the completion budget is the same on both (local reasoning models spend
+    output tokens before the tool call exactly as gpt-oss does - measured 252
+    and 625 reasoning tokens on qwen3.5-9b and gemma-4-e4b), while the model
+    ids are necessarily different.
 
     Read at startup like every other default (§13.1), and still overridable by
     the call's own env var - `CALL1_MAX_TOKENS` beats both.
@@ -63,7 +81,10 @@ def _by_provider(anthropic, groq):
     and the provider reports "model did not call a tool", which reads like the
     model cannot do it. See `_explain` in server/llm.py.
     """
-    return groq if _str("LLM_PROVIDER", "anthropic") == "groq" else anthropic
+    provider = _str("LLM_PROVIDER", "anthropic")
+    if provider in LOCAL_PROVIDERS:
+        return groq if local is None else local
+    return groq if provider in OPENAI_SHAPED else anthropic
 
 
 @dataclass(frozen=True)
@@ -104,14 +125,23 @@ class Config:
     groq_api_key: str = field(default_factory=lambda: _str("GROQ_API_KEY", ""))
     groq_base_url: str = field(default_factory=lambda: _str("GROQ_BASE_URL", "https://api.groq.com"))
 
+    #: A local OpenAI-compatible server (LM Studio's default port). No key: it
+    #: is this machine. See LOCAL_PROVIDERS.
+    lmstudio_base_url: str = field(
+        default_factory=lambda: _str("LMSTUDIO_BASE_URL", "http://127.0.0.1:1234"))
+
     # --- the two calls (CLAUDE.md 5) ----------------------------------------
     # Call 1 diagnoses. Its `diagnosis` field is what a human hand-reads thirty of
     # in week 3 (CLAUDE.md 9.5), so it gets the higher effort of the two.
     call1: LLMCallConfig = field(default_factory=lambda: LLMCallConfig(
-        model=_str("CALL1_MODEL", _by_provider("claude-opus-5", "openai/gpt-oss-120b")),
+        model=_str("CALL1_MODEL", _by_provider(
+            "claude-opus-5", "openai/gpt-oss-120b", "qwen/qwen3.5-9b")),
         max_tokens=_int("CALL1_MAX_TOKENS", _by_provider(300, 1500)),
         effort=_str("CALL1_EFFORT", "medium"),
-        timeout_s=_float("CALL1_TIMEOUT_S", 10.0),
+        #: 10s is a cloud number. A local 9B model measured 40.3s to a validated
+        #: Call 1 decision on this machine (2026-09-22), so a shared timeout
+        #: would fail every local call before it finished thinking.
+        timeout_s=_float("CALL1_TIMEOUT_S", _by_provider(10.0, 10.0, 180.0)),
     ))
     # Call 2 writes ONE SENTENCE from an action, a hint level and some node
     # labels. The split deliberately left it nothing to reason about: it has no
@@ -119,10 +149,11 @@ class Config:
     # spends seconds of a 4.5s p95 budget, so the default is Haiku and the
     # judgement stays on Call 1, whose diagnosis is hand-read in week 3.
     call2: LLMCallConfig = field(default_factory=lambda: LLMCallConfig(
-        model=_str("CALL2_MODEL", _by_provider("claude-haiku-4-5", "openai/gpt-oss-20b")),
+        model=_str("CALL2_MODEL", _by_provider(
+            "claude-haiku-4-5", "openai/gpt-oss-20b", "google/gemma-4-e4b")),
         max_tokens=_int("CALL2_MAX_TOKENS", _by_provider(250, 1200)),
         effort=_str("CALL2_EFFORT", "low"),
-        timeout_s=_float("CALL2_TIMEOUT_S", 10.0),
+        timeout_s=_float("CALL2_TIMEOUT_S", _by_provider(10.0, 10.0, 180.0)),
     ))
     #: Retries per call on a transport error or a schema-invalid response.
     #: CLAUDE.md 10: every retry is logged. There are no silent ones.
@@ -164,12 +195,21 @@ class Config:
         the environment's. Nothing reads os.environ at call time (§13.1) - both
         keys were read at startup.
         """
+        if self.llm_provider in LOCAL_PROVIDERS:
+            return ""  # this machine; `_invoke` does not demand one
         return self.groq_api_key if self.llm_provider == "groq" else self.api_key
 
     @property
     def llm_base_url(self) -> str:
         """The base URL for the ACTIVE provider. See `llm_key`."""
+        if self.llm_provider == "lmstudio":
+            return self.lmstudio_base_url
         return self.groq_base_url if self.llm_provider == "groq" else self.base_url
+
+    @property
+    def llm_is_local(self) -> bool:
+        """Served from this machine: no quota, no per-minute window, no key."""
+        return self.llm_provider in LOCAL_PROVIDERS
 
     # --- paths ---------------------------------------------------------------
     graph_path: Path = field(default_factory=lambda: _path("GRAPH_PATH", "data/graph.json"))

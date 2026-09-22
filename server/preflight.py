@@ -160,6 +160,16 @@ def window_spend(rows: list, model: str, now: Optional[float] = None) -> int:
 
 
 def check_token_budget(rows: list, now: Optional[float] = None) -> Check:
+    #: A local server has no quota and no daily window, so there is no budget to
+    #: be short of. Reported rather than silently skipped: "this check does not
+    #: apply" and "this check passed" are different things, and a reader of the
+    #: output is entitled to know which one they got.
+    if CONFIG.llm_is_local:
+        spent = window_spend(rows, CONFIG.call1.model, now=now)
+        return Check("tokens", True,
+                     f"not applicable: {CONFIG.llm_provider} is local, no daily "
+                     f"quota ({spent:,} tokens used in 24h, for information)",
+                     undecided=True)
     model = CONFIG.call1.model
     spent = window_spend(rows, model, now=now)
     remaining = CONFIG.tpd_limit - spent
