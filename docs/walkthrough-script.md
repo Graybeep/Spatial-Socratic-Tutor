@@ -22,28 +22,43 @@ Everything in the take serves that sentence. If a segment does not, cut it.
 ## Before you press record
 
 ```bash
-python -m server.preflight --expect-mock false     # must print "ready."
+python -m server.preflight --expect-mock true      # must print "ready."
 ```
 
 It checks clean `main`, absent `state.db`, `MOCK_MODE` as declared, and daily
 token headroom. **If it says NOT READY, fix it — do not record.**
 
-**There is no rehearsal day** — the recording moved up, so the provider is picked
-on the day and `TAKE_BUDGET` is measured from the take itself. The difference on
-camera is large, so decide before you press record:
+## The provider question is settled: record in MOCK_MODE
 
-| | Call 1 | Call 2 | one turn |
-|---|---|---|---|
-| Groq `gpt-oss-120b` / `20b` | **2.3s** p50 | not measured | — |
-| local `qwen3.5-9b` / `gemma-4-e4b` | **56.8s** | **24.3s** | **~81s** |
+`.env` is set to `MOCK_MODE=true` for the take. That removes every risk the
+recording could not absorb, now that the move to 09-23 left no rehearsal day:
 
-Only the local pair has been timed end to end (n=1, day 19). Groq's Call 1 p50
-is from day 12 and **its Call 2 has never been measured**, so the cloud row has
-no turn total — do not assume one. If you record on Groq, the first take is also
-the measurement.
+| | resolved by recording in mock |
+|---|---|
+| Which provider? | none — no model is called |
+| Groq Call 2 never timed | irrelevant; nothing to time |
+| ~81s/turn on local models | gone — the mock paces at **0.9s + 1.4s = 2.3s/turn** |
+| `TAKE_BUDGET` still provisional | no tokens spent at all |
+| Rate limit mid-take | impossible |
 
-What is certain is the order of magnitude: **a 20-turn take is ~27 minutes
-locally.** If recording locally, plan to cut between turns.
+**A 20-turn take is about 46 seconds of waiting.** It plays in real time.
+
+### Say out loud that the tutor's words are canned
+
+This is the one thing mock mode obliges you to disclose, and it costs nothing
+because the report already argues it:
+
+> *"The sentences you're hearing are templates — there's no model running. The
+> narrowing is the real thing: it's computed from the graph and the hint ladder,
+> and it's identical whether a model writes the words or not."*
+
+That is true by construction and is exactly why §9.1 is reported as a
+mock-utterance result: **the visual arm's narrowing is deterministic and does not
+depend on what Call 2 writes.** Said plainly it is a design point. Left unsaid
+and later noticed, it reads as a demo that quietly faked its tutor.
+
+**Do not claim a live model is reasoning on camera.** If asked, the real-model
+path is one environment variable and the report's numbers come from it.
 
 ---
 
@@ -127,24 +142,28 @@ Then the honest closing beat, on screen for ~20 seconds.
 
 ## If it breaks mid-take
 
-- **Call 2 times out** → a canned per-action line appears. The graph has
-  *already* moved, which is the point; carry on and mention the fallback.
-- **Rate limited on Groq** → stop. Do not narrate a stall. `--report` will show
-  what was left.
-- **Anything else** → stop, `python -m server.preflight`, start a fresh take
-  from a fresh `state.db`. Re-recording 3 minutes is cheaper than explaining an
-  artefact.
+In mock there is no network, no key and no rate limit, so the whole class of
+provider failures cannot occur. What is left:
+
+- **Eight turns on one item** → a forced reveal fires. Designed, not broken;
+  name it as the frustration cap and carry on.
+- **The session ends** → the circuit breaker cut it after repeated forced
+  reveals. Start a fresh take rather than explaining it.
+- **Anything else** → stop, `python -m server.preflight --expect-mock true`,
+  start a fresh take from a fresh `state.db`. Re-recording 3 minutes is cheaper
+  than explaining an artefact.
 
 ---
 
 ## After the take
 
-```bash
-python -m server.preflight --report     # per-turn mean and max
-```
+**Nothing to measure.** A mock take spends no tokens and writes no ledger lines,
+so `python -m server.preflight --report` will correctly report an empty ledger
+and **`TAKE_BUDGET` stays provisional at 90,000**. That is a real gap, not an
+oversight: no take has ever been costed, and the first real-model session is
+what would close it.
 
-Replace `TAKE_BUDGET` with the measured figure — it is provisional at 90,000 and
-nothing has counted a real take. Then tag:
+Tag it:
 
 ```bash
 git tag -a demo -m "demo walkthrough recorded"

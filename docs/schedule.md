@@ -806,6 +806,39 @@ path rather than degrading it.
 
 ---
 
+### 2026-09-22 (day 19) — the take is recorded in MOCK_MODE
+
+`.env` set to `MOCK_MODE=true` (gitignored, so this is a local change; the
+committed default was already `true`). The move to 09-23 removed the rehearsal
+day, and recording in mock removes every risk that day was meant to absorb:
+
+| open question | resolved by |
+|---|---|
+| Which provider ships on camera? | none is called |
+| Groq's Call 2 was never timed | nothing to time |
+| ~81s/turn on the local pair | mock paces at 0.9s + 1.4s = **2.3s/turn** |
+| Rate limit mid-take | impossible |
+
+A 20-turn take is **~46 seconds** of waiting and plays in real time.
+
+**The cost, stated rather than hidden: the tutor's sentences are templates.** The
+script now requires saying so on camera. It is defensible for exactly the reason
+§9.1 is already reported as a mock-utterance result — **narrowing is computed
+from the graph and the ladder, and is identical whether a model writes the words
+or not** — but it is only defensible when said. Unsaid and later noticed, it
+reads as a demo that faked its tutor.
+
+**`TAKE_BUDGET` will not be measured.** A mock take writes no ledger lines, so
+`--report` finds an empty ledger and the figure stays provisional at 90,000. No
+take has ever been costed; the first real-model session is what would close it.
+
+Three script sections went stale with the decision and were fixed: the pre-flight
+invocation now declares `--expect-mock true`, the break-glass list drops the
+provider failures that cannot occur in mock, and the after-the-take step no
+longer promises a measurement it cannot produce.
+
+---
+
 ### Eval freeze: no eval runs in the 24 hours before Saturday 2026-09-26
 
 **The window is Friday 2026-09-25 00:00 to Saturday 2026-09-26 00:00.** Nothing
