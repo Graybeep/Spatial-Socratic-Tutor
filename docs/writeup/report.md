@@ -461,7 +461,7 @@ it. Derivation, all five cases and the day-12 calibration withdrawal:
    `decision.requested_action`, so a Call 1 asking to step back got the word and
    the prerequisite chunk while **nothing moved** — no new item, the student
    still on the node they were failing. Only the two-failure rule ever moved the
-   curriculum. A model-requested backtrack is now honoured **only if the target
+   curriculum *backwards*. A model-requested backtrack is now honoured **only if the target
    prerequisite is below `MASTERY_THRESHOLD`** — §7 backtracks to close a gap,
    and a mastered prerequisite is not one — and is otherwise refused and
    degraded to help. Both paths are tested and the gate is mutation-tested;
@@ -576,12 +576,13 @@ a reviewer would have called adequate.
   for any improvement that follows it.**
 
 - **The seventh is a number that contradicted itself in its own paragraph, and
-  it is ours from day 18.** §5.6's containment count said the curriculum moved
-  on 13 and then, two sentences later, that one of those 13 moved nothing. Both
-  sentences came from one hand pass over one log, and no committed code could
-  reproduce either — the same standing this report withdrew a day-12 number for.
-  The correct split is **13 emitted, 12 moved**. It was found on day 19 by
-  building the tool that should have produced it in the first place:
+  it is ours from day 19 — written and caught the same day.** §5.6's containment
+  count said the curriculum moved on 13 and then, two sentences later, that one
+  of those 13 moved nothing. Both sentences came from one hand pass over one log,
+  and no committed code could reproduce either — the same standing this report
+  withdrew a day-12 number for. The correct split is **13 emitted, 12 moved**.
+  It was caught about ten hours later by building the tool that should have
+  produced it in the first place:
   `eval/curriculum_moves.py` decides movement by testing whether `item_id`
   changed, rather than trusting the action label, which is precisely what makes
   the two numbers different. **The lesson is this section's closing question

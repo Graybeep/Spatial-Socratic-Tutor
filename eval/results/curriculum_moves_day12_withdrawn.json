@@ -1,31 +1,24 @@
 {
-  "18d220d:real": {
-    "build": "18d220d",
+  "77b7e5d-dirty:real": {
+    "build": "77b7e5d-dirty",
     "mode": "real",
     "turns": 40,
     "sessions": 10,
-    "emitted_total": 13,
+    "emitted_total": 12,
     "moved_total": 12,
-    "overrode_emitted": 6,
-    "overrode_moved": 6,
+    "overrode_emitted": 11,
+    "overrode_moved": 11,
     "emitted": {
-      "advance": 6,
+      "advance": 7,
       "backtrack:model": 1,
-      "backtrack:server": 6
+      "backtrack:server": 4
     },
     "moved": {
-      "advance": 6,
-      "backtrack:server": 6
+      "advance": 7,
+      "backtrack:model": 1,
+      "backtrack:server": 4
     },
-    "stationary": [
-      {
-        "session_id": "sess_88764468ce90",
-        "turn_id": 4,
-        "action": "backtrack",
-        "label": "backtrack:model",
-        "item_id": "itm_0021"
-      }
-    ],
+    "stationary": [],
     "first_turn_moves": 0,
     "origin_disagreements": [],
     "provenance": {
@@ -37,7 +30,7 @@
       "coverage": 1.0,
       "complete": true,
       "code": "7bdd303",
-      "generated_at": "2026-09-22T10:58:16+0530"
+      "generated_at": "2026-09-22T10:58:27+0530"
     },
     "provenance_problem": null
   }
