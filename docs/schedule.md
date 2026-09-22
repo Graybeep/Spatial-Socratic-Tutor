@@ -148,8 +148,8 @@ much smaller scale.
 | ~~2026-09-17~~ | 14 | **dependency freeze** (§1.8), end of week 2 | **MET a day early**, on day 13 — enforced by a test, see below |
 | ~~2026-09-25 → 09-26~~ **from day 19** | 19→ | ~~eval freeze: 24h before Sat 26~~ **SUPERSEDED: no eval runs at all from day 19. The numbers are final.** | in force |
 | ~~2026-09-25~~ **2026-09-22** | ~~22~~ **19** | **feature freeze.** Tag `feature-freeze` | **DONE, three days early**, at `e71c6c5`. Demo-path fixes only from here |
-| ~~2026-09-29~~ **2026-09-26 (Sat)** | ~~26~~ 23 | **video walkthrough recorded.** Tag `demo` **after** the recording, not before | pending — **script written**: [walkthrough-script.md](walkthrough-script.md) |
-| 2026-09-24 (Thu) | 21 | **rehearsal**: pick the provider on measured turns, then `python -m server.preflight --report` and replace `TAKE_BUDGET` | pending |
+| ~~2026-09-29~~ ~~2026-09-26~~ **2026-09-23 (Wed)** | ~~26~~ ~~23~~ **20** | **video walkthrough recorded.** Tag `demo` **after** the recording, not before | **TOMORROW** — script: [walkthrough-script.md](walkthrough-script.md) |
+| ~~2026-09-24 (Thu)~~ | ~~21~~ | ~~rehearsal, then replace `TAKE_BUDGET`~~ | **OVERTAKEN**: the recording moved to 09-23, so there is no rehearsal day before it. Pick the provider and measure `TAKE_BUDGET` from the take itself |
 
 Tags cut so far: `schemas-frozen`, `graph-frozen`, `loop-working`, `feature-freeze`.
 Left: `demo`, after Saturday's recording and not before.
@@ -766,6 +766,43 @@ day 12 and **its Call 2 has never been timed**, so the script gives no cloud
 turn total and says to measure it Thursday. The local pair is timed end to end
 (56.8s + 24.3s = ~81s/turn, n=1), so only the local figure carries a
 20-turn estimate: ~27 minutes.
+
+---
+
+### 2026-09-22 (day 19) — the recording moved to tomorrow, and learner choice is future work
+
+**Recording is 2026-09-23, not 09-26.** Third date this item has had
+(09-29 → 09-26 → 09-23) and the first one that is inside 24 hours. Consequences,
+because a date change that is not costed is a date change that surprises someone:
+
+- **There is no rehearsal day.** Thursday's rehearsal was going to pick the
+  provider on measured turns and replace `TAKE_BUDGET` from a real take. Both now
+  have to happen *during* the take, or not at all. `TAKE_BUDGET` stays at its
+  provisional 90,000.
+- **Groq's Call 2 is still untimed**, so the cloud turn total is still unknown.
+  The local pair is the only end-to-end measurement there is (~81s/turn).
+- The eval freeze window was written as *the 24 hours before Saturday*. It is
+  moot: no eval has run since day 19 and none will.
+
+**Learner choice: the picker is rejected on a mechanism, not on taste.**
+`next_node` returns the lowest-mastery node whose prerequisites are *all*
+mastered. On a fresh session nothing is mastered, so the ready set is the graph's
+**3 root nodes, and all three are in §6.1** (verified: `6.1.1`, `6.1.3`). A
+student who picks §6.3 is returned to §6.1 by the first `advance`. It would be an
+illusion of choice discarded on turn one.
+
+**The version that works is a prior, not a position**, and is written up in
+`report.md` §9: initialise the chosen section's prerequisite ancestors at
+`MASTERY_THRESHOLD`, which makes its nodes ready without special-casing
+selection, and let §7's prereq back-decay and two-failure backtrack correct the
+claim when the student turns out not to know the skipped material. Existing
+machinery, no new rule. **Not built before submission.**
+
+**Upload stays cut, on measurements**: 30/66 prereq recall (45% ceiling), 17
+edges missed because the chapter names a concept before its prerequisite, and an
+MCQ key that is the longest option in 159/159 items. Prereq edges drive selection,
+backtracking and decay, so a graph missing half of them disables the adaptive
+path rather than degrading it.
 
 ---
 

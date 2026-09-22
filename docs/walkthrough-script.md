@@ -1,4 +1,4 @@
-# Walkthrough script — Saturday 2026-09-26
+# Walkthrough script — Wednesday 2026-09-23
 
 *Three minutes. Built around **narrowing and pointing**, which show immediately
 and are what §12 says the project contributes. Not around mastery, which at demo
@@ -28,7 +28,9 @@ python -m server.preflight --expect-mock false     # must print "ready."
 It checks clean `main`, absent `state.db`, `MOCK_MODE` as declared, and daily
 token headroom. **If it says NOT READY, fix it — do not record.**
 
-Provider decided at Thursday's rehearsal. The difference on camera is large:
+**There is no rehearsal day** — the recording moved up, so the provider is picked
+on the day and `TAKE_BUDGET` is measured from the take itself. The difference on
+camera is large, so decide before you press record:
 
 | | Call 1 | Call 2 | one turn |
 |---|---|---|---|
@@ -37,7 +39,8 @@ Provider decided at Thursday's rehearsal. The difference on camera is large:
 
 Only the local pair has been timed end to end (n=1, day 19). Groq's Call 1 p50
 is from day 12 and **its Call 2 has never been measured**, so the cloud row has
-no turn total — do not assume one, time it at Thursday's rehearsal.
+no turn total — do not assume one. If you record on Groq, the first take is also
+the measurement.
 
 What is certain is the order of magnitude: **a 20-turn take is ~27 minutes
 locally.** If recording locally, plan to cut between turns.
