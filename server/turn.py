@@ -749,12 +749,21 @@ def begin_turn(
     # `backtrack_origin` records which of the three happened, because the day-18
     # log could not distinguish a model-initiated backtrack from a coincident
     # two-failure one and the containment count needs that.
+    #
+    # CONFIG.model_backtrack is the coarser question, asked first: may the model
+    # move the curriculum at all? It is OFF by default, so the ordinary demo path
+    # refuses every model-requested backtrack and only the two-failure rule above
+    # moves the student backwards. That is also the behaviour every measurement in
+    # the report was taken under - before day 19 a model request moved nothing in
+    # any case. The mastery gate below is the finer rule, and only runs when the
+    # lever is enabled.
     if action == "backtrack" and backtrack_origin is None:
         mastery_map = _mastery_map(state)
         target = mastery_mod.backtrack_target(store, item.node_id, mastery_map)
         next_item = _pick_item(store, state, target) if target else None
         if (
-            target is not None
+            CONFIG.model_backtrack
+            and target is not None
             and next_item is not None
             and not mastery_mod.is_mastered(mastery_map.get(target, 0.0))
         ):

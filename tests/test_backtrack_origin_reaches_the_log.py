@@ -83,6 +83,10 @@ def _full_turn(store, db, state, response=None):
 
 
 def test_an_honoured_model_backtrack_is_logged_as_the_models(store, monkeypatch, no_latency):
+    """Needs the lever ON. `MODEL_BACKTRACK` defaults off, under which the
+    honoured branch is unreachable - see `test_the_lever_off_logs_a_refusal`."""
+    from .conftest import config_override
+
     node = _node_with_prereqs(store)
     db, state, item = _session_on(store, node)
     _requests(monkeypatch, "backtrack")
@@ -90,7 +94,8 @@ def test_an_honoured_model_backtrack_is_logged_as_the_models(store, monkeypatch,
         state.theta_map[p] = -4.0
     db.save(state)
 
-    phase1 = _full_turn(store, db, state)
+    with config_override(model_backtrack=True):
+        phase1 = _full_turn(store, db, state)
     assert phase1.action == "backtrack", "setup failed; this test proved nothing"
 
     record = _turn_records()[-1]
@@ -153,9 +158,33 @@ def test_a_turn_that_moved_nothing_backwards_logs_no_origin(store, monkeypatch, 
     assert record["backtrack_origin"] is None
 
 
+def test_the_lever_off_logs_a_refusal_not_a_move(store, monkeypatch, no_latency):
+    """The shipped demo path. With `MODEL_BACKTRACK` off the gap is irrelevant:
+    the request is refused, and a count reading this log must see a refusal
+    rather than a curriculum move."""
+    assert CONFIG.model_backtrack is False
+
+    node = _node_with_prereqs(store)
+    db, state, item = _session_on(store, node)
+    _requests(monkeypatch, "backtrack")
+    for p in store.prereqs(node):
+        state.theta_map[p] = -4.0
+    db.save(state)
+
+    phase1 = _full_turn(store, db, state)
+    assert phase1.action != "backtrack"
+
+    record = _turn_records()[-1]
+    assert record["backtrack_origin"] == "refused"
+    assert record["server_action"] != "backtrack"
+    assert record["item_id"] == item.id, "the lever was off and the item moved"
+
+
 def test_the_three_origins_are_the_only_values_written(store, monkeypatch, no_latency):
     """Pins the vocabulary a count will group by. A fourth spelling appearing
     later is a silent new bucket."""
+    from .conftest import config_override
+
     node = _node_with_prereqs(store)
 
     db, state, _ = _session_on(store, node)
@@ -163,7 +192,8 @@ def test_the_three_origins_are_the_only_values_written(store, monkeypatch, no_la
     for p in store.prereqs(node):
         state.theta_map[p] = -4.0
     db.save(state)
-    _full_turn(store, db, state)
+    with config_override(model_backtrack=True):
+        _full_turn(store, db, state)
 
     db, state, _ = _session_on(store, node)
     for p in store.prereqs(node):
