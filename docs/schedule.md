@@ -616,6 +616,41 @@ not mine to void — but it should be revisited once the provider is chosen.
 
 ---
 
+### 2026-09-22 (day 19, night) — the demo path, driven end to end
+
+Run before Friday's freeze, because §11 asks that `main` be left in a state that
+does not need a verification run afterwards. Mock mode, real `/session` and
+`/turn`, no model call.
+
+- **Client builds clean.** `npm run typecheck` and `npm run build` both exit 0;
+  34 modules, 154 kB (50 kB gzipped).
+- **Perfect student:** advances item to item, no narrowing — `advance` applies
+  none by design.
+- **Failing student**, which is what the walkthrough shows:
+
+| turn | action | lit | dimmed |
+|---|---|---|---|
+| t0 | `ask` | 52 | 0 |
+| t1 | `hint_visual` | **12** | 40 |
+| t2 | `hint_verbal` | 12 | 40 |
+| t3 | `hint_visual` | **9** | 43 |
+| t4–t6 | `hint_verbal` | 9 | 43 |
+| t7 | forced reveal → `advance` | — | — |
+
+Four documented behaviours confirmed live rather than from tests: **narrowing
+lands on turn two** (52 → 12, before any utterance), the `interleaved` ladder
+**bottoms out at 9 lit, not 5** — the number the projector test is actually
+about — the hint counter **caps at `HINT_MAX` 4** and never decreases, and the
+**8-turn budget forces a reveal** and moves on.
+
+**No `backtrack` appeared, and that is correct.** The session opens on a root
+node, so `backtrack_target` has no prerequisite to return and §7's two-failure
+rule has nowhere to send the student; the turn budget fires first. Checked
+rather than assumed, because an absent backtrack and a broken backtrack look
+identical in a trace.
+
+---
+
 ### Eval freeze: no eval runs in the 24 hours before Saturday 2026-09-26
 
 **The window is Friday 2026-09-25 00:00 to Saturday 2026-09-26 00:00.** Nothing
