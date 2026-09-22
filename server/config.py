@@ -242,6 +242,23 @@ class Config:
     prereq_decay: float = field(default_factory=lambda: _float("PREREQ_DECAY", 0.05))
     consecutive_failures_before_backtrack: int = field(
         default_factory=lambda: _int("CONSECUTIVE_FAILURES_BEFORE_BACKTRACK", 2))
+    #: Whether a model-requested backtrack may move the curriculum AT ALL.
+    #:
+    #: Default FALSE, which is the shipped demo behaviour: only §7's two-failure
+    #: rule moves the student backwards, and a `backtrack` Call 1 asks for is
+    #: always refused and degraded to `backtrack_refused_action`.
+    #:
+    #: The day-19 gate (see `server/turn.py`) is the finer rule underneath: when
+    #: this is TRUE a model request is honoured only against a prerequisite below
+    #: `mastery_threshold`, because §7 backtracks to close a gap. This flag is the
+    #: coarser question of whether the model gets that lever at all, and it is off
+    #: by default because a curriculum move is the kind of decision CLAUDE.md §5
+    #: keeps in Python. Until day 19 a model request moved nothing in any case, so
+    #: `false` is also the behaviour every measurement in the report was taken
+    #: under.
+    model_backtrack: bool = field(
+        default_factory=lambda: _bool("MODEL_BACKTRACK", False))
+
     #: What a REFUSED model-requested backtrack degrades to. Call 1 may ask to
     #: step back to a prerequisite the student has already mastered; the server
     #: refuses that (§7 backtracks to close a gap, and there is no gap), and the

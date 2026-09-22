@@ -73,6 +73,11 @@ def test_the_target_is_the_lowest_mastery_prereq(store):
 
 
 def test_a_backtrack_to_an_unmastered_prereq_is_honoured(store, monkeypatch):
+    """The gate's honoured branch, which only exists when the lever is ON.
+    `MODEL_BACKTRACK` defaults off, so this opts in explicitly - see
+    `test_the_lever_is_off_by_default` below for the shipped behaviour."""
+    from .conftest import config_override
+
     node = _node_with_prereqs(store)
     db, state, item = _session_on(store, node)
     _ask_for_backtrack(monkeypatch)
@@ -82,7 +87,8 @@ def test_a_backtrack_to_an_unmastered_prereq_is_honoured(store, monkeypatch):
         state.theta_map[p] = -4.0
     db.save(state)
 
-    phase1 = turn_mod.begin_turn(store, db, state, None)
+    with config_override(model_backtrack=True):
+        phase1 = turn_mod.begin_turn(store, db, state, None)
 
     assert phase1.action == "backtrack"
     assert phase1.backtrack_origin == "model"
@@ -92,7 +98,70 @@ def test_a_backtrack_to_an_unmastered_prereq_is_honoured(store, monkeypatch):
     assert phase1.hint_level == 0, "a backtrack starts the new item at rung 0"
 
 
+def test_the_lever_is_off_by_default_and_every_request_is_refused(store, monkeypatch):
+    """The SHIPPED behaviour. `MODEL_BACKTRACK` defaults false, so a model
+    request is refused even when the target prerequisite is wide open and the
+    finer gate below would have honoured it. Only §7's two-failure rule moves
+    the student backwards on the demo path.
+
+    This is also the behaviour every measurement in the report was taken under:
+    before day 19 a model request moved nothing in any case.
+    """
+    assert CONFIG.model_backtrack is False, (
+        "MODEL_BACKTRACK no longer defaults off; the demo path now lets the "
+        "model move the curriculum")
+
+    node = _node_with_prereqs(store)
+    db, state, item = _session_on(store, node)
+    _ask_for_backtrack(monkeypatch)
+
+    # The gap the honoured branch looks for is present, and still refused.
+    for p in store.prereqs(node):
+        state.theta_map[p] = -4.0
+    db.save(state)
+
+    phase1 = turn_mod.begin_turn(store, db, state, None)
+
+    assert phase1.action == CONFIG.backtrack_refused_action
+    assert phase1.backtrack_origin == "refused"
+    assert state.current_node == node, "the lever was off and the student moved"
+    assert state.current_item_id == item.id
+
+
+def test_the_lever_does_not_touch_the_two_failure_rule(store, monkeypatch):
+    """§7 is server-side and is not the model's lever. Turning the model's off
+    must not disable the rule that does the actual backtracking on the demo."""
+    assert CONFIG.model_backtrack is False
+
+    node = _node_with_prereqs(store)
+    db, state, item = _session_on(store, node)
+    for p in store.prereqs(node):
+        state.theta_map[p] = -4.0
+    state.consecutive_failures = CONFIG.consecutive_failures_before_backtrack
+    db.save(state)
+    monkeypatch.setattr(turn_mod, "_call1", lambda *a, **k: (
+        turn_mod.Call1Decision(
+            student_state="stuck", diagnosis="d", correct=False,
+            requested_action="hint_visual", requested_hint_level=1,
+            focus_nodes=[], expects="node_click",
+        ),
+        False,
+    ))
+    from server.schemas import StudentResponse
+    wrong = next(n for n in store.node_ids if n != item.answer)
+    phase1 = turn_mod.begin_turn(
+        store, db, state, StudentResponse(type="node_click", node_id=wrong))
+
+    assert phase1.action == "backtrack"
+    assert phase1.backtrack_origin == "server"
+    assert state.current_node in store.prereqs(node)
+
+
 def test_a_backtrack_to_a_mastered_prereq_is_refused(store, monkeypatch):
+    """The finer gate, with the lever ON: even enabled, a mastered prerequisite
+    is not a gap and the request is refused."""
+    from .conftest import config_override
+
     node = _node_with_prereqs(store)
     db, state, item = _session_on(store, node)
     _ask_for_backtrack(monkeypatch)
@@ -104,7 +173,8 @@ def test_a_backtrack_to_a_mastered_prereq_is_refused(store, monkeypatch):
     assert all(mastery_mod.is_mastered(mastery_mod.mastery(state.theta_map[p]))
                for p in store.prereqs(node))
 
-    phase1 = turn_mod.begin_turn(store, db, state, None)
+    with config_override(model_backtrack=True):
+        phase1 = turn_mod.begin_turn(store, db, state, None)
 
     assert phase1.action == CONFIG.backtrack_refused_action
     assert phase1.action != "backtrack"
