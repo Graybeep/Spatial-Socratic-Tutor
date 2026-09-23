@@ -59,7 +59,8 @@ should make a reader distrust all of it.
 
 One chapter. A hand-authored graph, with no extraction run on an arbitrary
 document. Simulated students, **no human study, and no learning outcome measured
-or claimed**. Latency figures come from a mock. Confirm-or-undo has never been
+or claimed**. Only Call 1 has been timed on a live model (p50 2.3s); Call 2 has
+not, and the demo's pacing is a mock's. Confirm-or-undo has never been
 watched by anyone who did not design it. All of it is argued in
 [`docs/writeup/limitations.md`](docs/writeup/limitations.md).
 

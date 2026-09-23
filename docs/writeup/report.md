@@ -85,7 +85,7 @@ reaches on page nine has already done its damage.
 | **The baseline is not silent** | The `none` arm still has the tutor speaking an `ask` utterance. Whatever that gives away is subtracted out of every marginal, so the marginals are conservative — but the baseline is not a zero-information control. Changing which arm is subtracted moves the figure ~2 points here; on a leakier verbal channel it would move more. |
 | **The leak metric is a floor, not an estimate** | §6 specifies embedding cosine; embeddings are a dependency we do not have, so the implemented metric is token cosine and trigram containment. It misses synonym paraphrase — a restatement in different words scores 0.06 against the answer it paraphrases. Reconstruction *means* restating in the model's own words, so **the metric is weakest exactly where the phenomenon is strongest.** Biased downward, not merely approximate. |
 | **Confirm-or-undo is untested by a stranger** | §8 calls it the only gate between a stray click and a permanent mastery penalty. It has been watched by nobody who did not design it. Booked three times, never run. **An assumption with a UI on it.** |
-| **Latency figures come from a mock** | The two-call timing profile the interface argument rests on was measured against mock utterances, not a live model. |
+| **Half the latency profile is unmeasured** | Call 1 is timed on the shipped model (p50 2.3s). Call 2 has never been timed on it, so no cloud turn total exists, and the recorded demo is paced by a mock. Re-argued in [§8](#8-limits). |
 
 Full list, including the ones that only matter to a reimplementer:
 [limitations.md](limitations.md).
@@ -180,7 +180,7 @@ student response
    │
    ├─ server applies guards, owns every counter, decides the real action
    │
-   ├─ graph_state streamed IMMEDIATELY  ← the graph moves here, ~1s
+   ├─ graph_state streamed IMMEDIATELY  ← the graph moves here, p50 2.3s
    │
    └─ Call 2 ── utterance only ── NEVER sees the answer while hinting
 ```
@@ -769,13 +769,34 @@ merely convenient: the visual arm's narrowing is *deterministic*, computed by
 `mastery.py` and the ladder, and does not depend on what Call 2 writes. The
 verbal arm is the one this limits, and it is the arm that lost.
 
-**§5's latency figure is an Anthropic number and is not re-derived here.** "Call
-1 is ~120 output tokens (~1s)" was written against a model that emits the tool
-call directly. gpt-oss emits reasoning first: measured 534–580 completion tokens
-and **p50 2.3s** to a validated decision. The architectural claim is untouched —
-the graph still moves on Call 1's return, before any utterance exists — but the
-*perceived-latency* argument in §5 was built on ~1s and has not been re-argued at
-2.3s. Treat that paragraph as stale rather than as verified.
+**§5's latency argument, re-argued at 2.3s.** CLAUDE.md §5 says "Call 1 is
+~120 output tokens (~1s)". That was written for a model that emits the tool call
+directly. gpt-oss reasons first: Call 1 measured 534–580 completion tokens and
+**p50 2.3s** to a validated decision on Groq. The sample size of that
+measurement was not recorded. The number changes how big the argument is, not
+its shape, and it splits the argument into a part that survives and a part that
+does not.
+
+*What survives: the time to the first visible response.* The graph moves on Call
+1's return, so the student sees the map narrow about 2.3s after answering. No
+design can show the narrowing sooner, because deciding *what* to dim is Call 1's
+job. A single combined call could at best match it, by streaming its focus field
+before its utterance. It could not beat it.
+
+*What does not survive: "a better profile than one 500-token call, not a tax".*
+That was a claim about total turn time: ~1s plus a streamed utterance, against
+one longer call. On this stack Call 2 is `gpt-oss-20b`, a second reasoning model
+that reasons before it writes. So the split probably *adds* total turn time, and
+we cannot say how much, because **Call 2 has never been timed on Groq**. The
+claim we make is the narrower one: the split costs an unmeasured amount of total
+turn time and buys the earliest possible visual. We think that trade is right
+for an interface whose hint *is* the graph, but it is a trade, not free.
+
+*What the recording shows.* The walkthrough runs in mock mode, paced at 0.9s +
+1.4s (`MOCK_CALL1_DELAY_S`, `MOCK_CALL2_DELAY_S`). Those delays were chosen
+against the old ~1s assumption, so the video's Call 1 gap is shorter than a
+live Groq turn and its Call 2 gap is a guess. The **ordering** on screen, graph
+first and text second, is the real one. The gaps are not.
 
 ## 9. What we cut, and said so
 
