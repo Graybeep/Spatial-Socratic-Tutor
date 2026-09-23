@@ -430,10 +430,20 @@ Ordered roughly by how much each would strengthen the central claim.
   option is also the longest, so all 159 are excluded from scoring. Rewriting the
   distractors could grow the scored bank from 69 items to as many as 228.
 - **A second chapter.** Nothing here shows the approach transfers.
-- **Better graph extraction.** The pipeline can find at most 45% of true
-  prerequisite edges, mostly because it assumes a concept is named before its
-  prerequisites, which the chapter often does not do. Automatic graphs from
-  arbitrary uploads are not viable until this improves.
+- **Any topic of choice.** Today the tutor teaches one fixed chapter. The goal is
+  to let a learner pick any topic and get a map and questions built for it. The
+  current pipeline cannot do that yet: it finds 30 of 66 true prerequisite edges
+  (at most 49 of 66, or 74%, however it is tuned), because it only proposes an
+  edge when the prerequisite is named first. Its generated multiple-choice items
+  put the correct answer as the longest option in 159 of 159. Getting there
+  needs four things: edge proposal that does not depend on text order, a required
+  human correction step, automatic item-quality screens, and `build/validate.py`
+  as the gate every generated topic must pass. The plan is in the report's
+  "Future work: any topic" section.
+- **Stronger mastery evidence.** Give each concept at least 3 distinct scored
+  items, and stop crediting a correct answer on a question the student has
+  already solved. Today mastery rests on 1 or 2 recognition clicks per concept,
+  which measures familiarity with the map more than understanding.
 
 **Tutor behaviour**
 
