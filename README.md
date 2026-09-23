@@ -452,6 +452,12 @@ Ordered roughly by how much each would strengthen the central claim.
   first advance would send the student back. Instead, choosing a section could
   mark its prerequisites as provisionally known, and the existing backtrack rules
   would correct the student if that was wrong. Designed in the report, not built.
+- **Explain-first mode for beginners.** When a concept's prerequisites are all
+  unmastered, explain a prerequisite first, then ask about the target concept, so
+  the explanation scaffolds the question without answering it. Not built:
+  explaining a node and then asking for that node is 100% leakage by
+  construction for click items, and would invalidate the effective-leakage
+  measurements (report §5.2).
 - **Let the ladder reach its floor.** The shipped ladder alternates visual and
   verbal hints and stops at 9 lit nodes, not the 5 the floor allows. Whether 5
   reads better is untested.
