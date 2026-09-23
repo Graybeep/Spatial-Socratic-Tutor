@@ -430,6 +430,13 @@ item type that does not route through the graph, and a check that the two types
 rank students similarly. Neither is in scope in four weeks, and we would rather
 state the confound than let a reviewer with an assessment background find it.
 
+**Mastery is estimated from 1 or 2 recognition-level scoring items per concept,
+re-served, so it measures familiarity with the map rather than understanding of
+mechanisms.** Every node has one scored node click and at most one scored edge
+click (17 of 52 nodes have one); once a node's items are used, `_pick_item`
+serves them again, scorable first, and a repeated correct click is credited again.
+A mock drive of 40 flawless turns re-served a solved item 6 times.
+
 **61% of the item bank is generator fixture, and it is now unscored.** 159 of 260
 items are mcq, and those 159 carry **three** distinct (key, distractors) tuples:
 `generate_items.py` cycles a three-element `MOCK_MECHANISMS` list with `k % 3`

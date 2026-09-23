@@ -854,6 +854,41 @@ graph missing over half of them does not degrade the tutor gracefully — it
 disables the adaptive path. That is why §10 lists upload as deleted rather than
 deferred, and why this section proposes the prior and not the picker.
 
+### Future work: any topic
+
+A student who wants to learn something the chapter does not cover needs a graph
+and an item bank for that topic, built without the four weeks of hand work this
+one had. The measurements say the current pipeline cannot do that:
+
+- Candidate generation passes **30 of 66** true prerequisite edges at the
+  shipped window. Widening the window does not rescue it: at an unbounded window
+  the ceiling is **49 of 66, 74%**, because the pipeline only proposes an edge
+  where the prerequisite is named first and the chapter often names it second.
+- The generated multiple-choice bank has the key as the longest option in
+  **159 of 159** items, against a 25% chance rate. Nothing in the pipeline
+  noticed.
+
+Any-topic support therefore needs four things before it needs a better model:
+
+1. **Order-independent edge proposal**, so that a prerequisite named after its
+   dependent can still be proposed. This is the 26% the window cannot reach.
+2. **A human correction step** on the proposed graph and items, kept as a
+   required stage rather than an optional review. It is the stage §4 calls the
+   actual work, and this project's graph exists because it was done by hand.
+3. **Item-quality screens** that run on every generated bank: key length against
+   distractor length, distinct (key, distractors) tuples, and the §9.4 distractor
+   screen once dialogues exist.
+4. **`validate.py` as the acceptance gate.** A generated topic ships only if it
+   passes the same DAG, orphan, granularity and item checks this chapter does.
+
+And two changes to scoring, which apply to this chapter as much as to any new one:
+
+- **At least 3 distinct scoring items per node**, so that mastery rests on more
+  than one or two recognition clicks.
+- **No credit for repeating a solved item.** Today a correct click on a re-served
+  item is scored again, which lets a student raise mastery by recognising a
+  question rather than by knowing the concept.
+
 ---
 
 *Reproduce the keyless half: `pip install -r requirements.txt && python -m
