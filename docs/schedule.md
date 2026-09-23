@@ -148,11 +148,11 @@ much smaller scale.
 | ~~2026-09-17~~ | 14 | **dependency freeze** (§1.8), end of week 2 | **MET a day early**, on day 13 — enforced by a test, see below |
 | ~~2026-09-25 → 09-26~~ **from day 19** | 19→ | ~~eval freeze: 24h before Sat 26~~ **SUPERSEDED: no eval runs at all from day 19. The numbers are final.** | in force |
 | ~~2026-09-25~~ **2026-09-22** | ~~22~~ **19** | **feature freeze.** Tag `feature-freeze` | **DONE, three days early**, at `e71c6c5`. Demo-path fixes only from here |
-| ~~2026-09-29~~ ~~2026-09-26~~ **2026-09-23 (Wed)** | ~~26~~ ~~23~~ **20** | **video walkthrough recorded.** Tag `demo` **after** the recording, not before | **TOMORROW** — script: [walkthrough-script.md](walkthrough-script.md) |
+| ~~2026-09-29~~ ~~2026-09-26~~ **2026-09-23 (Wed)** | ~~26~~ ~~23~~ **20** | **video walkthrough recorded.** Tag `demo` **after** the recording, not before | **TODAY** — script: [walkthrough-script.md](walkthrough-script.md) |
 | ~~2026-09-24 (Thu)~~ | ~~21~~ | ~~rehearsal, then replace `TAKE_BUDGET`~~ | **OVERTAKEN**: the recording moved to 09-23, so there is no rehearsal day before it. Pick the provider and measure `TAKE_BUDGET` from the take itself |
 
 Tags cut so far: `schemas-frozen`, `graph-frozen`, `loop-working`, `feature-freeze`.
-Left: `demo`, after Saturday's recording and not before.
+Left: `demo`, after the 09-23 recording and not before.
 
 ### 2026-09-15 (day 12) — a key arrived, and it is not an Anthropic key
 
