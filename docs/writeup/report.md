@@ -895,7 +895,7 @@ When a concept's prerequisites are all unmastered, explain a prerequisite first,
 then ask about the target concept, so the explanation scaffolds the question
 without answering it. **Not built:** explaining a node and then asking for that
 node is 100% leakage by construction for click items, and would invalidate the
-§9.1 measurements.
+effective-leakage measurements (§5.2).
 
 ---
 
