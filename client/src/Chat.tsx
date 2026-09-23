@@ -108,9 +108,12 @@ export function Chat({
               </button>
             ))}
           </div>
-        ) : (
+        ) : expects === "text" && !busy ? (
           <TextComposer busy={busy} onSubmit={onText} />
-        )}
+        ) : // In flight: send() clears mcq before the reply sets expects, and
+        // expects starts as "text" before the first turn. Falling through to
+        // the composer here flashed a dead text box on every answer.
+        null}
       </div>
     </>
   );
