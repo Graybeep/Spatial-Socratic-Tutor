@@ -509,9 +509,14 @@ fingerprint catches content drift and is blind to code drift. This one catches
 code drift and is blind to uncommitted code. Each is worth having; none is worth
 mistaking for the general case.
 
-**Latency figures come from a mock.** The two-call timing profile the interface
-is built around was reproduced from configured delays, not measured against a
-live model under load.
+**Half the latency profile is unmeasured.** Call 1 is timed on the shipped
+model: p50 2.3s on Groq, against the ~1s CLAUDE.md §5 assumed. Call 2 has never
+been timed there, so there is no cloud figure for a whole turn, and the
+recorded demo's rhythm comes from configured mock delays (0.9s + 1.4s) chosen
+against the old assumption. What is established is the **ordering**: the graph
+moves on Call 1's return, before any utterance exists. What is not established is
+whether the two-call split costs total turn time. On a stack where both calls
+reason before answering, it probably does. See report §8.
 
 ## One we cut deliberately
 
