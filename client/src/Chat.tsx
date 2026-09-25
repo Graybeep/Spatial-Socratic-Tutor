@@ -270,8 +270,8 @@ const btn: CSSProperties = {
 
 const primaryBtn: CSSProperties = {
   ...btn,
-  background: "var(--pending)",
-  borderColor: "var(--pending)",
+  background: "var(--accent)",
+  borderColor: "var(--accent)",
   color: "var(--paper)",
   fontWeight: 600,
 };

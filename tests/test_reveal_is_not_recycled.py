@@ -88,7 +88,9 @@ def test_the_reveal_is_tagged_in_history(store):
     _, state, _, r, _ = _fail_to_reveal(store)
     last = state.history[-1]
     assert last["role"] == "tutor" and last.get("reveal") is True
-    assert last["text"] == r.utterance
+    # History holds the speaker's words only. The response also carries the
+    # next item's question, appended after the history entry was written.
+    assert r.utterance.startswith(last["text"] + "\n\n")
     assert not any(e.get("reveal") for e in state.history[:-1])
 
 

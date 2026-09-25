@@ -62,15 +62,19 @@ def test_item_payload_carries_no_answer_material(client, session):
         assert field not in data["item"]
 
 
-def test_item_prompt_never_appears_on_any_turn(client, session):
-    """Unconditional. The tutor's `utterance` IS the question; the bank's prompt
-    text is Call 1's input and must never be rendered."""
+def test_item_prompt_appears_only_as_the_utterance_tail(client, session):
+    """The bank's prompt reaches the client in exactly one place: appended by
+    complete_turn as the last paragraph of `utterance`, after Call 2 and guard
+    layer 1 have run. §1.6 still holds - it is inside the one rendered field -
+    and no other field of the response may carry it."""
     store = main_mod.STORE
     data = turn(client, session)
     for _ in range(6):
         item = store.item(data["item"]["id"]) if data["item"] else None
         if item is not None:
-            assert item.prompt not in json.dumps(data)
+            assert data["utterance"].endswith("\n\n" + item.prompt.strip())
+            rest = {k: v for k, v in data.items() if k != "utterance"}
+            assert item.prompt not in json.dumps(rest, ensure_ascii=False)
         nxt = wrong_response(data, store)
         if nxt is None:
             break

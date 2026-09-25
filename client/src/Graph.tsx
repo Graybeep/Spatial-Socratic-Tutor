@@ -119,7 +119,7 @@ export function Graph({
       role="img"
       aria-label={`Concept graph, ${graph.nodes.length - dimmed.size} of ${graph.nodes.length} concepts still in play`}
     >
-      <defs><marker id="prereq-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#8a9b91" /></marker></defs>
+      <defs><marker id="prereq-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="var(--edge-arrow)" /></marker></defs>
       {graph.edges.map((e) => {
         const a = pos.get(e.from);
         const b = pos.get(e.to);
@@ -134,7 +134,7 @@ export function Graph({
             y1={a.y + NODE_H}
             x2={b.x + NODE_W / 2}
             y2={b.y}
-            stroke={isPending ? "var(--pending)" : "var(--rule)"}
+            stroke={isPending ? "var(--pending)" : "var(--edge)"}
             strokeWidth={isPending ? 5 : e.type === "prereq" ? 2 : 1}
             markerEnd={e.type === "prereq" ? "url(#prereq-arrow)" : undefined}
             style={{

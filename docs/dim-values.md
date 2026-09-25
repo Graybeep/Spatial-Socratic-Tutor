@@ -40,14 +40,24 @@ grep -E 'lit-stroke|dim-(stroke|shape|label|edge|saturate)' client/contrast-chec
 | `--dim-edge-opacity` | `0.15` | |
 | `--dim-saturate` | `0.12` | |
 
-Measured contrast against paper, already known and **not** what the test is for:
+The dimming tokens above did not change on 2026-09-25. The palette they are
+drawn in did: `--ink` `#16181a` → `#20382f`, and the map now sits on `--map`
+`#f9faf4` rather than `--paper`. Edges moved off `--rule` (now a faint chrome
+colour, `#dce2d8`, which put a lit edge at 1.26:1) onto their own `--edge`
+`#a3b3a7`, with prereq arrowheads in `--edge-arrow` `#8a9b91`. `--pending`
+stays violet `#7a5cff`: a selection has to differ from `--ink` in hue, not
+just in weight.
+
+Measured contrast against the map background, already known and **not** what
+the test is for. Same method as the 2026-09-22 figures, which it reproduces
+exactly on the old palette (shown in brackets):
 
 | | lit | dimmed |
 |---|---|---|
-| node outline | 17.19:1 (3px) | 1.53:1 (1px) |
-| label | 17.19:1 | 1.13:1 |
-| edge | 1.81:1 | 1.08:1 |
-| fill @ mastery 0.5 | 2.52:1 | 1.18:1 |
+| node outline | 11.99:1 (3px) [17.19] | 1.45:1 (1px) [1.53] |
+| label | 11.99:1 [17.19] | 1.11:1 [1.13] |
+| edge | 2.09:1 [1.81] | 1.10:1 [1.08] |
+| fill @ mastery 0.5 | 2.49:1 [2.52] | 1.18:1 [1.18] |
 
 Three channels, deliberately: opacity **plus** desaturation **plus** stroke
 width. CLAUDE.md §8 requires all three because opacity alone dies on a bad
