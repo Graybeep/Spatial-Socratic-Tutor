@@ -17,7 +17,7 @@ export function Landing({ onStart, error }: { onStart: () => void; error: string
       <section className="hero-copy">
         <div className="eyebrow"><span className="status-dot" /> LESS TELLING. MORE THINKING.</div>
         <h1>A little less noise.<br />A lot more <em>understanding.</em></h1>
-        <p className="hero-description">Find your way through a map of ideas. When you get stuck, the map narrows—giving you room to think, and a clearer place to look.</p>
+        <p className="hero-description">Find your way through a map of ideas. When you get stuck, the map narrows, giving you room to think, and a clearer place to look.</p>
         <button className="start-button" onClick={onStart}>Explore the chapter <span aria-hidden="true">↗</span></button>
         <p className="hero-footnote">No account needed · Progress stored on this machine</p>
         {error && <p className="error-message" role="alert">{error}</p>}
