@@ -52,11 +52,19 @@ interface gives away, and how that compares to giving nothing away at all.
 coverage rather than contrast.** §8 requires the narrowing to survive a bad
 display, which is why it uses three channels rather than one: opacity **plus**
 desaturation **plus** stroke width. The per-node contrast is measured and is not
-the worry — composited against paper, a lit node's outline is 17.19:1 at 3px
-against a dimmed node's 1.53:1 at 1px, and the 3px ink outline carries the
-signal while the fill contributes almost nothing (2.52:1 lit against 1.18:1
-dim). Those ratios are count-independent, so nothing about the number of lit
-nodes changes them.
+the worry — composited against the map background, a lit node's outline is
+11.99:1 at 3px against a dimmed node's 1.45:1 at 1px, and the 3px ink outline
+carries the signal while the fill contributes almost nothing (2.49:1 lit against
+1.18:1 dim). Those ratios are count-independent, so nothing about the number of
+lit nodes changes them. (They were 17.19:1 and 1.53:1 against paper before the
+2026-09-25 interface update changed the palette; `docs/dim-values.md` has both.)
+
+The same update raised node labels from 12 to 17 units without changing
+`--dim-label-opacity` (0.06). A ruled-out label is still 1.11:1 against the
+background, but it is larger, and on `client/contrast-check.html` at full-screen
+width it is faintly readable. Readable text is the leak the label channel exists
+to suppress, so that page is now also the test of whether 0.06 is still low
+enough.
 
 What is untested is whether the lit **set** reads as one place to look from the
 back of a room. The shipped `interleaved` ladder bottoms out at **9 lit, not the
@@ -92,6 +100,15 @@ person who had not seen the interface and ten minutes, and that person was never
 found. Week 3 ends 2026-09-24 and the recording is 09-23, so it will not happen
 before submission. Recorded here rather than left as an implicit assumption: an
 assumption honestly labelled is worth more than a booking that keeps sliding.
+
+**With a real model, nothing stops Call 1 moving a student past a wrong
+answer.** `server/turn.py` takes Call 1's `requested_action` as the starting
+action. A correct answer forces `advance`, but a wrong one does not forbid it,
+and the routing then opens the next node. The mock never requests `advance`
+after a failure, so the demo and every mock-mode number are unaffected. It would
+show only in real-model sessions, where it would under-serve an item the student
+got wrong; the mastery update itself still records the failure. One check before
+routing would close it. Found on 2026-09-25, after the freeze, and left open.
 
 **The partial-knowledge student is our construct.** It is operationalised as
 "restricts to lit nodes in the answer's graph neighbourhood, then guesses". That
