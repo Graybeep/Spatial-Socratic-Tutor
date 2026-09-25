@@ -84,3 +84,70 @@ body {
   outline: 2px solid var(--ink);
   outline-offset: 2px;
 }
+
+/* Submission interface. Fixed graph positions and dimming channels are preserved.
+ *
+ * --rule is chrome (panel borders) and is deliberately faint. Graph edges get
+ * their own --edge, measured against --map (docs/dim-values.md): at --rule's
+ * value a lit edge was 1.26:1 and would vanish on a projector.
+ *
+ * --pending is NOT overridden here. It must differ in HUE from --ink and the
+ * mastery ramp, or a selected node looks like every other node and
+ * confirm-or-undo (CLAUDE.md 8) has nothing to confirm. The green primary
+ * button is --accent. */
+:root { --ground:#f5f5ee; --paper:#fffef9; --ink:#20382f; --rule:#dce2d8; --map:#f9faf4; --edge:#a3b3a7; --edge-arrow:#8a9b91; --accent:#27644f; --rail:390px; }
+button { touch-action:manipulation; }
+button:disabled { opacity:.45; cursor:wait; }
+button:not(:disabled):hover { filter:brightness(.96); }
+.brand { display:inline-flex; align-items:center; gap:11px; font-size:20px; font-weight:600; letter-spacing:-.6px; white-space:nowrap; }
+.brand-mark { display:grid; place-items:center; position:relative; width:36px; height:36px; border-radius:11px; background:#234d3e; color:#f5f5ee; font-family:Georgia,serif; font-size:26px; font-style:italic; }
+.brand-mark span { position:absolute; top:-3px; right:6px; color:#c3dca7; }
+.brand-light { color:#819083; font-weight:400; font-size:13px; letter-spacing:0; }
+.eyebrow { font-size:10px; font-weight:600; letter-spacing:1.8px; color:#67806b; }
+.status-dot { display:inline-block; width:6px; height:6px; border-radius:50%; background:#659275; margin-right:8px; vertical-align:middle; }
+.pill { font-size:11px; color:#6b7d6e; border:1px solid #dce2d4; border-radius:30px; padding:7px 12px; white-space:nowrap; }
+.landing { max-width:1440px; margin:auto; padding:0 6%; }
+.landing-nav { height:100px; display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--rule); }
+.landing-main { display:grid; grid-template-columns:1fr 1fr; align-items:center; gap:60px; padding:64px 0 56px; }
+.hero-copy h1 { font-size:clamp(38px,4.1vw,62px); line-height:1.09; letter-spacing:-2.6px; font-weight:500; margin:24px 0; }
+.hero-copy h1 em { font-family:Georgia,serif; font-weight:400; color:#3f7155; }
+.hero-description { color:#768072; font-size:16px; line-height:1.85; max-width:43ch; margin:0 0 28px; }
+.start-button { display:inline-flex; align-items:center; justify-content:space-between; gap:46px; padding:16px 22px; border:0; border-radius:12px; background:#244c3c; color:#fffef5; font-family:inherit; font-size:15px; font-weight:600; box-shadow:0 5px 14px #29452a16; cursor:pointer; }
+.start-button span { font-size:23px; line-height:1; }
+.hero-footnote { color:#8a9183; font-size:11px; margin:13px 0 28px; }
+.chapter-card { display:flex; align-items:center; gap:15px; border:1px solid var(--rule); background:#fafaf4; border-radius:13px; padding:16px; max-width:450px; }
+.chapter-icon { display:grid; place-items:center; width:44px; height:52px; border:1px solid #d6ddcc; border-radius:6px 10px 10px 6px; background:#e9eddf; color:#657556; font-family:Georgia,serif; font-size:23px; }
+.chapter-card h3 { margin:3px 0; font-weight:600; font-size:14px; }.chapter-card p { margin:0; color:#849080; font-size:11px; }
+.chapter-card .eyebrow { font-size:8px; }.chapter-count { margin-left:auto; line-height:1.2; font-size:21px; text-align:center; }.chapter-count small { font-size:9px; color:#8a9183; }
+.hero-visual { position:relative; border:1px solid #d7e0d1; border-radius:24px; background:radial-gradient(ellipse at center,#f9fbf4 0%,#edf1e6 100%); box-shadow:0 24px 60px #42523b0b; overflow:hidden; }
+.preview-top { display:flex; justify-content:space-between; align-items:center; gap:8px; padding:24px 25px 0; }.preview-top .eyebrow { font-size:8px; }.preview-badge { background:#e0e8d8; padding:5px 9px; border-radius:20px; font-size:10px; color:#58754b; }
+.hero-visual svg { width:100%; display:block; }.preview-bottom { padding:0 28px 26px; display:flex; justify-content:space-between; align-items:flex-end; }.preview-number { font-family:Georgia,serif; font-size:40px; color:#345b40; }.preview-number span { font-family:inherit; font-size:24px; color:#9daa90; margin:0 8px; }.preview-bottom p { font-size:11px; margin:3px 0 0; color:#7b8b73; }.preview-note { font-size:9px; line-height:1.7; color:#94a088; text-align:right; }
+.how-it-works { display:grid; grid-template-columns:repeat(3,1fr); gap:35px; border-top:1px solid var(--rule); padding:30px 0; }.how-it-works article { display:flex; gap:16px; }.step-number { font-family:Georgia,serif; color:#9eac95; font-size:23px; }.how-it-works h2 { font-size:13px; font-weight:600; margin:1px 0 6px; }.how-it-works p { font-size:12px; line-height:1.7; color:#889080; margin:0; max-width:27ch; }
+.landing-footer { border-top:1px solid var(--rule); padding:20px 0 28px; display:flex; justify-content:space-between; font-size:10px; color:#97a08f; }
+.study-shell { height:100dvh; display:flex; flex-direction:column; overflow:hidden; }
+.study-header { height:72px; flex-shrink:0; padding:0 28px; display:flex; align-items:center; justify-content:space-between; gap:20px; background:var(--paper); border-bottom:1px solid var(--rule); }.study-course { font-size:13px; }.study-course span { color:#8c9986; font-size:9px; letter-spacing:1.5px; margin-right:12px; }.mode-badge { font-size:10px; color:#6b806d; background:#eef2e7; padding:7px 11px; border-radius:20px; }
+.study-body { display:grid; grid-template-columns:minmax(0,1fr) var(--rail); flex:1; min-height:0; padding:20px; gap:18px; }
+.map-panel { min-width:0; min-height:0; display:flex; flex-direction:column; border:1px solid var(--rule); border-radius:18px; overflow:hidden; background:var(--map); }
+.map-heading { display:flex; align-items:center; justify-content:space-between; padding:20px 24px 12px; gap:10px; }.map-heading h1 { margin:5px 0 0; font-weight:500; font-size:22px; letter-spacing:-.5px; }.map-heading .eyebrow { font-size:9px; }.map-heading .pill { font-size:10px; }
+.map-viewport { flex:1; min-height:0; overflow:auto; background-image:radial-gradient(#93a38b26 .8px,transparent .8px); background-size:19px 19px; scrollbar-width:thin; scrollbar-color:#bdcdb9 transparent; }.map-canvas { width:100%; height:100%; }
+.map-footer { display:flex; align-items:center; gap:16px; justify-content:space-between; padding:11px 22px; background:#fffef8; border-top:1px solid var(--rule); }
+/* The guide note. A FIXED-height slot, so a note appearing never changes the
+   map viewport's size - the SVG fits to it, and a resize would jump the map. */
+.map-guide { flex:1; min-width:0; height:46px; display:flex; align-items:center; justify-content:center; }
+.map-note { margin:0; max-width:56ch; font-size:12px; line-height:1.4; color:#3f5a45; background:#eef2e7; border:1px solid #dce5d3; border-left:3px solid #9fb59f; border-radius:9px; padding:5px 11px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
+.map-note:empty { padding:0; border:0; }
+.map-note-pick { background:#f4f2fb; border-color:#e2ddf5; border-left-color:var(--pending); }
+.map-note strong { font-weight:600; color:var(--ink); }.candidate-card { display:flex; align-items:center; gap:13px; }.candidate-card>div:last-child { max-width:120px; font-size:11px!important; }.map-legend { display:flex; gap:14px; font-size:10px; color:#83907e; }.map-legend span { display:flex; align-items:center; gap:5px; }.map-legend i { width:7px; height:7px; border-radius:2px; background:#7fa8a3; }.map-legend .legend-dim { background:#e0e5dc; }
+.zoom-controls { display:flex; align-items:center; border:1px solid #dce2d4; border-radius:9px; overflow:hidden; flex-shrink:0; }.zoom-controls button { border:0; padding:8px 10px; background:transparent; color:#50684c; font:inherit; font-size:11px; cursor:pointer; }.zoom-controls button:first-child,.zoom-controls button:last-child { font-size:19px; padding:3px 11px; }.zoom-controls button:disabled { cursor:default; }
+.tutor-panel { min-height:0; display:flex; flex-direction:column; background:var(--paper); border:1px solid var(--rule); border-radius:18px; overflow:hidden; }.tutor-heading { display:flex; align-items:center; gap:12px; padding:20px; border-bottom:1px solid #e8ecdf; }.tutor-avatar { display:grid; place-items:center; background:#e8efdf; color:#416b42; width:38px; height:38px; border-radius:12px; font-size:21px; }.tutor-heading h2 { margin:0; font-size:14px; font-weight:600; }.tutor-heading p { margin:3px 0 0; font-size:10px; color:#8a967e; }
+.question-card { margin:18px 18px 0; padding:20px; border-radius:12px; background:#ecf1e5; border:1px solid #dce5d3; flex-shrink:0; }.question-card .eyebrow { font-size:9px; }.question-card p { margin:10px 0 13px; font-size:17px; line-height:1.6; letter-spacing:-.25px; }.question-instruction { display:block; padding-top:12px; border-top:1px solid #d4dfc9; font-size:10px; color:#728566; }
+.transcript { flex:1; min-height:70px; overflow-y:auto; padding:20px; scrollbar-width:thin; }.message { margin:0 0 19px; font-size:13px; line-height:1.7; color:#627460; }.message-author { display:block; font-size:8px; letter-spacing:1.2px; margin-bottom:5px; color:#94a28c; font-weight:600; }.message-you { background:#f2f4ec; margin-left:35px; padding:10px 14px; border-radius:12px 12px 2px 12px; color:#415a3e; }.thinking { font-size:12px; color:#7c9175; }.answer-area { padding:19px 20px; border-top:1px solid var(--rule); background:#fafbf5; }.answer-area button { min-height:42px; }.error-message { color:var(--alert); font-size:13px; }
+@media(min-width:1500px) { :root { --rail:420px; }.study-body { padding:24px; gap:24px; } }
+@media(max-width:1100px) { .landing-main { gap:30px; }.brand-light { display:none; }.map-legend { display:none; }.study-body { padding:12px; gap:12px; }:root { --rail:340px; }.map-heading { padding:16px; }.map-heading .pill { display:none; }.map-footer { padding:8px 13px; gap:8px; } }
+/* Below 1180 the map panel is too narrow for readout, note and zoom in one row
+   (measured: at 1101 the note clipped). Two FIXED rows, not flex-wrap: with
+   wrap, "40 ruled out · hint 1 of 4" widened the readout enough to push the
+   zoom buttons onto a third row, and the map shrank 34px at the exact moment it
+   dimmed. */
+@media(max-width:1180px) { .map-footer { display:grid; grid-template-columns:minmax(0,1fr) auto; row-gap:6px; }.map-footer .candidate-card { height:40px; min-width:0; }.map-footer .zoom-controls { grid-row:1; grid-column:2; }.map-guide { grid-row:2; grid-column:1 / -1; } }
+@media(max-width:760px) { .landing { padding:0 6%; }.landing-nav { height:78px; }.landing-nav .pill { display:none; }.landing-main { grid-template-columns:1fr; padding:36px 0; gap:35px; }.hero-copy h1 { font-size:46px; }.hero-visual { max-width:550px; }.how-it-works { grid-template-columns:1fr; gap:22px; }.how-it-works p { max-width:none; }.landing-footer { flex-direction:column; gap:8px; }.study-shell { height:auto; min-height:100dvh; overflow:visible; }.study-header { padding:0 16px; height:64px; }.study-course { display:none; }.study-body { display:flex; flex-direction:column; overflow:visible; }.map-panel { height:62vh; min-height:420px; }.tutor-panel { min-height:420px; }.transcript { max-height:240px; }.question-card p { font-size:16px; }.map-heading h1 { font-size:19px; }.map-heading .eyebrow { font-size:8px; }.mode-badge { font-size:9px; }.map-footer .readout { font-size:26px!important; } }

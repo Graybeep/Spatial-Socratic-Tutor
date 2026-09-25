@@ -11,10 +11,19 @@ import type { EdgeRef, FrozenGraph, GraphState } from "./types";
  * the narrowing moment stops reading from the back of the room.
  */
 
-const NODE_W = 132;
-const NODE_H = 44;
-const R = 4;
-const LABEL_MAX = 17;
+const NODE_W = 152;
+const NODE_H = 66;
+const R = 10;
+
+function labelLines(label: string): string[] {
+  const lines: string[] = [""];
+  for (const word of label.split(" ")) {
+    const last = lines.length - 1;
+    if (lines[last] && `${lines[last]} ${word}`.length > 16) lines.push(word);
+    else lines[last] = lines[last] ? `${lines[last]} ${word}` : word;
+  }
+  return lines;
+}
 
 /** Mastery -> fill. FILL ONLY. Never opacity. */
 function masteryFill(m: number): string {
@@ -110,6 +119,7 @@ export function Graph({
       role="img"
       aria-label={`Concept graph, ${graph.nodes.length - dimmed.size} of ${graph.nodes.length} concepts still in play`}
     >
+      <defs><marker id="prereq-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="var(--edge-arrow)" /></marker></defs>
       {graph.edges.map((e) => {
         const a = pos.get(e.from);
         const b = pos.get(e.to);
@@ -124,14 +134,16 @@ export function Graph({
             y1={a.y + NODE_H}
             x2={b.x + NODE_W / 2}
             y2={b.y}
-            stroke={isPending ? "var(--pending)" : "var(--rule)"}
-            strokeWidth={isPending ? 4 : e.type === "prereq" ? 1.5 : 1}
-            strokeDasharray={e.type === "related" ? "4 4" : undefined}
-            opacity={isDim ? "var(--dim-edge-opacity)" : 1}
+            stroke={isPending ? "var(--pending)" : "var(--edge)"}
+            strokeWidth={isPending ? 5 : e.type === "prereq" ? 2 : 1}
+            markerEnd={e.type === "prereq" ? "url(#prereq-arrow)" : undefined}
             style={{
               transition: "opacity var(--dim-ms) ease",
               cursor: edgeClickable && !isDim ? "pointer" : "default",
+              pointerEvents: edgeClickable && !isDim ? "stroke" : "none",
             }}
+            strokeDasharray={e.type === "related" ? "4 4" : undefined}
+            opacity={isDim ? "var(--dim-edge-opacity)" : 1}
             onClick={
               edgeClickable && !isDim
                 ? () => onEdgeClick({ from: e.from, to: e.to })
@@ -184,6 +196,7 @@ export function Graph({
                 : undefined
             }
           >
+            {!isDim && <title>{n.label}</title>}
             <rect
               width={NODE_W}
               height={NODE_H}
@@ -225,9 +238,9 @@ export function Graph({
             )}
             <text
               x={NODE_W / 2}
-              y={NODE_H / 2 + 4}
+              y={NODE_H / 2 - (labelLines(n.label).length - 1) * 9 + 6}
               textAnchor="middle"
-              fontSize={12}
+              fontSize={17}
               fontWeight={600}
               fill={m > 0.55 ? "var(--paper)" : "var(--ink)"}
               // Driven near zero independently. The readable text is what leaks.
@@ -235,9 +248,7 @@ export function Graph({
               style={{ transition: "opacity var(--dim-ms) ease" }}
               pointerEvents="none"
             >
-              {n.label.length > LABEL_MAX + 1
-                ? n.label.slice(0, LABEL_MAX) + "…"
-                : n.label}
+              {labelLines(n.label).map((line, index) => <tspan key={index} x={NODE_W / 2} dy={index ? 18 : 0}>{line}</tspan>)}
             </text>
           </g>
         );

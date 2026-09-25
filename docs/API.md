@@ -359,8 +359,10 @@ MCQ free.
 The blanket claim "no distractor ever appears in a response" is **false and
 always was**: on an MCQ turn the options *are* the distractors, and their labels
 are the answer's aliases. What holds is narrower, and `tests/test_mcq.py` pins
-it: the item prompt never appears on any turn; aliases never appear on a non-MCQ
-turn; `mcq_options` never ships on a turn that did not ask for one.
+it: the item prompt appears only as the last paragraph of `utterance`, appended
+server-side after Call 2 and guard layer 1 (since 2026-09-25), and in no other
+field; aliases never appear on a non-MCQ turn; `mcq_options` never ships on a
+turn that did not ask for one.
 
 ## Local state
 

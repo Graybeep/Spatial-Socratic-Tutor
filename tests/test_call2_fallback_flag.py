@@ -103,7 +103,8 @@ def test_a_successful_call2_is_not_flagged(store, monkeypatch):
         phase1, response = _drive_one_turn(store)
 
     assert phase1.call2_fallback is False
-    assert response.utterance == "Which of these two comes first?"
+    # Call 2's words, then the item's question appended by complete_turn.
+    assert response.utterance.startswith("Which of these two comes first?\n\n")
     assert _logged_turns()[-1]["call2_fallback"] is False
 
 

@@ -27,6 +27,9 @@ DIMMING_TOKENS = [
     "--lit-stroke", "--dim-stroke", "--dim-shape-opacity",
     "--dim-label-opacity", "--dim-edge-opacity", "--dim-saturate",
     "--ink", "--paper", "--rule",
+    # Edges stopped being drawn in --rule on 2026-09-25, and are judged
+    # against the map panel's background, not --paper.
+    "--edge", "--edge-arrow", "--map",
 ]
 
 

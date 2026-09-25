@@ -4,7 +4,8 @@ Because MCQ options ARE the key plus its distractors, the blanket claim "no
 distractor ever appears in a response" is false and always was. The honest
 statement is narrower, and these tests are where it is written down:
 
-  - the item PROMPT never appears, on any turn
+  - the item PROMPT appears only as the last paragraph of `utterance`,
+    appended server-side after Call 2 - never in any other field
   - answer aliases never appear on non-MCQ turns
   - on an MCQ turn, mcq_options is exactly {key} | {distractors}, and nothing
     else about the item crosses the wire
@@ -42,13 +43,14 @@ def test_mcq_labels_come_from_the_graph_not_the_item(client, session, store):
         assert option["label"] == store.label(option["id"])
 
 
-def test_mcq_turn_still_leaks_no_prompt(client, session, store):
+def test_mcq_turn_carries_the_prompt_only_in_the_utterance(client, session, store):
     data = drive_to_mcq(client, session, store)
     if data is None:
         pytest.skip("no MCQ item reached in this walk")
     item = store.item(data["item"]["id"])
-    body = str(data)
-    assert item.prompt not in body
+    assert data["utterance"].endswith("\n\n" + item.prompt.strip())
+    rest = {k: v for k, v in data.items() if k != "utterance"}
+    assert item.prompt not in str(rest)
     assert set(data["item"]) == {"id", "difficulty", "scorable"}
 
 

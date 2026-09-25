@@ -1,19 +1,64 @@
-import { useRef, useState } from "react";
+import { useLayoutEffect, useRef, useState, type ReactNode } from "react";
 import { Graph } from "./Graph";
 import { Chat, NodePanel, type Line } from "./Chat";
-import { Landing } from "./Landing";
-import { createSession, loadGraph, streamTurn } from "./api";
+import { Brand, Landing } from "./Landing";
+import { createSession, loadGraph, loadMode, streamTurn } from "./api";
 import type {
   EdgeRef,
   Expects,
   FrozenGraph,
   GraphState,
+  GraphStatePhase,
   McqOption,
   SessionStatus,
   StudentResponse,
   TurnBudget,
 } from "./types";
 import "./tokens.css";
+
+/** Zoom is a multiple of the FITTED size, so 1 is "Fit map" and nothing goes
+ *  below it. A fixed pixel base cannot work: at 1440x900 the fitted viewport is
+ *  990x622, and a 1400x1040 base made "zoom out" enlarge the map. */
+const ZOOM_STEP = 1.5;
+const ZOOM_MAX = 4;
+
+/**
+ * The map's guide note after an answer: what the map just did, in words.
+ * Fixed interface copy, never model output - every claim in it is already on
+ * screen as dimming or as the question changing.
+ *
+ * It never says "correct". Moving to a new item does not prove that: a forced
+ * reveal moves on, a backtrack moves on, and a live Call 1 may request
+ * `advance`. Staying on the SAME item after an answer does prove the opposite,
+ * because a correct answer always closes the item (server/turn.py, step 4d).
+ */
+function outcomeNote(
+  p: GraphStatePhase,
+  prevItem: string | null,
+  prevDimmed: number,
+  total: number,
+): string | null {
+  if (p.session_state !== "active" || p.item === null) return null;
+  const dimmed = p.graph_state.dimmed_nodes.length;
+  if (p.item.id !== prevItem) {
+    const lead =
+      p.action === "backtrack" ? "Stepping back to an idea this one builds on." : "New question.";
+    return dimmed === 0 ? `${lead} Every concept is back in play.` : lead;
+  }
+  const faded = dimmed - prevDimmed;
+  if (faded <= 0) {
+    return p.action === "hint_verbal"
+      ? "Not this one. Read the tutor's hint, then choose again."
+      : "Not this one. Have another look, then choose again.";
+  }
+  const lit = total - dimmed;
+  const what = `${faded}${prevDimmed > 0 ? " more" : ""} concept${faded === 1 ? "" : "s"} faded`;
+  // Only a node item's answer is guaranteed to stay lit: candidate_order in
+  // server/mock_tutor.py puts it first. An edge item's endpoints are not.
+  return p.expects === "node_click"
+    ? `Not this one. ${what} — the answer is one of the ${lit} still lit.`
+    : `Not this one. ${what} — look among the ${lit} still lit.`;
+}
 
 /**
  * Dependency direction: App -> Graph -> types, App -> Chat -> types,
@@ -30,6 +75,18 @@ export default function App() {
   const [graph, setGraph] = useState<FrozenGraph | null>(null);
   const [gs, setGs] = useState<GraphState | null>(null);
   const [lines, setLines] = useState<Line[]>([]);
+  const [question, setQuestion] = useState("");
+  const [mode, setMode] = useState<boolean | null>(null);
+  const [zoom, setZoom] = useState(1);
+  const viewport = useRef<HTMLDivElement>(null);
+  const zoomScroll = useRef<{ x: number; y: number } | null>(null);
+  const activeItem = useRef<string | null>(null);
+  // The guide note. `outcome` is set once per answered turn, from phase 1;
+  // `checking` covers the ~0.8s before phase 1 lands.
+  const [outcome, setOutcome] = useState<string | null>(null);
+  const [checking, setChecking] = useState(false);
+  const lastDimmed = useRef(0);
+  const nodeTotal = useRef(0);
   const [expects, setExpects] = useState<Expects>("text");
   const [mcq, setMcq] = useState<McqOption[]>([]);
   const [hint, setHint] = useState(0);
@@ -65,21 +122,49 @@ export default function App() {
   // comes first and this runs when they choose to begin. See Landing.tsx.
   const [entered, setEntered] = useState(false);
 
+  // Zooming keeps the point at the centre of the view where it was; the
+  // browser would otherwise hold scrollLeft/scrollTop and drift to a corner.
+  useLayoutEffect(() => {
+    const v = viewport.current;
+    const s = zoomScroll.current;
+    zoomScroll.current = null;
+    if (v && s) {
+      v.scrollLeft = s.x;
+      v.scrollTop = s.y;
+    }
+  }, [zoom]);
+
+  function zoomTo(next: number) {
+    const z = Math.min(ZOOM_MAX, Math.max(1, next));
+    const v = viewport.current;
+    if (v && z !== zoom) {
+      const k = z / zoom;
+      zoomScroll.current = {
+        x: (v.scrollLeft + v.clientWidth / 2) * k - v.clientWidth / 2,
+        y: (v.scrollTop + v.clientHeight / 2) * k - v.clientHeight / 2,
+      };
+    }
+    setZoom(z);
+  }
+
   async function enter() {
     if (started.current) return;
     started.current = true;
+    setErr(null);
     setEntered(true);
     try {
       const [g, sid] = await Promise.all([loadGraph(), createSession()]);
       setGraph(g);
+      nodeTotal.current = g.nodes.length;
       session.current = sid;
+      void loadMode().then(setMode);
       void send(null);
     } catch {
       // Back to Landing rather than a dead screen: the student has somewhere
       // to press again, and the reason is on the surface they pressed from.
       started.current = false;
       setEntered(false);
-      setErr("Could not reach the tutor. Is the server running on port 8000?");
+      setErr("Could not reach the tutor. Check that the backend is running, then try again.");
     }
   }
 
@@ -90,13 +175,25 @@ export default function App() {
     setMcq([]);
     setInspected(null);
     clearPending();
+    setOutcome(null);
+    setChecking(response !== null);
 
     await streamTurn(
       { session_id: session.current, response },
       {
         // Phase 1. The graph moves HERE, ~0.8s ahead of any text, and becomes
         // interactive here too. Do not hold it back to sync with the utterance.
+        // The guide note explains the move here too, for the same reason.
         onGraphState: (p) => {
+          const prevItem = activeItem.current;
+          setOutcome(
+            response === null
+              ? null
+              : outcomeNote(p, prevItem, lastDimmed.current, nodeTotal.current),
+          );
+          lastDimmed.current = p.graph_state.dimmed_nodes.length;
+          if (prevItem !== (p.item?.id ?? null)) setQuestion("");
+          activeItem.current = p.item?.id ?? null;
           setGs(p.graph_state);
           setExpects(p.expects);
           setHint(p.hint_level);
@@ -107,7 +204,11 @@ export default function App() {
           setSessionState(p.session_state);
         },
         onUtterance: (text) => {
-          setLines((l) => [...l, { who: "tutor", text }]);
+          // The server appends the authored question as the last paragraph of
+          // the existing whitelisted utterance. No answer fields reach the UI.
+          const split = activeItem.current ? text.lastIndexOf("\n\n") : -1;
+          if (split >= 0) setQuestion(text.slice(split + 2));
+          setLines((l) => [...l, { who: "tutor", text: split >= 0 ? text.slice(0, split) : text }]);
           setBusy(false);
         },
         onError: (m) => {
@@ -117,6 +218,7 @@ export default function App() {
       },
     );
     setBusy(false);
+    setChecking(false);
   }
 
   function clearPending() {
@@ -181,21 +283,40 @@ export default function App() {
       ? pendingEdgeLabel()
       : null;
 
+  // A pick waiting for Confirm outranks everything: it is the one moment the
+  // student may not know that nothing has been submitted yet.
+  const guide: { pick: boolean; text: ReactNode } | null =
+    sessionState !== "active"
+      ? null
+      : pendingLabel !== null
+        ? {
+            pick: true,
+            text: (
+              <>
+                <strong>{pendingLabel}</strong> selected. Press Confirm, or click another{" "}
+                {pendingEdge ? "connection" : "concept"} to switch.
+              </>
+            ),
+          }
+        : outcome
+          ? { pick: false, text: outcome }
+          : checking
+            ? { pick: false, text: "Checking your answer…" }
+            : null;
+
   return (
-    <div
-      style={{
-        display: "grid",
-        gridTemplateColumns: "1fr var(--rail)",
-        height: "100vh",
-        overflow: "hidden",
-      }}
-    >
+    <div className="study-shell">
+      <header className="study-header"><Brand /><div className="study-course"><span>CHAPTER 06</span> Congestion Control</div><span className="mode-badge"><span className="status-dot" />{mode === true ? "Offline demo · scripted tutor" : mode === false ? "AI tutor enabled" : "Local study session"}</span></header>
+      <div className="study-body">
       {/* minHeight:0 is load-bearing. A grid item's automatic minimum size is
           content-based, and an SVG with width:100% has an intrinsic height from
           its viewBox aspect - so without this the row grows to ~866px at 50
           nodes, the graph runs off the bottom and the readout goes with it.
           Invisible at 16 nodes, obvious at 50. */}
-      <main style={{ position: "relative", minWidth: 0, minHeight: 0, overflow: "hidden" }}>
+      <main className="map-panel">
+        <div className="map-heading"><div><span className="eyebrow">YOUR LEARNING LANDSCAPE</span><h1>Follow the connections.</h1></div><span className="pill">{total} concepts · fixed map</span></div>
+        <div className="map-viewport" ref={viewport}>
+        <div className="map-canvas" style={{ width: `${zoom * 100}%`, height: `${zoom * 100}%` }}>
         <Graph
           graph={graph}
           state={gs}
@@ -215,30 +336,32 @@ export default function App() {
             setPendingEdge(e);
           }}
         />
+        </div></div>
 
         {/* The research variable, and the demo's punchline. Large, quiet, mono.
             Mono appears exactly here and nowhere else. */}
-        <div style={{ position: "absolute", left: 28, bottom: 24 }}>
-          <div className="readout" style={{ fontSize: 42, lineHeight: 1 }}>
+        <div className="map-footer"><div className="candidate-card" aria-live="polite">
+          <div className="readout" style={{ fontSize: 34, lineHeight: 1 }}>
             {lit}
             <span style={{ opacity: 0.35 }}> / {total}</span>
           </div>
           <div style={{ fontSize: 13, opacity: 0.65, marginTop: 4 }}>
-            {narrowed ? `${total - lit} ruled out` : "Nothing ruled out yet"}
+            {narrowed ? `${total - lit} ruled out` : "Concepts in play"}
             {hint > 0 && ` · hint ${hint} of 4`}
           </div>
         </div>
+        {/* role=status is always mounted: a live region that appears together
+            with its text is not reliably announced. Empty, it takes no space. */}
+        <div className="map-guide">
+          <p className={guide?.pick ? "map-note map-note-pick" : "map-note"} role="status">{guide?.text}</p>
+          {!guide && <div className="map-legend"><span><i />In play</span><span><i className="legend-dim" />Ruled out</span></div>}
+        </div>
+        <div className="zoom-controls" role="group" aria-label="Map zoom"><button aria-label="Zoom out" disabled={zoom <= 1} onClick={() => zoomTo(zoom / ZOOM_STEP)}>−</button><button onClick={() => zoomTo(1)} aria-label="Fit entire map">Fit map</button><button aria-label="Zoom in" disabled={zoom >= ZOOM_MAX} onClick={() => zoomTo(zoom * ZOOM_STEP)}>+</button></div></div>
       </main>
 
-      <aside
-        style={{
-          background: "var(--paper)",
-          borderLeft: "1px solid var(--rule)",
-          display: "flex",
-          flexDirection: "column",
-          minHeight: 0,
-        }}
-      >
+      <aside className="tutor-panel">
+        <div className="tutor-heading"><span className="tutor-avatar" aria-hidden="true">✦</span><div><h2>Your thinking partner</h2><p>Take a moment. Make a connection.</p></div></div>
+        {activeItem.current && <section className="question-card" aria-live="polite"><span className="eyebrow">THE QUESTION</span><p>{question || "Preparing your next question…"}</p><span className="question-instruction">{expects === "edge_click" ? "Select a connection on the map" : expects === "mcq" ? "Choose an option below" : "Select a concept on the map"}</span></section>}
         {panelNode && (
           <NodePanel
             node={panelNode}
@@ -267,6 +390,7 @@ export default function App() {
           onText={answerText}
         />
       </aside>
+      </div>
     </div>
   );
 }
