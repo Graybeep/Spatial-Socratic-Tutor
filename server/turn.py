@@ -949,6 +949,13 @@ def complete_turn(store: GraphStore, db: Store, phase1: Phase1) -> TurnResponse:
     phase1.call2_fallback = call2_fell_back
     state.record_history("tutor", utterance, reveal=phase1.resolved_with_support)
 
+    # Compose the authored question after recording the model's own words.
+    # This keeps it out of Call 2's recent history and leaves the wire contract
+    # unchanged. Every active turn carries the CURRENT question, even after a
+    # backtrack or reveal. Historical leakage results precede this UI fix.
+    if phase1.item is not None and not phase1.session_complete:
+        utterance = f"{utterance}\n\n{phase1.item.prompt.strip()}"
+
     response = TurnResponse(
         session_id=state.session_id,
         turn_id=state.turn_id,

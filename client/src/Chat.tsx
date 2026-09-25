@@ -1,4 +1,4 @@
-import type { CSSProperties, ReactNode } from "react";
+import { useEffect, useRef, type CSSProperties, type ReactNode } from "react";
 import type { Expects, GraphNode, McqOption, SessionStatus, TurnBudget } from "./types";
 
 /**
@@ -54,31 +54,32 @@ export function Chat({
   onMcq,
   onText,
 }: ChatProps) {
+  const transcript = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (transcript.current) transcript.current.scrollTop = transcript.current.scrollHeight;
+  }, [lines, busy]);
   return (
     <>
-      <div style={{ flex: 1, overflowY: "auto", padding: "24px 22px" }}>
+      <div className="transcript" ref={transcript} role="log" aria-label="Tutor conversation">
         {lines.length === 0 && !busy && (
           <p style={{ opacity: 0.6, margin: 0 }}>Getting started.</p>
         )}
         {lines.map((l, i) => (
           <p
             key={i}
-            style={{
-              margin: "0 0 16px",
-              maxWidth: "62ch",
-              opacity: l.who === "you" ? 0.62 : 1,
-            }}
+            className={`message message-${l.who}`}
           >
+            <span className="message-author">{l.who === "you" ? "YOUR CHOICE" : "SPATIAL TUTOR"}</span>
             {l.text}
           </p>
         ))}
-        {busy && <p style={{ opacity: 0.45, margin: 0 }}>Thinking</p>}
+        {busy && <p className="thinking" role="status">✦ Finding the next step…</p>}
         {error && <p style={{ color: "var(--alert)", margin: "8px 0 0" }}>{error}</p>}
       </div>
 
       <Budget budget={budget} resolvedWithSupport={resolvedWithSupport} />
 
-      <div style={{ borderTop: "1px solid var(--rule)", padding: 18 }}>
+      <div className="answer-area">
         {sessionState !== "active" ? (
           <SessionEnded state={sessionState} />
         ) : pendingLabel !== null ? (
@@ -97,7 +98,7 @@ export function Chat({
             </div>
           </div>
         ) : expects === "node_click" ? (
-          <Hint>Click the node you think it is.</Hint>
+          <Hint>Click a concept, then confirm your choice.</Hint>
         ) : expects === "edge_click" ? (
           <Hint>Click the connection you mean.</Hint>
         ) : expects === "mcq" && mcq.length > 0 ? (
@@ -260,7 +261,7 @@ const btn: CSSProperties = {
   font: "inherit",
   padding: "10px 12px",
   border: "1px solid var(--rule)",
-  borderRadius: 4,
+  borderRadius: 10,
   background: "var(--ground)",
   color: "var(--ink)",
   textAlign: "left",

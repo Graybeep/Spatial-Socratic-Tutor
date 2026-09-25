@@ -125,12 +125,11 @@ Then the honest closing beat, on screen for ~20 seconds.
 
 ## Three things that will happen, so they don't surprise you
 
-- **The opening question is vague.** `ItemPublic` carries `id`, `difficulty` and
-  `scorable` — **no prompt.** §1.6 renders exactly one text field, so the
-  question reaches the student only through the utterance, and Call 2 is
-  deliberately denied the item. The first line is therefore something like
-  *"Have a look at the map. Which node fits?"* **Narrate the actual question
-  yourself** — that is a scripting job, not a bug to fix on Friday.
+- **The current question is now visible.** The September 25 interface update
+  composes the authored prompt into `utterance` after Call 2 and pins it in the
+  question card. Read that question on camera, then demonstrate a wrong choice,
+  narrowing, confirmation, and the next question. The archived leakage numbers
+  precede this update; do not describe them as measurements of this interface.
 - **No backtracking early.** The session opens on a **root node**, which has no
   prerequisites, so there is nowhere to step back to. Backtracks appear only
   after the student has advanced and then failed twice.

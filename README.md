@@ -35,6 +35,15 @@ of evaluation numbers. It is a research prototype, not a product.
 
 ## What it does today
 
+**Submission interface update (September 25).** The landing page introduces the
+visual interaction, and the study view keeps the authored question visible while
+hints arrive. Full concept labels, map zoom, automatic transcript scrolling, and
+an explicit offline/AI mode badge make the demo easier to follow. Questions are
+composed server-side into the existing `utterance` after the speaking model's
+output is screened; they are not fed back into that model's recent history.
+The archived leakage measurements below describe the earlier build, before this
+question-display change. They are not measurements of the updated interface.
+
 **The chapter.** Chapter 6, *Congestion Control*, of Peterson and Davie,
 *Computer Networks: A Systems Approach* (CC BY 4.0). It is turned into:
 
@@ -464,10 +473,10 @@ Ordered roughly by how much each would strengthen the central claim.
 - **A semantic answer monitor.** Guard layer 1 uses token overlap, which misses a
   paraphrase of the answer. An embedding check would catch it, at the cost of a
   new dependency.
-- **Show the question itself.** The client renders only the tutor's sentence,
-  and Call 2 is never given the item, so the opening question is generic. A
-  second whitelisted field for the item prompt would fix this, but it widens what
-  reaches the screen and needs its own leak analysis.
+- **Re-evaluate the question display.** The authored prompt now appears in a
+  persistent question card, composed into the existing utterance after Call 2.
+  Repeat effective-leakage evaluations before claiming the archived results
+  apply to this updated student-visible information.
 - **Faster visible mastery.** A flawless student masters 1 node in 20 turns. The
   scoring constants are deliberately conservative. Tuning them is a research
   question, not a fix.

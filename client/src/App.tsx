@@ -1,8 +1,8 @@
 import { useRef, useState } from "react";
 import { Graph } from "./Graph";
 import { Chat, NodePanel, type Line } from "./Chat";
-import { Landing } from "./Landing";
-import { createSession, loadGraph, streamTurn } from "./api";
+import { Brand, Landing } from "./Landing";
+import { createSession, loadGraph, loadMode, streamTurn } from "./api";
 import type {
   EdgeRef,
   Expects,
@@ -30,6 +30,10 @@ export default function App() {
   const [graph, setGraph] = useState<FrozenGraph | null>(null);
   const [gs, setGs] = useState<GraphState | null>(null);
   const [lines, setLines] = useState<Line[]>([]);
+  const [question, setQuestion] = useState("");
+  const [mode, setMode] = useState<boolean | null>(null);
+  const [zoom, setZoom] = useState<number | null>(null);
+  const activeItem = useRef<string | null>(null);
   const [expects, setExpects] = useState<Expects>("text");
   const [mcq, setMcq] = useState<McqOption[]>([]);
   const [hint, setHint] = useState(0);
@@ -68,18 +72,20 @@ export default function App() {
   async function enter() {
     if (started.current) return;
     started.current = true;
+    setErr(null);
     setEntered(true);
     try {
       const [g, sid] = await Promise.all([loadGraph(), createSession()]);
       setGraph(g);
       session.current = sid;
+      void loadMode().then(setMode);
       void send(null);
     } catch {
       // Back to Landing rather than a dead screen: the student has somewhere
       // to press again, and the reason is on the surface they pressed from.
       started.current = false;
       setEntered(false);
-      setErr("Could not reach the tutor. Is the server running on port 8000?");
+      setErr("Could not reach the tutor. Check that the backend is running, then try again.");
     }
   }
 
@@ -97,6 +103,8 @@ export default function App() {
         // Phase 1. The graph moves HERE, ~0.8s ahead of any text, and becomes
         // interactive here too. Do not hold it back to sync with the utterance.
         onGraphState: (p) => {
+          if (activeItem.current !== (p.item?.id ?? null)) setQuestion("");
+          activeItem.current = p.item?.id ?? null;
           setGs(p.graph_state);
           setExpects(p.expects);
           setHint(p.hint_level);
@@ -107,7 +115,11 @@ export default function App() {
           setSessionState(p.session_state);
         },
         onUtterance: (text) => {
-          setLines((l) => [...l, { who: "tutor", text }]);
+          // The server appends the authored question as the last paragraph of
+          // the existing whitelisted utterance. No answer fields reach the UI.
+          const split = activeItem.current ? text.lastIndexOf("\n\n") : -1;
+          if (split >= 0) setQuestion(text.slice(split + 2));
+          setLines((l) => [...l, { who: "tutor", text: split >= 0 ? text.slice(0, split) : text }]);
           setBusy(false);
         },
         onError: (m) => {
@@ -182,20 +194,18 @@ export default function App() {
       : null;
 
   return (
-    <div
-      style={{
-        display: "grid",
-        gridTemplateColumns: "1fr var(--rail)",
-        height: "100vh",
-        overflow: "hidden",
-      }}
-    >
+    <div className="study-shell">
+      <header className="study-header"><Brand /><div className="study-course"><span>CHAPTER 06</span> Congestion Control</div><span className="mode-badge"><span className="status-dot" />{mode === true ? "Offline demo · scripted tutor" : mode === false ? "AI tutor enabled" : "Local study session"}</span></header>
+      <div className="study-body">
       {/* minHeight:0 is load-bearing. A grid item's automatic minimum size is
           content-based, and an SVG with width:100% has an intrinsic height from
           its viewBox aspect - so without this the row grows to ~866px at 50
           nodes, the graph runs off the bottom and the readout goes with it.
           Invisible at 16 nodes, obvious at 50. */}
-      <main style={{ position: "relative", minWidth: 0, minHeight: 0, overflow: "hidden" }}>
+      <main className="map-panel">
+        <div className="map-heading"><div><span className="eyebrow">YOUR LEARNING LANDSCAPE</span><h1>Follow the connections.</h1></div><span className="pill">{total} concepts · fixed map</span></div>
+        <div className="map-viewport">
+        <div className="map-canvas" style={zoom === null ? undefined : {width: 1400 * zoom, height: 1040 * zoom, minWidth: "100%", minHeight: "100%"}}>
         <Graph
           graph={graph}
           state={gs}
@@ -215,30 +225,25 @@ export default function App() {
             setPendingEdge(e);
           }}
         />
+        </div></div>
 
         {/* The research variable, and the demo's punchline. Large, quiet, mono.
             Mono appears exactly here and nowhere else. */}
-        <div style={{ position: "absolute", left: 28, bottom: 24 }}>
-          <div className="readout" style={{ fontSize: 42, lineHeight: 1 }}>
+        <div className="map-footer"><div className="candidate-card" aria-live="polite">
+          <div className="readout" style={{ fontSize: 34, lineHeight: 1 }}>
             {lit}
             <span style={{ opacity: 0.35 }}> / {total}</span>
           </div>
           <div style={{ fontSize: 13, opacity: 0.65, marginTop: 4 }}>
-            {narrowed ? `${total - lit} ruled out` : "Nothing ruled out yet"}
+            {narrowed ? `${total - lit} ruled out` : "Concepts in play"}
             {hint > 0 && ` · hint ${hint} of 4`}
           </div>
-        </div>
+        </div><div className="map-legend"><span><i />In play</span><span><i className="legend-dim" />Ruled out</span></div><div className="zoom-controls" aria-label="Map zoom"><button aria-label="Zoom out" onClick={() => setZoom(Math.max(.7, (zoom ?? 1) - .2))}>−</button><button onClick={() => setZoom(null)} aria-label="Fit entire map">Fit map</button><button aria-label="Zoom in" onClick={() => setZoom(Math.min(2, (zoom ?? .8) + .2))}>+</button></div></div>
       </main>
 
-      <aside
-        style={{
-          background: "var(--paper)",
-          borderLeft: "1px solid var(--rule)",
-          display: "flex",
-          flexDirection: "column",
-          minHeight: 0,
-        }}
-      >
+      <aside className="tutor-panel">
+        <div className="tutor-heading"><span className="tutor-avatar" aria-hidden="true">✦</span><div><h2>Your thinking partner</h2><p>Take a moment. Make a connection.</p></div></div>
+        {activeItem.current && <section className="question-card" aria-live="polite"><span className="eyebrow">THE QUESTION</span><p>{question || "Preparing your next question…"}</p><span className="question-instruction">{expects === "edge_click" ? "Select a connection on the map" : expects === "mcq" ? "Choose an option below" : "Select a concept on the map"}</span></section>}
         {panelNode && (
           <NodePanel
             node={panelNode}
@@ -267,6 +272,7 @@ export default function App() {
           onText={answerText}
         />
       </aside>
+      </div>
     </div>
   );
 }

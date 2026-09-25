@@ -8,6 +8,14 @@ import type {
 
 const BASE = import.meta.env.VITE_API_BASE_URL ?? "http://127.0.0.1:8000";
 
+export async function loadMode(): Promise<boolean | null> {
+  try {
+    const r = await fetch(`${BASE}/health`);
+    if (!r.ok) return null;
+    return (await r.json()).mock_mode;
+  } catch { return null; }
+}
+
 /**
  * Build against p95, not the mock's p50. The mock fakes 0.9s / 1.4s; a UI that
  * only looks right at the median goes janky on demo day.

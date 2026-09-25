@@ -1,165 +1,40 @@
-/**
- * The screen before the session. Nothing here talks to the server.
- *
- * WHY IT EXISTS
- * -------------
- * The app used to open straight onto 52 lit nodes. A student who has not read
- * the report has no idea what the map is, that a click is an answer, or that
- * getting it wrong is what makes the map do its work - so the first thing the
- * interface did was ask a question its user could not place.
- *
- * WHAT IT DELIBERATELY DOES NOT DO
- * --------------------------------
- * It does not preview the narrowing. App.tsx sets the rule this follows: "The
- * only motion in this app is the dim transition. No entrance animations, no
- * hover transitions - that is what makes the narrowing the memorable moment."
- * An animated 52 -> 12 demo here would spend that moment on a teaser, and the
- * student would meet the real one already knowing the trick. So the narrowing
- * is described in one line of plain language and shown for the first time when
- * it actually happens, on their own wrong answer.
- *
- * It also uses no jargon the tutor does not use: no "nodes", no "hint ladder",
- * no "narrowing schedule". Concepts, clicking, and the map getting smaller.
- */
+const previewNodes = [
+  [70, 80, "Packet flow", false], [300, 80, "Resources", true],
+  [70, 200, "Throughput", false], [300, 200, "Congestion", true],
+  [530, 200, "Flow control", false], [70, 320, "Fair queuing", false],
+  [300, 320, "TCP window", true], [530, 320, "Feedback", true],
+  [190, 440, "Slow start", true], [420, 440, "AIMD", true],
+] as const;
 
-const STEPS: Array<{ n: string; head: string; body: string }> = [
-  {
-    n: "1",
-    head: "You get a map",
-    body: "52 concepts from one networking chapter, with arrows for what you need to know first. It never moves, so you can learn where things are.",
-  },
-  {
-    n: "2",
-    head: "You answer by pointing",
-    body: "Click the concept you think it is, then confirm. Nothing is submitted until you do — a stray click costs you nothing.",
-  },
-  {
-    n: "3",
-    head: "Stuck? The map shrinks",
-    body: "Get it wrong and the concepts that cannot be the answer fade out. The search gets smaller instead of the hint getting louder.",
-  },
-];
+export function Brand() {
+  return <span className="brand"><span className="brand-mark" aria-hidden="true">S<span>·</span></span><span>spatial<span className="brand-light"> / socratic tutor</span></span></span>;
+}
 
 export function Landing({ onStart, error }: { onStart: () => void; error: string | null }) {
-  return (
-    <div
-      style={{
-        height: "100vh",
-        overflowY: "auto",
-        display: "grid",
-        placeItems: "center",
-        padding: "32px 20px",
-        // A single soft wash off the mastery ramp: enough to read as a front
-        // door rather than a form, without introducing a second palette.
-        background:
-          "radial-gradient(1100px 620px at 12% -10%, rgba(15,107,99,.10), transparent 62%), " +
-          "radial-gradient(900px 520px at 100% 108%, rgba(127,168,163,.16), transparent 60%), " +
-          "var(--ground)",
-      }}
-    >
-      <main style={{ width: "100%", maxWidth: 760 }}>
-        <p
-          style={{
-            margin: "0 0 14px",
-            fontFamily: "'IBM Plex Mono', ui-monospace, monospace",
-            fontSize: 11,
-            letterSpacing: ".14em",
-            textTransform: "uppercase",
-            color: "var(--m-100)",
-          }}
-        >
-          Computer Networks · Congestion Control
-        </p>
-
-        <h1
-          style={{
-            margin: "0 0 18px",
-            fontSize: "clamp(30px, 5.4vw, 46px)",
-            lineHeight: 1.08,
-            letterSpacing: "-.025em",
-            fontWeight: 600,
-            textWrap: "balance",
-          }}
-        >
-          A tutor that helps by showing less
-        </h1>
-
-        <p
-          style={{
-            margin: "0 0 30px",
-            fontSize: 17,
-            lineHeight: 1.6,
-            maxWidth: "54ch",
-            color: "#41474a",
-          }}
-        >
-          Most tutors help by saying more, and every extra sentence is another place
-          the answer can slip out. This one dims the map instead. When you are stuck,
-          the concepts that cannot be the answer fade — and nobody says a word.
-        </p>
-
-        <ol
-          style={{
-            listStyle: "none",
-            margin: "0 0 30px",
-            padding: 0,
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(210px, 1fr))",
-            gap: 1,
-            background: "var(--rule)",
-            border: "1px solid var(--rule)",
-            borderRadius: 10,
-            overflow: "hidden",
-          }}
-        >
-          {STEPS.map((s) => (
-            <li key={s.n} style={{ background: "var(--paper)", padding: "18px 18px 20px" }}>
-              <div
-                style={{
-                  fontFamily: "'IBM Plex Mono', ui-monospace, monospace",
-                  fontSize: 11,
-                  color: "var(--m-100)",
-                  letterSpacing: ".12em",
-                  marginBottom: 8,
-                }}
-              >
-                {s.n.padStart(2, "0")}
-              </div>
-              <h2 style={{ margin: "0 0 6px", fontSize: 15.5, fontWeight: 600 }}>{s.head}</h2>
-              <p style={{ margin: 0, fontSize: 14, lineHeight: 1.55, color: "#41474a" }}>
-                {s.body}
-              </p>
-            </li>
-          ))}
-        </ol>
-
-        <div style={{ display: "flex", flexWrap: "wrap", gap: 14, alignItems: "center" }}>
-          <button
-            type="button"
-            onClick={onStart}
-            style={{
-              font: "inherit",
-              fontSize: 16,
-              fontWeight: 600,
-              color: "var(--paper)",
-              background: "var(--m-100)",
-              border: "1px solid var(--m-100)",
-              borderRadius: 8,
-              padding: "13px 26px",
-              cursor: "pointer",
-            }}
-          >
-            Start learning
-          </button>
-          <span style={{ fontSize: 13.5, color: "#5b6265" }}>
-            No account, no sign-in. Your progress stays on this machine.
-          </span>
-        </div>
-
-        {error ? (
-          <p style={{ marginTop: 18, color: "var(--alert)", fontSize: 14 }}>{error}</p>
-        ) : null}
-      </main>
-    </div>
-  );
+  return <div className="landing">
+    <nav className="landing-nav"><Brand /><span className="pill">A new way to find your answer</span></nav>
+    <main className="landing-main">
+      <section className="hero-copy">
+        <div className="eyebrow"><span className="status-dot" /> LESS TELLING. MORE THINKING.</div>
+        <h1>A little less noise.<br />A lot more <em>understanding.</em></h1>
+        <p className="hero-description">Find your way through a map of ideas. When you get stuck, the map narrows—giving you room to think, and a clearer place to look.</p>
+        <button className="start-button" onClick={onStart}>Explore the chapter <span aria-hidden="true">↗</span></button>
+        <p className="hero-footnote">No account needed · Progress stored on this machine</p>
+        {error && <p className="error-message" role="alert">{error}</p>}
+        <div className="chapter-card"><span className="chapter-icon" aria-hidden="true">06</span><div><span className="eyebrow">YOUR CHAPTER</span><h3>Congestion Control</h3><p>Computer Networks · Peterson & Davie</p></div><span className="chapter-count">52<br /><small>concepts</small></span></div>
+      </section>
+      <section className="hero-visual" aria-label="Illustration of a concept map narrowing">
+        <div className="preview-top"><span className="eyebrow">A MAP THAT HELPS YOU THINK</span><span className="preview-badge">Visual hints</span></div>
+        <svg viewBox="0 0 720 530" role="img" aria-label="Illustrative concept map with six concepts highlighted">
+          <g fill="none" stroke="#b9cebf" strokeWidth="2"><path d="M140 126V200M370 126V200M140 246V320M370 246V320M600 246V320M370 366L260 440M370 366L490 440M600 366L490 440M140 126L370 200M370 126L600 200M140 246L370 320" /></g>
+          {previewNodes.map(([x,y,label,lit]) => <g key={label} opacity={lit ? 1 : .26}><rect x={x} y={y} width="142" height="46" rx="12" fill={lit ? "#e0eee5" : "#e8ece6"} stroke={lit ? "#2c6352" : "#adbcb2"} strokeWidth={lit ? 2 : 1}/><text x={x+71} y={y+28} textAnchor="middle" fill="#234a3e" fontSize="14" fontWeight="600">{label}</text></g>)}
+        </svg>
+        <div className="preview-bottom"><div><span className="preview-number">10 <span>→</span> 6</span><p>Fewer possibilities. Your reasoning.</p></div><span className="preview-note">Illustrative preview<br />Your map has 52 concepts</span></div>
+      </section>
+    </main>
+    <section className="how-it-works" aria-label="How it works">
+      {[['01','See the connections','A stable map shows how the ideas fit together.'],['02','Make your choice','Point to a concept. Confirm when you are ready.'],['03','Find your way forward','Visual hints narrow the search, one step at a time.']].map(([n,title,body])=><article key={n}><span className="step-number">{n}</span><div><h2>{title}</h2><p>{body}</p></div></article>)}
+    </section>
+    <footer className="landing-footer"><span>Built for curiosity. Designed for deliberate practice.</span><span>One chapter · A research prototype</span></footer>
+  </div>;
 }
