@@ -147,7 +147,7 @@ function Budget({
     return (
       <div style={budgetBar}>
         <span style={{ color: "var(--alert)" }}>
-          I showed you that one — it does not count towards mastery.
+          I showed you that one. It does not count towards mastery.
         </span>
       </div>
     );

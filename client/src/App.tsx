@@ -56,8 +56,8 @@ function outcomeNote(
   // Only a node item's answer is guaranteed to stay lit: candidate_order in
   // server/mock_tutor.py puts it first. An edge item's endpoints are not.
   return p.expects === "node_click"
-    ? `Not this one. ${what} — the answer is one of the ${lit} still lit.`
-    : `Not this one. ${what} — look among the ${lit} still lit.`;
+    ? `Not this one. ${what}. The answer is one of the ${lit} still lit.`
+    : `Not this one. ${what}. Look among the ${lit} still lit.`;
 }
 
 /**

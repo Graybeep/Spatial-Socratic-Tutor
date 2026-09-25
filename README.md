@@ -58,7 +58,7 @@ of evaluation numbers. It is a research prototype, not a product.
 4. **If the answer is wrong, the map narrows.** On the next turn 52 lit nodes
    become 12, then 9. The graph changes as soon as the tutor has decided, before
    its sentence has been written, and the note says what happened: *"Not this
-   one. 40 concepts faded — the answer is one of the 12 still lit."*
+   one. 40 concepts faded. The answer is one of the 12 still lit."*
 5. Hints escalate one level per turn, up to level 4. After **8 turns** on one item
    the tutor reveals the answer, marks the item "resolved with support", and
    awards no mastery. This caps frustration.
